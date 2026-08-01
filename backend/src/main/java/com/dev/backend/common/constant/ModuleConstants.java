@@ -18,6 +18,6 @@ public final class ModuleConstants {
     public static final String GENRE = "GENRE";           // Module Quản lý Thể loại sách
     public static final String SUPPORT = "SUPPORT";       // Module Quản lý Hỗ trợ & Phản hồi
     public static final String SYSTEM = "SYSTEM";         // Module Quản lý Cấu hình Hệ thống
-    public static final String CUSTOMER = "CUSTOMER";     // Module Quản lý Khách hàng
+    public static final String USER = "USER";     // Module Quản lý Khách hàng
     public static final String SHOP = "SHOP";             // Module Quản lý Cửa hàng / Gian hàng
 }

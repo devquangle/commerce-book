@@ -5,27 +5,32 @@ import { ShopRoutes } from "@/routes/ShopRoutes";
 import { UserRoutes } from "@/routes/UserRoutes";
 import ScrollToTop from "@/components/common/ScrollToTop";
 import { AuthProvider } from "@/providers/AuthProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-        {/* Admin panel: /admin/* */}
-        <Route path="/admin/*" element={<AdminRoutes />} />
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
+            {/* Admin panel: /admin/* */}
+            <Route path="/admin/*" element={<AdminRoutes />} />
 
-        {/* Shop panel (seller dashboard): /shop/* */}
-        <Route path="/shop/*" element={<ShopRoutes />} />
+            {/* Shop panel (seller dashboard): /shop/* */}
+            <Route path="/shop/*" element={<ShopRoutes />} />
 
-        {/* User storefront: /* */}
-        <Route path="/*" element={<UserRoutes />} />
+            {/* User storefront: /* */}
+            <Route path="/*" element={<UserRoutes />} />
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
-    </AuthProvider>
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 

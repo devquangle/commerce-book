@@ -2,8 +2,6 @@ package com.dev.backend.security.jwt;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.List;
-
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -34,11 +32,15 @@ public class JwtUtil {
 
     // ================= GENERATE =================
     public String generateAccessToken(CustomUserDetails userDetails) {
+        String role = "";
+        if (userDetails.getAuthorities() != null && !userDetails.getAuthorities().isEmpty()) {
+            role = userDetails.getAuthorities().iterator().next().getAuthority();
+        }
+        
         return Jwts.builder()
                 .setSubject(String.valueOf(userDetails.getUser().getId()))
                 .claim("tokenVersion", userDetails.getUser().getTokenVersion())
-                .claim("roles", userDetails.getRoles())
-                .claim("permissions", userDetails.getPermissions())
+                .claim("role", role)
                 .claim("type", JwtType.ACCESS.name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + JwtType.ACCESS.getExpirationMillis()))
@@ -88,18 +90,15 @@ public class JwtUtil {
     }
 
     public int extractTokenVersion(String token) {
-        Integer version = extractAllClaims(token).get("tokenVersion", Integer.class);
-        return version == null ? 0 : version;
+        Object versionObj = extractAllClaims(token).get("tokenVersion");
+        if (versionObj instanceof Number) {
+            return ((Number) versionObj).intValue();
+        }
+        return 0;
     }
 
-    @SuppressWarnings("unchecked")
-    public List<String> extractRoles(String token) {
-        return extractAllClaims(token).get("roles", List.class);
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<String> extractPermissions(String token) {
-        return extractAllClaims(token).get("permissions", List.class);
+    public String extractRole(String token) {
+        return extractAllClaims(token).get("role", String.class);
     }
 
     // ================= VALIDATE =================
@@ -125,7 +124,8 @@ public class JwtUtil {
     }
 
     // ================= HELPER =================
-    public boolean isTokenVersionValid(String token, int dbTokenVersion) {
-        return extractTokenVersion(token) == dbTokenVersion;
+    public boolean isTokenVersionValid(String token, Integer dbTokenVersion) {
+        int dbVersion = dbTokenVersion == null ? 0 : dbTokenVersion;
+        return extractTokenVersion(token) == dbVersion;
     }
 }

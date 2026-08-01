@@ -41,7 +41,7 @@ public class LoadData implements CommandLineRunner {
             {"ROLE_ADMIN", "ADMIN", ModuleConstants.SYSTEM, "Quản trị viên hệ thống", "admin", "admin@gmail.com", "Quản Trị Viên", "0901234567"},
             {"ROLE_STAFF", "STAFF", ModuleConstants.SYSTEM, "Nhân viên hệ thống", "staff", "staff@gmail.com", "Nhân Viên System", "0901234568"},
             {"ROLE_SHOP", "SHOP", ModuleConstants.SHOP, "Chủ gian hàng / Cửa hàng", "shop", "shop@gmail.com", "Chủ Cửa Hàng", "0901234569"},
-            {"ROLE_USER", "USER", ModuleConstants.CUSTOMER, "Khách hàng người dùng", "user", "user@gmail.com", "Khách Hàng", "0901234570"}
+            {"ROLE_USER", "USER", ModuleConstants.USER, "Khách hàng người dùng", "user", "user@gmail.com", "Khách Hàng", "0901234570"}
         };
 
         for (Object[] item : roleUserData) {

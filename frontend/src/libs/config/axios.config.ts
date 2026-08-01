@@ -2,7 +2,7 @@ import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { getAuthToken, setAuthToken, getToken, removeAuthToken, removeToken } from "../utils/cookie";
 import { TokenType } from "../constant/token.type";
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 // 1. Axios instance cho các request public (không yêu cầu đăng nhập)
 export const publicAxios = axios.create({

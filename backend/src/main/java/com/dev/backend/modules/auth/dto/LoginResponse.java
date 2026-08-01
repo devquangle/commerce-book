@@ -1,6 +1,5 @@
 package com.dev.backend.modules.auth.dto;
 
-import com.dev.backend.modules.user.dto.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,13 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuthResponse {
-
+public class LoginResponse {
     private String accessToken;
     private String refreshToken;
-
-    @Builder.Default
-    private String tokenType = "Bearer";
-
-    private UserResponse user;
 }

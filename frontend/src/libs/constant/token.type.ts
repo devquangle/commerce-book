@@ -1,6 +1,6 @@
 export const TokenType = {
-  ACCESS_TOKEN: "access_token",
-  REFRESH_TOKEN: "refresh_token",
+  ACCESS_TOKEN: "accessToken",
+  REFRESH_TOKEN: "refreshToken",
 } as const;
 
 export type TokenTypeValue = (typeof TokenType)[keyof typeof TokenType];

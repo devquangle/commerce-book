@@ -2,7 +2,6 @@ package com.dev.backend.modules.role.entity;
 
 import com.dev.backend.common.entity.BaseEntity;
 import com.dev.backend.modules.user.entity.User;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;

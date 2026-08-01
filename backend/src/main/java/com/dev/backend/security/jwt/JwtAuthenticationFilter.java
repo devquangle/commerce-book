@@ -1,9 +1,12 @@
 package com.dev.backend.security.jwt;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -59,12 +62,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     return;
                 }
 
-                // Extract stateless roles and permissions from JWT
-                List<String> roles = jwtUtil.extractRoles(token);
-                List<String> permissions = jwtUtil.extractPermissions(token);
+                // Extract stateless role from JWT
+                String role = jwtUtil.extractRole(token);
+                Collection<GrantedAuthority> authorities = Collections.emptyList();
+                if (role != null && !role.isBlank()) {
+                    authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
+                }
 
                 // Build UserDetails without querying Role/Permission tables
-                CustomUserDetails userDetails = new CustomUserDetails(user, roles, permissions);
+                CustomUserDetails userDetails = new CustomUserDetails(user, authorities);
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails,

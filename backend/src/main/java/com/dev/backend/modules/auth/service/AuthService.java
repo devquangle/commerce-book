@@ -1,6 +1,6 @@
 package com.dev.backend.modules.auth.service;
 
-import com.dev.backend.modules.auth.dto.AuthResponse;
+import com.dev.backend.modules.auth.dto.LoginResponse;
 import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
 import com.dev.backend.modules.auth.dto.LoginRequest;
 import com.dev.backend.modules.auth.dto.RefreshTokenRequest;
@@ -10,11 +10,11 @@ import com.dev.backend.modules.user.dto.UserResponse;
 
 public interface AuthService {
 
-    AuthResponse login(LoginRequest request);
+    LoginResponse login(LoginRequest request);
 
     UserResponse register(RegisterRequest request);
 
-    AuthResponse refreshToken(RefreshTokenRequest request);
+    LoginResponse refreshToken(RefreshTokenRequest request);
 
     UserResponse getProfile(Long userId);
 

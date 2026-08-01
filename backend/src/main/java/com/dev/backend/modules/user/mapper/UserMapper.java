@@ -32,15 +32,11 @@ public class UserMapper {
                 .id(entity.getId())
                 .username(entity.getUsername())
                 .email(entity.getEmail())
-                .fullName(entity.getFullName())
+                .name(entity.getFullName())
                 .phone(entity.getPhone())
                 .avatarUrl(entity.getAvatarUrl())
                 .street(entity.getStreet())
-                .status(entity.getStatus())
-                .enabled(entity.isEnabled())
-                .accountNonLocked(entity.isAccountNonLocked())
-                .createdAt(entity.getCreatedAt())
-                .updatedAt(entity.getUpdatedAt())
+                .role(entity.getRole().getName())
                 .build();
     }
 

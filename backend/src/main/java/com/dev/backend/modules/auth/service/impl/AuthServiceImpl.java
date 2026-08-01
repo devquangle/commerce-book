@@ -1,7 +1,8 @@
 package com.dev.backend.modules.auth.service.impl;
 
 import com.dev.backend.common.constant.JwtType;
-import com.dev.backend.modules.auth.dto.AuthResponse;
+import com.dev.backend.common.exception.UnauthorizedException;
+import com.dev.backend.modules.auth.dto.LoginResponse;
 import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
 import com.dev.backend.modules.auth.dto.LoginRequest;
 import com.dev.backend.modules.auth.dto.RefreshTokenRequest;
@@ -17,52 +18,71 @@ import com.dev.backend.modules.user.mapper.UserMapper;
 
 import com.dev.backend.security.custom.CustomUserDetails;
 import com.dev.backend.security.jwt.JwtUtil;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final AuthRepository authRepository;
     private final RoleRepository roleRepository;
-
+    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final UserMapper userMapper;
 
     @Override
-    @Transactional
-    public AuthResponse login(LoginRequest request) {
-        User user = authRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Email hoặc mật khẩu không chính xác"));
+    public LoginResponse login(LoginRequest loginRequest) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getEmail(),
+                            loginRequest.getPassword()));
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Email hoặc mật khẩu không chính xác");
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            User user = userDetails.getUser();
+
+            log.info("User login {}", loginRequest.getEmail());
+
+            if (!user.isEnabled()) {
+                throw new UnauthorizedException("Tài khoản chưa được kích hoạt");
+            }
+
+            if (!user.isAccountNonLocked()) {
+                throw new UnauthorizedException("Tài khoản đã bị khóa");
+            }
+
+            String accessToken = jwtUtil.generateAccessToken(userDetails);
+
+            String refreshToken = jwtUtil.generateRefreshToken(
+                    user.getId(),
+                    user.getTokenVersion());
+
+            // userService.resetFailedAttempts(user);
+
+            log.debug("Login success. Access token: {}", accessToken);
+            return LoginResponse.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .build();
+
+        } catch (BadCredentialsException ex) {
+            // userService.processLoginFail(loginRequest.getEmail());
+            throw ex;
         }
-
-        if (!user.isEnabled()) {
-            throw new RuntimeException("Tài khoản chưa được kích hoạt");
-        }
-
-        if (!user.isAccountNonLocked()) {
-            throw new RuntimeException("Tài khoản đã bị khóa");
-        }
-
-        CustomUserDetails userDetails = CustomUserDetails.build(user);
-        String accessToken = jwtUtil.generateAccessToken(userDetails);
-        String refreshToken = jwtUtil.generateRefreshToken(user.getId(), user.getTokenVersion() == null ? 0 : user.getTokenVersion());
-
-        return AuthResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .tokenType("Bearer")
-                .user(userMapper.toResponse(user))
-                .build();
     }
 
     @Override
@@ -104,7 +124,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional(readOnly = true)
-    public AuthResponse refreshToken(RefreshTokenRequest request) {
+    public LoginResponse refreshToken(RefreshTokenRequest request) {
         String token = request.getRefreshToken();
         if (!jwtUtil.isValid(token, JwtType.REFRESH)) {
             throw new RuntimeException("RefreshToken không hợp lệ hoặc đã hết hạn");
@@ -119,15 +139,13 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("RefreshToken đã bị vô hiệu hóa");
         }
 
-        CustomUserDetails userDetails = CustomUserDetails.build(user);
-        String newAccessToken = jwtUtil.generateAccessToken(userDetails);
+        String newAccessToken = "";
         String newRefreshToken = jwtUtil.generateRefreshToken(user.getId(), currentTokenVersion);
 
-        return AuthResponse.builder()
+        return LoginResponse.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
-                .tokenType("Bearer")
-                .user(userMapper.toResponse(user))
+
                 .build();
     }
 

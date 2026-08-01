@@ -7,7 +7,6 @@ export interface UserResponse {
   phone?: string;
   street: string;
   role: RoleType;
-  shopSlug?: string;
   avatar?: string;
 }
     

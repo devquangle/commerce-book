@@ -1,6 +1,8 @@
 package com.dev.backend.modules.auth.controller;
 
-import com.dev.backend.modules.auth.dto.AuthResponse;
+import com.dev.backend.modules.auth.dto.LoginResponse;
+import com.dev.backend.common.response.ResponseData;
+import com.dev.backend.common.response.ResponseUtil;
 import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
 import com.dev.backend.modules.auth.dto.LoginRequest;
 import com.dev.backend.modules.auth.dto.RefreshTokenRequest;
@@ -29,9 +31,9 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        AuthResponse response = authService.login(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ResponseData<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
+        LoginResponse response = authService.login(request);
+        return ResponseUtil.success("Login thành công", response);
     }
 
     @PostMapping("/register")
@@ -41,18 +43,16 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
-        AuthResponse response = authService.refreshToken(request);
+    public ResponseEntity<LoginResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
+        LoginResponse response = authService.refreshToken(request);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> getProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public ResponseEntity<ResponseData<UserResponse>> getProfile(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         UserResponse response = authService.getProfile(userDetails.getId());
-        return ResponseEntity.ok(response);
+        return ResponseUtil.success("DATA", response);
     }
 
     @PutMapping("/me")
