@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecom_store_book
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        enable_lazy_load_no_trans: true
+        default_batch_fetch_size: 50
+        jdbc:
+          time_zone: UTC
+
+app:
+  jwt:
+    secret: ${JWT_SECRET}
