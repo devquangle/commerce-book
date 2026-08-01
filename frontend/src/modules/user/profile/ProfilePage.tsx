@@ -76,7 +76,7 @@ const Profile = () => {
   return (
     <div className="flex-1 p-2">
       <div className="flex justify-between items-center gap-3 mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
           Thông tin cá nhân
         </h2>
       </div>
