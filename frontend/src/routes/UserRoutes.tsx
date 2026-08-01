@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import UserLayout from "@/layouts/UserLayout";
+import ProfileLayout from "@/layouts/ProfileLayout";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("@/modules/user/pages/Home"));
@@ -9,7 +10,7 @@ const BookList = lazy(() => import("@/modules/user/pages/BookList"));
 const Cart = lazy(() => import("@/modules/user/pages/Cart"));
 const Checkout = lazy(() => import("@/modules/user/pages/Checkout"));
 const OrderSuccess = lazy(() => import("@/modules/user/pages/OrderSuccess"));
-const Profile = lazy(() => import("@/modules/user/pages/Profile"));
+const Profile = lazy(() => import("@/modules/user/profile/ProfilePage"));
 const OrderHistory = lazy(() => import("@/modules/user/pages/OrderHistory"));
 const OrderDetail = lazy(() => import("@/modules/user/pages/OrderDetail"));
 const Search = lazy(() => import("@/modules/user/pages/Search"));
@@ -35,9 +36,13 @@ export const UserRoutes: React.FC = () => {
           <Route path="cart" element={<Cart />} />
           <Route path="checkout" element={<Checkout />} />
           <Route path="order-success" element={<OrderSuccess />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="orders" element={<OrderHistory />} />
-          <Route path="orders/:id" element={<OrderDetail />} />
+          
+          <Route element={<ProfileLayout />}>
+            <Route path="profile" element={<Profile />} />
+            <Route path="orders" element={<OrderHistory />} />
+            <Route path="orders/:id" element={<OrderDetail />} />
+          </Route>
+
           <Route path="404" element={<NotFound />} />
           <Route path="*" element={<Navigate to="/404" replace />} />
         </Routes>

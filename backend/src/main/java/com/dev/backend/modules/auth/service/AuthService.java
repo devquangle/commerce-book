@@ -5,7 +5,7 @@ import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
 import com.dev.backend.modules.auth.dto.LoginRequest;
 import com.dev.backend.modules.auth.dto.RefreshTokenRequest;
 import com.dev.backend.modules.auth.dto.RegisterRequest;
-import com.dev.backend.modules.auth.dto.UpdateProfileRequest;
+import com.dev.backend.modules.user.dto.UserRequest;
 import com.dev.backend.modules.user.dto.UserResponse;
 
 public interface AuthService {
@@ -18,7 +18,7 @@ public interface AuthService {
 
     UserResponse getProfile(Long userId);
 
-    UserResponse updateProfile(Long userId, UpdateProfileRequest request);
+    UserResponse updateProfile(Long userId, UserRequest request);
 
     void changePassword(Long userId, ChangePasswordRequest request);
 

@@ -67,24 +67,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse createUser(UserRequest request) {
-        if (Boolean.TRUE.equals(userRepository.existsByUsername(request.getUsername()))) {
-            throw new RuntimeException("Username already exists: " + request.getUsername());
-        }
-        if (Boolean.TRUE.equals(userRepository.existsByEmail(request.getEmail()))) {
-            throw new RuntimeException("Email already exists: " + request.getEmail());
-        }
-        User user = userMapper.toEntity(request);
-        User savedUser = userRepository.save(user);
-        return userMapper.toResponse(savedUser);
+      
     }
 
     @Override
     public UserResponse updateUser(Long id, UserRequest request) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-        userMapper.updateEntityFromRequest(request, user);
-        User updatedUser = userRepository.save(user);
-        return userMapper.toResponse(updatedUser);
+   
     }
 
     @Override

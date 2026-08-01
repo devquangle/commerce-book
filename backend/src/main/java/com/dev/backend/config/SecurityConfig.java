@@ -33,17 +33,18 @@ import lombok.RequiredArgsConstructor;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final CustomAccessDeniedHandler customAccessDeniedHandler;
-    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    private final CustomUserDetailsService customUserDetailsService;
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final CustomAccessDeniedHandler customAccessDeniedHandler;
+        private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+        private final CustomUserDetailsService customUserDetailsService;
 
-    @org.springframework.beans.factory.annotation.Value("${app.cors.allowedOrigins:http://localhost:5173}")
-    private List<String> allowedOrigins;
+        @org.springframework.beans.factory.annotation.Value("${app.cors.allowedOrigins:http://localhost:5173}")
+        private List<String> allowedOrigins;
     public static final String[] PUBLIC_URLS = {
             "/api/v1/auth/login",
             "/api/v1/auth/register",
             "/api/v1/auth/refresh",
+        "/api/v1/upload",
             "/products",
             "/genre/list",
             "/productdetail/**",
@@ -57,90 +58,85 @@ public class SecurityConfig {
             "/api/v1/reviews/**"
     };
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http
-                .csrf(csrf -> csrf.disable())
-                .cors(Customizer.withDefaults())
+                http
+                                .csrf(csrf -> csrf.disable())
+                                .cors(Customizer.withDefaults())
 
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                .authorizeHttpRequests(req -> req
-                        .requestMatchers(PUBLIC_URLS).permitAll()
-                        .requestMatchers("/api/v1/cart/**").hasRole("USER")
-                        .requestMatchers("/api/v1/voucher/available/**").hasRole("CUSTOMER")
+                                .authorizeHttpRequests(req -> req
+                                                .requestMatchers(PUBLIC_URLS).permitAll()
+                                                .anyRequest().authenticated())
 
-                        .requestMatchers("/api/v1/vouchers/**")
-                        .hasAnyRole("SUPER_ADMIN", "ADMIN", "VOUCHER")
-                        .anyRequest().authenticated())
+                                .exceptionHandling(ex -> ex
+                                                .accessDeniedHandler(customAccessDeniedHandler)
+                                                .authenticationEntryPoint(customAuthenticationEntryPoint))
 
-                .exceptionHandling(ex -> ex
-                        .accessDeniedHandler(customAccessDeniedHandler)
-                        .authenticationEntryPoint(customAuthenticationEntryPoint))
+                                .logout(logout -> logout.disable())
 
-                .logout(logout -> logout.disable())
+                                .addFilterBefore(jwtAuthenticationFilter,
+                                                UsernamePasswordAuthenticationFilter.class);
 
-                .addFilterBefore(jwtAuthenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class);
+                return http.build();
+        }
 
-        return http.build();
-    }
+        // ================= CORS CONFIG =================
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
 
-    // ================= CORS CONFIG =================
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+                CorsConfiguration config = new CorsConfiguration();
 
-        CorsConfiguration config = new CorsConfiguration();
+                config.setAllowedOrigins(allowedOrigins);
 
-        config.setAllowedOrigins(allowedOrigins);
+                config.setAllowedMethods(List.of(
+                                "GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
-        config.setAllowedMethods(List.of(
-                "GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                config.setAllowedHeaders(List.of(
+                                "Authorization",
+                                "Content-Type",
+                                "Accept"));
 
-        config.setAllowedHeaders(List.of(
-                "Authorization",
-                "Content-Type",
-                "Accept"));
+                config.setExposedHeaders(List.of(
+                                "Authorization"));
 
-        config.setExposedHeaders(List.of(
-                "Authorization"));
+                config.setAllowCredentials(true);
+                config.setMaxAge(3600L);
 
-        config.setAllowCredentials(true);
-        config.setMaxAge(3600L);
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", config);
 
-        source.registerCorsConfiguration("/**", config);
+                return source;
+        }
 
-        return source;
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public RestTemplate restTemplate() {
+                return new RestTemplate();
+        }
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
+        @Bean
+        public ObjectMapper objectMapper() {
+                return new ObjectMapper();
+        }
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
+        @Bean
+        public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+                AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
 
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+                builder
+                                .userDetailsService(customUserDetailsService)
+                                .passwordEncoder(passwordEncoder());
 
-        builder
-                .userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEncoder());
-
-        return builder.build();
-    }
+                return builder.build();
+        }
 
 }

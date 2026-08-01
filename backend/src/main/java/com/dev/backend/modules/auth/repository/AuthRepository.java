@@ -10,10 +10,10 @@ import java.util.Optional;
 @Repository
 public interface AuthRepository extends JpaRepository<User, Long> {
 
-    @EntityGraph(attributePaths = {"userRoles", "userRoles.role"})
+
     Optional<User> findByEmail(String email);
 
-    @EntityGraph(attributePaths = {"userRoles", "userRoles.role"})
+
     Optional<User> findById(Long id);
 
     Boolean existsByEmail(String email);

@@ -7,11 +7,11 @@ import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
 import com.dev.backend.modules.auth.dto.LoginRequest;
 import com.dev.backend.modules.auth.dto.RefreshTokenRequest;
 import com.dev.backend.modules.auth.dto.RegisterRequest;
-import com.dev.backend.modules.auth.dto.UpdateProfileRequest;
 import com.dev.backend.modules.auth.repository.AuthRepository;
 import com.dev.backend.modules.auth.service.AuthService;
 import com.dev.backend.modules.role.entity.Role;
 import com.dev.backend.modules.role.repository.RoleRepository;
+import com.dev.backend.modules.user.dto.UserRequest;
 import com.dev.backend.modules.user.dto.UserResponse;
 import com.dev.backend.modules.user.entity.User;
 import com.dev.backend.modules.user.mapper.UserMapper;
@@ -159,25 +159,17 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public UserResponse updateProfile(Long userId, UpdateProfileRequest request) {
+    public UserResponse updateProfile(Long userId, UserRequest request) {
         User user = authRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
 
-        if (request.getFullName() != null) {
-            user.setFullName(request.getFullName());
-        }
-        if (request.getPhone() != null) {
-            user.setPhone(request.getPhone());
-        }
-        if (request.getAvatarUrl() != null) {
-            user.setAvatarUrl(request.getAvatarUrl());
-        }
-        if (request.getStreet() != null) {
-            user.setStreet(request.getStreet());
-        }
+        user.setFullName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPhone(request.getPhone());
+        user.setStreet(request.getStreet());
+        user.setAvatarUrl(request.getAvatarUrl());
 
-        User updatedUser = authRepository.save(user);
-        return userMapper.toResponse(updatedUser);
+        return userMapper.toResponse(authRepository.save(user));
     }
 
     @Override

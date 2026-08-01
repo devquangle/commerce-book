@@ -57,7 +57,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // Fetch basic user to check token version (1 simple query, no joins needed)
                 User user = authRepository.findById(userId).orElse(null);
 
-                if (user == null || !jwtUtil.isTokenVersionValid(token, user.getTokenVersion())) {
+                if (user == null) {
+                    log.debug("Invalid JWT: User not found");
+                    chain.doFilter(request, response);
+                    return;
+                }
+                
+                if (!jwtUtil.isTokenVersionValid(token, user.getTokenVersion())) {
+                    log.debug("Invalid JWT: Token version mismatch");
                     chain.doFilter(request, response);
                     return;
                 }
@@ -79,8 +86,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 authentication.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request));
+log.info("Authorization: {}", authHeader);
 
+log.info("Token: {}", token);
+
+log.info("Valid: {}", jwtUtil.isValid(token, JwtType.ACCESS));
+
+log.info("UserId: {}", jwtUtil.extractUserId(token));
+
+log.info("Role: {}", jwtUtil.extractRole(token));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                
             }
 
         } catch (Exception e) {

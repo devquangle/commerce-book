@@ -7,8 +7,8 @@ import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
 import com.dev.backend.modules.auth.dto.LoginRequest;
 import com.dev.backend.modules.auth.dto.RefreshTokenRequest;
 import com.dev.backend.modules.auth.dto.RegisterRequest;
-import com.dev.backend.modules.auth.dto.UpdateProfileRequest;
 import com.dev.backend.modules.auth.service.AuthService;
+import com.dev.backend.modules.user.dto.UserRequest;
 import com.dev.backend.modules.user.dto.UserResponse;
 import com.dev.backend.security.custom.CustomUserDetails;
 import jakarta.validation.Valid;
@@ -56,14 +56,12 @@ public class AuthController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<UserResponse> updateProfile(
+    public ResponseEntity<ResponseData<UserResponse>> updateProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody UpdateProfileRequest request) {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+            @Valid @RequestBody UserRequest request) {
+      
         UserResponse response = authService.updateProfile(userDetails.getId(), request);
-        return ResponseEntity.ok(response);
+        return ResponseUtil.success("DATA =========", response);
     }
 
     @PutMapping("/change-password")

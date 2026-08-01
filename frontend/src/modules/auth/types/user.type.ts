@@ -7,6 +7,13 @@ export interface UserResponse {
   phone?: string;
   street: string;
   role: RoleType;
-  avatar?: string;
+  avatarUrl?: string;
 }
     
+export interface UserRequest {
+  email: string;
+  name: string;
+  phone?: string;
+  street: string;
+  avatarUrl?: string;
+}

@@ -33,7 +33,7 @@
 }
 
 @utility body-text {
-  @apply text-sm md:text-base lg:text-lg;
+  @apply text-sm lg:text-base;
 }
 
 @utility caption-text {

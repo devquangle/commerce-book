@@ -1,21 +1,24 @@
 package com.dev.backend.modules.user.dto;
 
+import org.aspectj.weaver.ast.Not;
+
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class UserRequest {
-    private String username;
+    @NotBlank(message="Email không được bỏ trống.")
     private String email;
-    private String password;
-    private String fullName;
+    private String name;
     private String phone;
-    private String avatarUrl;
     private String street;
-    private String status;
+    private String avatarUrl;
 }
