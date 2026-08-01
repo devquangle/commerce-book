@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ProductHeader } from "./components/ProductHeader";
 import { ProductFilter } from "./components/ProductFilter";
 import { ProductTable } from "./components/ProductTable";

@@ -2,13 +2,13 @@ export const ProductSkeleton = () => {
   return (
     <div className="card-custom overflow-hidden flex flex-col mb-6 animate-pulse">
       <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left table-fixed min-w-[900px]">
+        <table className="w-full text-sm text-left table-fixed min-w-255">
           <thead className="bg-slate-50/50 border-b border-slate-200">
             <tr className="text-slate-500">
               <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider w-12 text-center">
                 STT
               </th>
-              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider w-[280px]">
+              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider w-70">
                 Thông tin sản phẩm 
               </th>
               <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider w-[15%]">
@@ -35,7 +35,7 @@ export const ProductSkeleton = () => {
                 </td>
                 <td className="py-3 px-4">
                   <div className="flex gap-3 items-center">
-                    <div className="w-[60px] h-[86px] rounded-xl bg-slate-200 flex-shrink-0"></div>
+                    <div className="w-15 h-21.5 rounded-xl bg-slate-200 shrink-0"></div>
                     <div className="flex-1 flex flex-col gap-1.5">
                       <div className="flex flex-col gap-1">
                         <div className="h-3.5 bg-slate-200 rounded w-full"></div>
@@ -78,7 +78,7 @@ export const ProductMobileSkeleton = () => {
   return (
     <div className="card-custom p-4 flex flex-col gap-3 animate-pulse">
       <div className="flex items-start gap-3">
-        <div className="w-[60px] h-[86px] rounded-xl bg-slate-200 flex-shrink-0"></div>
+        <div className="w-15 h-21.5 rounded-xl bg-slate-200 shrink-0"></div>
         <div className="flex-1 min-w-0 flex flex-col gap-1.5">
           <div className="flex flex-col gap-1">
             <div className="h-3.5 bg-slate-200 rounded w-full"></div>

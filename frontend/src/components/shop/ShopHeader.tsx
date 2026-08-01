@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Menu, Store } from "lucide-react";
-import { ThemeToggle } from "../admin/ThemeToggle"; // Reusing the admin one for now
 import { ShopUserMenu } from "./ShopUserMenu";
 
 const ShopSidebarToggle = () => {
@@ -38,7 +37,6 @@ export const ShopHeader: React.FC = () => {
             </Link>
           </div>
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             <ShopUserMenu />
           </div>
         </div>

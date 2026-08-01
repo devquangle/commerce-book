@@ -47,7 +47,7 @@ const ProfileLayout = () => {
 
       {/* Right Content - 9 columns */}
       <div className="col-span-12 md:col-span-9">
-        <div className="card-custom min-h-[400px] h-full">
+        <div className="card-custom min-h-100 h-full">
           <Outlet />
         </div>
       </div>

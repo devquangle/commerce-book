@@ -43,7 +43,7 @@ export const AuthorMobileCard: React.FC<AuthorMobileCardProps> = ({
                   unoptimized
                 />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-sm shrink-0">
+                <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-sm shrink-0">
                   {author.name.charAt(0)}
                 </div>
               )}

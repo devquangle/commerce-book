@@ -11,7 +11,7 @@ export const ProductMobileCard: React.FC<ProductMobileCardProps> = ({ product, o
   return (
     <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 shadow-sm flex flex-col gap-3">
       <div className="flex items-start gap-3">
-        <div className="w-16 h-16 rounded-xl bg-zinc-100 dark:bg-zinc-800 overflow-hidden flex-shrink-0">
+        <div className="w-16 h-16 rounded-xl bg-zinc-100 dark:bg-zinc-800 overflow-hidden shrink-0">
           {product.urlImageDefault ? (
             <img src={product.urlImageDefault} alt={product.name} className="w-full h-full object-cover" />
           ) : (

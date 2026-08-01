@@ -81,14 +81,14 @@ export const UserHeader: React.FC = () => {
       {/* Mobile Offcanvas Backdrop */}
       {isMobileMenuOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
+          className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-60"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
 
       {/* Mobile Offcanvas Drawer */}
       <div
-        className={`md:hidden fixed top-0 left-0 h-full w-[85vw] max-w-sm bg-white dark:bg-zinc-950 z-[70] transform transition-transform duration-300 ease-in-out shadow-2xl flex flex-col ${
+        className={`md:hidden fixed top-0 left-0 h-full w-[85vw] max-w-sm bg-white dark:bg-zinc-950 z-70 transform transition-transform duration-300 ease-in-out shadow-2xl flex flex-col ${
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
