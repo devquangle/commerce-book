@@ -30,7 +30,7 @@ export const ShopSidebar: React.FC = () => {
       icon: PieChart,
     },
     {
-      label: "Sản phẩm của tôi",
+      label: "Quản lý sản phẩm",
       href: "/shop/products",
       icon: Package,
     },

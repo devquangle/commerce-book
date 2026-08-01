@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Edit2, Trash2, ExternalLink, Link2 } from "lucide-react";
-import Image from "next/image";
 import { AuthorResponse, getLabelAuthorStatus } from "../types/author.type";
 
 interface AuthorTableProps {

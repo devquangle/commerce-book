@@ -4,7 +4,7 @@ import ShopLayout from "@/layouts/ShopLayout";
 
 // Lazy-loaded pages
 const ShopDashboard = lazy(() => import("@/modules/shop/pages/ShopDashboard"));
-const ShopProducts = lazy(() => import("@/modules/shop/pages/ShopProducts"));
+const ShopProductPage = lazy(() => import("@/modules/shop/product/ShopProductPage"));
 const ShopOrders = lazy(() => import("@/modules/shop/pages/ShopOrders"));
 const ShopOrderDetail = lazy(() => import("@/modules/shop/pages/ShopOrderDetail"));
 const ShopRevenue = lazy(() => import("@/modules/shop/pages/ShopRevenue"));
@@ -23,7 +23,7 @@ export const ShopRoutes: React.FC = () => {
       <Suspense fallback={<ShopFallback />}>
         <Routes>
           <Route index element={<ShopDashboard />} />
-          <Route path="products" element={<ShopProducts />} />
+          <Route path="products" element={<ShopProductPage />} />
           <Route path="inventory" element={<ShopInventory />} />
           <Route path="orders" element={<ShopOrders />} />
           <Route path="orders/:id" element={<ShopOrderDetail />} />
