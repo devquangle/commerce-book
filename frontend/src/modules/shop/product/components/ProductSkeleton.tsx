@@ -1,6 +1,6 @@
 export const ProductSkeleton = () => {
   return (
-    <div className="card-custom overflow-hidden flex flex-col mb-6 animate-pulse">
+    <div className="card-custom overflow-hidden flex flex-col animate-pulse">
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left table-fixed min-w-255">
           <thead className="bg-slate-50/50 border-b border-slate-200">

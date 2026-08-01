@@ -9,7 +9,7 @@ export const AuthorHeader: React.FC<AuthorHeaderProps> = ({
   onAddAuthor,
 }) => {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="card-custom flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <div>
         <h1 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">
           Quản lý tác giả

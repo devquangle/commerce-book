@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export const ProductHeader = () => {
   return (
-    <div className="card-custom flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <div className="card-custom flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <div>
         <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Sản phẩm</h1>
         <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Quản lý danh sách sản phẩm của cửa hàng</p>

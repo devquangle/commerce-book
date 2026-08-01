@@ -74,7 +74,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
   };
 
   return (
-    <div className="card-custom overflow-hidden flex flex-col mb-6">
+    <div className="card-custom overflow-hidden flex flex-col">
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left table-fixed min-w-255">
           <thead className="bg-slate-50/50 dark:bg-zinc-800/50 border-b border-slate-200 dark:border-zinc-800">

@@ -2,10 +2,7 @@
 
 import React from "react";
 import { useForm } from "react-hook-form";
-import {
-  AuthorRequest,
-  AuthorResponse,
-} from "../types/author.type";
+
 import {
   Modal,
   InputField,
@@ -13,6 +10,7 @@ import {
   TextAreaField,
   Button,
 } from "@/components/common";
+import type { AuthorRequest, AuthorResponse } from "../types/author.type";
 
 interface AuthorModalProps {
   isOpen: boolean;

@@ -25,8 +25,7 @@ export const AuthorFilter: React.FC<AuthorFilterProps> = ({
   ];
 
   return (
-    <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 space-y-3 shadow-sm">
-      <div className="flex flex-col md:flex-row gap-3">
+    <div className="card-custom flex flex-col sm:flex-row gap-4">
         {/* Search Bar */}
         <div className="relative flex-1">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
@@ -74,7 +73,6 @@ export const AuthorFilter: React.FC<AuthorFilterProps> = ({
             </button>
           )}
         </div>
-      </div>
     </div>
   );
 };

@@ -258,7 +258,7 @@ const ShopProducts = () => {
   };
 
   return (
-    <div className="w-full h-full bg-zinc-50/50 dark:bg-zinc-950/50">
+    <div className="flex flex-col gap-6 w-full min-h-full pb-6">
       <ProductHeader />
       <ProductFilter 
         keyword={keyword}
