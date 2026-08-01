@@ -1,6 +1,8 @@
-package com.dev.backend.modules.auth.service.impl;
+package com.dev.backend.modules.auth.service;
 
 import com.dev.backend.common.constant.JwtType;
+import com.dev.backend.common.exception.BadRequestException;
+import com.dev.backend.common.exception.DuplicateFieldException;
 import com.dev.backend.common.exception.UnauthorizedException;
 import com.dev.backend.modules.auth.dto.LoginResponse;
 import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
@@ -8,7 +10,6 @@ import com.dev.backend.modules.auth.dto.LoginRequest;
 import com.dev.backend.modules.auth.dto.RefreshTokenRequest;
 import com.dev.backend.modules.auth.dto.RegisterRequest;
 import com.dev.backend.modules.auth.repository.AuthRepository;
-import com.dev.backend.modules.auth.service.AuthService;
 import com.dev.backend.modules.role.entity.Role;
 import com.dev.backend.modules.role.repository.RoleRepository;
 import com.dev.backend.modules.user.dto.UserRequest;
@@ -30,6 +31,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 @Slf4j
@@ -177,12 +179,19 @@ public class AuthServiceImpl implements AuthService {
     public void changePassword(Long userId, ChangePasswordRequest request) {
         User user = authRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+        DuplicateFieldException errors = new DuplicateFieldException(new HashMap<>());
 
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
-            throw new RuntimeException("Mật khẩu cũ không chính xác");
+            errors.addError("oldPassword", "Mật khẩu cũ không đúng.");
         }
-
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new BadRequestException("Mật khẩu xác nhận không khớp.");
+        }
+        if (!errors.getErrors().isEmpty()) {
+            throw errors;
+        }
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+
         int currentVersion = user.getTokenVersion() == null ? 0 : user.getTokenVersion();
         user.setTokenVersion(currentVersion + 1);
 

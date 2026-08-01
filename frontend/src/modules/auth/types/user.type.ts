@@ -17,3 +17,9 @@ export interface UserRequest {
   street: string;
   avatarUrl?: string;
 }
+
+export interface ChangePasswordRequest {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}

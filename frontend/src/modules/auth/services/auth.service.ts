@@ -2,7 +2,7 @@ import { authAxios, publicAxios } from "@/libs/config/axios.config";
 import type { LoginRequest, LoginResponse } from "../types/login.type";
 
 import type { ApiResponse } from "@/libs/utils/api-response";
-import type { UserResponse } from "../types/user.type";
+import type { UserRequest, UserResponse, ChangePasswordRequest } from "../types/user.type";
 
 export const AuthService = {
   login: async (request: LoginRequest): Promise<LoginResponse> => {
@@ -25,12 +25,23 @@ export const AuthService = {
     console.log("getUser data:", response.data.data); // Log the user data for debugging
     return response.data.data;
   },
-  updateUser: async (userData: FormData): Promise<UserResponse | null> => {
+  updateUser: async (request: UserRequest): Promise<UserResponse | null> => {
     const response =
-      await authAxios.put<ApiResponse<UserResponse>>("/api/v1/auth/me", userData);
+      await authAxios.put<ApiResponse<UserResponse>>("/api/v1/auth/me", request);
+      console.log("updateUser request:", request); // Log the request data for debugging
+      console.log("updateUser response:", response.data); // Log the entire response for debugging
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message || "Failed to update user data");
     }
     return response.data.data;
+  },
+  changePassword: async (request: ChangePasswordRequest): Promise<void> => {
+    const response = await authAxios.put<ApiResponse<void>>(
+      "/api/v1/auth/change-password",
+      request
+    );
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Failed to change password");
+    }
   }
 };

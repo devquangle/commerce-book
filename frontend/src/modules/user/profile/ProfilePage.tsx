@@ -10,6 +10,9 @@ import UploadImageService from "@/services/upload-image.service";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Button } from "@/components/common/Button";
+import { ChangePassModal } from "./components/ChangePassModal";
+
 const Profile = () => {
   const { userInfo, setUserInfo } = useAuth();
   const queryClient = useQueryClient();
@@ -34,6 +37,7 @@ const Profile = () => {
     userInfo?.avatarUrl || "/images/default-avatar.png",
   );
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [isChangePassModalOpen, setIsChangePassModalOpen] = useState(false);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -46,28 +50,19 @@ const Profile = () => {
   const onSubmit = async (data: UserRequest) => {
     try {
       setIsLoading(true);
-
+      console.log("Submitting data:", data); // Log the data being submitted
       const updatedData = { ...data };
       if (avatarFile) {
         const imageUrl = await UploadImageService.uploadImage(avatarFile);
         updatedData.avatarUrl = imageUrl;
+        setAvatar(imageUrl);
       }
 
-      const formData = new FormData();
-      formData.append(
-        "profile",
-        new Blob([JSON.stringify(updatedData)], { type: "application/json" }),
-      );
-
-      console.log("Submitting form data:", updatedData); // Log the data being submitted
-
-      const userRes = await AuthService.updateUser(formData);
+      const userRes = await AuthService.updateUser(updatedData);
 
       if (userRes) {
         showSuccessToast("Cập nhật thông tin thành công");
         setUserInfo(userRes);
-        console.log(userInfo);
-        
         queryClient.setQueryData(["auth", "me"], userRes);
       }
     } catch (error: unknown) {
@@ -142,15 +137,13 @@ const Profile = () => {
             />
 
             {/* Submit */}
-            <button
+            <Button
               type="submit"
-              disabled={isLoading}
-              className={`w-full lg:w-auto  cursor-pointer px-4 py-2 rounded text-white ${
-                isLoading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
-              }`}
+              isLoading={isLoading}
+              className="w-full lg:w-auto"
             >
-              {isLoading ? "Đang lưu..." : "Lưu thay đổi"}
-            </button>
+              Lưu thay đổi
+            </Button>
           </form>
         </div>
 
@@ -217,11 +210,20 @@ const Profile = () => {
             />
           </label>
 
-          <button className="w-full lg:w-auto px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => setIsChangePassModalOpen(true)}
+            className="w-full lg:w-auto"
+          >
             Đổi mật khẩu
-          </button>
+          </Button>
         </div>
       </div>
+      <ChangePassModal
+        isOpen={isChangePassModalOpen}
+        onClose={() => setIsChangePassModalOpen(false)}
+      />
     </div>
   );
 };

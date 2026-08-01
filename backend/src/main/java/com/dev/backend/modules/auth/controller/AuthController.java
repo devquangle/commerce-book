@@ -59,20 +59,18 @@ public class AuthController {
     public ResponseEntity<ResponseData<UserResponse>> updateProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody UserRequest request) {
-      
+
         UserResponse response = authService.updateProfile(userDetails.getId(), request);
         return ResponseUtil.success("DATA =========", response);
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<Void> changePassword(
+    public ResponseEntity<ResponseData<Void>> changePassword(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody ChangePasswordRequest request) {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+
         authService.changePassword(userDetails.getId(), request);
-        return ResponseEntity.ok().build();
+        return ResponseUtil.success("DATA =========", null);
     }
 
     @PostMapping("/logout")

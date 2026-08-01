@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export interface InputFieldProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -27,7 +28,11 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
     },
     ref
   ) => {
+    const [showPassword, setShowPassword] = useState(false);
     const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
+    
+    const isPasswordType = props.type === "password";
+    const inputType = isPasswordType ? (showPassword ? "text" : "password") : props.type;
 
     return (
       <div className={`space-y-1.5 ${containerClassName}`}>
@@ -52,13 +57,24 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             id={inputId}
             className={`w-full px-3.5 py-2 body-text bg-zinc-50 dark:bg-zinc-800/60 border rounded-xl focus:outline-none transition-all text-zinc-900 dark:text-white placeholder-zinc-400 ${
               icon ? "pl-10" : ""
-            } ${
+            } ${isPasswordType ? "pr-10" : ""} ${
               error
                 ? "border-red-500 focus:ring-2 focus:ring-red-500/20"
                 : "border-zinc-200 dark:border-zinc-700/80 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
             } ${className}`}
             {...props}
+            type={inputType}
           />
+          
+          {isPasswordType && (
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 focus:outline-none"
+            >
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
+          )}
         </div>
 
         {error ? (

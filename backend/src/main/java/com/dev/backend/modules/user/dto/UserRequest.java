@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRequest {
-    @NotBlank(message="Email không được bỏ trống.")
+   
     private String email;
     private String name;
     private String phone;
