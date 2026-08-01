@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { SidebarToggle } from "./SidebarToggle";
-import { ThemeToggle } from "./ThemeToggle";
 import { UserMenu } from "./UserMenu";
 
 export const AdminHeader: React.FC = () => {
@@ -24,7 +23,6 @@ export const AdminHeader: React.FC = () => {
             </Link>
           </div>
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             <UserMenu />
           </div>
         </div>
