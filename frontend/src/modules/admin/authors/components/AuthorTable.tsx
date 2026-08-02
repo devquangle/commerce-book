@@ -61,7 +61,7 @@ export const AuthorTable: React.FC<AuthorTableProps> = ({
               <th className="px-4 py-4 w-14 text-center">STT</th>
               <th className="px-6 py-4 w-[35%]">Tác giả</th>
               <th className="px-6 py-4 w-[35%]">Mô tả</th>
-              <th className="px-6 py-4 w-[15%]">Trạng thái</th>
+              <th className="px-6 py-4 w-[20%]">Trạng thái</th>
               <th className="px-6 py-4 text-right w-24"></th>
             </tr>
           </thead>
@@ -100,12 +100,12 @@ export const AuthorTable: React.FC<AuthorTableProps> = ({
                               href={author.urlBio}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 body-text text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium hover:underline px-1.5 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/50"
+                              className="inline-flex items-center gap-1 caption-text text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium hover:underline px-1.5 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/50"
                               title="Xem tiểu sử (Bio)"
                             >
                               <Link2 className="w-3 h-3" />
                               <span>Bio</span>
-                              <ExternalLink className="w-2.5 h-2.5" />
+                              <ExternalLink className="w-3 h-3" />
                             </a>
                           )}
                         </div>

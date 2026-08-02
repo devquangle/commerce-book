@@ -79,25 +79,25 @@ export const ProductTable: React.FC<ProductTableProps> = ({
         <table className="w-full text-sm text-left table-fixed min-w-255">
           <thead className="bg-slate-50/50 dark:bg-zinc-800/50 border-b border-slate-200 dark:border-zinc-800">
             <tr className="text-slate-500 dark:text-zinc-400">
-              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider w-12 text-center">
+              <th className="py-3 px-4 font-semibold body-text uppercase tracking-wider w-12 text-center">
                 STT
               </th>
-              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider min-w-60">
+              <th className="py-3 px-4 font-semibold body-text uppercase tracking-wider min-w-60">
                 Thông tin sản phẩm 
               </th>
-              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider w-28">
+              <th className="py-3 px-4 font-semibold body-text uppercase tracking-wider w-28">
                 Giá nhập
               </th>
-              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider w-28">
+              <th className="py-3 px-4 font-semibold body-text uppercase tracking-wider w-28">
                 Giá bán
               </th>
-              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider w-24 text-center">
+              <th className="py-3 px-4 font-semibold body-text uppercase tracking-wider w-24 text-center">
                 Tồn kho
               </th>
-              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider w-40">
+              <th className="py-3 px-4 font-semibold body-text uppercase tracking-wider w-40">
                 Trạng thái
               </th>
-              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider text-right w-16">
+              <th className="py-3 px-4 font-semibold body-text uppercase tracking-wider text-right w-16">
               </th>
             </tr>
           </thead>

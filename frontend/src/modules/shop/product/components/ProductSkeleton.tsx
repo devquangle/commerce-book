@@ -5,25 +5,25 @@ export const ProductSkeleton = () => {
         <table className="w-full text-sm text-left table-fixed min-w-255">
           <thead className="bg-slate-50/50 border-b border-slate-200">
             <tr className="text-slate-500">
-              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider w-12 text-center">
+              <th className="py-3 px-4 font-semibold body-text uppercase tracking-wider w-12 text-center">
                 STT
               </th>
-              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider w-70">
+              <th className="py-3 px-4 font-semibold body-text uppercase tracking-wider w-70">
                 Thông tin sản phẩm 
               </th>
-              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider w-[15%]">
+              <th className="py-3 px-4 font-semibold body-text uppercase tracking-wider w-[15%]">
                 Giá nhập
               </th>
-              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider w-[15%]">
+              <th className="py-3 px-4 font-semibold body-text uppercase tracking-wider w-[15%]">
                 Giá bán
               </th>
-              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider w-[12%] text-center">
+              <th className="py-3 px-4 font-semibold body-text uppercase tracking-wider w-[12%] text-center">
                 Tồn kho
               </th>
-              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider w-[20%]">
+              <th className="py-3 px-4 font-semibold body-text uppercase tracking-wider w-[20%]">
                 Trạng thái
               </th>
-              <th className="py-3 px-4 font-semibold text-xs uppercase tracking-wider text-right w-14">
+              <th className="py-3 px-4 font-semibold body-text uppercase tracking-wider text-right w-14">
               </th>
             </tr>
           </thead>
