@@ -93,7 +93,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                 value: opt,
               }))}
               containerClassName="!space-y-0 w-[72px]"
-              className="!px-2 !py-1.5 !min-h-0"
+              className="px-2! py-1.5! min-h-0!"
               openDirection="up"
             />
           </div>

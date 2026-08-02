@@ -52,7 +52,7 @@ const GenreModalContent: React.FC<GenreModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={genre ? "Cập nhật thể loại" : "Thêm thể loại mới"}
+      title={genre ? "Cập nhật" : "Thêm mới"}
       size="md"
       footer={
         <div className="flex items-center justify-end gap-3 w-full">

@@ -23,7 +23,7 @@ export const GenreHeader: React.FC<GenreHeaderProps> = ({
         className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl font-medium text-sm transition-all shadow-sm shadow-blue-500/20 cursor-pointer"
       >
         <Plus className="w-4 h-4" />
-        <span>Thêm thể loại mới</span>
+        <span>Thêm mới</span>
       </button>
     </div>
   );
