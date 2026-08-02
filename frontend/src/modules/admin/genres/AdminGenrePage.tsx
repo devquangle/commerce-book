@@ -17,7 +17,6 @@ import type { GenreResponse, GenreRequest } from "./types/genre.type";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Pagination } from "@/components/common/Pagination";
 import type { UseFormSetError } from "react-hook-form";
-import { showErrorToast } from "@/libs/utils/toastUtil";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
 
 const AdminGenrePage = () => {

@@ -7,7 +7,7 @@ import Spinner from "@/components/common/Spinner";
 const AdminDashboard = lazy(() => import("@/modules/admin/pages/AdminDashboard"));
 const AdminProducts = lazy(() => import("@/modules/admin/pages/AdminProducts"));
 const AdminStores = lazy(() => import("@/modules/admin/pages/AdminStores"));
-const AdminSeries = lazy(() => import("@/modules/admin/pages/AdminSeries"));
+const AdminSeriesPage = lazy(() => import("@/modules/admin/series/AdminSeriesPage"));
 const AdminGenrePage = lazy(() => import("@/modules/admin/genres/AdminGenrePage"));
 const AdminAuthorPage = lazy(() => import("@/modules/admin/authors/AdminAuthorPage"));
 const AdminPublisherPage = lazy(() => import("@/modules/admin/publishers/AdminPublisherPage"));
@@ -26,7 +26,7 @@ export const AdminRoutes: React.FC = () => {
           <Route index element={<AdminDashboard />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="stores" element={<AdminStores />} />
-          <Route path="series" element={<AdminSeries />} />
+          <Route path="series" element={<AdminSeriesPage />} />
           <Route path="genres" element={<AdminGenrePage />} />
           <Route path="authors" element={<AdminAuthorPage />} />
           <Route path="publishers" element={<AdminPublisherPage />} />

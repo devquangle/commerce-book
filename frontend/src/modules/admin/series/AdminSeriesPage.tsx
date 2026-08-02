@@ -120,8 +120,11 @@ const AdminSeriesPage = () => {
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
-            {seriesList.map((series) => (
+            {seriesList.map((series,index) => (
               <SeriesMobileCard
+                index={index}
+                page={page}
+                pageSize={size}
                 key={series.id}
                 series={series}
                 onEdit={handleEditSeries}

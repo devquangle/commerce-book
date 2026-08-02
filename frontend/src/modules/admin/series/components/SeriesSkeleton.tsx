@@ -6,8 +6,7 @@ export const SeriesSkeleton = () => {
           <thead className="bg-zinc-50 dark:bg-zinc-800/40 text-xs uppercase font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider">
             <tr>
               <th className="px-4 py-4 w-14 text-center">STT</th>
-              <th className="px-6 py-4 w-[35%]">Tác giả</th>
-              <th className="px-6 py-4 w-[35%]">Mô tả</th>
+              <th className="px-6 py-4 w-[75%]">Tên series</th>
               <th className="px-6 py-4 w-[15%]">Trạng thái</th>
               <th className="px-6 py-4 text-right w-24"></th>
             </tr>
@@ -27,10 +26,7 @@ export const SeriesSkeleton = () => {
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4">
-                  <div className="h-3 bg-zinc-200 dark:bg-zinc-700 rounded w-full mb-1"></div>
-                  <div className="h-3 bg-zinc-200 dark:bg-zinc-700 rounded w-3/4"></div>
-                </td>
+
                 <td className="px-6 py-4">
                   <div className="h-6 bg-zinc-200 dark:bg-zinc-700 rounded-lg w-24"></div>
                 </td>
