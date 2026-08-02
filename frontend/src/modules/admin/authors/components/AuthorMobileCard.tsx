@@ -27,7 +27,7 @@ export const AuthorMobileCard: React.FC<AuthorMobileCardProps> = ({
   const stt = page * pageSize + index + 1;
 
   return (
-    <div className="p-4 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 space-y-3 shadow-sm relative">
+    <div className="card-custom space-y-3 relative">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           {author.urlImage ? (

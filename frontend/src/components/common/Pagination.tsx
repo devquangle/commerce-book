@@ -52,7 +52,7 @@ export const Pagination: React.FC<PaginationProps> = ({
     : undefined;
 
   return (
-    <div className="flex flex-row items-center justify-between gap-2 sm:gap-4 py-2 px-1 w-full body-text">
+    <div className="flex flex-row items-center justify-between gap-2 sm:gap-4 py-2 px-1 w-full caption-text">
       {/* Left side: Page Info Text */}
       <div className="flex items-center text-zinc-500 dark:text-zinc-400">
         {totalElements !== undefined && startElement && endElement ? (
