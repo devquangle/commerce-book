@@ -87,12 +87,12 @@ const AdminGenrePage = () => {
       setSelectedGenre(null);
       setIsModalOpen(false);
     } catch (error: unknown) {
-      mapServerErrors(error, setError, showErrorToast);
+      mapServerErrors(error, setError);
     }
   };
 
   return (
-    <div className="flex flex-col gap-6 w-full min-h-full pb-6">
+    <div className="flex flex-col gap-6 w-full min-h-full">
       <GenreHeader onAddGenre={handleAddGenre} />
 
       <GenreFilter

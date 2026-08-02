@@ -85,7 +85,7 @@ const AdminAuthorPage = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 w-full min-h-full pb-6">
+    <div className="flex flex-col gap-6 w-full min-h-full">
       <AuthorHeader onAddAuthor={handleAddAuthor} />
 
       <AuthorFilter

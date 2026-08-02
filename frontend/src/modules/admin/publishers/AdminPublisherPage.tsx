@@ -96,7 +96,7 @@ const AdminPublisherPage = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 w-full min-h-full pb-6">
+    <div className="flex flex-col gap-6 w-full min-h-full">
       <PublisherHeader onAddPublisher={handleAddPublisher} />
 
       <PublisherFilter
