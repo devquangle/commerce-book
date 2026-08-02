@@ -16,7 +16,8 @@ public interface AuthorService {
 
     AuthorResponse update(Long id, AuthorRequest request);
 
-    void deleteAuthor(Long id);
+
+    void delete(Long id);
 
     void insertData();
 

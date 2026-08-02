@@ -13,7 +13,7 @@ interface AuthorTableProps {
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (size: number) => void;
   onEdit: (author: AuthorResponse) => void;
-  onDelete: (authorId: number) => void;
+  onDelete: (author: AuthorResponse) => void;
 }
 
 const ExpandableDescription: React.FC<{ text?: string }> = ({ text }) => {
@@ -86,7 +86,7 @@ export const AuthorTable: React.FC<AuthorTableProps> = ({
                           className="w-10 h-10 rounded-full object-cover shadow-sm border border-zinc-200 dark:border-zinc-700"
                         />
                       ) : (
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-sm shrink-0">
+                        <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-sm shrink-0">
                           {author.name.charAt(0)}
                         </div>
                       )}

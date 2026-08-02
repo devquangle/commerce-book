@@ -8,9 +8,11 @@ import {
   AuthorMobileSkeleton,
 } from "./components/AuthorSkeleton";
 import { AuthorModal } from "./components/AuthorModal";
+import { AuthorDeleteModal } from "./components/AuthorDeleteModal";
 import { useAuthorFilter } from "./hooks/useAuthorFilter";
 import {
   useCreateAuthor,
+  useDeleteAuthor,
   useFilterAuthor,
   useUpdateAuthor,
 } from "./hooks/useAuthor";
@@ -37,10 +39,14 @@ const AdminAuthorPage = () => {
 
   const createMutation = useCreateAuthor();
   const updateMutation = useUpdateAuthor();
+  const deleteMutation = useDeleteAuthor();
+  // TODO: const deleteMutation = useDeleteAuthor();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAuthor, setSelectedAuthor] = useState<AuthorResponse | null>(
     null,
   );
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleAddAuthor = () => {
     setSelectedAuthor(null);
@@ -52,10 +58,18 @@ const AdminAuthorPage = () => {
     setIsModalOpen(true);
   };
 
-  const handleDeleteAuthor = (id: number) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa tác giả này?")) {
-      // TODO: Call API delete author
-      console.log("Delete author id:", id);
+  const handleDeleteAuthor = (author: AuthorResponse) => {
+    setSelectedAuthor(author);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDeleteAuthor = () => {
+    if (selectedAuthor !== null) {
+      // TODO: Call API delete author via mutation
+      console.log("Xóa tác giả ID:", selectedAuthor.id);
+      deleteMutation.mutate(selectedAuthor.id);
+      setSelectedAuthor(null);
+      setIsDeleteModalOpen(false);
     }
   };
 
@@ -65,6 +79,7 @@ const AdminAuthorPage = () => {
     } else {
       createMutation.mutate(authorData);
     }
+    setSelectedAuthor(null);
     setIsModalOpen(false);
   };
 
@@ -130,6 +145,13 @@ const AdminAuthorPage = () => {
           onSave={handleSaveAuthor}
         />
       )}
+
+      <AuthorDeleteModal
+        isOpen={isDeleteModalOpen}
+        author={selectedAuthor}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={confirmDeleteAuthor}
+      />
     </div>
   );
 };

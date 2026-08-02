@@ -1,6 +1,7 @@
 package com.dev.backend.modules.author.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +45,12 @@ public class AuthorController {
             @RequestBody AuthorRequest authorRequest) {
         AuthorResponse response = authorService.update(id, authorRequest);
         return ResponseUtil.success("Cập nhật tác giả thành công.", response);
+    }
+
+    @DeleteMapping("/admin/authors/{id}")
+    public ResponseEntity<ResponseData<Void>> delete(@PathVariable("id") Long id) {
+        authorService.delete(id);
+        return ResponseUtil.success("Xoá tác giả thành công.", null);
     }
 
 }

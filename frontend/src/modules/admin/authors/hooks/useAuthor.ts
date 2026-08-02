@@ -60,3 +60,24 @@ export const useUpdateAuthor = () => {
     },
   });
 };
+
+export const useDeleteAuthor = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: number) => AuthorService.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["authors-filter"] });
+      showSuccessToast("Xóa tác giả thành công!");
+    },
+    onError: (error: unknown) => {
+      let errorMsg = "Đã xảy ra lỗi khi xóa tác giả.";
+      if (axios.isAxiosError(error)) {
+        errorMsg = error.response?.data?.message || error.message || errorMsg;
+      } else if (error instanceof Error) {
+        errorMsg = error.message;
+      }
+      showErrorToast(errorMsg);
+    },
+  });
+};

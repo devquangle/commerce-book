@@ -8,7 +8,7 @@ import { getLabelAuthorStatus, type AuthorResponse } from "../types/author.type"
 interface AuthorMobileCardProps {
   author: AuthorResponse;
   onEdit: (author: AuthorResponse) => void;
-  onDelete: (authorId: number) => void;
+  onDelete: (author: AuthorResponse) => void;
 }
 
 export const AuthorMobileCard: React.FC<AuthorMobileCardProps> = ({
@@ -84,7 +84,7 @@ export const AuthorMobileCard: React.FC<AuthorMobileCardProps> = ({
           <span>Chỉnh sửa</span>
         </button>
         <button
-          onClick={() => onDelete(author.id)}
+          onClick={() => onDelete(author)}
           className="inline-flex items-center justify-center p-2 text-zinc-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-xl transition-colors"
           title="Xóa"
         >

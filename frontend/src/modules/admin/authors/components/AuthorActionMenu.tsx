@@ -5,7 +5,7 @@ import { type AuthorResponse } from "../types/author.type";
 interface AuthorActionMenuProps {
   item: AuthorResponse;
   onEdit: (author: AuthorResponse) => void;
-  onDelete: (id: number) => void;
+  onDelete: (author: AuthorResponse) => void;
 }
 
 export const AuthorActionMenu: React.FC<AuthorActionMenuProps> = ({ item, onEdit, onDelete }) => {
@@ -71,7 +71,7 @@ export const AuthorActionMenu: React.FC<AuthorActionMenuProps> = ({ item, onEdit
           <button 
             onClick={() => {
               setIsOpen(false);
-              onDelete(item.id);
+              onDelete(item);
             }}
             className="flex items-center gap-2 w-full px-3 py-2 text-sm text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-red-600 transition-colors"
           >

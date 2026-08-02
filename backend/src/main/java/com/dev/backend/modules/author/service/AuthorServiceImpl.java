@@ -31,6 +31,7 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
     private final WikipediaService wikipediaService;
+
     @Override
     @Transactional(readOnly = true)
     public List<AuthorResponse> getAllAuthors() {
@@ -63,11 +64,11 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void deleteAuthor(Long id) {
-        if (!authorRepository.existsById(id)) {
-            throw new RuntimeException("Author not found with id: " + id);
-        }
-        authorRepository.deleteById(id);
+    public void delete(Long id) {
+        Author author = authorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
+        author.setStatus(AuthorStatus.DELETED);
+        authorRepository.save(author);
     }
 
     @Override
