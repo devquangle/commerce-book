@@ -65,7 +65,7 @@ export const GenreActionMenu: React.FC<GenreActionMenuProps> = ({ item, onEdit, 
             className="flex items-center gap-2 w-full px-3 py-2 text-sm text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-amber-600 transition-colors"
           >
             <Edit className="w-4 h-4" />
-            <span>Sửa</span>
+            <span>Cập nhật</span>
           </button>
           <div className="h-px bg-zinc-100 dark:bg-zinc-800 my-1 w-full" />
           <button 

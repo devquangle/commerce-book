@@ -155,7 +155,7 @@ describe("AuthorService - Dịch vụ quản lý tác giả", () => {
     const mockRequest: AuthorRequest = { name: "Nguyễn Du", urlBio: "truyen kieu", urlImage: "img", status: "ACTIVE", extract: "Tóm tắt tiểu sử" };
     const authorId = 5;
 
-    it("TC-AUTHOR-006: Nên gọi API cập nhật tác giả thành công và trả về dữ liệu tác giả đã sửa", async () => {
+    it("TC-AUTHOR-006: Nên gọi API cập nhật tác giả thành công và trả về dữ liệu tác giả đã Cập nhật", async () => {
       const mockResponse = {
         data: {
           success: true,

@@ -41,11 +41,36 @@ export const Modal: React.FC<ModalProps> = ({
 
     if (isOpen) {
       document.body.style.overflow = "hidden";
+
+      const mainEl = document.querySelector("main");
+      if (mainEl) {
+        const mainScrollbarWidth = mainEl.offsetWidth - mainEl.clientWidth;
+        if (mainScrollbarWidth > 0) {
+          const computedStyle = window.getComputedStyle(mainEl);
+          const currentPaddingRight = parseFloat(computedStyle.paddingRight) || 0;
+          mainEl.dataset.originalPaddingRight = mainEl.style.paddingRight;
+          mainEl.style.paddingRight = `${currentPaddingRight + mainScrollbarWidth}px`;
+        }
+        mainEl.style.overflow = "hidden";
+      }
+
       window.addEventListener("keydown", handleKeyDown);
     }
 
     return () => {
       document.body.style.overflow = "";
+
+      const mainEl = document.querySelector("main");
+      if (mainEl) {
+        mainEl.style.overflow = "";
+        if (mainEl.dataset.originalPaddingRight !== undefined) {
+          mainEl.style.paddingRight = mainEl.dataset.originalPaddingRight;
+          delete mainEl.dataset.originalPaddingRight;
+        } else {
+          mainEl.style.paddingRight = "";
+        }
+      }
+
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, onClose]);

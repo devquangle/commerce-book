@@ -62,7 +62,7 @@ export const ProductActionMenu: React.FC<ProductActionMenuProps> = ({ item, onDe
           </button>
           <button className="flex items-center gap-2 w-full px-3 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-zinc-800 hover:text-amber-600 transition-colors">
             <Edit className="w-4 h-4" />
-            <span>Sửa</span>
+            <span>Cập nhật</span>
           </button>
           <div className="h-px bg-slate-100 dark:bg-zinc-700 my-1 w-full" />
           <button 

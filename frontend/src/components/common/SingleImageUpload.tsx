@@ -122,7 +122,7 @@ export default function SingleImageUpload({
               alt="preview"
               className="w-full h-full object-contain"
             />
-            {/* Lớp Overlay chứa 3 nút chức năng: Xem - Sửa - Xóa */}
+            {/* Lớp Overlay chứa 3 nút chức năng: Xem - Cập nhật - Xóa */}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-slate-900/40 transition-all flex items-center justify-center gap-2.5">
               {/* Nút 1: Xem ảnh to */}
               <button
