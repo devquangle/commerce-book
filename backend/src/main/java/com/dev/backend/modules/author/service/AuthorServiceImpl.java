@@ -1,6 +1,8 @@
 package com.dev.backend.modules.author.service;
 
 import com.dev.backend.common.enums.AuthorStatus;
+import com.dev.backend.common.exception.BadRequestException;
+import com.dev.backend.common.exception.DuplicateFieldException;
 import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.common.utils.TextUtils;
 import com.dev.backend.modules.author.dto.AuthorFilterRequest;
@@ -13,6 +15,7 @@ import com.dev.backend.modules.author.repository.AuthorRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,32 +45,60 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public AuthorResponse getById(Long id) {
-        Author author = authorRepository.findById(id)
+    public boolean existsByName(String name) {
+        return authorRepository.existsByName(name);
+    }
+
+    @Override
+    public void validate(AuthorRequest request) {
+        DuplicateFieldException errors = new DuplicateFieldException(new HashMap<>());
+        if (existsByName(request.getName())) {
+            errors.addError("name", "Tên thể loại đã được sử dụng.");
+        }
+        if (!errors.getErrors().isEmpty()) {
+            throw errors;
+        }
+    }
+
+    @Override
+    public Author getById(Long id) {
+        return authorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AuthorResponse detail(Long id) {
+        Author author = getById(id);
         return authorMapper.toDTO(author);
     }
 
     @Override
     public AuthorResponse create(AuthorRequest request) {
         Author author = new Author();
+        validate(request);
         authorMapper.toEntity(author, request);
+        author.setStatus(AuthorStatus.ACTIVE);
         return authorMapper.toDTO(authorRepository.save(author));
     }
 
     @Override
     public AuthorResponse update(Long id, AuthorRequest request) {
-        Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
+        Author author = getById(id);
+        if (request.getStatus() == AuthorStatus.DELETED) {
+            throw new BadRequestException("Không được cập nhật sang trạng thái DELETED");
+        }
+        String newName = TextUtils.capitalizeFully(request.getName());
+        if (!author.getName().equals(newName)) {
+            validate(request);
+        }
         authorMapper.toEntity(author, request);
         return authorMapper.toDTO(authorRepository.save(author));
     }
 
     @Override
     public void delete(Long id) {
-        Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
+        Author author = getById(id);
         author.setStatus(AuthorStatus.DELETED);
         authorRepository.save(author);
     }
@@ -141,9 +173,9 @@ public class AuthorServiceImpl implements AuthorService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
-        AuthorStatus baseStatus = AuthorStatus.from(request.getStatus());
-        String keyword = (request.getKeyword() == null) ? "" : request.getKeyword().trim();
-        Page<Author> authorPage = authorRepository.search(keyword, baseStatus, pageable);
+        AuthorStatus status = request.getStatus();
+        String keyword = StringUtils.trimToNull(request.getKeyword());
+        Page<Author> authorPage = authorRepository.search(keyword, status, pageable);
 
         List<AuthorResponse> items = authorPage.getContent().stream().map(authorMapper::toDTO).toList();
 

@@ -149,9 +149,9 @@ public class GenreServiceImpl implements GenreService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
-        GenreStatus baseStatus = GenreStatus.from(request.getStatus());
+        GenreStatus status = request.getStatus();
         String keyword = StringUtils.trimToNull(request.getKeyword());
-        Page<Genre> authorPage = genreRepository.search(keyword, baseStatus, pageable);
+        Page<Genre> authorPage = genreRepository.search(keyword, status, pageable);
 
         List<GenreResponse> items = authorPage.getContent().stream().map(genreMapper::toDTO).toList();
 

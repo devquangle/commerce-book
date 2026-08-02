@@ -19,7 +19,6 @@ public class AuthorMapper {
         author.setUrlImage(request.getUrlImage());
         author.setUrlBio(request.getUrlBio());
         author.setDescription(request.getExtract());
-        author.setStatus(request.getStatus());
         return author;
     }
 
