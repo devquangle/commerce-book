@@ -35,7 +35,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Transactional(readOnly = true)
     public List<AuthorResponse> getAllAuthors() {
         return authorRepository.findAll().stream()
-                .map(authorMapper::toResponse)
+                .map(authorMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -44,23 +44,24 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorResponse getAuthorById(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
-        return authorMapper.toResponse(author);
+        return authorMapper.toDTO(author);
     }
 
     @Override
     public AuthorResponse createAuthor(AuthorRequest request) {
         Author author = new Author();
         authorMapper.toEntity(author, request);
-        return authorMapper.toResponse(authorRepository.save(author));
+        return authorMapper.toDTO(authorRepository.save(author));
     }
 
     @Override
     public AuthorResponse updateAuthor(Long id, AuthorRequest request) {
-        Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
-        authorMapper.updateEntityFromRequest(request, author);
-        Author updatedAuthor = authorRepository.save(author);
-        return authorMapper.toResponse(updatedAuthor);
+        // Author author = authorRepository.findById(id)
+        //         .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
+        // authorMapper.updateEntityFromRequest(request, author);
+        // Author updatedAuthor = authorRepository.save(author);
+        // return authorMapper.toResponse(updatedAuthor);
+        return null;
     }
 
     @Override
@@ -145,7 +146,7 @@ public class AuthorServiceImpl implements AuthorService {
         String keyword = (request.getKeyword() == null) ? "" : request.getKeyword().trim();
         Page<Author> authorPage = authorRepository.search(keyword, baseStatus, pageable);
 
-        List<AuthorResponse> items = authorPage.getContent().stream().map(authorMapper::toResponse).toList();
+        List<AuthorResponse> items = authorPage.getContent().stream().map(authorMapper::toDTO).toList();
 
         return new PageResponse<>(
                 items,

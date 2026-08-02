@@ -37,10 +37,10 @@ public class Author extends BaseEntity {
     @Column(name = "wikibase_item", length = 100)
     private String wikibaseItem;
 
-    @Column(name = "url_image")
+    @Column(name = "url_image", columnDefinition = "TEXT")
     private String urlImage;
 
-    @Column(name = "url_bio")
+    @Column(name = "url_bio", columnDefinition = "TEXT")
     private String urlBio;
 
     @Column(name = "description", columnDefinition = "TEXT")
