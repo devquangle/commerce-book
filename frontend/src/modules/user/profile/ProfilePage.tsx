@@ -53,7 +53,7 @@ const Profile = () => {
       console.log("Submitting data:", data); // Log the data being submitted
       const updatedData = { ...data };
       if (avatarFile) {
-        const imageUrl = await UploadImageService.uploadImage(avatarFile);
+        const imageUrl = await UploadImageService.uploadFile(avatarFile);
         updatedData.avatarUrl = imageUrl;
         setAvatar(imageUrl);
       }

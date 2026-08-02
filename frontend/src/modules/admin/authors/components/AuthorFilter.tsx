@@ -2,6 +2,7 @@ import React from "react";
 import { Search, X, RotateCcw } from "lucide-react";
 import type { AuthorStatus } from "../types/author.type";
 import { SelectBox } from "@/components/common/SelectBox";
+import { Button } from "@/components/common/Button";
 
 interface AuthorFilterProps {
   keyword: string;
@@ -18,7 +19,6 @@ export const AuthorFilter: React.FC<AuthorFilterProps> = ({
   onStatusChange,
   onReset,
 }) => {
-  const isFiltered = Boolean(keyword) || Boolean(status);
 
   const statusOptions = [
     { label: "Tất cả trạng thái", value: "" },
@@ -55,7 +55,6 @@ export const AuthorFilter: React.FC<AuthorFilterProps> = ({
           <SelectBox
             options={statusOptions}
             value={status || ""}
-            searchable
             searchPlaceholder="Lọc trạng thái..."
             onChange={(e) =>
               onStatusChange(e.target.value ? (e.target.value as AuthorStatus) : null)
@@ -63,16 +62,12 @@ export const AuthorFilter: React.FC<AuthorFilterProps> = ({
             containerClassName="w-full"
           />
 
-          {/* Reset Filters */}
-          {isFiltered && (
-            <button
+            <Button
               onClick={onReset}
-              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-xl transition-colors shrink-0"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Xóa bộ lọc</span>
-            </button>
-          )}
+              variant="outline"
+              icon={<RotateCcw className="w-4 h-4" />}
+              className="shrink-0 aspect-square p-0 w-10 h-10"
+            />
         </div>
     </div>
   );

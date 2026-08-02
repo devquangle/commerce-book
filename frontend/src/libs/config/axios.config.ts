@@ -88,13 +88,12 @@ authAxios.interceptors.response.use(
       }
 
       try {
-        // Gọi API refresh token
-        const rs = await publicAxios.post("/auth/refresh", {
-          refreshToken,
-        });
+        // Gọi API refresh token (dùng dynamic import để tránh Circular Dependency vì auth.service import axios)
+        const { AuthService } = await import("@/modules/auth/services/auth.service");
+        const loginResponse = await AuthService.refreshToken({ refreshToken });
 
-        // Giả sử API trả về { accessToken: "..." }
-        const { accessToken } = rs.data; 
+        // Lấy accessToken từ response
+        const { accessToken } = loginResponse; 
         
         // Lưu token mới vào cookie
         setAuthToken(accessToken);

@@ -9,7 +9,11 @@ import {
 } from "./components/AuthorSkeleton";
 import { AuthorModal } from "./components/AuthorModal";
 import { useAuthorFilter } from "./hooks/useAuthorFilter";
-import { useFilterAuthor } from "./hooks/useAuthor";
+import {
+  useCreateAuthor,
+  useFilterAuthor,
+  useUpdateAuthor,
+} from "./hooks/useAuthor";
 import type { AuthorResponse, AuthorRequest } from "./types/author.type";
 import { EmptyState } from "@/components/common/EmptyState";
 
@@ -31,6 +35,8 @@ const AdminAuthorPage = () => {
   const authorList = data?.items || [];
   const totalElements = data?.totalItems || 0;
 
+  const createMutation = useCreateAuthor();
+  const updateMutation = useUpdateAuthor();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAuthor, setSelectedAuthor] = useState<AuthorResponse | null>(
     null,
@@ -55,11 +61,9 @@ const AdminAuthorPage = () => {
 
   const handleSaveAuthor = (authorData: AuthorRequest & { id?: number }) => {
     if (authorData.id) {
-      // TODO: Call API update author
-      console.log("Update author:", authorData);
+      updateMutation.mutate({ id: authorData.id, req: authorData });
     } else {
-      // TODO: Call API create author
-      console.log("Create author:", authorData);
+      createMutation.mutate(authorData);
     }
     setIsModalOpen(false);
   };

@@ -16,6 +16,6 @@ public class AuthorRequest {
     private String wikibaseItem;
     private String urlImage;
     private String urlBio;
-    private String description;
+    private String extract;
     private AuthorStatus status;
 }

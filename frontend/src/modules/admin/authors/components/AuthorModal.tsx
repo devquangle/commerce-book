@@ -12,7 +12,8 @@ import { Button } from "@/components/common/Button";
 import SingleImageUpload from "@/components/common/SingleImageUpload";
 import useDebounce from "@/libs/utils/useDebounce";
 import { useWikipedia } from "../hooks/useWikipedia";
-import { showSuccessToast } from "@/libs/utils/toastUtil";
+import { showSuccessToast, showErrorToast } from "@/libs/utils/toastUtil";
+import UploadImageService from "@/services/upload-image.service";
 import type { AuthorRequest, AuthorResponse } from "../types/author.type";
 
 interface AuthorModalProps {
@@ -103,19 +104,38 @@ const AuthorModalContent: React.FC<AuthorModalProps> = ({
     );
   }, [wikiData, getValues, setValue, setAvatarUrl, setFile, avatarUrl]);
 
-  const onSubmit = (data: AuthorRequest) => {
+  const onSubmit = async (data: AuthorRequest) => {
     const finalData = { ...data, urlImage: avatarUrl };
+
+    if (finalData.urlImage.includes("wikipedia")) {
+      finalData.urlImage = wikiData?.urlImage || finalData.urlImage;
+    }
+
+    try {
+      if (file) {
+        finalData.urlImage = await UploadImageService.uploadFile(file);
+      } else if (
+        finalData.urlImage &&
+        !finalData.urlImage.includes("wikipedia") &&
+        !finalData.urlImage.startsWith("/") && // Không upload lại nếu là ảnh local của server mình
+        !finalData.urlImage.includes("localhost")
+      ) {
+        finalData.urlImage = await UploadImageService.uploadImageUrl(finalData.urlImage);
+      }
+    } catch (error :unknown) {
+      showErrorToast("Lỗi khi tải ảnh lên máy chủ!");
+      return;
+    }
+
     onSave({
       id: author?.id,
       ...finalData,
-      file,
     });
   };
 
   const statusOptions = [
     { label: "Đang hoạt động", value: "ACTIVE" },
     { label: "Không hoạt động", value: "INACTIVE" },
-    { label: "Đã xóa", value: "DELETED" },
   ];
 
   return (

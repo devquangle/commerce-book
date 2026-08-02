@@ -78,7 +78,6 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
 
     // Close dropdown on click outside
     useEffect(() => {
-      if (!searchable) return;
       const handleClickOutside = (event: MouseEvent) => {
         if (
           dropdownRef.current &&
@@ -91,7 +90,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
       };
-    }, [searchable]);
+    }, []);
 
     // Filter options for search
     const filteredOptions = options.filter((opt) =>
@@ -130,7 +129,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
         {label && (
           <label
             htmlFor={selectId}
-            className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
+            className="block caption-text text-zinc-700 dark:text-zinc-300"
           >
             {label} {required && <span className="text-red-500">*</span>}
           </label>
@@ -148,11 +147,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
           }}
           onBlur={onBlur}
           disabled={disabled}
-          className={searchable ? "sr-only" : `w-full px-3.5 py-2 text-sm bg-zinc-50 dark:bg-zinc-800/60 border rounded-xl focus:outline-none transition-all text-zinc-900 dark:text-white cursor-pointer ${
-            error
-              ? "border-red-500 focus:ring-2 focus:ring-red-500/20"
-              : "border-zinc-200 dark:border-zinc-700/80 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-          } ${className}`}
+          className="sr-only"
           {...props}
         >
           {placeholder && (
@@ -167,14 +162,13 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
           ))}
         </select>
 
-        {/* Searchable Custom Dropdown (Rendered when searchable = true) */}
-        {searchable && (
+        {/* Custom Dropdown (Always rendered instead of native select) */}
           <div className="relative" ref={dropdownRef}>
             <button
               type="button"
               disabled={disabled}
               onClick={() => setIsOpen((prev) => !prev)}
-              className={`w-full flex items-center justify-between px-3.5 py-2 text-sm bg-zinc-50 dark:bg-zinc-800/60 border rounded-xl transition-all text-left ${
+              className={`w-full flex items-center justify-between px-3.5 py-2 body-text bg-zinc-50 dark:bg-zinc-800/60 border rounded-xl transition-all text-left ${
                 error
                   ? "border-red-500 focus:ring-2 focus:ring-red-500/20"
                   : "border-zinc-200 dark:border-zinc-700/80 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
@@ -183,7 +177,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
               <span
                 className={`truncate ${
                   selectedOption
-                    ? "text-zinc-900 dark:text-white font-medium"
+                    ? "text-zinc-900 dark:text-white font-medium caption-text"
                     : "text-zinc-400"
                 }`}
               >
@@ -196,31 +190,33 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
             {isOpen && (
               <div className="absolute z-50 mt-1 w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-lg max-h-60 overflow-hidden flex flex-col animate-in fade-in duration-100">
                 {/* Search Bar inside Dropdown */}
-                <div className="p-2 border-b border-zinc-100 dark:border-zinc-800 relative">
-                  <Search className="w-3.5 h-3.5 absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder={searchPlaceholder}
-                    className="w-full pl-8 pr-7 py-1.5 text-xs bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-900 dark:text-white placeholder-zinc-400"
-                    autoFocus
-                  />
-                  {searchTerm && (
-                    <button
-                      type="button"
-                      onClick={() => setSearchTerm("")}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  )}
-                </div>
+                {searchable && (
+                  <div className="p-2 border-b border-zinc-100 dark:border-zinc-800 relative">
+                    <Search className="w-3.5 h-3.5 absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      placeholder={searchPlaceholder}
+                      className="w-full pl-8 pr-7 py-1.5 body-text bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-900 dark:text-white placeholder-zinc-400"
+                      autoFocus
+                    />
+                    {searchTerm && (
+                      <button
+                        type="button"
+                        onClick={() => setSearchTerm("")}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+                )}
 
                 {/* Options List */}
                 <div className="overflow-y-auto p-1 max-h-48 space-y-0.5">
                   {filteredOptions.length === 0 ? (
-                    <p className="p-3 text-xs text-center text-zinc-400 font-medium">
+                    <p className="p-3 caption-text text-center text-zinc-400 font-medium">
                       Không tìm thấy kết quả
                     </p>
                   ) : (
@@ -232,7 +228,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
                           type="button"
                           disabled={opt.disabled}
                           onClick={() => handleSelectOption(opt)}
-                          className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium rounded-lg text-left transition-colors ${
+                          className={`w-full flex items-center justify-between px-3 py-2 caption-text font-medium rounded-lg text-left transition-colors ${
                             opt.disabled
                               ? "opacity-40 cursor-not-allowed"
                               : isSelected
@@ -250,7 +246,6 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
               </div>
             )}
           </div>
-        )}
 
         {error ? (
           <p className="text-xs text-red-500 font-medium">{error}</p>

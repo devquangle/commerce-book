@@ -41,27 +41,25 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional(readOnly = true)
-    public AuthorResponse getAuthorById(Long id) {
+    public AuthorResponse getById(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
         return authorMapper.toDTO(author);
     }
 
     @Override
-    public AuthorResponse createAuthor(AuthorRequest request) {
+    public AuthorResponse create(AuthorRequest request) {
         Author author = new Author();
         authorMapper.toEntity(author, request);
         return authorMapper.toDTO(authorRepository.save(author));
     }
 
     @Override
-    public AuthorResponse updateAuthor(Long id, AuthorRequest request) {
-        // Author author = authorRepository.findById(id)
-        //         .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
-        // authorMapper.updateEntityFromRequest(request, author);
-        // Author updatedAuthor = authorRepository.save(author);
-        // return authorMapper.toResponse(updatedAuthor);
-        return null;
+    public AuthorResponse update(Long id, AuthorRequest request) {
+        Author author = authorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
+        authorMapper.toEntity(author, request);
+        return authorMapper.toDTO(authorRepository.save(author));
     }
 
     @Override

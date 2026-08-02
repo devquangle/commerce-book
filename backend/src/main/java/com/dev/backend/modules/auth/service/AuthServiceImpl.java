@@ -136,18 +136,19 @@ public class AuthServiceImpl implements AuthService {
         User user = authRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
 
+        CustomUserDetails customUserDetails = CustomUserDetails.build(user);
+
         int currentTokenVersion = user.getTokenVersion() == null ? 0 : user.getTokenVersion();
         if (!jwtUtil.isTokenVersionValid(token, currentTokenVersion)) {
             throw new RuntimeException("RefreshToken đã bị vô hiệu hóa");
         }
 
-        String newAccessToken = "";
+        String newAccessToken = jwtUtil.generateAccessToken(customUserDetails);
         String newRefreshToken = jwtUtil.generateRefreshToken(user.getId(), currentTokenVersion);
 
         return LoginResponse.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
-
                 .build();
     }
 
