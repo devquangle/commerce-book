@@ -12,7 +12,6 @@ import com.dev.backend.common.enums.AuthorStatus;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class AuthorResponse {
     private Long id;
     private String name;

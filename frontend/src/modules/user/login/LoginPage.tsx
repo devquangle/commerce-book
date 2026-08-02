@@ -9,7 +9,7 @@ import { useState } from "react";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
 import { showErrorToast } from "@/libs/utils/toastUtil";
 import { showSuccessToast } from "./../../../libs/utils/toastUtil";
-import { Spinner } from "@/components/common/Spinner";
+import Spinner from "@/components/common/Spinner";
 
 const LoginPage = () => {
   const {

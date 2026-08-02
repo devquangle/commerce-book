@@ -9,7 +9,7 @@ const AuthorService = {
   ): Promise<Pagination<AuthorResponse>> => {
     const response = await authAxios.get<
       ApiResponse<Pagination<AuthorResponse>>
-    >(`/api/v1/admin/authors`, { params: option });
+    >(`/api/v1/admin/authors/filter`, { params: option });
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message || "Failed to fetch author data");
     }

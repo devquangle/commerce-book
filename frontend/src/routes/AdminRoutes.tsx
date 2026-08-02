@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLayout from "@/layouts/AdminLayout";
+import Spinner from "@/components/common/Spinner";
 
 // Lazy-loaded pages
 const AdminDashboard = lazy(() => import("@/modules/admin/pages/AdminDashboard"));
@@ -15,16 +16,12 @@ const AdminReportsProducts = lazy(() => import("@/modules/admin/pages/AdminRepor
 const AdminReportsStores = lazy(() => import("@/modules/admin/pages/AdminReportsStores"));
 const AdminSettings = lazy(() => import("@/modules/admin/pages/AdminSettings"));
 
-const AdminFallback = () => (
-  <div className="flex items-center justify-center h-64">
-    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-  </div>
-);
+
 
 export const AdminRoutes: React.FC = () => {
   return (
     <AdminLayout>
-      <Suspense fallback={<AdminFallback />}>
+      <Suspense fallback={<Spinner message="Loading admin panel..." />}>
         <Routes>
           <Route index element={<AdminDashboard />} />
           <Route path="products" element={<AdminProducts />} />

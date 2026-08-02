@@ -30,7 +30,7 @@ public class AuthorMapper {
         authorResponse.setId(author.getId());
         authorResponse.setName(author.getName());
         authorResponse.setWikibaseItem(author.getWikibaseItem());
-
+        authorResponse.setSlug(author.getSlug());
         authorResponse.setUrlImage(author.getUrlImage());
         authorResponse.setUrlBio(author.getUrlBio());
         authorResponse.setDescription(author.getDescription());

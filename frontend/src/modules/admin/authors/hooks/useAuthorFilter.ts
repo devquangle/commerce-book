@@ -72,6 +72,15 @@ export const useAuthorFilter = () => {
     setSize(initialFilterOptions.size);
   }, []);
 
+  const handlePageChange = useCallback((newPage: number) => {
+    setPage(newPage);
+  }, []);
+
+  const handlePageSizeChange = useCallback((newSize: number) => {
+    setSize(newSize);
+    setPage(1);
+  }, []);
+
   const filterParams: AuthorFilterRequest = {
     keyword: debouncedKeyword ? debouncedKeyword.trim() : "",
     status: status || undefined,
@@ -92,6 +101,9 @@ export const useAuthorFilter = () => {
 
     handleKeywordChange,
     handleStatusChange,
+    handlePageChange,
+    handlePageSizeChange,
+    
     handleResetFilter,
   };
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { Search, X, RotateCcw } from "lucide-react";
 import type { AuthorStatus } from "../types/author.type";
-import { SelectBox } from "@/components/common";
+import { SelectBox } from "@/components/common/SelectBox";
 
 interface AuthorFilterProps {
   keyword: string;

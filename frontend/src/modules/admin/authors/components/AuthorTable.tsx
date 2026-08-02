@@ -1,7 +1,8 @@
 import React from "react";
 import { ExternalLink, Link2 } from "lucide-react";
 import { getLabelAuthorStatus, type AuthorResponse } from "../types/author.type";
-import { Pagination } from "@/components/common";
+import { Pagination } from "@/components/common/Pagination";
+import { EmptyState } from "@/components/common/EmptyState";
 import { AuthorActionMenu } from "./AuthorActionMenu";
 
 interface AuthorTableProps {
@@ -114,8 +115,8 @@ export const AuthorTable: React.FC<AuthorTableProps> = ({
             })}
             {authors.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-32 text-center text-zinc-500 dark:text-zinc-400">
-                  Không tìm thấy tác giả phù hợp
+                <td colSpan={5} className="p-0">
+                  <EmptyState title="Không tìm thấy tác giả phù hợp" />
                 </td>
               </tr>
             )}

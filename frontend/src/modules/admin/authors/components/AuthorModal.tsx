@@ -3,13 +3,11 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 
-import {
-  Modal,
-  InputField,
-  SelectBox,
-  TextAreaField,
-  Button,
-} from "@/components/common";
+import { Modal } from "@/components/common/Modal";
+import { InputField } from "@/components/common/InputField";
+import { TextAreaField } from "@/components/common/TextAreaField";
+import { SelectBox } from "@/components/common/SelectBox";
+import { Button } from "@/components/common/Button";
 import type { AuthorRequest, AuthorResponse } from "../types/author.type";
 
 interface AuthorModalProps {
