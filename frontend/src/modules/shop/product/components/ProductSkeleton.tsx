@@ -76,7 +76,7 @@ export const ProductSkeleton = () => {
 
 export const ProductMobileSkeleton = () => {
   return (
-    <div className="card-custom p-4 flex flex-col gap-3 animate-pulse">
+    <div className="card-custom flex flex-col gap-3 animate-pulse">
       <div className="flex items-start gap-3">
         <div className="w-15 h-21.5 rounded-xl bg-slate-200 shrink-0"></div>
         <div className="flex-1 min-w-0 flex flex-col gap-1.5">

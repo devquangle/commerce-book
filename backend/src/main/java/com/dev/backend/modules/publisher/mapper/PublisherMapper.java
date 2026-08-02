@@ -27,6 +27,7 @@ public class PublisherMapper {
         PublisherResponse response = new PublisherResponse();
         response.setId(entity.getId());
         response.setName(entity.getName());
+        response.setSlug(entity.getSlug());
         response.setStatus(entity.getStatus());
         return response;
     }

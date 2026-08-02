@@ -60,7 +60,6 @@ public class PublisherServiceImpl implements PublisherService {
         if (existsByName(request.getName())) {
             errors.addError("name", "Tên nhà xuất bản đã được sử dụng.");
         }
-
         if (!errors.getErrors().isEmpty()) {
             throw errors;
         }
@@ -77,6 +76,7 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public PublisherResponse create(PublisherRequest request) {
         Publisher publisher = new Publisher();
+        validate(request);
         publisherMapper.toEntity(publisher, request);
         publisher.setStatus(PublisherStatus.ACTIVE);
         return publisherMapper.toDTO(publisherRepository.save(publisher));

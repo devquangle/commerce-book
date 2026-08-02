@@ -112,22 +112,7 @@ export const AdminSidebar: React.FC = () => {
         aria-label="Sidebar"
       >
         <div className="h-full px-3 py-4 overflow-y-auto">
-          {/* Mobile Header Brand */}
-          <Link
-            to="/admin"
-            className="flex items-center ps-2.5 mb-5 sm:hidden"
-            onClick={handleClose}
-          >
-            <img
-              src="https://flowbite.com/docs/images/logo.svg"
-              className="h-6 w-6 me-3"
-              alt="Flowbite Logo"
-            />
-            <span className="self-center text-lg font-semibold whitespace-nowrap text-zinc-900 dark:text-white">
-              Book Commerce Admin
-            </span>
-          </Link>
-
+        
           <ul className="space-y-1 body-text">
             {/* Main Navigation Items */}
             {topNavItems.map((item) => {

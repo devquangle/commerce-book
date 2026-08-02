@@ -52,14 +52,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       lg: "px-5 py-2.5 text-base gap-2.5",
     };
 
-    const spinnerVariantMap = {
-      primary: "white" as const,
-      secondary: "dark" as const,
-      outline: "primary" as const,
-      ghost: "primary" as const,
-      danger: "white" as const,
-    };
-
     return (
       <button
         ref={ref}
@@ -72,8 +64,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading ? (
           <>
-            <Spinner size="sm" variant={spinnerVariantMap[variant]} />
-            <span>Đang xử lý...</span>
+            <Spinner />
           </>
         ) : (
           <>

@@ -18,6 +18,7 @@ import {
 } from "./hooks/useAuthor";
 import type { AuthorResponse, AuthorRequest } from "./types/author.type";
 import { EmptyState } from "@/components/common/EmptyState";
+import { Pagination } from "@/components/common/Pagination";
 
 const AdminAuthorPage = () => {
   const {
@@ -120,10 +121,13 @@ const AdminAuthorPage = () => {
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
-            {authorList.map((author) => (
+            {authorList.map((author, index) => (
               <AuthorMobileCard
                 key={author.id}
                 author={author}
+                index={index}
+                page={page}
+                pageSize={size}
                 onEdit={handleEditAuthor}
                 onDelete={handleDeleteAuthor}
               />
@@ -134,6 +138,19 @@ const AdminAuthorPage = () => {
               </div>
             )}
           </div>
+
+          {authorList.length > 0 && (
+            <div className="md:hidden w-full card-custom p-3">
+              <Pagination
+                currentPage={page}
+                totalPages={Math.ceil(totalElements / size)}
+                totalElements={totalElements}
+                pageSize={size}
+                onPageChange={handlePageChange}
+                onPageSizeChange={handlePageSizeChange}
+              />
+            </div>
+          )}
         </>
       )}
 

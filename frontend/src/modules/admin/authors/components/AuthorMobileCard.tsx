@@ -1,23 +1,33 @@
 "use client";
 
-import React from "react";
-import { Edit2, Trash2, ExternalLink, Link2 } from "lucide-react";
+import React, { useState } from "react";
+import { ExternalLink, Link2 } from "lucide-react";
 
 import { getLabelAuthorStatus, type AuthorResponse } from "../types/author.type";
+import { AuthorActionMenu } from "./AuthorActionMenu";
 
 interface AuthorMobileCardProps {
   author: AuthorResponse;
+  index: number;
+  page: number;
+  pageSize: number;
   onEdit: (author: AuthorResponse) => void;
   onDelete: (author: AuthorResponse) => void;
 }
 
 export const AuthorMobileCard: React.FC<AuthorMobileCardProps> = ({
   author,
+  index,
+  page,
+  pageSize,
   onEdit,
   onDelete,
 }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const stt = page * pageSize + index + 1;
+
   return (
-    <div className="p-4 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 space-y-3 shadow-sm">
+    <div className="p-4 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 space-y-3 shadow-sm relative">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           {author.urlImage ? (
@@ -32,15 +42,52 @@ export const AuthorMobileCard: React.FC<AuthorMobileCardProps> = ({
             </div>
           )}
           <div>
-            <h3 className="font-bold text-zinc-900 dark:text-white text-base">
-              {author.name}
-            </h3>
+            <div className="flex items-center gap-2">
+              <h3 className="font-bold text-zinc-900 dark:text-white text-base">
+                {author.name}
+              </h3>
+              {author.urlBio && (
+                <a
+                  href={author.urlBio}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-700 dark:text-blue-400 transition-colors"
+                  title="Xem tiểu sử chi tiết"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              )}
+            </div>
             <p className="text-xs text-zinc-400 font-mono">
-              Slug: {author.slug}
+              STT: {stt} &bull; Slug: {author.slug}
             </p>
           </div>
         </div>
 
+        <div className="-mt-1 -mr-2">
+          <AuthorActionMenu item={author} onEdit={onEdit} onDelete={onDelete} />
+        </div>
+      </div>
+
+      {author.description && (
+        <div className="space-y-1">
+          <p className={`text-xs text-zinc-600 dark:text-zinc-400 ${!isExpanded ? "line-clamp-3" : ""}`}>
+            {author.description}
+          </p>
+          {author.description.length > 120 && (
+            <button 
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              {isExpanded ? "Thu gọn" : "Xem thêm"}
+            </button>
+          )}
+        </div>
+      )}
+
+
+
+      <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800 flex items-center">
         <span
           className={`px-2.5 py-0.5 text-xs font-semibold rounded-lg ${
             author.status === "ACTIVE"
@@ -52,44 +99,6 @@ export const AuthorMobileCard: React.FC<AuthorMobileCardProps> = ({
         >
           {getLabelAuthorStatus(author.status)}
         </span>
-      </div>
-
-      {author.description && (
-        <p className="text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2">
-          {author.description}
-        </p>
-      )}
-
-      {author.urlBio && (
-        <div className="pt-1">
-          <a
-            href={author.urlBio}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium"
-          >
-            <Link2 className="w-3.5 h-3.5" />
-            <span>Xem tiểu sử chi tiết</span>
-            <ExternalLink className="w-3 h-3" />
-          </a>
-        </div>
-      )}
-
-      <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-end gap-2">
-        <button
-          onClick={() => onEdit(author)}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-zinc-100 dark:bg-zinc-800 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-zinc-700 dark:text-zinc-200 hover:text-blue-600 rounded-xl text-xs font-semibold transition-colors"
-        >
-          <Edit2 className="w-3.5 h-3.5" />
-          <span>Chỉnh sửa</span>
-        </button>
-        <button
-          onClick={() => onDelete(author)}
-          className="inline-flex items-center justify-center p-2 text-zinc-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-xl transition-colors"
-          title="Xóa"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
       </div>
     </div>
   );

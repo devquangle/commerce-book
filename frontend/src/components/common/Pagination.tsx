@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { SelectBox } from "@/components/common/SelectBox";
 
 export interface PaginationProps {
   currentPage: number;
@@ -22,32 +23,21 @@ export const Pagination: React.FC<PaginationProps> = ({
   onPageSizeChange,
   pageSizeOptions = [10, 20, 50, 100],
 }) => {
-  // Helper to generate visible page numbers
+  // Helper to generate visible page numbers (compact mode: max 5 items)
   const getPageNumbers = (): (number | string)[] => {
     const pages: (number | string)[] = [];
-    const maxVisible = 7;
 
-    if (totalPages <= maxVisible) {
+    if (totalPages <= 5) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-      if (currentPage <= 4) {
-        for (let i = 1; i <= 5; i++) pages.push(i);
-        pages.push("...");
-        pages.push(totalPages);
-      } else if (currentPage >= totalPages - 3) {
-        pages.push(1);
-        pages.push("...");
-        for (let i = totalPages - 4; i <= totalPages; i++) pages.push(i);
+      if (currentPage <= 3) {
+        pages.push(1, 2, 3, "...", totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1, "...", totalPages - 2, totalPages - 1, totalPages);
       } else {
-        pages.push(1);
-        pages.push("...");
-        pages.push(currentPage - 1);
-        pages.push(currentPage);
-        pages.push(currentPage + 1);
-        pages.push("...");
-        pages.push(totalPages);
+        pages.push(1, "...", currentPage, "...", totalPages);
       }
     }
 
@@ -62,45 +52,54 @@ export const Pagination: React.FC<PaginationProps> = ({
     : undefined;
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-3 px-1 border-t border-zinc-200 dark:border-zinc-800 text-sm">
+    <div className="flex flex-row items-center justify-between gap-2 sm:gap-4 py-2 px-1 w-full body-text">
       {/* Left side: Page Info Text */}
-      <div className="flex items-center text-zinc-500 dark:text-zinc-400 text-xs sm:text-sm order-2 sm:order-1">
+      <div className="flex items-center text-zinc-500 dark:text-zinc-400">
         {totalElements !== undefined && startElement && endElement ? (
-          <span>
-            Hiển thị <span className="font-semibold text-zinc-900 dark:text-white">{startElement}</span>–
-            <span className="font-semibold text-zinc-900 dark:text-white">{endElement}</span> trong{" "}
-            <span className="font-semibold text-zinc-900 dark:text-white">{totalElements}</span> kết quả
-          </span>
+          <>
+            <span className="hidden sm:inline">
+              Hiển thị <span className="font-semibold text-zinc-900 dark:text-white">{startElement}</span>–
+              <span className="font-semibold text-zinc-900 dark:text-white">{endElement}</span> trong{" "}
+              <span className="font-semibold text-zinc-900 dark:text-white">{totalElements}</span> kết quả
+            </span>
+            <span className="sm:hidden font-medium">
+              {startElement}–{endElement} / {totalElements}
+            </span>
+          </>
         ) : (
-          <span>
-            Trang <span className="font-semibold text-zinc-900 dark:text-white">{currentPage}</span> /{" "}
-            <span className="font-semibold text-zinc-900 dark:text-white">{totalPages}</span>
-          </span>
+          <>
+            <span className="hidden sm:inline">
+              Trang <span className="font-semibold text-zinc-900 dark:text-white">{currentPage}</span> /{" "}
+              <span className="font-semibold text-zinc-900 dark:text-white">{totalPages}</span>
+            </span>
+            <span className="sm:hidden font-medium">
+              {currentPage} / {totalPages}
+            </span>
+          </>
         )}
       </div>
 
       {/* Right side: Per-Page Select Dropdown (In Front) + Navigation Buttons */}
-      <div className="flex items-center gap-3 order-1 sm:order-2 flex-wrap">
+      <div className="flex flex-row items-center gap-2 sm:gap-3">
         {/* Per-Page Select Dropdown in front of navigation buttons */}
         {onPageSizeChange && (
-          <div className="flex items-center gap-1.5 border-e border-zinc-200 dark:border-zinc-800 pe-3 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
-            <span>Hiển thị</span>
-            <select
+          <div className="hidden sm:flex items-center justify-center gap-2 border-e border-zinc-200 dark:border-zinc-800 pe-3 text-zinc-500 dark:text-zinc-400">
+            <span className="hidden sm:inline">Hiển thị</span>
+            <SelectBox
               value={pageSize}
               onChange={(e) => onPageSizeChange(Number(e.target.value))}
-              className="px-2.5 py-1.5 text-xs sm:text-sm bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-800 dark:text-zinc-200 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer"
-            >
-              {pageSizeOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option} / trang
-                </option>
-              ))}
-            </select>
+              options={pageSizeOptions.map((opt) => ({
+                label: String(opt),
+                value: opt,
+              }))}
+              containerClassName="!space-y-0 w-[72px]"
+              className="!px-2 !py-1.5 !min-h-0"
+            />
           </div>
         )}
 
         {/* Navigation Buttons */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center justify-center gap-1.5">
           {/* Previous Button */}
           <button
             type="button"
@@ -120,7 +119,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                 return (
                   <span
                     key={`dots-${idx}`}
-                    className="px-2 py-1 text-zinc-400 dark:text-zinc-500 font-medium select-none"
+                    className="px-1.5 py-1 text-zinc-400 dark:text-zinc-500 font-medium select-none"
                   >
                     ...
                   </span>
@@ -135,7 +134,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                   key={pageNum}
                   type="button"
                   onClick={() => onPageChange(pageNum)}
-                  className={`min-w-9 h-9 px-3 rounded-xl font-medium text-xs sm:text-sm transition-all ${
+                  className={`min-w-9 h-9 px-3 rounded-xl font-medium transition-all ${
                     isActive
                       ? "bg-blue-600 text-white font-semibold shadow-sm shadow-blue-500/20"
                       : "border border-zinc-200 dark:border-zinc-700/80 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700"

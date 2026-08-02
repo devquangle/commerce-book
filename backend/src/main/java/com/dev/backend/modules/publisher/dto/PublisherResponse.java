@@ -14,5 +14,6 @@ import com.dev.backend.common.enums.PublisherStatus;
 public class PublisherResponse {
     private Long id;
     private String name;
+    private String slug;
     private PublisherStatus status;
 }

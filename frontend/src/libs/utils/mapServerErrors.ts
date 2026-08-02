@@ -5,13 +5,13 @@ import { getErrorMessage } from "./error";
 
 /**
  * Chuyển lỗi server thành lỗi form và set lên react-hook-form
- * Nếu server trả lỗi theo field, chỉ set error trên form, KHÔNG show toast
- * Nếu không có field-specific error, mới show toast
+ * Nếu server trả lỗi theo field, set error trên form cho từng field.
+ * Nếu là lỗi chung, set vào error 'root'.
+ * KHÔNG show toast.
  */
 export function mapServerErrors<T extends FieldValues>(
   error: unknown,
   setError: UseFormSetError<T>,
-  showErrorToast?: (msg: string) => void,
 ) {
   if (axios.isAxiosError(error)) {
     const serverData = error.response?.data;
@@ -36,8 +36,15 @@ export function mapServerErrors<T extends FieldValues>(
       return; 
     }
 
-    showErrorToast?.(serverData?.message ?? "Có lỗi xảy ra từ máy chủ");
+    // Map lỗi chung vào 'root'
+    setError("root" as Path<T>, {
+      type: "server",
+      message: serverData?.message ?? "Có lỗi xảy ra từ máy chủ",
+    });
   } else {
-    showErrorToast?.(getErrorMessage(error));
+    setError("root" as Path<T>, {
+      type: "server",
+      message: getErrorMessage(error),
+    });
   }
 }

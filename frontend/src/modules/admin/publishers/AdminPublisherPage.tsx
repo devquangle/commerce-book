@@ -16,8 +16,14 @@ import {
   useFilterPublisher,
   useUpdatePublisher,
 } from "./hooks/usePublisher";
-import type { PublisherResponse, PublisherRequest } from "./types/publisher.type";
+import type {
+  PublisherResponse,
+  PublisherRequest,
+} from "./types/publisher.type";
 import { EmptyState } from "@/components/common/EmptyState";
+import { Pagination } from "@/components/common/Pagination";
+import { mapServerErrors } from "@/libs/utils/mapServerErrors";
+import type { UseFormSetError } from "react-hook-form";
 
 const AdminPublisherPage = () => {
   const {
@@ -42,9 +48,8 @@ const AdminPublisherPage = () => {
   const deleteMutation = useDeletePublisher();
   // TODO: const deleteMutation = useDeletePublisher();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPublisher, setSelectedPublisher] = useState<PublisherResponse | null>(
-    null,
-  );
+  const [selectedPublisher, setSelectedPublisher] =
+    useState<PublisherResponse | null>(null);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -73,14 +78,21 @@ const AdminPublisherPage = () => {
     }
   };
 
-  const handleSavePublisher = (publisherData: PublisherRequest & { id?: number }) => {
-    if (publisherData.id) {
-      updateMutation.mutate({ id: publisherData.id, req: publisherData });
-    } else {
-      createMutation.mutate(publisherData);
+  const handleSavePublisher = async (
+    publisherData: PublisherRequest & { id?: number },
+    setError: UseFormSetError<PublisherRequest>,
+  ) => {
+    try {
+      if (publisherData.id) {
+        await updateMutation.mutateAsync({ id: publisherData.id, req: publisherData });
+      } else {
+        await createMutation.mutateAsync(publisherData);
+      }
+      setSelectedPublisher(null);
+      setIsModalOpen(false);
+    } catch (error: unknown) {
+      mapServerErrors(error, setError);
     }
-    setSelectedPublisher(null);
-    setIsModalOpen(false);
   };
 
   return (
@@ -120,10 +132,13 @@ const AdminPublisherPage = () => {
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
-            {publisherList.map((publisher) => (
+            {publisherList.map((publisher, index) => (
               <PublisherMobileCard
                 key={publisher.id}
                 publisher={publisher}
+                index={index}
+                page={page}
+                pageSize={size}
                 onEdit={handleEditPublisher}
                 onDelete={handleDeletePublisher}
               />
@@ -134,6 +149,19 @@ const AdminPublisherPage = () => {
               </div>
             )}
           </div>
+
+          {publisherList.length > 0 && (
+            <div className="md:hidden w-full card-custom p-3">
+              <Pagination
+                currentPage={page}
+                totalPages={Math.ceil(totalElements / size)}
+                totalElements={totalElements}
+                pageSize={size}
+                onPageChange={handlePageChange}
+                onPageSizeChange={handlePageSizeChange}
+              />
+            </div>
+          )}
         </>
       )}
 

@@ -10,7 +10,7 @@ const AdminStores = lazy(() => import("@/modules/admin/pages/AdminStores"));
 const AdminSeries = lazy(() => import("@/modules/admin/pages/AdminSeries"));
 const AdminGenrePage = lazy(() => import("@/modules/admin/genres/AdminGenrePage"));
 const AdminAuthorPage = lazy(() => import("@/modules/admin/authors/AdminAuthorPage"));
-const AdminPublishers = lazy(() => import("@/modules/admin/pages/AdminPublishers"));
+const AdminPublisherPage = lazy(() => import("@/modules/admin/publishers/AdminPublisherPage"));
 const AdminAnalytics = lazy(() => import("@/modules/admin/pages/AdminAnalytics"));
 const AdminReportsProducts = lazy(() => import("@/modules/admin/pages/AdminReportsProducts"));
 const AdminReportsStores = lazy(() => import("@/modules/admin/pages/AdminReportsStores"));
@@ -29,7 +29,7 @@ export const AdminRoutes: React.FC = () => {
           <Route path="series" element={<AdminSeries />} />
           <Route path="genres" element={<AdminGenrePage />} />
           <Route path="authors" element={<AdminAuthorPage />} />
-          <Route path="publishers" element={<AdminPublishers />} />
+          <Route path="publishers" element={<AdminPublisherPage />} />
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="reports/products" element={<AdminReportsProducts />} />
           <Route path="reports/stores" element={<AdminReportsStores />} />

@@ -15,6 +15,7 @@ import {
 } from "./hooks/useGenre";
 import type { GenreResponse, GenreRequest } from "./types/genre.type";
 import { EmptyState } from "@/components/common/EmptyState";
+import { Pagination } from "@/components/common/Pagination";
 import type { UseFormSetError } from "react-hook-form";
 import { showErrorToast } from "@/libs/utils/toastUtil";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
@@ -144,6 +145,19 @@ const AdminGenrePage = () => {
               </div>
             )}
           </div>
+
+          {genreList.length > 0 && (
+            <div className="md:hidden w-full card-custom p-3">
+              <Pagination
+                currentPage={page}
+                totalPages={Math.ceil(totalElements / size)}
+                totalElements={totalElements}
+                pageSize={size}
+                onPageChange={handlePageChange}
+                onPageSizeChange={handlePageSizeChange}
+              />
+            </div>
+          )}
         </>
       )}
 

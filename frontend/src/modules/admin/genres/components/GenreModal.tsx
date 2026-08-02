@@ -10,7 +10,7 @@ interface GenreModalProps {
   isOpen: boolean;
   genre: GenreResponse | null;
   onClose: () => void;
-  onSave: (genreData: GenreRequest & { id?: number }, setError: UseFormSetError<GenreRequest>) => void;
+  onSave: (genreData: GenreRequest & { id?: number }, setError: UseFormSetError<GenreRequest>) => void | Promise<void>;
 }
 
 const initGenre: GenreRequest = {
@@ -36,7 +36,7 @@ const GenreModalContent: React.FC<GenreModalProps> = ({
   });
 
   const onSubmit = async (data: GenreRequest) => {
-    onSave({
+    await onSave({
       id: genre?.id,
       ...data,
     }, setError);

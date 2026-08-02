@@ -22,7 +22,7 @@ export const SeriesMobileCard: React.FC<SeriesMobileCardProps> = ({
   const stt = (page - 1) * pageSize + index + 1;
 
   return (
-    <div className="card-custom p-4 flex flex-col gap-3 relative">
+    <div className="card-custom flex flex-col gap-3 relative">
       <div className="absolute top-4 right-4">
         <SeriesActionMenu item={series} onEdit={onEdit} onDelete={onDelete} />
       </div>
