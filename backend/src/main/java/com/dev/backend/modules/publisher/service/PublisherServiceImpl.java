@@ -4,7 +4,9 @@ import com.dev.backend.common.enums.PublisherStatus;
 import com.dev.backend.common.exception.BadRequestException;
 import com.dev.backend.common.exception.DuplicateFieldException;
 import com.dev.backend.common.exception.NotFoundException;
+import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.common.utils.TextUtils;
+import com.dev.backend.modules.publisher.dto.PublisherFilterRequest;
 import com.dev.backend.modules.publisher.dto.PublisherRequest;
 import com.dev.backend.modules.publisher.dto.PublisherResponse;
 import com.dev.backend.modules.publisher.entity.Publisher;
@@ -12,6 +14,12 @@ import com.dev.backend.modules.publisher.mapper.PublisherMapper;
 import com.dev.backend.modules.publisher.repository.PublisherRepository;
 
 import lombok.RequiredArgsConstructor;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,5 +102,96 @@ public class PublisherServiceImpl implements PublisherService {
         Publisher publisher = getById(id);
         publisher.setStatus(PublisherStatus.DELETED);
         publisherRepository.save(publisher);
+    }
+
+    @Override
+    public PageResponse<PublisherResponse> search(PublisherFilterRequest request) {
+        int page = (request.getPage() == null || request.getPage() < 1) ? 0 : request.getPage() - 1;
+        int size = (request.getSize() == null || request.getSize() < 1) ? 10 : request.getSize();
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+        String keyword = StringUtils.trimToNull(request.getKeyword());
+        PublisherStatus status = request.getStatus();
+        // WordUtils.capitalizeFully("huynh quang");
+        Page<Publisher> publisherPage = publisherRepository.search(keyword, status, pageable);
+
+        List<PublisherResponse> items = publisherPage.getContent().stream().map(publisherMapper::toDTO).toList();
+
+        return new PageResponse<>(
+                items,
+                publisherPage.getNumber(),
+                publisherPage.getSize(),
+                publisherPage.getTotalElements(),
+                publisherPage.getTotalPages());
+    }
+
+    @Override
+    public void insertData() {
+        if (publisherRepository.count() > 0) {
+            return;
+        }
+
+        List<Publisher> items = List.of(
+                createPublisher("Khác"),
+
+                // Việt Nam
+                createPublisher("NXB Kim Đồng"),
+                createPublisher("NXB Trẻ"),
+                createPublisher("NXB Giáo Dục Việt Nam"),
+                createPublisher("NXB Văn Học"),
+                createPublisher("NXB Lao Động"),
+                createPublisher("NXB Tổng Hợp TP. Hồ Chí Minh"),
+                createPublisher("NXB Hội Nhà Văn"),
+                createPublisher("NXB Phụ Nữ Việt Nam"),
+                createPublisher("NXB Chính Trị Quốc Gia Sự Thật"),
+                createPublisher("NXB Thế Giới"),
+                createPublisher("NXB Dân Trí"),
+
+                // Mỹ
+                createPublisher("Penguin Random House"),
+                createPublisher("HarperCollins"),
+                createPublisher("Simon & Schuster"),
+                createPublisher("Macmillan Publishers"),
+                createPublisher("Hachette Book Group"),
+
+                // Anh
+                createPublisher("Oxford University Press"),
+                createPublisher("Cambridge University Press"),
+                createPublisher("Bloomsbury Publishing"),
+                createPublisher("Pearson"),
+
+                // Nhật Bản
+                createPublisher("Kodansha"),
+                createPublisher("Shueisha"),
+                createPublisher("Shogakukan"),
+                createPublisher("Kadokawa"),
+
+                // Hàn Quốc
+                createPublisher("Munhakdongne"),
+                createPublisher("Changbi Publishers"),
+                createPublisher("Wisdom House"),
+
+                // Trung Quốc
+                createPublisher("People's Literature Publishing House"),
+                createPublisher("China Publishing Group"),
+                createPublisher("CITIC Press"),
+
+                // Quốc tế
+                createPublisher("Springer"),
+                createPublisher("Elsevier"),
+                createPublisher("Wiley"),
+                createPublisher("O'Reilly Media"),
+                createPublisher("Manning Publications"),
+                createPublisher("Packt Publishing"));
+
+        publisherRepository.saveAll(items);
+    }
+
+    private Publisher createPublisher(String name) {
+        Publisher publisher = new Publisher();
+        publisher.setName(TextUtils.capitalizeFully(name));
+        publisher.setSlug(TextUtils.toSlug(name));
+        publisher.setStatus(PublisherStatus.ACTIVE);
+        return publisher;
     }
 }

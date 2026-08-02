@@ -4,6 +4,7 @@ import com.dev.backend.common.constant.ModuleConstants;
 import com.dev.backend.common.enums.UserStatus;
 import com.dev.backend.modules.author.service.AuthorService;
 import com.dev.backend.modules.genre.service.GenreService;
+import com.dev.backend.modules.publisher.service.PublisherService;
 import com.dev.backend.modules.role.entity.Role;
 import com.dev.backend.modules.role.repository.RoleRepository;
 import com.dev.backend.modules.user.entity.User;
@@ -27,10 +28,11 @@ public class LoadData implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+
+    private final PasswordEncoder passwordEncoder;
     private final AuthorService authorService;
     private final GenreService genreService;
-    private final PasswordEncoder passwordEncoder;
-
+    private final PublisherService publisherService;
     @Override
     public void run(String... args) throws Exception {
         insertData();
@@ -95,6 +97,7 @@ public class LoadData implements CommandLineRunner {
         }
         authorService.insertData();
         genreService.insertData();
+        publisherService.insertData();
         log.info("Khởi tạo dữ liệu mẫu hoàn tất.");
     }
 }
