@@ -16,6 +16,32 @@ interface AuthorTableProps {
   onDelete: (authorId: number) => void;
 }
 
+const ExpandableDescription: React.FC<{ text?: string }> = ({ text }) => {
+  const [isExpanded, setIsExpanded] = React.useState(false);
+
+  if (!text) {
+    return <span className="text-xs text-zinc-400 italic">Chưa có mô tả</span>;
+  }
+
+  const isLong = text.length > 80;
+
+  return (
+    <div className="max-w-md">
+      <p className={`text-xs text-zinc-600 dark:text-zinc-400 ${!isExpanded ? 'line-clamp-2' : ''}`}>
+        {text}
+      </p>
+      {isLong && (
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline mt-1 focus:outline-none"
+        >
+          {isExpanded ? "Thu gọn" : "Xem thêm"}
+        </button>
+      )}
+    </div>
+  );
+};
+
 export const AuthorTable: React.FC<AuthorTableProps> = ({
   authors,
   page = 1,
@@ -33,10 +59,10 @@ export const AuthorTable: React.FC<AuthorTableProps> = ({
           <thead className="bg-zinc-50 dark:bg-zinc-800/40 text-xs uppercase font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider">
             <tr>
               <th className="px-4 py-4 w-14 text-center">STT</th>
-              <th className="px-6 py-4">Tác giả</th>
-              <th className="px-6 py-4">Mô tả</th>
-              <th className="px-6 py-4">Trạng thái</th>
-              <th className="px-6 py-4 text-right">Thao tác</th>
+              <th className="px-6 py-4 w-[35%]">Tác giả</th>
+              <th className="px-6 py-4 w-[35%]">Mô tả</th>
+              <th className="px-6 py-4 w-[15%]">Trạng thái</th>
+              <th className="px-6 py-4 text-right w-24">Thao tác</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -90,9 +116,7 @@ export const AuthorTable: React.FC<AuthorTableProps> = ({
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <p className="line-clamp-2 max-w-md text-xs text-zinc-600 dark:text-zinc-400">
-                      {author.description || "Chưa có mô tả"}
-                    </p>
+                    <ExpandableDescription text={author.description} />
                   </td>
                   <td className="px-6 py-4">
                     <span

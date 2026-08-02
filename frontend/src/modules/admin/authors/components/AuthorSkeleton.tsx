@@ -3,22 +3,22 @@ export const AuthorSkeleton = () => {
     <div className="card-custom overflow-hidden flex flex-col mb-6 animate-pulse">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm text-zinc-600 dark:text-zinc-300">
-          <thead className="bg-zinc-50 dark:bg-zinc-800/40 border-b border-zinc-200 dark:border-zinc-800">
-            <tr className="text-zinc-500 dark:text-zinc-400">
+          <thead className="bg-zinc-50 dark:bg-zinc-800/40 text-xs uppercase font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider">
+            <tr>
               <th className="px-4 py-4 w-14 text-center">STT</th>
-              <th className="px-6 py-4">Tác giả</th>
-              <th className="px-6 py-4">Mô tả</th>
-              <th className="px-6 py-4">Trạng thái</th>
-              <th className="px-6 py-4 text-right">Thao tác</th>
+              <th className="px-6 py-4 w-[35%]">Tác giả</th>
+              <th className="px-6 py-4 w-[35%]">Mô tả</th>
+              <th className="px-6 py-4 w-[15%]">Trạng thái</th>
+              <th className="px-6 py-4 text-right w-24">Thao tác</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
               <tr key={i}>
-                <td className="px-4 py-4 text-center">
+                <td className="px-4 py-4 text-center font-medium text-zinc-400 dark:text-zinc-500 text-xs">
                   <div className="h-4 bg-zinc-200 dark:bg-zinc-700 rounded w-4 mx-auto"></div>
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-6 py-4 font-medium text-zinc-900 dark:text-white">
                   <div className="flex gap-3 items-center">
                     <div className="w-10 h-10 rounded-full bg-zinc-200 dark:bg-zinc-700 shrink-0"></div>
                     <div className="flex-1 flex flex-col gap-1.5">
@@ -28,15 +28,14 @@ export const AuthorSkeleton = () => {
                   </div>
                 </td>
                 <td className="px-6 py-4">
-                  <div className="h-3.5 bg-zinc-200 dark:bg-zinc-700 rounded w-48 mb-1.5"></div>
-                  <div className="h-3.5 bg-zinc-200 dark:bg-zinc-700 rounded w-32"></div>
+                  <div className="h-3 bg-zinc-200 dark:bg-zinc-700 rounded w-full mb-1"></div>
+                  <div className="h-3 bg-zinc-200 dark:bg-zinc-700 rounded w-3/4"></div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="h-6 bg-zinc-200 dark:bg-zinc-700 rounded-lg w-24"></div>
                 </td>
                 <td className="px-6 py-4 text-right">
-                  <div className="flex justify-end gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-700"></div>
+                  <div className="flex justify-end">
                     <div className="w-8 h-8 rounded-lg bg-zinc-200 dark:bg-zinc-700"></div>
                   </div>
                 </td>
