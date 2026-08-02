@@ -22,6 +22,7 @@ export interface SelectBoxProps
   containerClassName?: string;
   value?: string | number;
   defaultValue?: string | number;
+  openDirection?: "up" | "down";
 }
 
 export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
@@ -44,6 +45,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
       onBlur,
       disabled,
       name,
+      openDirection = "down",
       ...props
     },
     ref
@@ -188,7 +190,11 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
 
             {/* Dropdown Menu */}
             {isOpen && (
-              <div className="absolute z-50 mt-1 w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-lg max-h-60 overflow-hidden flex flex-col animate-in fade-in duration-100">
+              <div
+                className={`absolute z-50 w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-lg max-h-60 overflow-hidden flex flex-col animate-in fade-in duration-100 ${
+                  openDirection === "up" ? "bottom-full mb-1" : "top-full mt-1"
+                }`}
+              >
                 {/* Search Bar inside Dropdown */}
                 {searchable && (
                   <div className="p-2 border-b border-zinc-100 dark:border-zinc-800 relative">

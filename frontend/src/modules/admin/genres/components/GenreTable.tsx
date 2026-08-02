@@ -26,8 +26,8 @@ export const GenreTable: React.FC<GenreTableProps> = ({
   onDelete,
 }) => {
   return (
-    <div className="hidden md:flex card-custom overflow-hidden flex-col">
-      <div className="overflow-x-auto">
+    <div className="hidden md:flex card-custom flex-col">
+      <div className="overflow-x-auto overflow-hidden rounded-t-2xl">
         <table className="w-full text-left text-sm text-zinc-600 dark:text-zinc-300">
           <thead className="bg-zinc-50 dark:bg-zinc-800/40 text-xs uppercase font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider">
             <tr>
