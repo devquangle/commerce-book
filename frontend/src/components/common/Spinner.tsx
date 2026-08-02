@@ -49,7 +49,7 @@ const Spinner: React.FC<LoadingProps> = ({
   return (
     <div className={`fixed inset-0 z-9999 flex items-center justify-center bg-slate-950/40 backdrop-blur-md transition-opacity duration-300 ${className}`}>
       {/* Glass card container */}
-      <div className="relative flex flex-col items-center justify-center p-8 bg-white/95 dark:bg-slate-900/95 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800/60 max-w-[280px] w-full mx-4 transition-transform duration-300 scale-100">
+      <div className="relative flex flex-col items-center justify-center p-8 bg-white/95 dark:bg-slate-900/95 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800/60 max-w-70 w-full mx-4 transition-transform duration-300 scale-100">
         
         {/* Animated Spinner Spinner Container */}
         <div className="relative w-16 h-16 mb-4 flex items-center justify-center">

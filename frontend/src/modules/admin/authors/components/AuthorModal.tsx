@@ -15,6 +15,7 @@ import { useWikipedia } from "../hooks/useWikipedia";
 import { showSuccessToast, showErrorToast } from "@/libs/utils/toastUtil";
 import UploadImageService from "@/services/upload-image.service";
 import type { AuthorRequest, AuthorResponse } from "../types/author.type";
+import axios from "axios";
 
 interface AuthorModalProps {
   isOpen: boolean;
@@ -123,7 +124,13 @@ const AuthorModalContent: React.FC<AuthorModalProps> = ({
         finalData.urlImage = await UploadImageService.uploadImageUrl(finalData.urlImage);
       }
     } catch (error :unknown) {
-      showErrorToast("Lỗi khi tải ảnh lên máy chủ!");
+      let errorMsg = "Đã xảy ra lỗi.";
+      if (axios.isAxiosError(error)) {
+        errorMsg = error.response?.data?.message || error.message || errorMsg;
+      } else if (error instanceof Error) {
+        errorMsg = error.message;
+      }
+      showErrorToast(errorMsg);
       return;
     }
 
