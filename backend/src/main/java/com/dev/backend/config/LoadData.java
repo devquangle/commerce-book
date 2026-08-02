@@ -7,6 +7,7 @@ import com.dev.backend.modules.genre.service.GenreService;
 import com.dev.backend.modules.publisher.service.PublisherService;
 import com.dev.backend.modules.role.entity.Role;
 import com.dev.backend.modules.role.repository.RoleRepository;
+import com.dev.backend.modules.series.service.SeriesService;
 import com.dev.backend.modules.user.entity.User;
 import com.dev.backend.modules.user.repository.UserRepository;
 
@@ -33,6 +34,7 @@ public class LoadData implements CommandLineRunner {
     private final AuthorService authorService;
     private final GenreService genreService;
     private final PublisherService publisherService;
+    private final SeriesService seriesService;
     @Override
     public void run(String... args) throws Exception {
         insertData();
@@ -98,6 +100,7 @@ public class LoadData implements CommandLineRunner {
         authorService.insertData();
         genreService.insertData();
         publisherService.insertData();
+        seriesService.insertData();
         log.info("Khởi tạo dữ liệu mẫu hoàn tất.");
     }
 }

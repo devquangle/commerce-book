@@ -67,12 +67,6 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public GenreResponse getGenreResponse(Long id) {
-        return genreMapper.toDTO(getById(id));
-    }
-
-    @Override
     public GenreResponse create(GenreRequest request) {
         Genre genre = new Genre();
         validate(request);
@@ -151,15 +145,15 @@ public class GenreServiceImpl implements GenreService {
 
         GenreStatus status = request.getStatus();
         String keyword = StringUtils.trimToNull(request.getKeyword());
-        Page<Genre> authorPage = genreRepository.search(keyword, status, pageable);
+        Page<Genre> item = genreRepository.search(keyword, status, pageable);
 
-        List<GenreResponse> items = authorPage.getContent().stream().map(genreMapper::toDTO).toList();
+        List<GenreResponse> items = item.getContent().stream().map(genreMapper::toDTO).toList();
 
         return new PageResponse<>(
                 items,
-                authorPage.getNumber(),
-                authorPage.getSize(),
-                authorPage.getTotalElements(),
-                authorPage.getTotalPages());
+                item.getNumber(),
+                item.getSize(),
+                item.getTotalElements(),
+                item.getTotalPages());
     }
 }

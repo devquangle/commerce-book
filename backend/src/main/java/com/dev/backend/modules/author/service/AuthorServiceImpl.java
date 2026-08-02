@@ -175,16 +175,16 @@ public class AuthorServiceImpl implements AuthorService {
 
         AuthorStatus status = request.getStatus();
         String keyword = StringUtils.trimToNull(request.getKeyword());
-        Page<Author> authorPage = authorRepository.search(keyword, status, pageable);
+        Page<Author> item = authorRepository.search(keyword, status, pageable);
 
-        List<AuthorResponse> items = authorPage.getContent().stream().map(authorMapper::toDTO).toList();
+        List<AuthorResponse> items = item.getContent().stream().map(authorMapper::toDTO).toList();
 
         return new PageResponse<>(
                 items,
-                authorPage.getNumber(),
-                authorPage.getSize(),
-                authorPage.getTotalElements(),
-                authorPage.getTotalPages());
+                item.getNumber(),
+                item.getSize(),
+                item.getTotalElements(),
+                item.getTotalPages());
     }
 
 }

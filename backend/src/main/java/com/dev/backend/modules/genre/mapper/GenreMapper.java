@@ -23,12 +23,12 @@ public class GenreMapper {
         if (entity == null) {
             return null;
         }
-        GenreResponse dto = new GenreResponse();
-        dto.setId(entity.getId());
-        dto.setName(entity.getName());
-        dto.setSlug(entity.getSlug());
-        dto.setStatus(entity.getStatus());
-        return dto;
+        GenreResponse response = new GenreResponse();
+        response.setId(entity.getId());
+        response.setName(entity.getName());
+        response.setSlug(entity.getSlug());
+        response.setStatus(entity.getStatus());
+        return response;
 
     }
 

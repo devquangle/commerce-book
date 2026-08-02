@@ -1,9 +1,12 @@
 package com.dev.backend.modules.series.entity;
 
 import com.dev.backend.common.entity.BaseEntity;
+import com.dev.backend.common.enums.SeriesStatus;
 import com.dev.backend.modules.product.entity.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -27,8 +30,12 @@ public class Series extends BaseEntity {
     @Column(name = "name", nullable = false, length = 150)
     private String name;
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
+    @Column(name = "slug", nullable = false, length = 150)
+    private String slug;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private SeriesStatus status;
 
     @OneToMany(mappedBy = "series")
     @Builder.Default

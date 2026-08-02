@@ -17,7 +17,6 @@ public interface GenreService {
 
     void validate(GenreRequest request);
 
-    GenreResponse getGenreResponse(Long id);
 
     GenreResponse create(GenreRequest request);
 

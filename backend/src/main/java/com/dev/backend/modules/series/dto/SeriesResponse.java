@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import com.dev.backend.common.enums.SeriesStatus;
 
 @Data
 @NoArgsConstructor
@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class SeriesResponse {
     private Long id;
     private String name;
-    private String description;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String slug;
+    private SeriesStatus status;
 }

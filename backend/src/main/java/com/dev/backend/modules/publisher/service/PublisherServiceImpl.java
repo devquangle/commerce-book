@@ -112,17 +112,16 @@ public class PublisherServiceImpl implements PublisherService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         String keyword = StringUtils.trimToNull(request.getKeyword());
         PublisherStatus status = request.getStatus();
-        // WordUtils.capitalizeFully("huynh quang");
-        Page<Publisher> publisherPage = publisherRepository.search(keyword, status, pageable);
+        Page<Publisher> item = publisherRepository.search(keyword, status, pageable);
 
-        List<PublisherResponse> items = publisherPage.getContent().stream().map(publisherMapper::toDTO).toList();
+        List<PublisherResponse> items = item.getContent().stream().map(publisherMapper::toDTO).toList();
 
         return new PageResponse<>(
                 items,
-                publisherPage.getNumber(),
-                publisherPage.getSize(),
-                publisherPage.getTotalElements(),
-                publisherPage.getTotalPages());
+                item.getNumber(),
+                item.getSize(),
+                item.getTotalElements(),
+                item.getTotalPages());
     }
 
     @Override
