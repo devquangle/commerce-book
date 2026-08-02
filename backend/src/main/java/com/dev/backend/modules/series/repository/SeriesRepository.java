@@ -1,8 +1,6 @@
 package com.dev.backend.modules.series.repository;
 
-import com.dev.backend.common.enums.GenreStatus;
 import com.dev.backend.common.enums.SeriesStatus;
-import com.dev.backend.modules.genre.entity.Genre;
 import com.dev.backend.modules.series.entity.Series;
 
 import org.springframework.data.domain.Page;

@@ -35,15 +35,15 @@ public class GenreController {
     }
 
     @PostMapping("/admin/genres")
-    public ResponseEntity<ResponseData<GenreResponse>> add(@RequestBody GenreRequest authorRequest) {
-        GenreResponse response = authorService.create(authorRequest);
+    public ResponseEntity<ResponseData<GenreResponse>> add(@RequestBody GenreRequest request) {
+        GenreResponse response = authorService.create(request);
         return ResponseUtil.success("Thêm thể loại thành công.", response);
     }
 
     @PutMapping("/admin/genres/{id}")
     public ResponseEntity<ResponseData<GenreResponse>> update(@PathVariable("id") Long id,
-            @RequestBody GenreRequest authorRequest) {
-        GenreResponse response = authorService.update(id, authorRequest);
+            @RequestBody GenreRequest request) {
+        GenreResponse response = authorService.update(id, request);
         return ResponseUtil.success("Cập nhật thể loại thành công.", response);
     }
 
