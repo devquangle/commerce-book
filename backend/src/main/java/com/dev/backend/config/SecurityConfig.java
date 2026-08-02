@@ -40,23 +40,24 @@ public class SecurityConfig {
 
         @org.springframework.beans.factory.annotation.Value("${app.cors.allowedOrigins:http://localhost:5173}")
         private List<String> allowedOrigins;
-    public static final String[] PUBLIC_URLS = {
-            "/api/v1/auth/login",
-            "/api/v1/auth/register",
-            "/api/v1/auth/refresh",
-        "/api/v1/upload",
-            "/products",
-            "/genre/list",
-            "/productdetail/**",
-            "/reviews/**",
-            "/api/v1/products/**",
-            "/api/v1/products/search/**",
-            "/api/v1/genres/**",
-            "/api/v1/authors/**",
-            "/api/v1/publishers/**",
-            "/api/v1/series/**",
-            "/api/v1/reviews/**"
-    };
+        public static final String[] PUBLIC_URLS = {
+                        "/api/v1/auth/login",
+                        "/api/v1/auth/register",
+                        "/api/v1/auth/refresh",
+                        "/api/v1/upload",
+                        "/api/v1/wikipedia/**",
+                        "/products",
+                        "/genre/list",
+                        "/productdetail/**",
+                        "/reviews/**",
+                        "/api/v1/products/**",
+                        "/api/v1/products/search/**",
+                        "/api/v1/genres/**",
+                        "/api/v1/authors/**",
+                        "/api/v1/publishers/**",
+                        "/api/v1/series/**",
+                        "/api/v1/reviews/**"
+        };
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

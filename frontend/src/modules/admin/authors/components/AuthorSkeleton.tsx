@@ -9,7 +9,7 @@ export const AuthorSkeleton = () => {
               <th className="px-6 py-4 w-[35%]">Tác giả</th>
               <th className="px-6 py-4 w-[35%]">Mô tả</th>
               <th className="px-6 py-4 w-[15%]">Trạng thái</th>
-              <th className="px-6 py-4 text-right w-24">Thao tác</th>
+              <th className="px-6 py-4 text-right w-24"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">

@@ -5,7 +5,7 @@ import type { ApiResponse } from "@/libs/utils/api-response";
 const WikipediaService = {
   async fetchAuthorData(req: string): Promise<WikipediaResponse> {
     const res = await publicAxios.get<ApiResponse<WikipediaResponse>>(
-      "/public/wikipedia",
+      "/api/v1/wikipedia",
       {
         params: { name: req },
       },
