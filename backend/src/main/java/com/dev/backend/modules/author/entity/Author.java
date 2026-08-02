@@ -1,10 +1,13 @@
 package com.dev.backend.modules.author.entity;
 
 import com.dev.backend.common.entity.BaseEntity;
+import com.dev.backend.common.enums.AuthorStatus;
 import com.dev.backend.modules.author_product.entity.AuthorProduct;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -44,7 +47,8 @@ public class Author extends BaseEntity {
     private String description;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private AuthorStatus status;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

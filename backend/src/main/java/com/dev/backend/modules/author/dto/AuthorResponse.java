@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import com.dev.backend.common.enums.AuthorStatus;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +21,7 @@ public class AuthorResponse {
     private String urlImage;
     private String urlBio;
     private String description;
-    private String status;
+    private AuthorStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

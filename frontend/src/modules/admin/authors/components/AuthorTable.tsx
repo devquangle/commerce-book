@@ -1,7 +1,5 @@
-"use client";
-
 import React from "react";
-import { Edit2, Trash2, ExternalLink, Link2 } from "lucide-react";
+import { ExternalLink, Link2 } from "lucide-react";
 import { getLabelAuthorStatus, type AuthorResponse } from "../types/author.type";
 import { Pagination } from "@/components/common";
 import { AuthorActionMenu } from "./AuthorActionMenu";

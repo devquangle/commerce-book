@@ -2,6 +2,7 @@ package com.dev.backend.config;
 
 import com.dev.backend.common.constant.ModuleConstants;
 import com.dev.backend.common.enums.UserStatus;
+import com.dev.backend.modules.author.service.AuthorService;
 import com.dev.backend.modules.role.entity.Role;
 import com.dev.backend.modules.role.repository.RoleRepository;
 import com.dev.backend.modules.user.entity.User;
@@ -25,7 +26,7 @@ public class LoadData implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
+    private final AuthorService authorService;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -90,6 +91,7 @@ public class LoadData implements CommandLineRunner {
                  userRepository.save(savedUser);
             }
         }
+        authorService.insertData();
 
         log.info("Khởi tạo dữ liệu mẫu hoàn tất.");
     }

@@ -65,8 +65,18 @@ const AuthorModalContent: React.FC<AuthorModalContentProps> = ({
       onClose={onClose}
       title={author ? "Chỉnh sửa thông tin tác giả" : "Thêm tác giả mới"}
       size="md"
+      footer={
+        <div className="flex items-center justify-end gap-3 w-full">
+          <Button variant="secondary" onClick={onClose}>
+            Hủy bỏ
+          </Button>
+          <Button type="submit" form="author-form" isLoading={isSubmitting}>
+            {author ? "Cập nhật" : "Thêm mới"}
+          </Button>
+        </div>
+      }
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form id="author-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <InputField
           label="Tên tác giả"
           required
@@ -105,16 +115,6 @@ const AuthorModalContent: React.FC<AuthorModalContentProps> = ({
           error={errors.extract?.message}
           {...register("extract")}
         />
-
-        {/* Modal Actions */}
-        <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-end gap-3">
-          <Button variant="secondary" onClick={onClose}>
-            Hủy bỏ
-          </Button>
-          <Button type="submit" isLoading={isSubmitting}>
-            {author ? "Cập nhật" : "Thêm mới"}
-          </Button>
-        </div>
       </form>
     </Modal>
   );

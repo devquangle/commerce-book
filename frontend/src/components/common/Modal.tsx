@@ -15,6 +15,7 @@ export type ModalProps = {
   children?: React.ReactNode;
   size?: "sm" | "md" | "lg";
   isLoading?: boolean;
+  footer?: React.ReactNode;
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -28,6 +29,7 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   size = "md",
   isLoading = false,
+  footer,
 }) => {
   // Handle ESC key press to close modal
   useEffect(() => {
@@ -39,11 +41,15 @@ export const Modal: React.FC<ModalProps> = ({
 
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      const mainEl = document.querySelector("main");
+      if (mainEl) mainEl.style.overflow = "hidden";
       window.addEventListener("keydown", handleKeyDown);
     }
 
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
+      const mainEl = document.querySelector("main");
+      if (mainEl) mainEl.style.overflow = "";
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, onClose]);
@@ -94,8 +100,15 @@ export const Modal: React.FC<ModalProps> = ({
           {children}
         </div>
 
+        {/* Custom Footer */}
+        {footer && (
+          <div className="px-6 py-4 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/30">
+            {footer}
+          </div>
+        )}
+
         {/* Modal Footer (Renders when onConfirm is provided or default action buttons are needed) */}
-        {onConfirm && (
+        {!footer && onConfirm && (
           <div className="px-6 py-4 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-end gap-3 bg-zinc-50/50 dark:bg-zinc-800/30">
             <Button variant="secondary" onClick={onClose} disabled={isLoading}>
               {cancelText}

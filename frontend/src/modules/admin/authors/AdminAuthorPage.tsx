@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { AuthorHeader } from "./components/AuthorHeader";
 import { AuthorFilter } from "./components/AuthorFilter";
 import { AuthorTable } from "./components/AuthorTable";
 import { AuthorMobileCard } from "./components/AuthorMobileCard";
 import { AuthorSkeleton, AuthorMobileSkeleton } from "./components/AuthorSkeleton";
 import { AuthorModal } from "./components/AuthorModal";
-import type { AuthorResponse, AuthorFilterState, AuthorRequest } from "./types/author.type";
+import { useAuthorFilter } from "./hooks/useAuthorFilter";
+import type { AuthorResponse, AuthorRequest } from "./types/author.type";
 
 const MOCK_AUTHORS: AuthorResponse[] = [
   {
@@ -56,25 +57,30 @@ const MOCK_AUTHORS: AuthorResponse[] = [
 ];
 
 const AdminAuthorPage = () => {
+  const {
+    keyword,
+    status,
+    page,
+    size,
+    filterParams,
+    setPage,
+    setSize,
+    handleKeywordChange,
+    handleStatusChange,
+    handleResetFilter,
+  } = useAuthorFilter();
+
   const [authors, setAuthors] = useState<AuthorResponse[]>(MOCK_AUTHORS);
-  const [filterState, setFilterState] = useState<AuthorFilterState>({ page: 1, size: 10 });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAuthor, setSelectedAuthor] = useState<AuthorResponse | null>(null);
 
-  const handleFilterChange = (updatedState: Partial<AuthorFilterState>) => {
-    setFilterState((prev) => ({ ...prev, ...updatedState, page: 1 }));
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
   };
 
-  const handleResetFilter = () => {
-    setFilterState({ page: 1, size: 10 });
-  };
-
-  const handlePageChange = (page: number) => {
-    setFilterState((prev) => ({ ...prev, page }));
-  };
-
-  const handlePageSizeChange = (size: number) => {
-    setFilterState((prev) => ({ ...prev, size, page: 1 }));
+  const handlePageSizeChange = (newSize: number) => {
+    setSize(newSize);
+    setPage(1);
   };
 
   const handleAddAuthor = () => {
@@ -127,26 +133,28 @@ const AdminAuthorPage = () => {
       setIsLoading(false);
     }, 1000);
     return () => clearTimeout(timer);
-  }, [filterState]);
+  }, [filterParams.keyword, filterParams.status, filterParams.page, filterParams.size]);
 
   const filteredAuthors = authors.filter(a => {
-    if (filterState.keyword && !a.name.toLowerCase().includes(filterState.keyword.toLowerCase())) return false;
-    if (filterState.status && a.status !== filterState.status) return false;
+    if (filterParams.keyword && !a.name.toLowerCase().includes(filterParams.keyword.toLowerCase())) return false;
+    if (filterParams.status && a.status !== filterParams.status) return false;
     return true;
   });
 
   const paginatedAuthors = filteredAuthors.slice(
-    ((filterState.page || 1) - 1) * (filterState.size || 10),
-    (filterState.page || 1) * (filterState.size || 10)
+    ((filterParams.page || 1) - 1) * (filterParams.size || 10),
+    (filterParams.page || 1) * (filterParams.size || 10)
   );
 
   return (
-    <div className="flex flex-col gap-6 w-full  min-h-full pb-6">
+    <div className="flex flex-col gap-6 w-full min-h-full pb-6">
       <AuthorHeader onAddAuthor={handleAddAuthor} />
       
       <AuthorFilter 
-        filterState={filterState} 
-        onChange={handleFilterChange} 
+        keyword={keyword}
+        status={status}
+        onKeywordChange={handleKeywordChange}
+        onStatusChange={handleStatusChange}
         onReset={handleResetFilter} 
       />
       
@@ -165,8 +173,8 @@ const AdminAuthorPage = () => {
         <>
           <AuthorTable 
             authors={paginatedAuthors}
-            page={filterState.page}
-            pageSize={filterState.size}
+            page={page}
+            pageSize={size}
             totalElements={filteredAuthors.length}
             onPageChange={handlePageChange}
             onPageSizeChange={handlePageSizeChange}

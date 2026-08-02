@@ -1,5 +1,6 @@
 package com.dev.backend.modules.author.mapper;
 
+import com.dev.backend.common.utils.TextUtils;
 import com.dev.backend.modules.author.dto.AuthorRequest;
 import com.dev.backend.modules.author.dto.AuthorResponse;
 import com.dev.backend.modules.author.entity.Author;
@@ -8,63 +9,35 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthorMapper {
 
-    public Author toEntity(AuthorRequest request) {
-        if (request == null) {
+    public Author toEntity(Author author, AuthorRequest request) {
+        if (author == null) {
             return null;
         }
-        return Author.builder()
-                .name(request.getName())
-                .slug(request.getSlug())
-                .wikibaseItem(request.getWikibaseItem())
-                .urlImage(request.getUrlImage())
-                .urlBio(request.getUrlBio())
-                .description(request.getDescription())
-                .status(request.getStatus())
-                .build();
+        author.setName(TextUtils.capitalizeFully(request.getName()));
+        author.setWikibaseItem(request.getWikibaseItem());
+        author.setUrlImage(request.getUrlImage());
+        author.setUrlBio(request.getUrlBio());
+        author.setDescription(request.getDescription());
+        author.setStatus(request.getStatus());
+        return author;
     }
 
-    public AuthorResponse toResponse(Author entity) {
-        if (entity == null) {
+    public AuthorResponse toDTO(Author author) {
+        if (author == null) {
             return null;
         }
-        return AuthorResponse.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .slug(entity.getSlug())
-                .wikibaseItem(entity.getWikibaseItem())
-                .urlImage(entity.getUrlImage())
-                .urlBio(entity.getUrlBio())
-                .description(entity.getDescription())
-                .status(entity.getStatus())
-                .createdAt(entity.getCreatedAt())
-                .updatedAt(entity.getUpdatedAt())
-                .build();
+        AuthorResponse authorResponse = new AuthorResponse();
+        authorResponse.setId(author.getId());
+        authorResponse.setName(author.getName());
+        authorResponse.setWikibaseItem(author.getWikibaseItem());
+
+        authorResponse.setUrlImage(author.getUrlImage());
+        authorResponse.setUrlBio(author.getUrlBio());
+        authorResponse.setDescription(author.getDescription());
+        authorResponse.setStatus(author.getStatus());
+        return authorResponse;
+
     }
 
-    public void updateEntityFromRequest(AuthorRequest request, Author entity) {
-        if (request == null || entity == null) {
-            return;
-        }
-        if (request.getName() != null) {
-            entity.setName(request.getName());
-        }
-        if (request.getSlug() != null) {
-            entity.setSlug(request.getSlug());
-        }
-        if (request.getWikibaseItem() != null) {
-            entity.setWikibaseItem(request.getWikibaseItem());
-        }
-        if (request.getUrlImage() != null) {
-            entity.setUrlImage(request.getUrlImage());
-        }
-        if (request.getUrlBio() != null) {
-            entity.setUrlBio(request.getUrlBio());
-        }
-        if (request.getDescription() != null) {
-            entity.setDescription(request.getDescription());
-        }
-        if (request.getStatus() != null) {
-            entity.setStatus(request.getStatus());
-        }
-    }
+  
 }

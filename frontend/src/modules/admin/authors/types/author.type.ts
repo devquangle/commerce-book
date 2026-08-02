@@ -31,7 +31,7 @@ export interface AuthorRequest {
   status: AuthorStatus;
 }
 
-export interface AuthorFilterState {
+export interface AuthorFilterRequest {
   keyword?: string;
   status?: AuthorStatus;
   page?: number;
