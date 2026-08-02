@@ -228,7 +228,7 @@ const AuthorModalContent: React.FC<AuthorModalProps> = ({
                 onChange={onChange}
                 onBlur={onBlur}
                 ref={ref}
-                openDirection="up"
+                openDirection="down"
               />
             )}
           />
