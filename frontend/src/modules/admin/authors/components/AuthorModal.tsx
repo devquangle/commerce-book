@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm, useWatch, Controller } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { Modal } from "@/components/common/Modal";
@@ -142,7 +142,7 @@ const AuthorModalContent: React.FC<AuthorModalProps> = ({
 
   const statusOptions = [
     { label: "Đang hoạt động", value: "ACTIVE" },
-    { label: "Không hoạt động", value: "INACTIVE" },
+    { label: "Ngừng hoạt động", value: "INACTIVE" },
   ];
 
   return (
@@ -199,11 +199,22 @@ const AuthorModalContent: React.FC<AuthorModalProps> = ({
         )}
 
         {author && (
-          <SelectBox
-            label="Trạng thái"
-            options={statusOptions}
-            error={errors.status?.message}
-            {...register("status")}
+          <Controller
+            control={control}
+            name="status"
+            render={({ field: { value, onChange, onBlur, ref, name } }) => (
+              <SelectBox
+                label="Trạng thái"
+                options={statusOptions}
+                error={errors.status?.message}
+                name={name}
+                value={value}
+                onChange={onChange}
+                onBlur={onBlur}
+                ref={ref}
+                openDirection="up"
+              />
+            )}
           />
         )}
 

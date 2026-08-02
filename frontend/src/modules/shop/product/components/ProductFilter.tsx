@@ -38,7 +38,7 @@ export const ProductFilter = ({
         >
           <option value="">Trạng thái</option>
           <option value="ACTIVE">Hoạt động</option>
-          <option value="INACTIVE">Không hoạt động</option>
+          <option value="INACTIVE">Ngừng hoạt động</option>
           <option value="DELETED">Đã xóa</option>
         </select>
         <button 

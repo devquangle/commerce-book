@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { Modal } from "@/components/common/Modal";
 import { InputField } from "@/components/common/InputField";
 import { SelectBox } from "@/components/common/SelectBox";
@@ -29,6 +29,7 @@ const SeriesModalContent: React.FC<SeriesModalProps> = ({
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<SeriesRequest>({
     defaultValues: series || initSeries,
@@ -43,7 +44,7 @@ const SeriesModalContent: React.FC<SeriesModalProps> = ({
 
   const statusOptions = [
     { label: "Đang hoạt động", value: "ACTIVE" },
-    { label: "Không hoạt động", value: "INACTIVE" },
+    { label: "Ngừng hoạt động", value: "INACTIVE" },
   ];
 
   return (
@@ -72,11 +73,22 @@ const SeriesModalContent: React.FC<SeriesModalProps> = ({
           {...register("name", { required: "Vui lòng nhập tên" })}
         />
         {series && (
-          <SelectBox
-            label="Trạng thái"
-            options={statusOptions}
-            error={errors.status?.message}
-            {...register("status")}
+          <Controller
+            control={control}
+            name="status"
+            render={({ field: { value, onChange, onBlur, ref, name } }) => (
+              <SelectBox
+                label="Trạng thái"
+                options={statusOptions}
+                error={errors.status?.message}
+                name={name}
+                value={value}
+                onChange={onChange}
+                onBlur={onBlur}
+                ref={ref}
+                openDirection="up"
+              />
+            )}
           />
         )}
       </form>

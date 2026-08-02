@@ -23,7 +23,7 @@ export const SeriesFilter: React.FC<SeriesFilterProps> = ({
   const statusOptions = [
     { label: "Tất cả trạng thái", value: "" },
     { label: "Đang hoạt động", value: "ACTIVE" },
-    { label: "Không hoạt động", value: "INACTIVE" },
+    { label: "Ngừng hoạt động", value: "INACTIVE" },
     { label: "Đã xóa", value: "DELETED" },
   ];
 
@@ -55,7 +55,6 @@ export const SeriesFilter: React.FC<SeriesFilterProps> = ({
           <SelectBox
             options={statusOptions}
             value={status || ""}
-            searchPlaceholder="Lọc trạng thái..."
             onChange={(e) =>
               onStatusChange(e.target.value ? (e.target.value as SeriesStatus) : null)
             }

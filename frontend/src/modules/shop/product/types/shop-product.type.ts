@@ -5,7 +5,7 @@ export const getLabelProductStatus = (status: ProductStatus) => {
     case "ACTIVE":
       return "Đang hoạt động";
     case "INACTIVE":
-      return "Không hoạt động";
+      return "Ngừng hoạt động";
     case "DELETED":
       return "Đã xóa";
     default:

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown, Search, Check, X } from "lucide-react";
 
 export interface SelectOption {
   label: string;
@@ -9,7 +9,7 @@ export interface SelectOption {
   disabled?: boolean;
 }
 
-export interface SelectBoxProps
+export interface SelectSearchBoxProps
   extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "value" | "defaultValue"> {
   label?: string;
   error?: string;
@@ -17,13 +17,14 @@ export interface SelectBoxProps
   options: SelectOption[];
   placeholder?: string;
   required?: boolean;
+  searchPlaceholder?: string;
   containerClassName?: string;
   value?: string | number;
   defaultValue?: string | number;
   openDirection?: "up" | "down";
 }
 
-export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
+export const SelectSearchBox = React.forwardRef<HTMLSelectElement, SelectSearchBoxProps>(
   (
     {
       label,
@@ -32,6 +33,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
       options,
       placeholder,
       required,
+      searchPlaceholder = "Tìm kiếm...",
       className = "",
       containerClassName = "",
       id,
@@ -59,8 +61,9 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
       }
     };
 
-    // State for custom dropdown
+    // State for searchable custom dropdown
     const [isOpen, setIsOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
     const [selectedValue, setSelectedValue] = useState<string | number>(
       value !== undefined ? value : defaultValue !== undefined ? defaultValue : ""
     );
@@ -89,7 +92,10 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
       };
     }, []);
 
-
+    // Filter options for search
+    const filteredOptions = options.filter((opt) =>
+      opt.label.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const selectedOption = options.find(
       (opt) => String(opt.value) === String(selectedValue)
@@ -100,6 +106,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
 
       setSelectedValue(opt.value);
       setIsOpen(false);
+      setSearchTerm("");
 
       // Trigger native select change event so react-hook-form registers the update
       if (selectRef.current) {
@@ -186,15 +193,36 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
                   openDirection === "up" ? "bottom-full mb-1" : "top-full mt-1"
                 }`}
               >
+                {/* Search Bar inside Dropdown */}
+                  <div className="p-2 border-b border-zinc-100 dark:border-zinc-800 relative">
+                    <Search className="w-3.5 h-3.5 absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      placeholder={searchPlaceholder}
+                      className="w-full pl-8 pr-7 py-1.5 body-text bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-900 dark:text-white placeholder-zinc-400"
+                      autoFocus
+                    />
+                    {searchTerm && (
+                      <button
+                        type="button"
+                        onClick={() => setSearchTerm("")}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
 
-
+                {/* Options List */}
                 <div className="overflow-y-auto p-1 max-h-48 space-y-0.5">
-                  {options.length === 0 ? (
+                  {filteredOptions.length === 0 ? (
                     <p className="p-3 caption-text text-center text-zinc-400 font-medium">
-                      Không có lựa chọn nào
+                      Không tìm thấy kết quả
                     </p>
                   ) : (
-                    options.map((opt) => {
+                    filteredOptions.map((opt) => {
                       const isSelected = String(opt.value) === String(selectedValue);
                       return (
                         <button
@@ -231,4 +259,4 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
   }
 );
 
-SelectBox.displayName = "SelectBox";
+SelectSearchBox.displayName = "SelectSearchBox";

@@ -41,15 +41,11 @@ export const Modal: React.FC<ModalProps> = ({
 
     if (isOpen) {
       document.body.style.overflow = "hidden";
-      const mainEl = document.querySelector("main");
-      if (mainEl) mainEl.style.overflow = "hidden";
       window.addEventListener("keydown", handleKeyDown);
     }
 
     return () => {
       document.body.style.overflow = "";
-      const mainEl = document.querySelector("main");
-      if (mainEl) mainEl.style.overflow = "";
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, onClose]);

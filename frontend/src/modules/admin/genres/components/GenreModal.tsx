@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm, type UseFormSetError } from "react-hook-form";
+import { useForm, Controller, type UseFormSetError } from "react-hook-form";
 import { Modal } from "@/components/common/Modal";
 import { InputField } from "@/components/common/InputField";
 import { SelectBox } from "@/components/common/SelectBox";
@@ -28,6 +28,7 @@ const GenreModalContent: React.FC<GenreModalProps> = ({
     register,
     handleSubmit,
     setError,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<GenreRequest>({
     defaultValues: genre || initGenre,
@@ -44,7 +45,7 @@ const GenreModalContent: React.FC<GenreModalProps> = ({
 
   const statusOptions = [
     { label: "Đang hoạt động", value: "ACTIVE" },
-    { label: "Không hoạt động", value: "INACTIVE" },
+    { label: "Ngừng hoạt động", value: "INACTIVE" },
   ];
 
   return (
@@ -91,11 +92,22 @@ const GenreModalContent: React.FC<GenreModalProps> = ({
           })}
         />
         {genre && (
-          <SelectBox
-            label="Trạng thái"
-            options={statusOptions}
-            error={errors.status?.message}
-            {...register("status")}
+          <Controller
+            control={control}
+            name="status"
+            render={({ field: { value, onChange, onBlur, ref, name } }) => (
+              <SelectBox
+                label="Trạng thái"
+                options={statusOptions}
+                error={errors.status?.message}
+                name={name}
+                value={value}
+                onChange={onChange}
+                onBlur={onBlur}
+                ref={ref}
+                openDirection="up"
+              />
+            )}
           />
         )}
       </form>
