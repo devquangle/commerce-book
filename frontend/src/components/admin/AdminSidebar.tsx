@@ -142,7 +142,7 @@ export const AdminSidebar: React.FC = () => {
                   <Link
                     to={item.href}
                     onClick={handleClose}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
+                    className={`flex items-center gap-3 px-3 py-2.5 caption-text rounded-xl transition-all ${
                       isActive
                         ? "bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 font-semibold"
                         : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 hover:text-zinc-900 dark:hover:text-zinc-100"
@@ -188,7 +188,7 @@ export const AdminSidebar: React.FC = () => {
                         <Link
                           to={subItem.href}
                           onClick={handleClose}
-                          className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all body-text ${
+                          className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all caption-text ${
                             isSubActive
                               ? "bg-blue-100/70 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 font-semibold"
                               : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 hover:text-zinc-900 dark:hover:text-zinc-100"
@@ -253,7 +253,7 @@ export const AdminSidebar: React.FC = () => {
                         <Link
                           to={subItem.href}
                           onClick={handleClose}
-                          className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all body-text ${
+                          className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all caption-text ${
                             isSubActive
                               ? "bg-blue-100/70 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 font-semibold"
                               : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 hover:text-zinc-900 dark:hover:text-zinc-100"

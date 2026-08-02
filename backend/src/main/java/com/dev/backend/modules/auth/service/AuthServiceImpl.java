@@ -4,10 +4,11 @@ import com.dev.backend.common.constant.JwtType;
 import com.dev.backend.common.exception.BadRequestException;
 import com.dev.backend.common.exception.DuplicateFieldException;
 import com.dev.backend.common.exception.UnauthorizedException;
+import com.dev.backend.common.utils.CookieUtil;
 import com.dev.backend.modules.auth.dto.LoginResponse;
+import com.dev.backend.modules.auth.dto.RefreshResponse;
 import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
 import com.dev.backend.modules.auth.dto.LoginRequest;
-import com.dev.backend.modules.auth.dto.RefreshTokenRequest;
 import com.dev.backend.modules.auth.dto.RegisterRequest;
 import com.dev.backend.modules.auth.repository.AuthRepository;
 import com.dev.backend.modules.role.entity.Role;
@@ -20,6 +21,8 @@ import com.dev.backend.modules.user.mapper.UserMapper;
 import com.dev.backend.security.custom.CustomUserDetails;
 import com.dev.backend.security.jwt.JwtUtil;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
 
     @Override
-    public LoginResponse login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -72,13 +75,12 @@ public class AuthServiceImpl implements AuthService {
             String refreshToken = jwtUtil.generateRefreshToken(
                     user.getId(),
                     user.getTokenVersion());
-
+            CookieUtil.addCookie(response, "refreshToken", refreshToken);
             // userService.resetFailedAttempts(user);
 
             log.debug("Login success. Access token: {}", accessToken);
             return LoginResponse.builder()
                     .accessToken(accessToken)
-                    .refreshToken(refreshToken)
                     .build();
 
         } catch (BadCredentialsException ex) {
@@ -126,29 +128,31 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional(readOnly = true)
-    public LoginResponse refreshToken(RefreshTokenRequest request) {
-        String token = request.getRefreshToken();
-        if (!jwtUtil.isValid(token, JwtType.REFRESH)) {
-            throw new RuntimeException("RefreshToken không hợp lệ hoặc đã hết hạn");
+    public RefreshResponse refreshToken(HttpServletRequest request) {
+        String refreshToken = CookieUtil.getCookie(request, "refreshToken");
+        if (!jwtUtil.isValid(refreshToken, JwtType.REFRESH)) {
+            throw new UnauthorizedException("Token không hợp lệ");
         }
-
-        Long userId = jwtUtil.extractUserId(token);
+        Long userId = jwtUtil.extractUserId(refreshToken);
         User user = authRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+        if (!jwtUtil.isTokenVersionValid(refreshToken, user.getTokenVersion())) {
+            throw new UnauthorizedException("Token đã bị thu hồi");
+        }
+
+        
 
         CustomUserDetails customUserDetails = CustomUserDetails.build(user);
 
         int currentTokenVersion = user.getTokenVersion() == null ? 0 : user.getTokenVersion();
-        if (!jwtUtil.isTokenVersionValid(token, currentTokenVersion)) {
+        if (!jwtUtil.isTokenVersionValid(refreshToken, currentTokenVersion)) {
             throw new RuntimeException("RefreshToken đã bị vô hiệu hóa");
         }
 
         String newAccessToken = jwtUtil.generateAccessToken(customUserDetails);
-        String newRefreshToken = jwtUtil.generateRefreshToken(user.getId(), currentTokenVersion);
 
-        return LoginResponse.builder()
+        return RefreshResponse.builder()
                 .accessToken(newAccessToken)
-                .refreshToken(newRefreshToken)
                 .build();
     }
 

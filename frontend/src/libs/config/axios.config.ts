@@ -1,12 +1,11 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
-import { getAuthToken, setAuthToken, getToken, removeAuthToken, removeToken, setToken } from "../utils/cookie";
-import { TokenType } from "../constant/token.type";
-
+import { getAuthToken, setAuthToken, removeAuthToken  } from "../utils/cookie";
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 // 1. Axios instance cho các request public (không yêu cầu đăng nhập)
 export const publicAxios = axios.create({
   baseURL: BASE_URL,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -77,30 +76,16 @@ authAxios.interceptors.response.use(
       originalRequest._retry = true;
       isRefreshing = true;
 
-      const refreshToken = getToken(TokenType.REFRESH_TOKEN);
-      
-      if (!refreshToken) {
-        // Không có refresh token -> Đăng xuất luôn
-        removeAuthToken();
-        removeToken(TokenType.REFRESH_TOKEN);
-        isRefreshing = false;
-        window.location.href = "/login"; // Tự động đá ra trang login
-        return Promise.reject(error);
-      }
-
       try {
-        // Gọi API refresh token (dùng dynamic import để tránh Circular Dependency vì auth.service import axios)
+        // Gọi API refresh token (trình duyệt sẽ tự động gửi cookie HttpOnly refreshToken)
         const { AuthService } = await import("@/modules/auth/services/auth.service");
-        const loginResponse = await AuthService.refreshToken({ refreshToken });
+        const loginResponse = await AuthService.refreshToken();
 
-        // Lấy accessToken từ response
-        const { accessToken, refreshToken: newRefreshToken } = loginResponse; 
+        // Chỉ lấy accessToken từ response, refreshToken đã được set tự động qua cookie HttpOnly
+        const { accessToken } = loginResponse; 
         
-        // Lưu token mới vào cookie
+        // Lưu accessToken mới vào cookie (không HttpOnly)
         setAuthToken(accessToken);
-        if (newRefreshToken) {
-          setToken(TokenType.REFRESH_TOKEN, newRefreshToken);
-        }
 
         // Chạy lại các request đang nằm trong hàng đợi
         processQueue(null, accessToken);
@@ -114,7 +99,7 @@ authAxios.interceptors.response.use(
         // Nếu refresh token cũng thất bại (VD: refresh token hết hạn)
         processQueue(_error, null);
         removeAuthToken();
-        removeToken(TokenType.REFRESH_TOKEN);
+        // Xóa refreshToken thì Backend phải làm qua header Set-Cookie Max-Age=0
         window.location.href = "/login"; // Tự động đá ra trang login
         return Promise.reject(_error);
       } finally {

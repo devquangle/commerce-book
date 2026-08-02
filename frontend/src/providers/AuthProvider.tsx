@@ -41,10 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = async (request: LoginRequest): Promise<UserResponse | null> => {
     const res = await AuthService.login(request);
     setToken(TokenType.ACCESS_TOKEN, res.accessToken);
-    setToken(TokenType.REFRESH_TOKEN, res.refreshToken);
-    // Force React Query to fetch and cache new user data
     console.log(res);
-    
     const fetchedUser = await queryClient.fetchQuery({
       queryKey: ["auth", "me"],
       queryFn: () => AuthService.getUser(),

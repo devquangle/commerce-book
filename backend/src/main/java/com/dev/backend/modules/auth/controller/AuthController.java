@@ -1,21 +1,25 @@
 package com.dev.backend.modules.auth.controller;
 
 import com.dev.backend.modules.auth.dto.LoginResponse;
+import com.dev.backend.modules.auth.dto.RefreshResponse;
 import com.dev.backend.common.response.ResponseData;
 import com.dev.backend.common.response.ResponseUtil;
 import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
 import com.dev.backend.modules.auth.dto.LoginRequest;
-import com.dev.backend.modules.auth.dto.RefreshTokenRequest;
 import com.dev.backend.modules.auth.dto.RegisterRequest;
 import com.dev.backend.modules.auth.service.AuthService;
 import com.dev.backend.modules.user.dto.UserRequest;
 import com.dev.backend.modules.user.dto.UserResponse;
 import com.dev.backend.security.custom.CustomUserDetails;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,9 +35,9 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseData<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
-        LoginResponse response = authService.login(request);
-        return ResponseUtil.success("Login thành công", response);
+    public ResponseEntity<ResponseData<LoginResponse>> login(@Valid @RequestBody LoginRequest request,HttpServletResponse response) {
+        LoginResponse data = authService.login(request,response);
+        return ResponseUtil.success("Login thành công", data);
     }
 
     @PostMapping("/register")
@@ -43,9 +47,10 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<ResponseData<LoginResponse>> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
-        LoginResponse response = authService.refreshToken(request);
-          return ResponseUtil.success("refresh ", response);
+    public ResponseEntity<ResponseData<RefreshResponse>> refreshToken(HttpServletRequest request) {
+
+        RefreshResponse data = authService.refreshToken(request);
+        return ResponseUtil.success("refresh success", data);
     }
 
     @GetMapping("/me")

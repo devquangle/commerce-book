@@ -1,20 +1,23 @@
 package com.dev.backend.modules.auth.service;
 
 import com.dev.backend.modules.auth.dto.LoginResponse;
+import com.dev.backend.modules.auth.dto.RefreshResponse;
 import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
 import com.dev.backend.modules.auth.dto.LoginRequest;
-import com.dev.backend.modules.auth.dto.RefreshTokenRequest;
 import com.dev.backend.modules.auth.dto.RegisterRequest;
 import com.dev.backend.modules.user.dto.UserRequest;
 import com.dev.backend.modules.user.dto.UserResponse;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 public interface AuthService {
 
-    LoginResponse login(LoginRequest request);
+    LoginResponse login(LoginRequest request, HttpServletResponse response);
+
+    RefreshResponse refreshToken(HttpServletRequest request);
 
     UserResponse register(RegisterRequest request);
-
-    LoginResponse refreshToken(RefreshTokenRequest request);
 
     UserResponse getProfile(Long userId);
 

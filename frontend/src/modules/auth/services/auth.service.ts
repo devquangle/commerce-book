@@ -1,5 +1,5 @@
 import { authAxios, publicAxios } from "@/libs/config/axios.config";
-import type { LoginRequest, LoginResponse, RefreshTokenRequest } from "../types/login.type";
+import type { LoginRequest, LoginResponse, RefreshTokenResponse } from "../types/login.type";
 
 import type { ApiResponse } from "@/libs/utils/api-response";
 import type { UserRequest, UserResponse, ChangePasswordRequest } from "../types/user.type";
@@ -44,10 +44,9 @@ export const AuthService = {
       throw new Error(response.data.message || "Failed to change password");
     }
   },
-  refreshToken: async (request: RefreshTokenRequest): Promise<LoginResponse> => {
-    const response = await publicAxios.post<ApiResponse<LoginResponse>>(
-      "/api/v1/auth/refresh",
-      request
+  refreshToken: async (): Promise<RefreshTokenResponse> => {
+    const response = await publicAxios.post<ApiResponse<RefreshTokenResponse>>(
+      "/api/v1/auth/refresh"
     );
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message || "Failed to refresh token");
