@@ -65,15 +65,6 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponse(user);
     }
 
-    @Override
-    public UserResponse createUser(UserRequest request) {
-      
-    }
-
-    @Override
-    public UserResponse updateUser(Long id, UserRequest request) {
-   
-    }
 
     @Override
     public void deleteUser(Long id) {

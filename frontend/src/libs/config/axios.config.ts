@@ -1,5 +1,5 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
-import { getAuthToken, setAuthToken, getToken, removeAuthToken, removeToken } from "../utils/cookie";
+import { getAuthToken, setAuthToken, getToken, removeAuthToken, removeToken, setToken } from "../utils/cookie";
 import { TokenType } from "../constant/token.type";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
@@ -82,8 +82,9 @@ authAxios.interceptors.response.use(
       if (!refreshToken) {
         // Không có refresh token -> Đăng xuất luôn
         removeAuthToken();
+        removeToken(TokenType.REFRESH_TOKEN);
         isRefreshing = false;
-        // window.location.href = "/login"; // Bật dòng này nếu muốn tự động đá ra trang login
+        window.location.href = "/login"; // Tự động đá ra trang login
         return Promise.reject(error);
       }
 
@@ -93,10 +94,13 @@ authAxios.interceptors.response.use(
         const loginResponse = await AuthService.refreshToken({ refreshToken });
 
         // Lấy accessToken từ response
-        const { accessToken } = loginResponse; 
+        const { accessToken, refreshToken: newRefreshToken } = loginResponse; 
         
         // Lưu token mới vào cookie
         setAuthToken(accessToken);
+        if (newRefreshToken) {
+          setToken(TokenType.REFRESH_TOKEN, newRefreshToken);
+        }
 
         // Chạy lại các request đang nằm trong hàng đợi
         processQueue(null, accessToken);
@@ -111,7 +115,7 @@ authAxios.interceptors.response.use(
         processQueue(_error, null);
         removeAuthToken();
         removeToken(TokenType.REFRESH_TOKEN);
-        // window.location.href = "/login"; // Bật dòng này nếu muốn tự động đá ra trang login
+        window.location.href = "/login"; // Tự động đá ra trang login
         return Promise.reject(_error);
       } finally {
         isRefreshing = false;

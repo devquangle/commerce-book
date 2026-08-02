@@ -6,7 +6,7 @@ import type { UserResponse } from "@/modules/auth/types/user.type";
 import type { LoginRequest } from "@/modules/auth/types/login.type";
 import type { RoleType } from "@/libs/constant/role.type";
 import { AuthService } from "@/modules/auth/services/auth.service";
-import { getToken, setToken } from "@/libs/utils/cookie";
+import { getToken, setToken, removeToken } from "@/libs/utils/cookie";
 import { TokenType } from "@/libs/constant/token.type";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -54,8 +54,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const logout = async (): Promise<void> => {
-    // Mock logout logic
+    removeToken(TokenType.ACCESS_TOKEN);
+    removeToken(TokenType.REFRESH_TOKEN);
     setUserInfo(null);
+    window.location.href = "/login";
   };
 
   const hasRole = (role: RoleType): boolean => {

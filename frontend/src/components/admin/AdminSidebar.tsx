@@ -58,7 +58,7 @@ export const AdminSidebar: React.FC = () => {
     },
     {
       label: "Quản lý thể loại",
-      href: "/admin/categories",
+      href: "/admin/genres",
       icon: Layers,
     },
     {
@@ -128,7 +128,7 @@ export const AdminSidebar: React.FC = () => {
             </span>
           </Link>
 
-          <ul className="space-y-1 font-medium text-sm">
+          <ul className="space-y-1 body-text">
             {/* Main Navigation Items */}
             {topNavItems.map((item) => {
               const Icon = item.icon;
@@ -188,7 +188,7 @@ export const AdminSidebar: React.FC = () => {
                         <Link
                           to={subItem.href}
                           onClick={handleClose}
-                          className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all text-xs font-medium ${
+                          className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all body-text ${
                             isSubActive
                               ? "bg-blue-100/70 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 font-semibold"
                               : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 hover:text-zinc-900 dark:hover:text-zinc-100"
@@ -253,7 +253,7 @@ export const AdminSidebar: React.FC = () => {
                         <Link
                           to={subItem.href}
                           onClick={handleClose}
-                          className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all text-xs font-medium ${
+                          className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all body-text ${
                             isSubActive
                               ? "bg-blue-100/70 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 font-semibold"
                               : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 hover:text-zinc-900 dark:hover:text-zinc-100"
