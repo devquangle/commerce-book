@@ -52,8 +52,8 @@ export const AuthorActionMenu: React.FC<AuthorActionMenuProps> = ({ item, onEdit
 
       {isOpen && (
         <div 
-          className={`absolute right-6 w-32 bg-white dark:bg-zinc-900 rounded-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-zinc-200 dark:border-zinc-700 z-50 overflow-hidden flex flex-col py-1 ${
-            openUpward ? "bottom-full mb-1" : "top-full mt-1"
+          className={`absolute right-6 w-32 bg-white dark:bg-zinc-900 rounded-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-zinc-200 dark:border-zinc-700 z-50 overflow-hidden flex flex-col py-1 animate-in fade-in zoom-in-95 duration-100 ${
+            openUpward ? "bottom-0 origin-bottom-right" : "top-0 origin-top-right"
           }`}
         >
 

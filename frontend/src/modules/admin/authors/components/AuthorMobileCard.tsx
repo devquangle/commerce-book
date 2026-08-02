@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ExternalLink, Link2 } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 import { getLabelAuthorStatus, type AuthorResponse } from "../types/author.type";
 import { AuthorActionMenu } from "./AuthorActionMenu";
