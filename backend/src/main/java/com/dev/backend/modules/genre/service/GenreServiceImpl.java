@@ -1,6 +1,7 @@
 package com.dev.backend.modules.genre.service;
 
 import com.dev.backend.common.enums.GenreStatus;
+import com.dev.backend.common.exception.BadRequestException;
 import com.dev.backend.common.exception.DuplicateFieldException;
 import com.dev.backend.common.exception.NotFoundException;
 import com.dev.backend.common.response.PageResponse;
@@ -14,6 +15,7 @@ import com.dev.backend.modules.genre.repository.GenreRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -75,13 +77,18 @@ public class GenreServiceImpl implements GenreService {
         Genre genre = new Genre();
         validate(request);
         genreMapper.toEntity(genre, request);
+        genre.setStatus(GenreStatus.ACTIVE);
         return genreMapper.toDTO(genreRepository.save(genre));
     }
 
     @Override
     public GenreResponse update(Long id, GenreRequest request) {
         Genre genre = getById(id);
-        if (!request.getName().equals(genre.getName())) {
+        if (request.getStatus() == GenreStatus.DELETED) {
+            throw new BadRequestException("Không được cập nhật sang trạng thái DELETED");
+        }
+        String newName = TextUtils.capitalizeFully(request.getName());
+        if (!genre.getName().equals(newName)) {
             validate(request);
         }
         genreMapper.toEntity(genre, request);
@@ -143,7 +150,7 @@ public class GenreServiceImpl implements GenreService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
         GenreStatus baseStatus = GenreStatus.from(request.getStatus());
-        String keyword = (request.getKeyword() == null) ? "" : request.getKeyword().trim();
+        String keyword = StringUtils.trimToNull(request.getKeyword());
         Page<Genre> authorPage = genreRepository.search(keyword, baseStatus, pageable);
 
         List<GenreResponse> items = authorPage.getContent().stream().map(genreMapper::toDTO).toList();

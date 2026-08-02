@@ -21,7 +21,6 @@ public interface GenreRepository extends JpaRepository<Genre, Long> {
                 FROM Genre g
                 WHERE (
                     :keyword IS NULL
-                    OR TRIM(:keyword) = ''
                     OR LOWER(g.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
                 )
                 AND (

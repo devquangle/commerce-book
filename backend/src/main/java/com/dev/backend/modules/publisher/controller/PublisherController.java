@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.common.response.ResponseData;
 import com.dev.backend.common.response.ResponseUtil;
-import com.dev.backend.modules.genre.dto.GenreFilterRequest;
-import com.dev.backend.modules.genre.dto.GenreRequest;
-
-import com.dev.backend.modules.genre.service.GenreService;
 import com.dev.backend.modules.publisher.dto.PublisherFilterRequest;
 import com.dev.backend.modules.publisher.dto.PublisherRequest;
 import com.dev.backend.modules.publisher.dto.PublisherResponse;
