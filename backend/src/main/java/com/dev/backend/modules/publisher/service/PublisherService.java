@@ -1,15 +1,26 @@
 package com.dev.backend.modules.publisher.service;
 
+
 import com.dev.backend.modules.publisher.dto.PublisherRequest;
 import com.dev.backend.modules.publisher.dto.PublisherResponse;
+import com.dev.backend.modules.publisher.entity.Publisher;
 
 import java.util.List;
 
 public interface PublisherService {
     List<PublisherResponse> getAllPublishers();
-    PublisherResponse getPublisherById(Long id);
-    PublisherResponse getPublisherByName(String name);
-    PublisherResponse createPublisher(PublisherRequest request);
-    PublisherResponse updatePublisher(Long id, PublisherRequest request);
-    void deletePublisher(Long id);
+
+    Publisher getById(Long id);
+
+    boolean existsByName(String name);
+
+    void validate(PublisherRequest request);
+
+    PublisherResponse getPublisherResponse(Long id);
+
+    PublisherResponse create(PublisherRequest request);
+
+    PublisherResponse update(Long id, PublisherRequest request);
+
+    void delete(Long id);
 }

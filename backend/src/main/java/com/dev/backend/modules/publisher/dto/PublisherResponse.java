@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import com.dev.backend.common.enums.PublisherStatus;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,7 +16,5 @@ import java.time.LocalDateTime;
 public class PublisherResponse {
     private Long id;
     private String name;
-    private String description;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private PublisherStatus status;
 }

@@ -1,5 +1,7 @@
 package com.dev.backend.modules.publisher.dto;
 
+import com.dev.backend.common.enums.PublisherStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,5 +13,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PublisherRequest {
     private String name;
-    private String description;
+    private PublisherStatus status;
 }

@@ -31,7 +31,7 @@ public class Genre extends BaseEntity {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "slug", length = 100)
+    @Column(name = "slug", nullable = false, length = 100 )
     private String slug;
 
     @Column(name = "status")
