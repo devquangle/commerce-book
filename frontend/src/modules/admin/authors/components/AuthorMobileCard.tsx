@@ -37,7 +37,7 @@ export const AuthorMobileCard: React.FC<AuthorMobileCardProps> = ({
               className="w-10 h-10 rounded-full object-cover shadow-sm border border-zinc-200 dark:border-zinc-700"
             />
           ) : (
-            <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-sm shrink-0">
+            <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold body-text shadow-sm shrink-0">
               {author.name.charAt(0)}
             </div>
           )}
@@ -58,7 +58,7 @@ export const AuthorMobileCard: React.FC<AuthorMobileCardProps> = ({
                 </a>
               )}
             </div>
-            <p className="text-xs text-zinc-400 font-mono">
+            <p className="caption-text font-mono">
               STT: {stt} &bull; Slug: {author.slug}
             </p>
           </div>
@@ -71,13 +71,13 @@ export const AuthorMobileCard: React.FC<AuthorMobileCardProps> = ({
 
       {author.description && (
         <div className="space-y-1">
-          <p className={`text-xs text-zinc-600 dark:text-zinc-400 ${!isExpanded ? "line-clamp-3" : ""}`}>
+          <p className={`body-text text-zinc-600 dark:text-zinc-400 ${!isExpanded ? "line-clamp-3" : ""}`}>
             {author.description}
           </p>
           {author.description.length > 120 && (
             <button 
               onClick={() => setIsExpanded(!isExpanded)}
-              className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+              className="body-text font-semibold text-blue-600 dark:text-blue-400 hover:underline"
             >
               {isExpanded ? "Thu gọn" : "Xem thêm"}
             </button>
@@ -89,7 +89,7 @@ export const AuthorMobileCard: React.FC<AuthorMobileCardProps> = ({
 
       <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800 flex items-center">
         <span
-          className={`px-2.5 py-0.5 text-xs font-semibold rounded-lg ${
+          className={`px-2.5 py-0.5 caption-text font-semibold rounded-lg ${
             author.status === "ACTIVE"
               ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400"
               : author.status === "INACTIVE"

@@ -62,7 +62,7 @@ export const GenreActionMenu: React.FC<GenreActionMenuProps> = ({ item, onEdit, 
               setIsOpen(false);
               onEdit(item);
             }}
-            className="flex items-center gap-2 w-full px-3 py-2 text-sm text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-amber-600 transition-colors"
+            className="flex items-center gap-2 w-full px-3 py-2 body-text text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-amber-600 transition-colors"
           >
             <Edit className="w-4 h-4" />
             <span>Cập nhật</span>
@@ -73,7 +73,7 @@ export const GenreActionMenu: React.FC<GenreActionMenuProps> = ({ item, onEdit, 
               setIsOpen(false);
               onDelete(item);
             }}
-            className="flex items-center gap-2 w-full px-3 py-2 text-sm text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-red-600 transition-colors"
+            className="flex items-center gap-2 w-full px-3 py-2 body-text text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-red-600 transition-colors"
           >
             <Trash2 className="w-4 h-4" />
             <span>Xóa</span>

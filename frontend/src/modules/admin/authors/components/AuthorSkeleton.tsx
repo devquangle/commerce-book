@@ -2,7 +2,7 @@ export const AuthorSkeleton = () => {
   return (
     <div className="card-custom overflow-hidden flex flex-col mb-6 animate-pulse">
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm text-zinc-600 dark:text-zinc-300">
+        <table className="w-full text-left body-text text-zinc-600 dark:text-zinc-300">
           <thead className="bg-zinc-50 dark:bg-zinc-800/40 text-xs uppercase font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider">
             <tr>
               <th className="px-4 py-4 w-14 text-center">STT</th>

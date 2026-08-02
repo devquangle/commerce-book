@@ -35,7 +35,7 @@ export const SeriesMobileCard: React.FC<SeriesMobileCardProps> = ({
           <h3 className="font-semibold text-zinc-900 dark:text-white text-base">
             {series.name}
           </h3>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+          <p className="body-text text-zinc-500 dark:text-zinc-400 mt-1">
             STT: {stt} • Slug: {series.slug}
           </p>
         </div>
@@ -43,7 +43,7 @@ export const SeriesMobileCard: React.FC<SeriesMobileCardProps> = ({
 
       <div className="flex items-center justify-between mt-2 pt-3 border-t border-zinc-100 dark:border-zinc-800">
         <span
-          className={`inline-flex items-center px-2.5 py-1 text-xs font-semibold rounded-lg ${
+          className={`inline-flex items-center px-2.5 py-1 caption-text font-semibold rounded-lg ${
             series.status === "ACTIVE"
               ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400"
               : series.status === "INACTIVE"

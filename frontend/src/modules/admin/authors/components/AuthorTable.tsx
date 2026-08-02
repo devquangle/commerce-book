@@ -20,20 +20,20 @@ const ExpandableDescription: React.FC<{ text?: string }> = ({ text }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   if (!text) {
-    return <span className="text-xs text-zinc-400 italic">Chưa có mô tả</span>;
+    return <span className="body-text text-zinc-400 italic">Chưa có mô tả</span>;
   }
 
   const isLong = text.length > 80;
 
   return (
     <div className="max-w-md">
-      <p className={`text-xs text-zinc-600 dark:text-zinc-400 ${!isExpanded ? 'line-clamp-2' : ''}`}>
+      <p className={`body-text text-zinc-600 dark:text-zinc-400 ${!isExpanded ? 'line-clamp-2' : ''}`}>
         {text}
       </p>
       {isLong && (
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline mt-1 focus:outline-none"
+          className="body-text font-medium text-blue-600 dark:text-blue-400 hover:underline mt-1 focus:outline-none"
         >
           {isExpanded ? "Thu gọn" : "Xem thêm"}
         </button>
@@ -55,8 +55,8 @@ export const AuthorTable: React.FC<AuthorTableProps> = ({
   return (
     <div className="hidden md:flex card-custom flex-col">
       <div className="overflow-x-auto overflow-hidden rounded-t-2xl">
-        <table className="w-full text-left text-sm text-zinc-600 dark:text-zinc-300">
-          <thead className="bg-zinc-50 dark:bg-zinc-800/40 text-xs uppercase font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider">
+        <table className="w-full text-left body-text text-zinc-600 dark:text-zinc-300">
+          <thead className="bg-zinc-50 dark:bg-zinc-800/40 body-text uppercase font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider">
             <tr>
               <th className="px-4 py-4 w-14 text-center">STT</th>
               <th className="px-6 py-4 w-[35%]">Tác giả</th>
@@ -74,7 +74,7 @@ export const AuthorTable: React.FC<AuthorTableProps> = ({
                   key={author.id}
                   className="hover:bg-zinc-50/70 dark:hover:bg-zinc-800/30 transition-colors"
                 >
-                  <td className="px-4 py-4 text-center font-medium text-zinc-400 dark:text-zinc-500 text-xs">
+                  <td className="px-4 py-4 text-center font-medium text-zinc-400 dark:text-zinc-500 body-text">
                     {stt}
                   </td>
                   <td className="px-6 py-4 font-medium text-zinc-900 dark:text-white">
@@ -86,7 +86,7 @@ export const AuthorTable: React.FC<AuthorTableProps> = ({
                           className="w-10 h-10 rounded-full object-cover shadow-sm border border-zinc-200 dark:border-zinc-700"
                         />
                       ) : (
-                        <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-sm shrink-0">
+                        <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold body-text shadow-sm shrink-0">
                           {author.name.charAt(0)}
                         </div>
                       )}
@@ -100,7 +100,7 @@ export const AuthorTable: React.FC<AuthorTableProps> = ({
                               href={author.urlBio}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium hover:underline px-1.5 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/50"
+                              className="inline-flex items-center gap-1 body-text text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium hover:underline px-1.5 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/50"
                               title="Xem tiểu sử (Bio)"
                             >
                               <Link2 className="w-3 h-3" />
@@ -109,7 +109,7 @@ export const AuthorTable: React.FC<AuthorTableProps> = ({
                             </a>
                           )}
                         </div>
-                        <p className="text-xs text-zinc-400 font-mono mt-0.5">
+                        <p className="caption-text font-mono mt-0.5">
                           Slug: {author.slug}
                         </p>
                       </div>
@@ -120,7 +120,7 @@ export const AuthorTable: React.FC<AuthorTableProps> = ({
                   </td>
                   <td className="px-6 py-4">
                     <span
-                      className={`inline-flex items-center px-2.5 py-1 text-xs font-semibold rounded-lg ${
+                      className={`inline-flex items-center px-2.5 py-1 caption-text font-semibold rounded-lg ${
                         author.status === "ACTIVE"
                           ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400"
                           : author.status === "INACTIVE"

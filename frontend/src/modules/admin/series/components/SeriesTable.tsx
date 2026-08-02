@@ -28,8 +28,8 @@ export const SeriesTable: React.FC<SeriesTableProps> = ({
   return (
     <div className="hidden md:flex card-custom flex-col">
       <div className="overflow-x-auto overflow-hidden rounded-t-2xl">
-        <table className="w-full text-left text-sm text-zinc-600 dark:text-zinc-300">
-          <thead className="bg-zinc-50 dark:bg-zinc-800/40 text-xs uppercase font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider">
+        <table className="w-full text-left body-text text-zinc-600 dark:text-zinc-300">
+          <thead className="bg-zinc-50 dark:bg-zinc-800/40 body-text uppercase font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider">
             <tr>
               <th className="px-4 py-4 w-14 text-center">STT</th>
               <th className="px-6 py-4 w-[75%]">Tên Series</th>
@@ -46,12 +46,12 @@ export const SeriesTable: React.FC<SeriesTableProps> = ({
                   key={series.id}
                   className="hover:bg-zinc-50/70 dark:hover:bg-zinc-800/30 transition-colors"
                 >
-                  <td className="px-4 py-4 text-center font-medium text-zinc-400 dark:text-zinc-500 text-xs">
+                  <td className="px-4 py-4 text-center font-medium text-zinc-400 dark:text-zinc-500 body-text">
                     {stt}
                   </td>
                   <td className="px-6 py-4 font-medium text-zinc-900 dark:text-white">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-sm shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-bold body-text shadow-sm shrink-0">
                         {series.name.charAt(0)}
                       </div>
                       <div>
@@ -60,7 +60,7 @@ export const SeriesTable: React.FC<SeriesTableProps> = ({
                             {series.name}
                           </span>
                         </div>
-                        <p className="text-xs text-zinc-400 font-mono mt-0.5">
+                        <p className="caption-text font-mono mt-0.5">
                           Slug: {series.slug}
                         </p>
                       </div>
@@ -68,7 +68,7 @@ export const SeriesTable: React.FC<SeriesTableProps> = ({
                   </td>
                   <td className="px-6 py-4">
                     <span
-                      className={`inline-flex items-center px-2.5 py-1 text-xs font-semibold rounded-lg ${
+                      className={`inline-flex items-center px-2.5 py-1 caption-text font-semibold rounded-lg ${
                         series.status === "ACTIVE"
                           ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400"
                           : series.status === "INACTIVE"
