@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { useForm, useWatch, Controller } from "react-hook-form";
+import {
+  useForm,
+  useWatch,
+  Controller,
+  type UseFormSetError,
+} from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { Modal } from "@/components/common/Modal";
@@ -21,7 +26,10 @@ interface AuthorModalProps {
   isOpen: boolean;
   author: AuthorResponse | null;
   onClose: () => void;
-  onSave: (authorData: AuthorRequest & { id?: number; file?: File | null }) => void;
+  onSave: (
+    authorData: AuthorRequest & { id?: number; file?: File | null },
+    setError: UseFormSetError<AuthorRequest>,
+  ) => void | Promise<void>;
 }
 
 const initAuthor: AuthorRequest = {
@@ -43,6 +51,7 @@ const AuthorModalContent: React.FC<AuthorModalProps> = ({
     handleSubmit,
     setValue,
     getValues,
+    setError,
     control,
     formState: { errors, isSubmitting },
   } = useForm<AuthorRequest>({
@@ -75,7 +84,7 @@ const AuthorModalContent: React.FC<AuthorModalProps> = ({
 
   const { data: wikiData, isFetching: isWikiFetching } = useWikipedia(
     shouldFetchWiki ? debouncedName : "",
-    isOpen
+    isOpen,
   );
 
   const handleSyncToForm = useCallback(() => {
@@ -101,7 +110,7 @@ const AuthorModalContent: React.FC<AuthorModalProps> = ({
     showSuccessToast(
       updated
         ? "Đã tự động điền các thông tin còn thiếu từ Wikipedia!"
-        : "Các trường thông tin trên Form đã đầy đủ."
+        : "Các trường thông tin trên Form đã đầy đủ.",
     );
   }, [wikiData, getValues, setValue, setAvatarUrl, setFile, avatarUrl]);
 
@@ -121,9 +130,11 @@ const AuthorModalContent: React.FC<AuthorModalProps> = ({
         !finalData.urlImage.startsWith("/") && // Không upload lại nếu là ảnh local của server mình
         !finalData.urlImage.includes("localhost")
       ) {
-        finalData.urlImage = await UploadImageService.uploadImageUrl(finalData.urlImage);
+        finalData.urlImage = await UploadImageService.uploadImageUrl(
+          finalData.urlImage,
+        );
       }
-    } catch (error :unknown) {
+    } catch (error: unknown) {
       let errorMsg = "Đã xảy ra lỗi.";
       if (axios.isAxiosError(error)) {
         errorMsg = error.response?.data?.message || error.message || errorMsg;
@@ -134,10 +145,10 @@ const AuthorModalContent: React.FC<AuthorModalProps> = ({
       return;
     }
 
-    onSave({
+     await onSave({
       id: author?.id,
       ...finalData,
-    });
+    }, setError);
   };
 
   const statusOptions = [
@@ -149,7 +160,7 @@ const AuthorModalContent: React.FC<AuthorModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={author ? "Chỉnh sửa thông tin tác giả" : "Thêm tác giả mới"}
+      title={author ? "Cập nhật" : "Thêm mới"}
       size="lg"
       footer={
         <div className="flex items-center justify-end gap-3 w-full">
@@ -162,7 +173,11 @@ const AuthorModalContent: React.FC<AuthorModalProps> = ({
         </div>
       }
     >
-      <form id="author-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4 px-3">
+      <form
+        id="author-form"
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-4"
+      >
         <div className="relative w-full">
           <InputField
             label="Tên tác giả"
@@ -194,7 +209,8 @@ const AuthorModalContent: React.FC<AuthorModalProps> = ({
 
         {shouldFetchWiki && !wikiData && !isWikiFetching && (
           <div className="mt-2 p-2.5 bg-amber-50 rounded-lg border border-amber-100 text-xs text-amber-700">
-            Không tìm thấy thông tin cho "<strong>{debouncedName}</strong>" trên Wikipedia.
+            Không tìm thấy thông tin cho "<strong>{debouncedName}</strong>" trên
+            Wikipedia.
           </div>
         )}
 

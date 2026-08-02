@@ -19,6 +19,8 @@ import {
 import type { AuthorResponse, AuthorRequest } from "./types/author.type";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Pagination } from "@/components/common/Pagination";
+import { mapServerErrors } from "@/libs/utils/mapServerErrors";
+import type { UseFormSetError } from "react-hook-form";
 
 const AdminAuthorPage = () => {
   const {
@@ -74,14 +76,24 @@ const AdminAuthorPage = () => {
     }
   };
 
-  const handleSaveAuthor = (authorData: AuthorRequest & { id?: number }) => {
-    if (authorData.id) {
-      updateMutation.mutate({ id: authorData.id, req: authorData });
-    } else {
-      createMutation.mutate(authorData);
+  const handleSaveAuthor = async (
+    authorData: AuthorRequest & { id?: number },
+    setError: UseFormSetError<AuthorRequest>,
+  ) => {
+    try {
+      if (authorData.id) {
+        await updateMutation.mutateAsync({
+          id: authorData.id,
+          req: authorData,
+        });
+      } else {
+        await createMutation.mutateAsync(authorData);
+      }
+      setSelectedAuthor(null);
+      setIsModalOpen(false);
+    } catch (error) {
+      mapServerErrors(error, setError);
     }
-    setSelectedAuthor(null);
-    setIsModalOpen(false);
   };
 
   return (

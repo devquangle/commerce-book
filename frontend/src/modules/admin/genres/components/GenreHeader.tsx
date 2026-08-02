@@ -15,7 +15,7 @@ export const GenreHeader: React.FC<GenreHeaderProps> = ({
           Quản lý thể loại
         </h1>
         <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-          Quản lý danh sách thể loại 
+          Quản lý danh sách thể loại, giúp phân loại và tổ chức hệ thống sách một cách logic.
         </p>
       </div>
       <button

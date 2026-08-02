@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, type UseFormSetError } from "react-hook-form";
 import { Modal } from "@/components/common/Modal";
 import { InputField } from "@/components/common/InputField";
 import { SelectBox } from "@/components/common/SelectBox";
@@ -12,7 +12,9 @@ interface SeriesModalProps {
   isOpen: boolean;
   series: SeriesResponse | null;
   onClose: () => void;
-  onSave: (seriesData: SeriesRequest & { id?: number }) => void;
+  onSave: (seriesData: SeriesRequest & { id?: number },
+      setError: UseFormSetError<SeriesRequest>,
+    ) => void | Promise<void>;
 }
 
 const initSeries: SeriesRequest = {
@@ -30,16 +32,17 @@ const SeriesModalContent: React.FC<SeriesModalProps> = ({
     register,
     handleSubmit,
     control,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<SeriesRequest>({
     defaultValues: series || initSeries,
   });
 
   const onSubmit = async (data: SeriesRequest) => {
-    onSave({
+    await onSave({
       id: series?.id,
       ...data,
-    });
+    }, setError);
   };
 
   const statusOptions = [
@@ -51,7 +54,7 @@ const SeriesModalContent: React.FC<SeriesModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={series ? "Chỉnh sửa thông tin" : "Thêm mới"}
+      title={series ? "Cập nhật" : "Thêm mới"}
       size="md"
       footer={
         <div className="flex items-center justify-end gap-3 w-full">
@@ -64,13 +67,13 @@ const SeriesModalContent: React.FC<SeriesModalProps> = ({
         </div>
       }
     >
-      <form id="series-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4 px-3">
+      <form id="series-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <InputField
-          label="Tên"
+          label="Tên series"
           required
-          placeholder="Nhập tên..."
+          placeholder="Nhập tên series..."
           error={errors.name?.message}
-          {...register("name", { required: "Vui lòng nhập tên" })}
+          {...register("name", { required: "Vui lòng nhập tên series" })}
         />
         {series && (
           <Controller

@@ -68,7 +68,7 @@ const GenreModalContent: React.FC<GenreModalProps> = ({
       <form
         id="genre-form"
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4 px-3"
+        className="space-y-4"
       >
         <InputField
           label="Tên thể loại"

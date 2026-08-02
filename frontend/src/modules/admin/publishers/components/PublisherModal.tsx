@@ -16,7 +16,7 @@ interface PublisherModalProps {
   onSave: (
     publisherData: PublisherRequest & { id?: number },
     setError: UseFormSetError<PublisherRequest>,
-  ) => void;
+  ) => void | Promise<void>;
 }
 
 const initPublisher: PublisherRequest = {
@@ -61,7 +61,7 @@ const PublisherModalContent: React.FC<PublisherModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={publisher ? "Cập nhật nhà xuất bản" : "Thêm nhà xuất bản mới"}
+      title={publisher ? "Cập nhật" : "Thêm mới"}
       size="md"
       footer={
         <div className="flex items-center justify-end gap-3 w-full">
@@ -77,12 +77,12 @@ const PublisherModalContent: React.FC<PublisherModalProps> = ({
       <form
         id="publisher-form"
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4 px-3"
+        className="space-y-4"
       >
         <InputField
-          label="Tên"
+          label="Tên nhà xuất bản"
           required
-          placeholder="Nhập tên..."
+          placeholder="Nhập tên nhà xuất bản..."
           error={errors.name?.message}
           {...register("name", {
             required: "Tên nhà xuất bản không được để trống.",

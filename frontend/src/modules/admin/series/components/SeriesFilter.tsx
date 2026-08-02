@@ -36,7 +36,7 @@ export const SeriesFilter: React.FC<SeriesFilterProps> = ({
             type="text"
             value={keyword || ""}
             onChange={(e) => onKeywordChange(e.target.value)}
-            placeholder="Tìm kiếm theo tên tác giả"
+            placeholder="Tìm kiếm theo tên series"
             className="w-full pl-10 pr-9 py-2 text-sm bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-zinc-900 dark:text-white placeholder-zinc-400 transition-all"
           />
           {keyword && (
