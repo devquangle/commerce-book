@@ -18,6 +18,7 @@ import {
 } from "./hooks/useSeries";
 import type { SeriesResponse, SeriesRequest } from "./types/series.type";
 import { EmptyState } from "@/components/common/EmptyState";
+import { Pagination } from "@/components/common/Pagination";
 
 const AdminSeriesPage = () => {
   const {
@@ -120,7 +121,7 @@ const AdminSeriesPage = () => {
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
-            {seriesList.map((series,index) => (
+            {seriesList.map((series, index) => (
               <SeriesMobileCard
                 index={index}
                 page={page}
@@ -134,6 +135,18 @@ const AdminSeriesPage = () => {
             {seriesList.length === 0 && (
               <div className="col-span-full bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800">
                 <EmptyState title="Không tìm thấy tác giả phù hợp" />
+              </div>
+            )}
+            {seriesList.length > 0 && (
+              <div className="md:hidden w-full card-custom p-3">
+                <Pagination
+                  currentPage={page}
+                  totalPages={Math.ceil(totalElements / size)}
+                  totalElements={totalElements}
+                  pageSize={size}
+                  onPageChange={handlePageChange}
+                  onPageSizeChange={handlePageSizeChange}
+                />
               </div>
             )}
           </div>
