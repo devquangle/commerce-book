@@ -15,7 +15,7 @@ const AdminAnalytics = lazy(() => import("@/modules/admin/pages/AdminAnalytics")
 const AdminReportsProducts = lazy(() => import("@/modules/admin/pages/AdminReportsProducts"));
 const AdminReportsStores = lazy(() => import("@/modules/admin/pages/AdminReportsStores"));
 const AdminSettings = lazy(() => import("@/modules/admin/pages/AdminSettings"));
-const Profile = lazy(() => import("@/modules/auth/components/Profile"));
+const ProfilePage = lazy(() => import("@/modules/auth/components/ProfilePage"));
 
 
 export const AdminRoutes: React.FC = () => {
@@ -34,7 +34,7 @@ export const AdminRoutes: React.FC = () => {
           <Route path="reports/products" element={<AdminReportsProducts />} />
           <Route path="reports/stores" element={<AdminReportsStores />} />
           <Route path="settings" element={<AdminSettings />} />
-          <Route path="profile" element={<Profile />} />
+          <Route path="profile" element={<ProfilePage />} />
           <Route path="*" element={<Navigate to="/admin" replace />} />
         </Routes>
       </Suspense>

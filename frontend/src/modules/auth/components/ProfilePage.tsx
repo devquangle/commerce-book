@@ -4,7 +4,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/context/useAuth";
 import { getErrorMessage } from "@/libs/utils/error";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
-import { showErrorToast, showSuccessToast } from "@/libs/utils/toastUtil";
+import {
+  showErrorToast,
+  showInfoToast,
+  showSuccessToast,
+} from "@/libs/utils/toastUtil";
 import { AuthService } from "@/modules/auth/services/auth.service";
 import type { UserRequest } from "@/modules/auth/types/user.type";
 import UploadImageService from "@/services/upload-image.service";
@@ -15,7 +19,7 @@ import { ProfileAvatar } from "./ProfileAvatar";
 import { ChangePassModal } from "./ChangePassModal";
 import Spinner from "@/components/common/Spinner";
 
-const Profile: React.FC = () => {
+const ProfilePage = () => {
   const { userInfo, setUserInfo } = useAuth();
   const queryClient = useQueryClient();
 
@@ -41,6 +45,8 @@ const Profile: React.FC = () => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [isChangePassModalOpen, setIsChangePassModalOpen] = useState(false);
 
+  const classNameInfo = userInfo?.role === "USER" ? "" : "card-custom";
+
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -53,6 +59,17 @@ const Profile: React.FC = () => {
     try {
       setIsLoading(true);
       const updatedData = { ...data };
+      const changed =
+        avatarFile !== null ||
+        ["name", "email", "phone", "street", "avatarUrl"].some(
+          (key) =>
+            data[key as keyof UserRequest] !==
+            userInfo?.[key as keyof typeof userInfo],
+        );
+      if (!changed) {
+        showInfoToast("Không có thay đổi nào");
+        return;
+      }
       if (avatarFile) {
         const imageUrl = await UploadImageService.uploadFile(avatarFile);
         updatedData.avatarUrl = imageUrl;
@@ -74,12 +91,12 @@ const Profile: React.FC = () => {
     }
   };
   if (isLoading) {
-    return <Spinner message="Đang cập nhật thông tin..." />
+    return <Spinner message="Đang cập nhật thông tin..." />;
   }
 
   return (
     <div className="flex flex-col gap-6 w-full min-h-full pb-6">
-      <ProfileHeader title="Thông tin cá nhân" className="card-custom" />
+      <ProfileHeader title="Thông tin cá nhân" className={classNameInfo} />
 
       <div className="card-custom flex flex-col lg:flex-row gap-6">
         <ProfileForm
@@ -103,4 +120,4 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile;
+export default ProfilePage;

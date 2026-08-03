@@ -1,20 +1,18 @@
-import React from "react";
 import { InputField } from "@/components/common/InputField";
 import { Button } from "@/components/common/Button";
 import type { UserRequest } from "@/modules/auth/types/user.type";
-import type { FieldErrors, UseFormRegister } from "react-hook-form";
+import type { FieldErrors, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
 
 export interface ProfileFormProps {
   register: UseFormRegister<UserRequest>;
   errors: FieldErrors<UserRequest>;
-  onSubmit: (e?: React.FormEvent<HTMLFormElement>) => void;
-}
+  onSubmit: ReturnType<UseFormHandleSubmit<UserRequest>>;}
 
-export const ProfileForm: React.FC<ProfileFormProps> = ({
+export const ProfileForm = ({
   register,
   errors,
   onSubmit,
-}) => {
+}: ProfileFormProps) => {
   return (
     <div className="flex-1">
       <form className="space-y-4" onSubmit={onSubmit}>
@@ -66,10 +64,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
           error={errors?.street?.message}
         />
 
-        <Button
-          type="submit"
-          className="w-full lg:w-auto"
-        >
+        <Button type="submit" className="w-full lg:w-auto">
           Lưu thay đổi
         </Button>
       </form>

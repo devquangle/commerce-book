@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -201,7 +202,15 @@ public class AuthServiceImpl implements AuthService {
     public UserResponse updateProfile(Long userId, UserRequest request) {
         User user = authRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
-        validate(request);
+        String oldEmail = user.getEmail();
+        String oldPhone = user.getPhone();
+        String newEmail = request.getEmail();
+        String newPhone = request.getPhone();
+        if (!Objects.equals(oldEmail, newEmail)
+                || !Objects.equals(oldPhone, newPhone)) {
+            validate(request);
+        }
+
         userMapper.toProfile(user, request);
         return userMapper.toResponse(authRepository.save(user));
     }

@@ -8,6 +8,7 @@ import {
   Package,
   PieChart,
   Store,
+  User,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -82,4 +83,9 @@ export const adminSidebarMenu: AdminSidebarMenuItem[] = [
     icon: BarChart,
     href: "/admin/analytics",
   },
+  {
+    label:"Tài khoản",
+    href: "/admin/profile",
+    icon: User,
+  }
 ];

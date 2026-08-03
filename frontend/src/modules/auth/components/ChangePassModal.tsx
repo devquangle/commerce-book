@@ -5,7 +5,7 @@ import { InputField } from "@/components/common/InputField";
 import { AuthService } from "@/modules/auth/services/auth.service";
 import type { ChangePasswordRequest } from "@/modules/auth/types/user.type";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
-import { showErrorToast, showSuccessToast } from "@/libs/utils/toastUtil";
+import {  showSuccessToast } from "@/libs/utils/toastUtil";
 
 interface ChangePassModalProps {
   isOpen: boolean;
