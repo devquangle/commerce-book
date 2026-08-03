@@ -50,6 +50,24 @@ public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
 
     @Override
+    @Transactional(readOnly = true)
+    public boolean existsByEmail(String email) {
+        return authRepository.existsByEmail(email);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByUsername(String username) {
+        return authRepository.existsByUsername(username);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByPhone(String phone) {
+        return authRepository.existsByPhone(phone);
+    }
+
+    @Override
     public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -140,8 +158,6 @@ public class AuthServiceImpl implements AuthService {
             throw new UnauthorizedException("Token đã bị thu hồi");
         }
 
-        
-
         CustomUserDetails customUserDetails = CustomUserDetails.build(user);
 
         int currentTokenVersion = user.getTokenVersion() == null ? 0 : user.getTokenVersion();
@@ -158,6 +174,22 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional(readOnly = true)
+    public void validate(UserRequest request) {
+        DuplicateFieldException errors = new DuplicateFieldException(new HashMap<>());
+        if (existsByPhone(request.getPhone())) {
+            errors.addError("phone", "Số điện thoại đã được sử dụng.");
+        }
+        if (existsByEmail(request.getEmail())) {
+            errors.addError("email", "Email đã được sử dụng.");
+        }
+
+        if (!errors.getErrors().isEmpty()) {
+            throw errors;
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public UserResponse getProfile(Long userId) {
         User user = authRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
@@ -169,13 +201,8 @@ public class AuthServiceImpl implements AuthService {
     public UserResponse updateProfile(Long userId, UserRequest request) {
         User user = authRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
-
-        user.setFullName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setPhone(request.getPhone());
-        user.setStreet(request.getStreet());
-        user.setAvatarUrl(request.getAvatarUrl());
-
+        validate(request);
+        userMapper.toProfile(user, request);
         return userMapper.toResponse(authRepository.save(user));
     }
 

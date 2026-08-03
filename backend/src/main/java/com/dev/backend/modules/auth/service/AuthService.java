@@ -17,6 +17,8 @@ public interface AuthService {
 
     RefreshResponse refreshToken(HttpServletRequest request);
 
+    void validate(UserRequest request);
+
     UserResponse register(RegisterRequest request);
 
     UserResponse getProfile(Long userId);
@@ -26,4 +28,10 @@ public interface AuthService {
     void changePassword(Long userId, ChangePasswordRequest request);
 
     void logout(Long userId);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByUsername(String username);
+
+    boolean existsByPhone(String phone);
 }

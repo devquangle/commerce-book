@@ -7,14 +7,12 @@ import type { FieldErrors, UseFormRegister } from "react-hook-form";
 export interface ProfileFormProps {
   register: UseFormRegister<UserRequest>;
   errors: FieldErrors<UserRequest>;
-  isLoading: boolean;
   onSubmit: (e?: React.FormEvent<HTMLFormElement>) => void;
 }
 
 export const ProfileForm: React.FC<ProfileFormProps> = ({
   register,
   errors,
-  isLoading,
   onSubmit,
 }) => {
   return (
@@ -70,7 +68,6 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
 
         <Button
           type="submit"
-          isLoading={isLoading}
           className="w-full lg:w-auto"
         >
           Lưu thay đổi

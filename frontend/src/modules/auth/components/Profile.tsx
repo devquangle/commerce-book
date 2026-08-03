@@ -13,6 +13,7 @@ import { ProfileHeader } from "./ProfileHeader";
 import { ProfileForm } from "./ProfileForm";
 import { ProfileAvatar } from "./ProfileAvatar";
 import { ChangePassModal } from "./ChangePassModal";
+import Spinner from "@/components/common/Spinner";
 
 const Profile: React.FC = () => {
   const { userInfo, setUserInfo } = useAuth();
@@ -35,7 +36,7 @@ const Profile: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [avatar, setAvatar] = useState<string>(
-    userInfo?.avatarUrl || "/images/default-avatar.png"
+    userInfo?.avatarUrl || "/images/default-avatar.png",
   );
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [isChangePassModalOpen, setIsChangePassModalOpen] = useState(false);
@@ -72,16 +73,18 @@ const Profile: React.FC = () => {
       setIsLoading(false);
     }
   };
+  if (isLoading) {
+    return <Spinner message="Đang cập nhật thông tin..." />
+  }
 
   return (
     <div className="flex flex-col gap-6 w-full min-h-full pb-6">
-      <ProfileHeader title="Thông tin cá nhân" />
+      <ProfileHeader title="Thông tin cá nhân" className="card-custom" />
 
-      <div className="card-custom flex flex-col lg:flex-row gap-4">
+      <div className="card-custom flex flex-col lg:flex-row gap-6">
         <ProfileForm
           register={register}
           errors={errors}
-          isLoading={isLoading}
           onSubmit={handleSubmit(onSubmit)}
         />
 
