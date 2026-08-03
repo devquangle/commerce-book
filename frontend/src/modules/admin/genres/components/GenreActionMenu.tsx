@@ -16,8 +16,13 @@ export const GenreActionMenu: React.FC<GenreActionMenuProps> = ({ item, onEdit, 
   const handleToggle = () => {
     if (!isOpen && dropdownRef.current) {
       const rect = dropdownRef.current.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - rect.bottom;
-      if (spaceBelow < 250) {
+      const spaceBelowWindow = window.innerHeight - rect.bottom;
+
+      const container = dropdownRef.current.closest(".card-custom, table, .overflow-x-auto, tbody");
+      const containerRect = container ? container.getBoundingClientRect() : null;
+      const spaceBelowContainer = containerRect ? containerRect.bottom - rect.bottom : Infinity;
+
+      if (spaceBelowWindow < 250 || spaceBelowContainer < 160) {
         setOpenUpward(true);
       } else {
         setOpenUpward(false);

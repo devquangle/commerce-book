@@ -108,6 +108,15 @@ export const SearchableSelect = React.forwardRef<
       opt.label.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
+    const otherOptionInOptions = options.find(
+      (opt) => String(opt.value) === "-1" || opt.label.toLowerCase() === "khác"
+    );
+
+    const displayOptions =
+      filteredOptions.length > 0
+        ? filteredOptions
+        : [otherOptionInOptions || { label: "Khác", value: -1 }];
+
     const selectedOption = options.find(
       (opt) => String(opt.value) === String(selectedValue),
     );
@@ -230,12 +239,12 @@ export const SearchableSelect = React.forwardRef<
 
               {/* Options List */}
               <div className="overflow-y-auto p-1 max-h-48 space-y-0.5">
-                {filteredOptions.length === 0 ? (
+                {displayOptions.length === 0 ? (
                   <p className="p-3 caption-text text-center text-zinc-400 font-medium">
                     Không tìm thấy kết quả
                   </p>
                 ) : (
-                  filteredOptions.map((opt) => {
+                  displayOptions.map((opt) => {
                     const isSelected =
                       String(opt.value) === String(selectedValue);
                     return (

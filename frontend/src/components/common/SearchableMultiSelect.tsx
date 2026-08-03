@@ -75,6 +75,15 @@ export const SearchableMultiSelect: React.FC<SearchableMultiSelectProps> = ({
     opt.label.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const otherOptionInOptions = options.find(
+    (opt) => String(opt.value) === "-1" || opt.label.toLowerCase() === "khác"
+  );
+
+  const displayOptions =
+    filteredOptions.length > 0
+      ? filteredOptions
+      : [otherOptionInOptions || { label: "Khác", value: -1 }];
+
   const selectedOptions = options.filter((opt) =>
     selectedValues.some((v) => String(v) === String(opt.value))
   );
@@ -212,12 +221,12 @@ export const SearchableMultiSelect: React.FC<SearchableMultiSelectProps> = ({
 
             {/* Options List */}
             <div className="overflow-y-auto p-1 max-h-48 space-y-0.5">
-              {filteredOptions.length === 0 ? (
+              {displayOptions.length === 0 ? (
                 <p className="p-3 caption-text text-center text-zinc-400 font-medium">
                   Không tìm thấy kết quả
                 </p>
               ) : (
-                filteredOptions.map((opt) => {
+                displayOptions.map((opt) => {
                   const isSelected = selectedValues.some(
                     (v) => String(v) === String(opt.value)
                   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import type { Control, FieldErrors } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import type { ProductRequest } from "../types/shop-product.type";
@@ -16,6 +16,8 @@ export interface ProductAttributeProps {
   seriesOptions?: { label: string; value: number }[];
 }
 
+const OTHER_OPTION = { label: "Khác", value: -1 };
+
 const ProductAttribute: React.FC<ProductAttributeProps> = ({
   control,
   errors,
@@ -24,12 +26,59 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
   publisherOptions = [],
   seriesOptions = [],
 }) => {
+  const genresWithOther = useMemo(() => {
+    if (
+      genreOptions.some(
+        (opt) => opt.value === -1 || opt.label.toLowerCase() === "khác",
+      )
+    ) {
+      return genreOptions;
+    }
+    return [...genreOptions, OTHER_OPTION];
+  }, [genreOptions]);
+
+  const authorsWithOther = useMemo(() => {
+    if (
+      authorOptions.some(
+        (opt) => opt.value === -1 || opt.label.toLowerCase() === "khác",
+      )
+    ) {
+      return authorOptions;
+    }
+    return [...authorOptions, OTHER_OPTION];
+  }, [authorOptions]);
+
+  const publishersWithOther = useMemo(() => {
+    if (
+      publisherOptions.some(
+        (opt) => opt.value === -1 || opt.label.toLowerCase() === "khác",
+      )
+    ) {
+      return publisherOptions;
+    }
+    return [...publisherOptions, OTHER_OPTION];
+  }, [publisherOptions]);
+
+  const seriesWithOther = useMemo(() => {
+    if (
+      seriesOptions.some(
+        (opt) => opt.value === -1 || opt.label.toLowerCase() === "khác",
+      )
+    ) {
+      return seriesOptions;
+    }
+    return [...seriesOptions, OTHER_OPTION];
+  }, [seriesOptions]);
+
   return (
     <div className="col-span-12 lg:col-span-5 space-y-6 lg:h-full">
       <div className="card-custom space-y-5 lg:h-full">
         {/* Header */}
         <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-zinc-800">
-          <SlidersHorizontal size={18} className="text-indigo-600 dark:text-indigo-400" />
+          <SlidersHorizontal
+            size={18}
+            className="text-indigo-600 dark:text-indigo-400"
+          />
           <h2 className="text-base font-bold text-slate-900 dark:text-white">
             Thuộc tính
           </h2>
@@ -44,14 +93,15 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
               control={control}
               rules={{
                 validate: (val) =>
-                  (Array.isArray(val) && val.length > 0) || "Vui lòng chọn ít nhất 1 thể loại",
+                  (Array.isArray(val) && val.length > 0) ||
+                  "Vui lòng chọn ít nhất 1 thể loại",
               }}
               render={({ field }) => (
                 <SearchableMultiSelect
                   label="Thể loại"
                   required
                   placeholder="Chọn thể loại..."
-                  options={genreOptions}
+                  options={genresWithOther}
                   value={field.value ?? []}
                   onChange={field.onChange}
                   maxSelection={4}
@@ -64,7 +114,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
               label="Thể loại"
               required
               placeholder="Chọn thể loại..."
-              options={genreOptions}
+              options={genresWithOther}
               maxSelection={4}
             />
           )}
@@ -76,14 +126,15 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
               control={control}
               rules={{
                 validate: (val) =>
-                  (Array.isArray(val) && val.length > 0) || "Vui lòng chọn ít nhất 1 tác giả",
+                  (Array.isArray(val) && val.length > 0) ||
+                  "Vui lòng chọn ít nhất 1 tác giả",
               }}
               render={({ field }) => (
                 <SearchableMultiSelect
                   label="Tác giả"
                   required
                   placeholder="Chọn tác giả..."
-                  options={authorOptions}
+                  options={authorsWithOther}
                   value={field.value ?? []}
                   onChange={field.onChange}
                   maxSelection={4}
@@ -96,7 +147,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
               label="Tác giả"
               required
               placeholder="Chọn tác giả..."
-              options={authorOptions}
+              options={authorsWithOther}
               maxSelection={4}
             />
           )}
@@ -114,7 +165,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
                   label="Nhà xuất bản"
                   required
                   placeholder="Chọn nhà xuất bản..."
-                  options={publisherOptions}
+                  options={publishersWithOther}
                   value={field.value ?? ""}
                   onChange={(e) => {
                     const val = Number(e.target.value);
@@ -129,7 +180,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
               label="Nhà xuất bản"
               required
               placeholder="Chọn nhà xuất bản..."
-              options={publisherOptions}
+              options={publishersWithOther}
             />
           )}
 
@@ -142,7 +193,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
                 <SearchableSelect
                   label="Bộ sách"
                   placeholder="Chọn bộ sách..."
-                  options={seriesOptions}
+                  options={seriesWithOther}
                   value={field.value ?? ""}
                   onChange={(e) => {
                     const val = Number(e.target.value);
@@ -156,7 +207,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
             <SearchableSelect
               label="Bộ sách"
               placeholder="Chọn bộ sách..."
-              options={seriesOptions}
+              options={seriesWithOther}
             />
           )}
         </div>
