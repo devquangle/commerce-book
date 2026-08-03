@@ -32,10 +32,33 @@ export interface ProductResponse {
   status: ProductStatus;
 }
 
-
 export interface ProductFilterRequest {
   keyword?: string;
   status?: ProductStatus;
   page?: number;
   size?: number;
+}
+
+export interface ProductRequest {
+  name: string;
+  authorIds: number[];
+  publisherId: number | null;
+  genreIds: number[];
+  weight: number;
+  publishYear: string;
+  pages: number;
+  language: string;
+  price: number;
+  quantity: number;
+  status: ProductStatus;
+  seriesId: number | null;
+  isbn: string;
+  coverImages: ProductImageRequest[];
+  description: string;
+}
+
+export interface ProductImageRequest {
+  file?: File | null;
+  url?: string | null;
+  isThumbnail: boolean;
 }

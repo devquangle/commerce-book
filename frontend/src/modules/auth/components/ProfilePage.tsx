@@ -102,7 +102,7 @@ const ProfilePage = () => {
     <div className="flex flex-col gap-6 w-full min-h-full pb-6">
       <ProfileHeader
         title="Thông tin cá nhân"
-        content={textContent}
+        subTitle={textContent}
         className={classNameInfo}
       />
 

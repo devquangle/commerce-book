@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import  { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLayout from "@/layouts/AdminLayout";
 import Spinner from "@/components/common/Spinner";

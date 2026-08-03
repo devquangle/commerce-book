@@ -2,13 +2,13 @@ import React from "react";
 
 export interface ProfileHeaderProps {
   title?: string;
-  content?: string;
+  subTitle?: string;
   className?: string;
 }
 
 export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   title = "Thông tin cá nhân",
-  content,
+  subTitle,
   className,
 }) => {
   return (
@@ -18,7 +18,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           {title}
         </h1>
         <p className="body-text text-zinc-500 dark:text-zinc-400 mt-1">
-        {content}
+        {subTitle}
         </p>
       </div>
     </div>
