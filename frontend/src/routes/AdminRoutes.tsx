@@ -18,7 +18,7 @@ const AdminSettings = lazy(() => import("@/modules/admin/pages/AdminSettings"));
 const ProfilePage = lazy(() => import("@/modules/auth/components/ProfilePage"));
 
 
-export const AdminRoutes: React.FC = () => {
+export const AdminRoutes= () => {
   return (
     <AdminLayout>
       <Suspense fallback={<Spinner message="Loading admin panel..." />}>

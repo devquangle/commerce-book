@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {  Search, ShoppingCart, Menu, X } from "lucide-react";
-import { ThemeToggle } from "../admin/ThemeToggle"; // Reusing the global theme toggle
 import { StorefrontUserMenu } from "./StorefrontUserMenu";
 import { StorefrontMegaMenu } from "./StorefrontMegaMenu";
 import Container from "../common/Container";
@@ -44,8 +43,6 @@ export const UserHeader: React.FC = () => {
                 />
                 <Search className="w-4 h-4 text-zinc-400 absolute left-3" />
               </div>
-
-              <ThemeToggle />
 
               {/* Cart */}
               <Link

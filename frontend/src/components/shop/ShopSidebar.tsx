@@ -1,110 +1,182 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { ChevronDown } from "lucide-react";
+import { shopSidebarMenu, type ShopSidebarMenuItem } from "./shop-sidebar-menu";
 
-import {
-  PieChart,
-  Package,
-  ShoppingCart,
-  DollarSign,
-  Settings,
-  Archive,
-  Menu,
-} from "lucide-react";
 
 export const ShopSidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { pathname } = useLocation();
 
+  const isMenuItemActive = (item: ShopSidebarMenuItem): boolean => {
+    if (item.href) {
+      return item.href === "/shop"
+        ? pathname === "/shop"
+        : pathname.startsWith(item.href);
+    }
+    if (item.subItems) {
+      return item.subItems.some((sub) => isMenuItemActive(sub));
+    }
+    return false;
+  };
+
+  const [userToggled, setUserToggled] = useState<{
+    pathname: string;
+    label: string | null;
+  } | null>(null);
+
+  const activeParent = shopSidebarMenu.find(
+    (item) => item.subItems && isMenuItemActive(item)
+  );
+
+  const openMenuLabel =
+    userToggled?.pathname === pathname
+      ? userToggled.label
+      : activeParent
+      ? activeParent.label
+      : null;
+
   useEffect(() => {
     const handleToggle = () => setIsOpen((prev) => !prev);
-    window.addEventListener("toggle-shop-sidebar", handleToggle);
-    return () => window.removeEventListener("toggle-shop-sidebar", handleToggle);
+    window.addEventListener("toggle-admin-sidebar", handleToggle);
+    return () =>
+      window.removeEventListener("toggle-admin-sidebar", handleToggle);
   }, []);
 
   const handleClose = () => setIsOpen(false);
 
-  const navItems = [
-    {
-      label: "Bảng điều khiển",
-      href: "/shop",
-      icon: PieChart,
-    },
-    {
-      label: "Quản lý sản phẩm",
-      href: "/shop/products",
-      icon: Package,
-    },
-    {
-      label: "Quản lý kho",
-      href: "/shop/inventory",
-      icon: Archive,
-    },
-    {
-      label: "Đơn hàng",
-      href: "/shop/orders",
-      icon: ShoppingCart,
-    },
-    {
-      label: "Doanh thu",
-      href: "/shop/revenue",
-      icon: DollarSign,
-    },
-    {
-      label: "Cài đặt cửa hàng",
-      href: "/shop/settings",
-      icon: Settings,
-    },
-  ];
+  const toggleSubMenu = (label: string) => {
+    const nextLabel = openMenuLabel === label ? null : label;
+    setUserToggled({ pathname, label: nextLabel });
+  };
 
   return (
     <>
       {/* Mobile Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/50 sm:hidden"
+          className="fixed inset-0 z-30 bg-black/50 sm:hidden transition-opacity duration-300 ease-in-out"
           onClick={handleClose}
         />
       )}
 
       <aside
-        id="shop-sidebar"
-        className={`fixed top-0 left-0 z-40 w-64 h-full pt-16 transition-transform ${
+        id="top-bar-sidebar"
+        className={`fixed top-0 left-0 z-40 w-64 h-full pt-17 transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } sm:translate-x-0 bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800`}
-        aria-label="Shop Sidebar"
+        aria-label="Sidebar"
       >
         <div className="h-full px-3 py-4 overflow-y-auto">
-          {/* Mobile Header Brand */}
-          <Link
-            to="/shop"
-            className="flex items-center ps-2.5 mb-5 sm:hidden"
-            onClick={handleClose}
-          >
-            <span className="self-center text-lg font-semibold whitespace-nowrap text-zinc-900 dark:text-white">
-              Cửa hàng của tôi
-            </span>
-          </Link>
-
-          <ul className="space-y-1 font-medium text-sm">
-            {navItems.map((item) => {
+          <ul className="space-y-1 body-text">
+            {shopSidebarMenu.map((item) => {
               const Icon = item.icon;
-              const isActive =
-                item.href === "/shop"
-                  ? pathname === "/shop"
-                  : pathname.startsWith(item.href);
+              const hasSubItems = Boolean(
+                item.subItems && item.subItems.length > 0
+              );
+              const parentActive = isMenuItemActive(item);
+              const isExpanded = openMenuLabel === item.label;
+
+              if (hasSubItems && item.subItems) {
+                return (
+                  <li key={item.label}>
+                    <button
+                      type="button"
+                      onClick={() => toggleSubMenu(item.label)}
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-200 ease-in-out ${
+                        parentActive
+                          ? "bg-blue-50/60 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 font-semibold"
+                          : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 hover:text-zinc-900 dark:hover:text-zinc-100"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon
+                          className={`w-5 h-5 shrink-0 transition-colors duration-200 ${
+                            parentActive
+                              ? "text-blue-600 dark:text-blue-400"
+                              : "text-zinc-500 dark:text-zinc-400"
+                          }`}
+                        />
+                        <span>{item.label}</span>
+                      </div>
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform duration-300 ease-in-out ${
+                          isExpanded ? "rotate-180" : ""
+                        } ${
+                          parentActive
+                            ? "text-blue-600 dark:text-blue-400"
+                            : "text-zinc-400"
+                        }`}
+                      />
+                    </button>
+
+                    <div
+                      className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
+                        isExpanded
+                          ? "grid-rows-[1fr] opacity-100 mt-1"
+                          : "grid-rows-[0fr] opacity-0"
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        <ul className="space-y-1 ps-4 pb-0.5">
+                          {item.subItems.map((subItem) => {
+                            const SubIcon = subItem.icon;
+                            const isSubActive = subItem.href
+                              ? subItem.href === "/admin"
+                                ? pathname === "/admin"
+                                : pathname.startsWith(subItem.href)
+                              : false;
+
+                            return (
+                              <li key={subItem.href || subItem.label}>
+                                <Link
+                                  to={subItem.href || "#"}
+                                  onClick={handleClose}
+                                  className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200 ease-in-out body-text ${
+                                    isSubActive
+                                      ? "bg-blue-100/70 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 font-semibold"
+                                      : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 hover:text-zinc-900 dark:hover:text-zinc-100"
+                                  }`}
+                                >
+                                  <SubIcon
+                                    className={`w-4 h-4 shrink-0 transition-colors duration-200 ${
+                                      isSubActive
+                                        ? "text-blue-600 dark:text-blue-400"
+                                        : ""
+                                    }`}
+                                  />
+                                  <span>{subItem.label}</span>
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+                );
+              }
+
+              const isActive = isMenuItemActive(item);
 
               return (
-                <li key={item.href}>
+                <li key={item.href || item.label}>
                   <Link
-                    to={item.href}
+                    to={item.href || "#"}
                     onClick={handleClose}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
+                    className={`flex items-center gap-3 px-3 py-2.5 body-text rounded-xl transition-all duration-200 ease-in-out ${
                       isActive
-                        ? "bg-green-50 dark:bg-green-950/50 text-green-600 dark:text-green-400 font-semibold"
+                        ? "bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 font-semibold"
                         : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 hover:text-zinc-900 dark:hover:text-zinc-100"
                     }`}
                   >
-                    <Icon className={`w-5 h-5 shrink-0 ${isActive ? "text-green-600 dark:text-green-400" : "text-zinc-500 dark:text-zinc-400"}`} />
+                    <Icon
+                      className={`w-5 h-5 shrink-0 transition-colors duration-200 ${
+                        isActive
+                          ? "text-blue-600 dark:text-blue-400"
+                          : "text-zinc-500 dark:text-zinc-400"
+                      }`}
+                    />
                     <span>{item.label}</span>
                   </Link>
                 </li>

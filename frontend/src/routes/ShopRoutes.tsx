@@ -1,6 +1,7 @@
-import React, { Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import ShopLayout from "@/layouts/ShopLayout";
+import Spinner from "@/components/common/Spinner";
 
 // Lazy-loaded pages
 const ShopDashboard = lazy(() => import("@/modules/shop/pages/ShopDashboard"));
@@ -14,14 +15,15 @@ const ShopOrderDetail = lazy(
 const ShopRevenue = lazy(() => import("@/modules/shop/pages/ShopRevenue"));
 const ShopSettings = lazy(() => import("@/modules/shop/pages/ShopSettings"));
 const ShopInventory = lazy(() => import("@/modules/shop/pages/ShopInventory"));
+const StorePage = lazy(() => import("@/modules/shop/stores/pages/StorePage"));
 
-
-export const ShopRoutes: React.FC = () => {
+export const ShopRoutes = () => {
   return (
     <ShopLayout>
-      <Suspense >
+      <Suspense fallback={<Spinner message="Loading shop panel..." />}>
         <Routes>
           <Route index element={<ShopDashboard />} />
+          <Route path="stores" element={<StorePage />} />
           <Route path="products" element={<ShopProductPage />} />
           <Route path="inventory" element={<ShopInventory />} />
           <Route path="orders" element={<ShopOrders />} />
