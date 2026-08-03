@@ -21,7 +21,7 @@ export interface AdminSidebarMenuItem {
 
 export const adminSidebarMenu: AdminSidebarMenuItem[] = [
   {
-    label: "Trang chủ",
+    label: "Bảng điều khiển",
     href: "/admin",
     icon: PieChart,
   },

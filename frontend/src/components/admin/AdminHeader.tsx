@@ -1,8 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
-
 import { SidebarToggle } from "./SidebarToggle";
-import { UserMenu } from "./UserMenu";
+import { AccountMenu } from "./AccountMenu";
+import { Logo } from "../common/Logo";
 
 export const AdminHeader: React.FC = () => {
   return (
@@ -11,19 +10,10 @@ export const AdminHeader: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center justify-start rtl:justify-end">
             <SidebarToggle />
-            <Link to="/admin" className="flex ms-2 md:me-24 items-center gap-3">
-              <img
-                src="https://flowbite.com/docs/images/logo.svg"
-                className="h-6 w-6"
-                alt="FlowBite Logo"
-              />
-              <span className="self-center text-lg font-semibold whitespace-nowrap text-zinc-900 dark:text-white">
-                Flowbite
-              </span>
-            </Link>
+            <Logo href="/admin" className="px-3" />
           </div>
           <div className="flex items-center gap-2">
-            <UserMenu />
+            <AccountMenu />
           </div>
         </div>
       </div>
