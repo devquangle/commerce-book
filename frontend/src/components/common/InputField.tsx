@@ -6,7 +6,7 @@ import { Eye, EyeOff } from "lucide-react";
 export interface InputFieldProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  error?: string;
+  error?: React.ReactNode;
   helperText?: string;
   icon?: React.ReactNode;
   required?: boolean;

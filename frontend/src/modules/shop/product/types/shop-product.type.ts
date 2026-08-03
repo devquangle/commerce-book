@@ -49,6 +49,7 @@ export interface ProductRequest {
   pages: number;
   language: string;
   price: number;
+  originalPrice: number;
   quantity: number;
   status: ProductStatus;
   seriesId: number | null;

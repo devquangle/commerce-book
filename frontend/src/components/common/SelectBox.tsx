@@ -12,7 +12,7 @@ export interface SelectOption {
 export interface SelectBoxProps
   extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "value" | "defaultValue"> {
   label?: string;
-  error?: string;
+  error?: React.ReactNode;
   helperText?: string;
   options: SelectOption[];
   placeholder?: string;
@@ -122,7 +122,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
         {label && (
           <label
             htmlFor={selectId}
-            className="block caption-text text-zinc-700 dark:text-zinc-300"
+            className="block caption-text font-semibold text-zinc-700 dark:text-zinc-300"
           >
             {label} {required && <span className="text-red-500">*</span>}
           </label>
@@ -170,7 +170,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
               <span
                 className={`truncate ${
                   selectedOption
-                    ? "text-zinc-900 dark:text-white font-medium caption-text"
+                    ? "text-zinc-900 dark:text-white font-medium"
                     : "text-zinc-400"
                 }`}
               >
