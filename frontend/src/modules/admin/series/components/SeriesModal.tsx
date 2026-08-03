@@ -36,6 +36,8 @@ const SeriesModalContent: React.FC<SeriesModalProps> = ({
     formState: { errors, isSubmitting },
   } = useForm<SeriesRequest>({
     defaultValues: series || initSeries,
+    mode: "onChange",
+    reValidateMode: "onChange",
   });
 
   const onSubmit = async (data: SeriesRequest) => {
@@ -73,7 +75,21 @@ const SeriesModalContent: React.FC<SeriesModalProps> = ({
           required
           placeholder="Nhập tên series..."
           error={errors.name?.message}
-          {...register("name", { required: "Vui lòng nhập tên series" })}
+         {...register("name", {
+            required: "Tên series không được để trống.",
+            minLength: {
+              value: 2,
+              message: "Tên series phải có ít nhất 2 ký tự.",
+            },
+            maxLength: {
+              value: 100,
+              message: "Tên series không được vượt quá 100 ký tự.",
+            },
+            pattern: {
+              value: /^[A-Za-zÀ-ỹ\s]+$/u,
+              message: "Tên series chỉ được chứa chữ cái và khoảng trắng.",
+            },
+          })}
         />
         {series && (
           <Controller

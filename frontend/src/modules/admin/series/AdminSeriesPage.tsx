@@ -19,6 +19,8 @@ import {
 import type { SeriesResponse, SeriesRequest } from "./types/series.type";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Pagination } from "@/components/common/Pagination";
+import { mapServerErrors } from "@/libs/utils/mapServerErrors";
+import type { UseFormSetError } from "react-hook-form";
 
 const AdminSeriesPage = () => {
   const {
@@ -74,14 +76,24 @@ const AdminSeriesPage = () => {
     }
   };
 
-  const handleSaveSeries = (seriesData: SeriesRequest & { id?: number }) => {
-    if (seriesData.id) {
-      updateMutation.mutate({ id: seriesData.id, req: seriesData });
-    } else {
-      createMutation.mutate(seriesData);
+  const handleSaveSeries = async (
+    seriesData: SeriesRequest & { id?: number },
+    setError: UseFormSetError<SeriesRequest>,
+  ) => {
+    try {
+      if (seriesData.id) {
+        await updateMutation.mutateAsync({
+          id: seriesData.id,
+          req: seriesData,
+        });
+      } else {
+        await createMutation.mutateAsync(seriesData);
+      }
+      setSelectedSeries(null);
+      setIsModalOpen(false);
+    } catch (error: unknown) {
+      mapServerErrors(error, setError);
     }
-    setSelectedSeries(null);
-    setIsModalOpen(false);
   };
 
   return (
