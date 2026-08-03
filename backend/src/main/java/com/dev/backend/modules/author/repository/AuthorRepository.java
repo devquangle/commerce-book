@@ -11,14 +11,14 @@ import org.springframework.data.repository.query.Param;
 
 public interface AuthorRepository extends JpaRepository<Author, Long> {
         @Query("""
-                                SELECT a
-                                FROM Author a
-                                WHERE (
-                                        :keyword IS NULL
-                                        OR LOWER(a.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
-                                )
-                                AND (:status IS NULL OR a.status = :status)
-                        """)
+                SELECT a
+                FROM Author a
+                WHERE (
+                        :keyword IS NULL
+                        OR LOWER(a.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                )
+                AND (:status IS NULL OR a.status = :status)
+                """)
         Page<Author> search(
                         @Param("keyword") String keyword,
                         @Param("status") AuthorStatus status,

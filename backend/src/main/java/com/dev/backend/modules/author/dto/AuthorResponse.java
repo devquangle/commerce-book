@@ -4,9 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
-
 import com.dev.backend.common.enums.AuthorStatus;
 
 @Getter
@@ -22,6 +19,4 @@ public class AuthorResponse {
     private String urlBio;
     private String description;
     private AuthorStatus status;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -138,22 +139,23 @@ public class GenreServiceImpl implements GenreService {
     @Override
     @Transactional(readOnly = true)
     public PageResponse<GenreResponse> search(GenreFilterRequest request) {
-        int page = (request.getPage() == null || request.getPage() < 1) ? 0 : request.getPage() - 1;
-        int size = (request.getSize() == null || request.getSize() < 1) ? 10 : request.getSize();
+        Pageable pageable = PageRequest.of(
+                Math.max(0, Optional.ofNullable(request.getPage()).orElse(1) - 1),
+                Optional.ofNullable(request.getSize()).filter(s -> s > 0).orElse(10),
+                Sort.by(Sort.Direction.DESC, "id"));
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
-
-        GenreStatus status = request.getStatus();
-        String keyword = StringUtils.trimToNull(request.getKeyword());
-        Page<Genre> item = genreRepository.search(keyword, status, pageable);
-
-        List<GenreResponse> items = item.getContent().stream().map(genreMapper::toDTO).toList();
+        Page<GenreResponse> page = genreRepository
+                .search(
+                        StringUtils.trimToNull(request.getKeyword()),
+                        request.getStatus(),
+                        pageable)
+                .map(genreMapper::toDTO);
 
         return new PageResponse<>(
-                items,
-                item.getNumber(),
-                item.getSize(),
-                item.getTotalElements(),
-                item.getTotalPages());
+                page.getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages());
     }
 }

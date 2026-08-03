@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -146,22 +147,23 @@ public class SeriesServiceImpl implements SeriesService {
 
     @Override
     public PageResponse<SeriesResponse> search(SeriesFilterRequest request) {
-        int page = (request.getPage() == null || request.getPage() < 1) ? 0 : request.getPage() - 1;
-        int size = (request.getSize() == null || request.getSize() < 1) ? 10 : request.getSize();
+     Pageable pageable = PageRequest.of(
+                Math.max(0, Optional.ofNullable(request.getPage()).orElse(1) - 1),
+                Optional.ofNullable(request.getSize()).filter(s -> s > 0).orElse(10),
+                Sort.by(Sort.Direction.DESC, "id"));
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
-
-        SeriesStatus status = request.getStatus();
-        String keyword = StringUtils.trimToNull(request.getKeyword());
-        Page<Series> item = seriesRepository.search(keyword, status, pageable);
-
-        List<SeriesResponse> items = item.getContent().stream().map(seriesMapper::toDTO).toList();
+        Page<SeriesResponse> page = seriesRepository
+                .search(
+                        StringUtils.trimToNull(request.getKeyword()),
+                        request.getStatus(),
+                        pageable)
+                .map(seriesMapper::toDTO);
 
         return new PageResponse<>(
-                items,
-                item.getNumber(),
-                item.getSize(),
-                item.getTotalElements(),
-                item.getTotalPages());
+                page.getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages());
     }
 }

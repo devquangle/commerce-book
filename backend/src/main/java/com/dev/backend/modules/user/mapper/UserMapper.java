@@ -1,6 +1,5 @@
 package com.dev.backend.modules.user.mapper;
 
-import com.dev.backend.modules.user.dto.UserRequest;
 import com.dev.backend.modules.user.dto.UserResponse;
 import com.dev.backend.modules.user.entity.User;
 import org.springframework.stereotype.Component;
