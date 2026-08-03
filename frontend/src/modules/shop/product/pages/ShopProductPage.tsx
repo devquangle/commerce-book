@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { ProductHeader } from "./components/ProductHeader";
-import { ProductFilter } from "./components/ProductFilter";
-import { ProductTable } from "./components/ProductTable";
-import { ProductMobileCard } from "./components/ProductMobileCard";
+import { ProductHeader } from "../components/ProductHeader";
+import { ProductFilter } from "../components/ProductFilter";
+import { ProductTable } from "../components/ProductTable";
+import { ProductMobileCard } from "../components/ProductMobileCard";
 import {
   ProductSkeleton,
   ProductMobileSkeleton,
-} from "./components/ProductSkeleton";
-import { ProductDeleteModal } from "./components/ProductDeleteModal";
-import type { ProductResponse } from "./types/shop-product.type";
+} from "../components/ProductSkeleton";
+import { ProductDeleteModal } from "../components/ProductDeleteModal";
+import type { ProductResponse } from "../types/shop-product.type";
 
 // Dữ liệu mẫu (Mock data)
 const MOCK_PRODUCTS: ProductResponse[] = [
@@ -194,7 +194,7 @@ const MOCK_PRODUCTS: ProductResponse[] = [
   },
 ];
 
-import { useProductShopFilter } from "./hooks/useProductShopFilter";
+import { useProductShopFilter } from "../hooks/useProductShopFilter";
 
 const ShopProducts = () => {
   const {

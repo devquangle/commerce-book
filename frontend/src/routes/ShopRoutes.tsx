@@ -5,7 +5,7 @@ import ShopLayout from "@/layouts/ShopLayout";
 // Lazy-loaded pages
 const ShopDashboard = lazy(() => import("@/modules/shop/pages/ShopDashboard"));
 const ShopProductPage = lazy(
-  () => import("@/modules/shop/product/ShopProductPage"),
+  () => import("@/modules/shop/product/pages/ShopProductPage"),
 );
 const ShopOrders = lazy(() => import("@/modules/shop/pages/ShopOrders"));
 const ShopOrderDetail = lazy(
