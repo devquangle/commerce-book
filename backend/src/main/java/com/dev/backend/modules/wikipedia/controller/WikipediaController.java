@@ -1,4 +1,4 @@
-package com.dev.backend.modules.author.controller;
+package com.dev.backend.modules.wikipedia.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dev.backend.common.response.ResponseData;
 import com.dev.backend.common.response.ResponseUtil;
-import com.dev.backend.modules.author.dto.WikipediaResponse;
-import com.dev.backend.modules.author.service.WikipediaService;
+import com.dev.backend.modules.wikipedia.dto.WikipediaResponse;
+import com.dev.backend.modules.wikipedia.service.WikipediaService;
 
 import lombok.RequiredArgsConstructor;
 

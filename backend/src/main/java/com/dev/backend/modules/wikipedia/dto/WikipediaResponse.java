@@ -1,4 +1,4 @@
-package com.dev.backend.modules.author.dto;
+package com.dev.backend.modules.wikipedia.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

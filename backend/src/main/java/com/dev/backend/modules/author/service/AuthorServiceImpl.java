@@ -8,10 +8,11 @@ import com.dev.backend.common.utils.TextUtils;
 import com.dev.backend.modules.author.dto.AuthorFilterRequest;
 import com.dev.backend.modules.author.dto.AuthorRequest;
 import com.dev.backend.modules.author.dto.AuthorResponse;
-import com.dev.backend.modules.author.dto.WikipediaResponse;
 import com.dev.backend.modules.author.entity.Author;
 import com.dev.backend.modules.author.mapper.AuthorMapper;
 import com.dev.backend.modules.author.repository.AuthorRepository;
+import com.dev.backend.modules.wikipedia.dto.WikipediaResponse;
+import com.dev.backend.modules.wikipedia.service.WikipediaService;
 
 import lombok.RequiredArgsConstructor;
 

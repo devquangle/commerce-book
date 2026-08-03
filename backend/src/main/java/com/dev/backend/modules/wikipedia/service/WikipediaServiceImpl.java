@@ -1,4 +1,4 @@
-package com.dev.backend.modules.author.service;
+package com.dev.backend.modules.wikipedia.service;
 
 
 import java.util.Set;
@@ -10,8 +10,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.dev.backend.common.exception.NotFoundException;
-import com.dev.backend.modules.author.dto.WikipediaApiResponse;
-import com.dev.backend.modules.author.dto.WikipediaResponse;
+import com.dev.backend.modules.wikipedia.dto.WikipediaApiResponse;
+import com.dev.backend.modules.wikipedia.dto.WikipediaResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
