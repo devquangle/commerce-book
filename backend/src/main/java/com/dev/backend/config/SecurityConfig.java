@@ -46,6 +46,7 @@ public class SecurityConfig {
                         "/api/v1/auth/refresh",
                         "/api/v1/upload",
                         "/api/v1/wikipedia/**",
+                          "/api/v1/gemini/**",
                         "/products",
                         "/genre/list",
                         "/productdetail/**",
