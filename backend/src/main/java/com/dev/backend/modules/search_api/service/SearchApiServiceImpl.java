@@ -1,18 +1,13 @@
 package com.dev.backend.modules.search_api.service;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.dev.backend.modules.search_api.dto.SearchApiImage;
-import com.dev.backend.modules.search_api.dto.SearchApiOriginal;
 import com.dev.backend.modules.search_api.dto.SearchApiResponse;
 import com.dev.backend.modules.search_api.dto.UrlImageResponse;
 
@@ -23,11 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class SearchApiServiceImpl implements SearchApiService {
+
     private final RestTemplate restTemplate;
 
     @Override
     public UrlImageResponse getTop5ImageLinks(String keyword) {
-
         String url = UriComponentsBuilder.fromUriString("https://www.searchapi.io/api/v1/search")
                 .queryParam("engine", "google_images")
                 .queryParam("q", keyword)
@@ -40,22 +35,19 @@ public class SearchApiServiceImpl implements SearchApiService {
         try {
             SearchApiResponse response = restTemplate.getForObject(url, SearchApiResponse.class);
 
-            List<String> links = Optional.ofNullable(response)
-                    .map(SearchApiResponse::getImages)
-                    .orElse(Collections.emptyList())
-                    .stream()
-                    .map(SearchApiImage::getOriginal)
-                    .filter(Objects::nonNull)
-                    .map(SearchApiOriginal::getLink)
-                    .filter(StringUtils::hasText)
-                    .limit(5)
-                    .toList();
+            if (response != null && response.getImages() != null) {
+                List<String> links = response.getImages().stream()
+                        .filter(img -> img.getOriginal() != null && img.getOriginal().getLink() != null)
+                        .limit(5)
+                        .map(img -> img.getOriginal().getLink())
+                        .collect(Collectors.toList());
 
-            return new UrlImageResponse(links);
-
-        } catch (RestClientException e) {
-            log.error("Lỗi khi gọi SearchAPI với keyword={}", keyword, e);
-            return new UrlImageResponse(Collections.emptyList());
+                return new UrlImageResponse(links);
+            }
+        } catch (Exception e) {
+            log.error("Lỗi khi gọi API SearchAPI cho từ khóa {}: {}", keyword, e.getMessage());
         }
+
+        return new UrlImageResponse(new ArrayList<>());
     }
 }

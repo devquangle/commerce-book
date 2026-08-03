@@ -6,9 +6,24 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 
+
+
+
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchApiResponse {
+    private List<ImageWrapper> images;
 
-    private List<SearchApiImage> images;
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class ImageWrapper {
+        private OriginalData original;
+    }
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class OriginalData {
+        private String link;
+    }
+
 }

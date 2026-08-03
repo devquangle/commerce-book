@@ -58,6 +58,8 @@ const ShopProductCreatePage = () => {
         control={control}
         errors={errors}
         watch={watch}
+        setValue={setValue}
+        getValues={getValues}
       />
       <ProductAttribute
         control={control}

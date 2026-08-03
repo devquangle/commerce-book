@@ -48,6 +48,7 @@ public class SecurityConfig {
                         "/api/v1/wikipedia/**",
                         "/api/v1/gemini/**",
                         "/api/v1/search-api/**",
+                        "/api/v1/google-books/**",
                         "/products",
                         "/genre/list",
                         "/productdetail/**",

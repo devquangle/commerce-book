@@ -29,3 +29,6 @@ app:
     api-secret: ${CLOUDINARY_API_SECRET}
   gemini:
     api-key: ${GEMINI_API_KEY}
+  google:
+    books:
+      api-key: ${GOOGLE_BOOK_API_KEY}

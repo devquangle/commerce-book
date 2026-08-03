@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { createPortal } from "react-dom";
 
 interface LoadingProps {
   inline?: boolean;
@@ -19,9 +20,10 @@ const Spinner: React.FC<LoadingProps> = ({
     // Block scrolling on the body
     const originalOverflow = document.body.style.overflow;
     const originalPaddingRight = document.body.style.paddingRight;
-    
+
     // Prevent layout shift by calculating scrollbar width
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
 
     document.body.style.overflow = "hidden";
     if (scrollbarWidth > 0) {
@@ -46,20 +48,21 @@ const Spinner: React.FC<LoadingProps> = ({
     );
   }
 
-  return (
-    <div className={`fixed inset-0 z-9999 flex items-center justify-center bg-slate-950/40 backdrop-blur-md transition-opacity duration-300 ${className}`}>
+  const overlayContent = (
+    <div
+      className={`fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/40 backdrop-blur-md transition-opacity duration-300 ${className}`}
+    >
       {/* Glass card container */}
       <div className="relative flex flex-col items-center justify-center p-8 bg-white/95 dark:bg-slate-900/95 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800/60 max-w-70 w-full mx-4 transition-transform duration-300 scale-100">
-        
-        {/* Animated Spinner Spinner Container */}
+        {/* Animated Spinner Container */}
         <div className="relative w-16 h-16 mb-4 flex items-center justify-center">
           {/* Outer glowing ripple */}
           <div className="absolute inset-0 rounded-full bg-indigo-500/10 animate-ping duration-[1.5s]"></div>
-          
+
           {/* Outer spinning gradient ring */}
           <div className="absolute inset-0 rounded-full border-4 border-slate-100 dark:border-slate-800"></div>
           <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-indigo-600 border-r-indigo-600 animate-spin"></div>
-          
+
           {/* Inner reverse spinning ring */}
           <div className="absolute inset-2 rounded-full border-4 border-transparent border-b-indigo-400 border-l-indigo-400 animate-[spin_1.5s_linear_infinite_reverse]"></div>
         </div>
@@ -78,6 +81,12 @@ const Spinner: React.FC<LoadingProps> = ({
       </div>
     </div>
   );
+
+  if (typeof document !== "undefined") {
+    return createPortal(overlayContent, document.body);
+  }
+
+  return overlayContent;
 };
 
 export default Spinner;
