@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { LogOut } from "lucide-react";
+import { User, LogOut, ChevronDown } from "lucide-react";
 import { adminAccountMenu } from "./admin-account-menu";
 import { LogoutModal } from "../common/LogoutModal";
 import { useAuth } from "@/context/useAuth";
@@ -12,7 +12,7 @@ export const AccountMenu: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const {userInfo, logout} = useAuth();
+  const { userInfo, logout } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -33,7 +33,7 @@ export const AccountMenu: React.FC = () => {
     try {
       setIsLoggingOut(true);
       if (logout) {
-        await   logout();
+        await logout();
       }
       setIsLogoutModalOpen(false);
       setIsDropdownOpen(false);
@@ -47,30 +47,41 @@ export const AccountMenu: React.FC = () => {
 
   const displayName = userInfo?.name || "Super Admin";
   const displayEmail = userInfo?.email || "admin@commercebook.com";
+  const displayUserName = userInfo?.username || "superadmin";
+
+  const rawName = userInfo?.name?.trim();
+  const displayHeaderName =
+    rawName && rawName.length > 15 ? displayUserName : displayName;
 
   return (
     <>
       <div className="flex items-center ms-3 relative" ref={dropdownRef}>
+        {/* Account Trigger Button */}
         <button
           type="button"
           onClick={() => setIsDropdownOpen((prev) => !prev)}
-          className="flex text-sm bg-zinc-800 rounded-full focus:ring-4 focus:ring-zinc-300 dark:focus:ring-zinc-600 cursor-pointer"
+          className="flex items-center gap-2 px-2.5 py-2.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus:outline-none"
           aria-expanded={isDropdownOpen}
         >
           <span className="sr-only">Mở menu tài khoản</span>
-          <img
-            className="w-8 h-8 rounded-full object-cover border border-zinc-200 dark:border-zinc-700"
-            src={userInfo?.avatarUrl || "https://flowbite.com/docs/images/people/profile-picture-5.jpg"}
-            alt="user photo"
-            width={32}
-            height={32}
+          <User className="w-6 h-6 text-zinc-600 dark:text-zinc-400" />
+
+          <span className="body-text font-medium text-zinc-700 dark:text-zinc-200 max-w-32.5 truncate">
+            {displayHeaderName}
+          </span>
+
+          <ChevronDown
+            className={`w-4 h-4 text-zinc-400 dark:text-zinc-500 transition-transform duration-200 ${
+              isDropdownOpen ? "rotate-180 text-blue-600 dark:text-blue-400" : ""
+            }`}
           />
         </button>
 
+        {/* Dropdown Menu */}
         {isDropdownOpen && (
-          <div className="z-50 absolute right-0 top-full mt-2.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-lg w-52 divide-y divide-zinc-100 dark:divide-zinc-800 animate-in fade-in zoom-in-95 duration-150">
+          <div className="z-50 absolute right-0 top-full mt-2.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl w-60 overflow-hidden animate-in fade-in zoom-in-95 duration-150 divide-y divide-zinc-100 dark:divide-zinc-800">
             {/* User Info Header */}
-            <div className="px-4 py-3">
+            <div className="px-4 py-3 bg-zinc-50/80 dark:bg-zinc-800/50">
               <p className="body-text font-semibold text-zinc-900 dark:text-white truncate">
                 {displayName}
               </p>
@@ -79,7 +90,7 @@ export const AccountMenu: React.FC = () => {
               </p>
             </div>
 
-            {/* Menu Items from admin-account-menu.ts */}
+            {/* Menu Items */}
             <ul className="py-1.5 body-text text-zinc-700 dark:text-zinc-200 font-medium">
               {adminAccountMenu.map((item) => {
                 const Icon = item.icon;
@@ -87,10 +98,10 @@ export const AccountMenu: React.FC = () => {
                   <li key={item.label}>
                     <Link
                       to={item.href || "#"}
-                      className="flex items-center gap-2.5 px-4 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors"
+                      className="flex items-center gap-3 px-4 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors"
                       onClick={() => setIsDropdownOpen(false)}
                     >
-                      <Icon className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
+                      <Icon className="w-4 h-4 text-zinc-400 dark:text-zinc-500" />
                       <span>{item.label}</span>
                     </Link>
                   </li>
@@ -106,7 +117,7 @@ export const AccountMenu: React.FC = () => {
                   setIsDropdownOpen(false);
                   setIsLogoutModalOpen(true);
                 }}
-                className="w-full flex items-center gap-2.5 px-4 py-2 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer text-left font-medium"
+                className="w-full flex items-center gap-3 px-4 py-2 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer text-left font-medium"
               >
                 <LogOut className="w-4 h-4" />
                 <span>Đăng xuất</span>

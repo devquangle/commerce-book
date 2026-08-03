@@ -4,6 +4,7 @@ export interface UserResponse {
   id: string;
   email: string;
   name: string;
+  username: string;
   phone?: string;
   street: string;
   role: RoleType;

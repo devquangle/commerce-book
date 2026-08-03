@@ -9,7 +9,7 @@ export interface AdminAccountMenuItem {
 export const adminAccountMenu: AdminAccountMenuItem[] = [
   {
     label: "Tài khoản",
-    href: "/admin/account",
+    href: "/admin/profile",
     icon: User,
   },
 ];

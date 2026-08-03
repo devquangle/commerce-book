@@ -64,7 +64,7 @@ export const AdminSidebar: React.FC = () => {
 
       <aside
         id="top-bar-sidebar"
-        className={`fixed top-0 left-0 z-40 w-64 h-full pt-16 transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 z-40 w-64 h-full pt-17 transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } sm:translate-x-0 bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800`}
         aria-label="Sidebar"
