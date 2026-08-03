@@ -67,7 +67,8 @@ export const AccountMenu: React.FC = () => {
           <User className="w-6 h-6 text-zinc-600 dark:text-zinc-400" />
 
           <span className="body-text font-medium text-zinc-700 dark:text-zinc-200 max-w-32.5 truncate">
-            {displayHeaderName}
+            <span className="sm:hidden">Tài khoản</span>
+            <span className="hidden sm:inline">{displayHeaderName}</span>
           </span>
 
           <ChevronDown

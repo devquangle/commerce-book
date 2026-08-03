@@ -7,7 +7,6 @@ import type { LoginRequest } from "@/modules/auth/types/login.type";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
-import { showErrorToast } from "@/libs/utils/toastUtil";
 import { showSuccessToast } from "./../../../libs/utils/toastUtil";
 import Spinner from "@/components/common/Spinner";
 
@@ -34,7 +33,7 @@ const LoginPage = () => {
         navigate("/admin");
       }
     } catch (error: unknown) {
-      mapServerErrors(error, setError, showErrorToast);
+      mapServerErrors(error, setError);
     } finally {
       setIsLoading(false);
     }
