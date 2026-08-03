@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
-import { AuthorFilterRequest, AuthorRequest } from './../../src/modules/admin/authors/types/author.type';
-import AuthorService from './../../src/modules/admin/authors/services/author.service';
-import { authAxios } from './../../src/libs/config/axios.config';
+
+import { authAxios } from "@/libs/config/axios.config";
+import type { AuthorFilterRequest, AuthorRequest } from "@/modules/admin/authors/types/author.type";
+import AuthorService from "@/modules/admin/authors/services/author.service";
 
 // Mock thư viện axios để không gọi API thật trong lúc test
 vi.mock("@/libs/config/axios.config", () => {

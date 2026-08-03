@@ -1,7 +1,7 @@
+import { publicAxios } from "@/libs/config/axios.config";
+import WikipediaService from "@/modules/admin/authors/services/wikipedia.service";
+import type { WikipediaResponse } from "@/modules/admin/authors/types/wikipedia.type";
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
-import WikipediaService from "./../../src//modules/admin/authors/services/wikipedia.service";
-import { publicAxios } from "./../../src//libs/config/axios.config";
-import type { WikipediaResponse } from "./../../src/modules/admin/authors/types/wikipedia.type";
 
 // Mock axios config
 vi.mock("./../../src/libs/config/axios.config", () => {
