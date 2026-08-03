@@ -45,8 +45,6 @@ const ProfilePage = () => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [isChangePassModalOpen, setIsChangePassModalOpen] = useState(false);
 
-  const classNameInfo = userInfo?.role === "USER" ? "" : "card-custom";
-
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -54,6 +52,12 @@ const ProfilePage = () => {
     setAvatarFile(file);
     setAvatar(URL.createObjectURL(file));
   };
+
+  const textContent =
+    userInfo?.role == "USER"
+      ? ""
+      : "Cập nhật thông tin cá nhân, thay đổi mật khẩu và quản lý ảnh đại diện.";
+  const classNameInfo = userInfo?.role == "USER" ? "" : "card-custom";
 
   const onSubmit = async (data: UserRequest) => {
     try {
@@ -96,9 +100,13 @@ const ProfilePage = () => {
 
   return (
     <div className="flex flex-col gap-6 w-full min-h-full pb-6">
-      <ProfileHeader title="Thông tin cá nhân" className={classNameInfo} />
+      <ProfileHeader
+        title="Thông tin cá nhân"
+        content={textContent}
+        className={classNameInfo}
+      />
 
-      <div className="card-custom flex flex-col lg:flex-row gap-6">
+      <div className={`flex flex-col lg:flex-row gap-6 ${classNameInfo}`}>
         <ProfileForm
           register={register}
           errors={errors}

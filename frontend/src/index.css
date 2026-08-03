@@ -19,7 +19,7 @@
 }
 
 @utility card-custom {
-  @apply bg-white dark:bg-zinc-900 rounded-xl border border-slate-100 dark:border-zinc-800 p-4 shadow-sm;
+  @apply bg-white dark:bg-zinc-900 rounded-xl border border-slate-100 dark:border-zinc-800 p-4 lg:p-6 shadow-sm;
 }
 @utility card-custom-v1 {
   @apply bg-white dark:bg-zinc-900 rounded-lg border border-slate-100 dark:border-zinc-800 shadow-sm;

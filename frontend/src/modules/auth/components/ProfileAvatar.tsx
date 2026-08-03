@@ -22,7 +22,7 @@ export const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
           <img
             src={avatar}
             alt="avatar"
-            className="w-full h-full rounded-3xl border border-zinc-200 dark:border-zinc-700 object-cover transition-transform duration-200 group-hover:scale-105 shadow-sm"
+            className="w-full h-full rounded-3xl border border-zinc-200 dark:border-zinc-700 object-cover shadow-sm"
           />
 
           <div className="absolute inset-0 rounded-3xl bg-black/30 opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center gap-3">
