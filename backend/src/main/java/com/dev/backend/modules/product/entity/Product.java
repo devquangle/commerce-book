@@ -1,6 +1,7 @@
 package com.dev.backend.modules.product.entity;
 
 import com.dev.backend.common.entity.BaseEntity;
+import com.dev.backend.common.enums.ProductStatus;
 import com.dev.backend.modules.author_product.entity.AuthorProduct;
 import com.dev.backend.modules.genre_product.entity.GenreProduct;
 import com.dev.backend.modules.image_product.entity.ImageProduct;
@@ -11,6 +12,8 @@ import com.dev.backend.modules.shop.entity.Shop;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,7 +25,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,29 +50,40 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "series_id")
     private Series series;
 
-    @Column(name = "title", nullable = false, length = 255)
-    private String title;
+    @Column(name = "name", nullable = false, length = 255)
+    private String name;
 
     @Column(name = "slug", length = 255)
     private String slug;
 
+    @Column(name = "language", length = 50)
+    private String language;
+
     @Column(name = "isbn", length = 50)
     private String isbn;
+
+    private LocalDate publishYear;
+
+    private Integer weight;
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "price", precision = 15, scale = 2)
-    private BigDecimal price;
+    @Column(name = "price")
+    private Integer price;
 
-    @Column(name = "original_price", precision = 15, scale = 2)
-    private BigDecimal originalPrice;
+    @Column(name = "original_price")
+    private Integer originalPrice;
 
-    @Column(name = "stock_quantity")
-    private Integer stockQuantity;
+    @Column(name = "quantity")
+    private Integer quantity;
+
+    @Column(name = "pages")
+    private Integer pages;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

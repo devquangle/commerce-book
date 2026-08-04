@@ -24,10 +24,11 @@ export interface ProductResponse {
   publishYear: string;
   pages: number;
   language?: string;
-  genresName: string[] | [];
-  authorsName: string[] | [];
+
   publisherName: string;
   seriesName: string;
+  genresName: string[] | [];
+  authorsName: string[] | [];
   urlImageDefault: string;
   status: ProductStatus;
 }

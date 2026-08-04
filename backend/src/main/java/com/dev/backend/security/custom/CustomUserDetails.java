@@ -1,5 +1,7 @@
 package com.dev.backend.security.custom;
 
+import com.dev.backend.common.exception.BadRequestException;
+import com.dev.backend.modules.shop.entity.Shop;
 import com.dev.backend.modules.user.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -7,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
 public class CustomUserDetails implements UserDetails {
 
@@ -20,12 +23,12 @@ public class CustomUserDetails implements UserDetails {
 
     public static CustomUserDetails build(User user) {
         Collection<GrantedAuthority> authorities = Collections.emptyList();
-        
+
         if (user.getRole() != null) {
             String code = user.getRole().getCode();
             String name = user.getRole().getName();
             String roleStr = (code != null && !code.isBlank()) ? code : name;
-            
+
             if (roleStr != null && !roleStr.isBlank()) {
                 String authorityName = roleStr.startsWith("ROLE_") ? roleStr : "ROLE_" + roleStr;
                 authorities = Collections.singletonList(new SimpleGrantedAuthority(authorityName));
@@ -39,8 +42,15 @@ public class CustomUserDetails implements UserDetails {
         return user;
     }
 
-    public Long getId() {
+    public Long getUserId() {
         return user.getId();
+    }
+
+    public Long getShopId() {
+        if (user.getShop() == null) {
+            throw new BadRequestException("Người dùng chưa có cửa hàng.");
+        }
+        return user.getShop().getId();
     }
 
     @Override

@@ -55,7 +55,7 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<ResponseData<UserResponse>> getProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-        UserResponse response = authService.getProfile(userDetails.getId());
+        UserResponse response = authService.getProfile(userDetails.getUserId());
         return ResponseUtil.success("DATA", response);
     }
 
@@ -64,7 +64,7 @@ public class AuthController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody UserRequest request) {
 
-        UserResponse response = authService.updateProfile(userDetails.getId(), request);
+        UserResponse response = authService.updateProfile(userDetails.getUserId(), request);
         return ResponseUtil.success("DATA =========", response);
     }
 
@@ -73,14 +73,14 @@ public class AuthController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody ChangePasswordRequest request) {
 
-        authService.changePassword(userDetails.getId(), request);
+        authService.changePassword(userDetails.getUserId(), request);
         return ResponseUtil.success("DATA =========", null);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@AuthenticationPrincipal CustomUserDetails userDetails) {
         if (userDetails != null) {
-            authService.logout(userDetails.getId());
+            authService.logout(userDetails.getUserId());
         }
         return ResponseEntity.ok().build();
     }

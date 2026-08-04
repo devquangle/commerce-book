@@ -1,5 +1,6 @@
 package com.dev.backend.modules.product.mapper;
 
+import com.dev.backend.modules.product.dto.ProductInfo;
 import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.entity.Product;
@@ -12,67 +13,63 @@ public class ProductMapper {
         if (request == null) {
             return null;
         }
-        return Product.builder()
-                .title(request.getTitle())
-                .slug(request.getSlug())
-                .isbn(request.getIsbn())
-                .description(request.getDescription())
-                .price(request.getPrice())
-                .originalPrice(request.getOriginalPrice())
-                .stockQuantity(request.getStockQuantity())
-                .status(request.getStatus())
-                .build();
+        return null;
     }
 
-    public ProductResponse toResponse(Product entity) {
+    public ProductResponse toDTO(Product entity) {
         if (entity == null) {
             return null;
         }
-        return ProductResponse.builder()
-                .id(entity.getId())
-                .shopId(entity.getShop() != null ? entity.getShop().getId() : null)
-                .publisherId(entity.getPublisher() != null ? entity.getPublisher().getId() : null)
-                .seriesId(entity.getSeries() != null ? entity.getSeries().getId() : null)
-                .title(entity.getTitle())
-                .slug(entity.getSlug())
-                .isbn(entity.getIsbn())
-                .description(entity.getDescription())
-                .price(entity.getPrice())
-                .originalPrice(entity.getOriginalPrice())
-                .stockQuantity(entity.getStockQuantity())
-                .status(entity.getStatus())
-                .createdAt(entity.getCreatedAt())
-                .updatedAt(entity.getUpdatedAt())
-                .build();
+        ProductResponse response = new ProductResponse();
+
+        response.setProductId(entity.getId().intValue());
+        response.setName(entity.getTitle());
+        response.setSlug(entity.getSlug());
+        response.setOriginalPrice(entity.getOriginalPrice());
+        response.setPrice(entity.getPrice());
+        response.setQuantity(entity.getQuantity());
+        response.setWeight(entity.getWeight());
+        response.setPublishYear(
+                entity.getPublishYear() != null
+                        ? entity.getPublishYear().toString()
+                        : null);
+        response.setPages(entity.getPages());
+        response.setLanguage(entity.getLanguage());
+        response.setIsbn(entity.getIsbn());
+
+        response.setPublisherName(
+                entity.getPublisher() != null
+                        ? entity.getPublisher().getName()
+                        : null);
+
+        response.setSeriesName(
+                entity.getSeries() != null
+                        ? entity.getSeries().getName()
+                        : null);
+
+        // response.setGenresName(
+        //         genreProductService.getGenreNamesByProductId(entity.getId()));
+
+        // response.setAuthorsName(
+        //         authorProductService.getAuthorNamesByProductId(entity.getId()));
+
+        // response.setUrlImageDefault(
+        //         imageProductService.getDefaultImageUrlByProductId(entity.getId()));
+
+        response.setStatus(entity.getStatus());
+
+        return response;
+
+
     }
 
-    public void updateEntityFromRequest(ProductRequest request, Product entity) {
-        if (request == null || entity == null) {
-            return;
-        }
-        if (request.getTitle() != null) {
-            entity.setTitle(request.getTitle());
-        }
-        if (request.getSlug() != null) {
-            entity.setSlug(request.getSlug());
-        }
-        if (request.getIsbn() != null) {
-            entity.setIsbn(request.getIsbn());
-        }
-        if (request.getDescription() != null) {
-            entity.setDescription(request.getDescription());
-        }
-        if (request.getPrice() != null) {
-            entity.setPrice(request.getPrice());
-        }
-        if (request.getOriginalPrice() != null) {
-            entity.setOriginalPrice(request.getOriginalPrice());
-        }
-        if (request.getStockQuantity() != null) {
-            entity.setStockQuantity(request.getStockQuantity());
-        }
-        if (request.getStatus() != null) {
-            entity.setStatus(request.getStatus());
-        }
-    }
+    // public ProductInfo toDTO(Product entity) {
+    //     if (entity == null) {
+    //         return null;
+    //     }
+    //     ProductInfo response = new ProductInfo();
+
+    //     return response;
+    // }
+
 }

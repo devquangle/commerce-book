@@ -1,18 +1,14 @@
 package com.dev.backend.modules.product.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.util.List;
 
 import com.dev.backend.common.enums.ProductStatus;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class ProductResponse {
+import lombok.Getter;
+import lombok.Setter;
+@Getter
+@Setter
+public class ProductInfo {
     private Integer productId;
     private String name;
     private String slug;

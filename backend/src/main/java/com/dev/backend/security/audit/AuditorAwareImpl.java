@@ -22,7 +22,7 @@ public class AuditorAwareImpl implements AuditorAware<Long> {
 
         Object principal = authentication.getPrincipal();
         if (principal instanceof CustomUserDetails userDetails) {
-            return Optional.ofNullable(userDetails.getId());
+            return Optional.ofNullable(userDetails.getUserId());
         }
 
         return Optional.empty();
