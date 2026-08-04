@@ -12,6 +12,7 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
+import { ADMIN_PATH } from "@/libs/constant/admin-path";
 
 export interface AdminSidebarMenuItem {
   label: string;
@@ -23,17 +24,17 @@ export interface AdminSidebarMenuItem {
 export const adminSidebarMenu: AdminSidebarMenuItem[] = [
   {
     label: "Bảng điều khiển",
-    href: "/admin",
+    href: ADMIN_PATH.ROOT,
     icon: PieChart,
   },
   {
     label: "Quản lý sản phẩm",
-    href: "/admin/products",
+    href: ADMIN_PATH.PRODUCTS_FULL,
     icon: Package,
   },
   {
     label: "Quản lý cửa hàng",
-    href: "/admin/stores",
+    href: ADMIN_PATH.STORES_FULL,
     icon: Store,
   },
   {
@@ -42,22 +43,22 @@ export const adminSidebarMenu: AdminSidebarMenuItem[] = [
     subItems: [
       {
         label: "Quản lý bộ sách",
-        href: "/admin/series",
+        href: ADMIN_PATH.SERIES_FULL,
         icon: Package,
       },
       {
         label: "Quản lý thể loại",
-        href: "/admin/genres",
+        href: ADMIN_PATH.GENRES_FULL,
         icon: Layers,
       },
       {
         label: "Quản lý tác giả",
-        href: "/admin/authors",
+        href: ADMIN_PATH.AUTHORS_FULL,
         icon: Users,
       },
       {
         label: "Quản lý NXB",
-        href: "/admin/publishers",
+        href: ADMIN_PATH.PUBLISHERS_FULL,
         icon: BookOpen,
       },
     ],
@@ -68,12 +69,12 @@ export const adminSidebarMenu: AdminSidebarMenuItem[] = [
     subItems: [
       {
         label: "Báo cáo sản phẩm",
-        href: "/admin/reports/products",
+        href: ADMIN_PATH.REPORTS_PRODUCTS_FULL,
         icon: FileSpreadsheet,
       },
       {
         label: "Báo cáo cửa hàng",
-        href: "/admin/reports/stores",
+        href: ADMIN_PATH.REPORTS_STORES_FULL,
         icon: FileBarChart,
       },
     ],
@@ -81,11 +82,11 @@ export const adminSidebarMenu: AdminSidebarMenuItem[] = [
   {
     label: "Thống kê",
     icon: BarChart,
-    href: "/admin/analytics",
+    href: ADMIN_PATH.ANALYTICS_FULL,
   },
   {
-    label:"Tài khoản",
-    href: "/admin/profile",
+    label: "Tài khoản",
+    href: ADMIN_PATH.PROFILE_FULL,
     icon: User,
-  }
+  },
 ];

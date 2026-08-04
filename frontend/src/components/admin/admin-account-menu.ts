@@ -1,4 +1,5 @@
 import { User, type LucideIcon } from "lucide-react";
+import { ADMIN_PATH } from "@/libs/constant/admin-path";
 
 export interface AdminAccountMenuItem {
   label: string;
@@ -9,7 +10,7 @@ export interface AdminAccountMenuItem {
 export const adminAccountMenu: AdminAccountMenuItem[] = [
   {
     label: "Tài khoản",
-    href: "/admin/profile",
+    href: ADMIN_PATH.PROFILE_FULL,
     icon: User,
   },
 ];
