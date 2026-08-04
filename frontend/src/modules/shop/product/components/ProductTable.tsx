@@ -11,14 +11,19 @@ import {
   ChevronDown,
   PenTool,
   Tag,
+  BadgeDollarSign,
+  Receipt,
+  Package,
 } from "lucide-react";
 import { Pagination } from "../../../../components/common/Pagination";
+import { Tooltip } from "../../../../components/common/Tooltip";
 import {
   type ProductResponse,
   type ProductStatus,
   getLabelProductStatus,
 } from "../types/shop-product.type";
 import { ProductActionMenu } from "./ProductActionMenu";
+import { formatMoney } from "@/libs/utils/formatMoney.utils";
 
 interface ProductTableProps {
   products: ProductResponse[];
@@ -29,10 +34,6 @@ interface ProductTableProps {
   onDelete: (id: number) => void;
 }
 
-const formatMoney = (amount: number) =>
-  new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(
-    amount,
-  );
 const getLanguageName = (code: string) => code;
 
 const ExpandableAuthors = ({ authors }: { authors?: string[] }) => {
@@ -245,38 +246,86 @@ export const ProductTable: React.FC<ProductTableProps> = ({
 
                 {/* ── GIÁ & KHO ── */}
                 <td className="py-3 px-6 align-middle">
-                  <div className="flex flex-col gap-0.5 caption-text">
-                    <div className="font-semibold text-slate-900 dark:text-zinc-100">
-                      {formatMoney(product.price)}
-                    </div>
-                    <div className="text-slate-500 dark:text-zinc-400">
-                      <span>{formatMoney(product.originalPrice || product.price)}</span>
-                      {product.originalPrice && product.originalPrice > product.price ? (
-                        <span className="ml-1 text-rose-500 font-medium">
-                          (-{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%)
-                        </span>
+                  <div className="flex flex-col gap-1 caption-text">
+                    {/* Dòng 1: Giá nhập */}
+                    <Tooltip
+                      content="Giá nhập"
+                      position="top"
+                      variant="dark"
+                      className="w-fit"
+                    >
+                      <div className="flex items-center gap-1.5 text-slate-600 dark:text-zinc-400">
+                        <BadgeDollarSign
+                          size={13}
+                          className="text-slate-400 dark:text-zinc-500 shrink-0"
+                        />
+                        <span>{formatMoney(product.originalPrice)}</span>
+                      </div>
+                    </Tooltip>
+
+                    {/* Dòng 2: Giá bán */}
+                    <div className="flex items-center gap-1.5 w-fit">
+                      <Tooltip
+                        content="Giá bán"
+                        position="top"
+                        variant="indigo"
+                        className="w-fit"
+                      >
+                        <div className="flex items-center gap-1.5 font-semibold text-slate-900 dark:text-zinc-100">
+                          <Receipt
+                            size={13}
+                            className="text-indigo-600 dark:text-indigo-400 shrink-0"
+                          />
+                          <span>{formatMoney(product.price)}</span>
+                        </div>
+                      </Tooltip>
+                      {product.originalPrice &&
+                      product.originalPrice > product.price ? (
+                        <Tooltip
+                          content={`Bán lỗ -${formatMoney(product.originalPrice - product.price)} so với giá nhập`}
+                          position="top"
+                          variant="rose"
+                          className="w-fit"
+                        >
+                          <span className="text-rose-500 font-medium text-[11px] cursor-help">
+                            -{formatMoney(product.originalPrice - product.price)}
+                          </span>
+                        </Tooltip>
                       ) : null}
                     </div>
-                    <div className="text-slate-500 dark:text-zinc-400">
-                      {product.quantity > 0 ? (
-                        <span>
-                          Kho còn{" "}
-                          <span
-                            className={`font-semibold ${
-                              product.quantity <= 10
-                                ? "text-amber-600 dark:text-amber-400"
-                                : "text-slate-700 dark:text-zinc-300"
-                            }`}
-                          >
-                            {product.quantity}
+
+                    {/* Dòng 3: Tồn kho */}
+                    <Tooltip
+                      content="Tồn kho"
+                      position="top"
+                      variant="dark"
+                      className="w-fit"
+                    >
+                      <div className="flex items-center gap-1.5 text-slate-500 dark:text-zinc-400">
+                        <Package
+                          size={13}
+                          className="text-slate-400 dark:text-zinc-500 shrink-0"
+                        />
+                        {product.quantity > 0 ? (
+                          <span>
+                            Kho còn{" "}
+                            <span
+                              className={`font-semibold ${
+                                product.quantity <= 10
+                                  ? "text-amber-600 dark:text-amber-400"
+                                  : "text-slate-700 dark:text-zinc-300"
+                              }`}
+                            >
+                              {product.quantity}
+                            </span>
                           </span>
-                        </span>
-                      ) : (
-                        <span className="text-rose-600 dark:text-rose-400 font-medium">
-                          Hết hàng
-                        </span>
-                      )}
-                    </div>
+                        ) : (
+                          <span className="text-rose-600 dark:text-rose-400 font-medium">
+                            Hết hàng
+                          </span>
+                        )}
+                      </div>
+                    </Tooltip>
                   </div>
                 </td>
 

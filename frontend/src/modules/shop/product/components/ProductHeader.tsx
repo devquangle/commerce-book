@@ -9,7 +9,7 @@ export const ProductHeader = () => {
         <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Quản lý danh sách sản phẩm của cửa hàng</p>
       </div>
       <Link
-        to="/shop/product/create"
+        to="/shop/products/create"
         className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors"
       >
         <Plus className="w-4 h-4" />

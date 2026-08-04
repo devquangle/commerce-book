@@ -7,6 +7,7 @@ import { AuthProvider } from "@/providers/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { SHOP_PATH } from "./libs/constant/shop-path";
 
 const queryClient = new QueryClient();
 
@@ -21,7 +22,7 @@ function App() {
             <Route path="/admin/*" element={<AdminRoutes />} />
 
             {/* Shop panel (seller dashboard): /shop/* */}
-            <Route path="/shop/*" element={<ShopRoutes />} />
+            <Route path={`${SHOP_PATH.ROOT}/*`} element={<ShopRoutes />} />
 
             {/* User storefront: /* */}
             <Route path="/*" element={<UserRoutes />} />

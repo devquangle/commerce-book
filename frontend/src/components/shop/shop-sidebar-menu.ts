@@ -12,6 +12,7 @@ import {
   type LucideIcon,
   MessageCircle,
 } from "lucide-react";
+import { SHOP_PATH } from "@/libs/constant/shop-path";
 
 export interface ShopSidebarMenuItem {
   label: string;
@@ -23,32 +24,32 @@ export interface ShopSidebarMenuItem {
 export const shopSidebarMenu: ShopSidebarMenuItem[] = [
   {
     label: "Bảng điều khiển",
-    href: "/shop",
+    href: SHOP_PATH.ROOT,
     icon: LayoutDashboard,
   },
   {
     label: "Thông tin cửa hàng",
-    href: "/shop/stores",
+    href: SHOP_PATH.STORE_FULL,
     icon: Store,
   },
   {
     label: "Quản lý sản phẩm",
-    href: "/shop/products",
+    href: SHOP_PATH.PRODUCTS_FULL,
     icon: Boxes,
   },
   {
     label: "Quản lý đơn hàng",
-    href: "/shop/orders",
+    href: SHOP_PATH.ORDERS_FULL,
     icon: ClipboardList,
   },
   {
     label: "Đánh giá & phản hồi",
-    href: "/shop/reviews",
+    href: SHOP_PATH.REVIEWS_FULL,
     icon: MessageSquareReply,
   },
   {
     label: "Trò chuyện",
-    href: "/shop/chats",
+    href: SHOP_PATH.CHATS_FULL,
     icon: MessageCircle,
   },
   {
@@ -57,29 +58,29 @@ export const shopSidebarMenu: ShopSidebarMenuItem[] = [
     subItems: [
       {
         label: "Sản phẩm",
-        href: "/shop/promotions",
+        href: SHOP_PATH.PROMOTIONS_FULL,
         icon: BadgePercent,
       },
       {
         label: "Đơn hàng",
-        href: "/shop/vouchers",
+        href: SHOP_PATH.VOUCHERS_FULL,
         icon: TicketPercent,
       },
     ],
   },
   {
     label: "Báo cáo vi phạm",
-    href: "/shop/reports",
+    href: SHOP_PATH.REPORTS_FULL,
     icon: TriangleAlert,
   },
   {
     label: "Thống kê",
-    href: "/shop/analytics",
+    href: SHOP_PATH.ANALYTICS_FULL,
     icon: BarChart3,
   },
   {
     label: "Tài khoản",
-    href: "/shop/profile",
+    href: SHOP_PATH.MY_ACCOUNT_FULL,
     icon: User,
   },
 ];
