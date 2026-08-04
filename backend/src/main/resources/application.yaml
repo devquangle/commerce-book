@@ -32,3 +32,6 @@ app:
   google:
     books:
       api-key: ${GOOGLE_BOOK_API_KEY}
+  searchapi:
+    api-key: ${SEARCH_API_KEY}
+    url: ${URL_SEARCH_API}

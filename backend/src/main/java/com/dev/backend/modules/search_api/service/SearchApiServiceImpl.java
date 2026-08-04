@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.dev.backend.config.SearchApiProperties;
 import com.dev.backend.modules.search_api.dto.SearchApiResponse;
 import com.dev.backend.modules.search_api.dto.UrlImageResponse;
 
@@ -20,20 +21,21 @@ import lombok.extern.slf4j.Slf4j;
 public class SearchApiServiceImpl implements SearchApiService {
 
     private final RestTemplate restTemplate;
+    private final SearchApiProperties properties;
 
     @Override
     public UrlImageResponse getTop5ImageLinks(String keyword) {
-        String url = UriComponentsBuilder.fromUriString("https://www.searchapi.io/api/v1/search")
+        String req = UriComponentsBuilder.fromUriString(properties.url())
                 .queryParam("engine", "google_images")
                 .queryParam("q", keyword)
                 .queryParam("gl", "vn")
                 .queryParam("hl", "vi")
-                .queryParam("api_key", "K77tHqsk2AkFMiZrrzBCtJbR")
+                .queryParam("api_key", properties.apiKey())
                 .build()
                 .toUriString();
 
         try {
-            SearchApiResponse response = restTemplate.getForObject(url, SearchApiResponse.class);
+            SearchApiResponse response = restTemplate.getForObject(req, SearchApiResponse.class);
 
             if (response != null && response.getImages() != null) {
                 List<String> links = response.getImages().stream()
