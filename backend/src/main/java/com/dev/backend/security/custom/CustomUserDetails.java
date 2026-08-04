@@ -1,15 +1,12 @@
 package com.dev.backend.security.custom;
 
 import com.dev.backend.common.exception.BadRequestException;
-import com.dev.backend.modules.shop.entity.Shop;
 import com.dev.backend.modules.user.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 
 public class CustomUserDetails implements UserDetails {
 

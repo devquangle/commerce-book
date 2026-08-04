@@ -1,6 +1,5 @@
 package com.dev.backend.modules.product.mapper;
 
-import com.dev.backend.modules.product.dto.ProductInfo;
 import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.entity.Product;
@@ -23,7 +22,7 @@ public class ProductMapper {
         ProductResponse response = new ProductResponse();
 
         response.setProductId(entity.getId().intValue());
-        response.setName(entity.getTitle());
+        response.setName(entity.getName());
         response.setSlug(entity.getSlug());
         response.setOriginalPrice(entity.getOriginalPrice());
         response.setPrice(entity.getPrice());

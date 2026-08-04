@@ -1,18 +1,56 @@
-export type ProductStatus = "ACTIVE" | "INACTIVE" | "DELETED";
+export type ProductStatus =
+  | "ACTIVE"
+  | "INACTIVE"
+  | "DELETED"
+  | "PENDING_APPROVAL"
+  | "REJECTED"
+  | "BANNED";
 
-export const getLabelProductStatus = (status: ProductStatus) => {
+export const getProductStatusInfo = (status: ProductStatus) => {
   switch (status) {
     case "ACTIVE":
-      return "Đang hoạt động";
+      return {
+        label: "Đang bán",
+        color: "success",
+      };
+
     case "INACTIVE":
-      return "Ngừng hoạt động";
+      return {
+        label: "Tạm ngưng",
+        color: "secondary",
+      };
+
+    case "PENDING_APPROVAL":
+      return {
+        label: "Chờ duyệt",
+        color: "warning",
+      };
+
+    case "REJECTED":
+      return {
+        label: "Từ chối",
+        color: "danger",
+      };
+
+    case "BANNED":
+      return {
+        label: "Bị khóa",
+        color: "dark",
+      };
+
     case "DELETED":
-      return "Đã xóa";
+      return {
+        label: "Đã xóa",
+        color: "secondary",
+      };
+
     default:
-      return status;
+      return {
+        label: status,
+        color: "secondary",
+      };
   }
 };
-
 export interface ProductResponse {
   id: number;
   name: string;
@@ -24,7 +62,6 @@ export interface ProductResponse {
   publishYear: string;
   pages: number;
   language?: string;
-
   publisherName: string;
   seriesName: string;
   genresName: string[] | [];
