@@ -30,6 +30,7 @@ type Props = {
   onChange: (val: string) => void;
   bookName?: string;
   authorNames?: string;
+  disabled?: boolean;
 };
 
 const CustomImage = Image.extend({
@@ -58,6 +59,7 @@ const ProductDescriptionEditor = ({
   onChange,
   bookName,
   authorNames,
+  disabled = false,
 }: Props) => {
   const fileRef = useRef<HTMLInputElement>(null);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
@@ -66,6 +68,7 @@ const ProductDescriptionEditor = ({
 
   const editor = useEditor({
     immediatelyRender: false,
+    editable: !disabled,
     extensions: [
       StarterKit.configure({
         link: { openOnClick: false },

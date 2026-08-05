@@ -95,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
                 product.setSlug(generateUniqueSlug(shop.getId(), product.getSlug()));
                 product.setPublisher(publisherService.getById(request.getPublisherId()));
                 product.setSeries(
-                                request.getSeriesId() != null ? seriesService.getById(request.getPublisherId()) : null);
+                                request.getSeriesId() != null ? seriesService.getById(request.getSeriesId()) : null);
 
                 Product saveProduct = productRepository.save(product);
                 authorProductService.setAuthorsProduct(saveProduct, request.getAuthorIds());
@@ -112,7 +112,7 @@ public class ProductServiceImpl implements ProductService {
                 product.setSlug(generateUniqueSlug(shopId, product.getSlug()));
                 product.setPublisher(publisherService.getById(request.getPublisherId()));
                 product.setSeries(
-                                request.getSeriesId() != null ? seriesService.getById(request.getPublisherId()) : null);
+                                request.getSeriesId() != null ? seriesService.getById(request.getSeriesId()) : null);
 
                 Product saveProduct = productRepository.save(product);
                 authorProductService.setAuthorsProduct(saveProduct, request.getAuthorIds());

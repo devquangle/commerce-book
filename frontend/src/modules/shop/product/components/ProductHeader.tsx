@@ -19,6 +19,7 @@ export interface ProductHeaderProps {
   title?: string;
   subTitle?: string;
   submitText?: string;
+  showSubmit?: boolean;
   onBack?: () => void;
   onReset?: () => void;
   onSubmit?: () => void;
@@ -31,6 +32,7 @@ export const ProductHeader: React.FC<ProductHeaderProps> = ({
   title,
   subTitle,
   submitText,
+  showSubmit = true,
   onBack,
   onReset,
   onSubmit,
@@ -126,15 +128,17 @@ export const ProductHeader: React.FC<ProductHeaderProps> = ({
             Đặt lại
           </Button>
         )}
-        <Button
-          type={onSubmit ? "button" : "submit"}
-          onClick={onSubmit}
-          variant="primary"
-          icon={<Save className="w-4 h-4" />}
-          className="w-full sm:w-auto cursor-pointer"
-        >
-          {displaySubmitText}
-        </Button>
+        {showSubmit && (
+          <Button
+            type={onSubmit ? "button" : "submit"}
+            onClick={onSubmit}
+            variant="primary"
+            icon={<Save className="w-4 h-4" />}
+            className="w-full sm:w-auto cursor-pointer"
+          >
+            {displaySubmitText}
+          </Button>
+        )}
       </div>
     </div>
   );

@@ -40,12 +40,12 @@ export interface ProductBasicInfoProps {
   isLoadingBookSearch?: boolean;
   onSelectBook?: (item: GoogleBookResponse) => void;
   showStatus?: boolean;
+  disabled?: boolean;
 }
 
 const STATUS_OPTIONS = [
   { label: "Đang bán", value: "ACTIVE" },
   { label: "Tạm ngưng", value: "INACTIVE" },
-  { label: "Chờ duyệt", value: "PENDING_APPROVAL" },
 ];
 
 const MAX_IMAGES = 6;
@@ -62,6 +62,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
   isLoadingBookSearch,
   onSelectBook,
   showStatus = false,
+  disabled = false,
 }) => {
   const watchedPrice = watch ? watch("price") : 0;
   const watchedOriginalPrice = watch ? watch("originalPrice") : 0;
@@ -312,6 +313,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
               <SearchInput<ProductRequest, GoogleBookResponse>
                 label="Tên sách"
                 required
+                disabled={disabled}
                 name="name"
                 placeholder="Nhập tên sách..."
                 register={register}
@@ -358,6 +360,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
           <InputField
             label="Giá nhập (đ)"
             required
+            disabled={disabled}
             type="number"
             placeholder="0"
             {...(register
@@ -376,6 +379,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
           <InputField
             label="Giá bán (đ)"
             required
+            disabled={disabled}
             type="number"
             placeholder="0"
             {...(register
@@ -393,6 +397,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
 
           <InputField
             label="Số lượng"
+            disabled={disabled}
             type="number"
             placeholder="0"
             {...(register
@@ -421,6 +426,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
           <InputField
             label="Số trang"
             required
+            disabled={disabled}
             type="number"
             placeholder="0"
             {...(register
@@ -435,6 +441,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
           <InputField
             label="Trọng lượng (g)"
             required
+            disabled={disabled}
             type="number"
             placeholder="0"
             {...(register
@@ -449,6 +456,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
           <InputField
             label="Ngày xuất bản"
             required
+            disabled={disabled}
             type="date"
             {...(register
               ? register("publishYear", {
@@ -460,6 +468,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
 
           <InputField
             label="Mã ISBN"
+            disabled={disabled}
             type="text"
             placeholder="978-..."
             {...(register ? register("isbn") : {})}
@@ -477,6 +486,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
                 <SearchableSelect
                   label="Ngôn ngữ"
                   required
+                  disabled={disabled}
                   placeholder="Chọn ngôn ngữ..."
                   options={languageOptions}
                   value={field.value}
@@ -489,6 +499,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
             <SearchableSelect
               label="Ngôn ngữ"
               required
+              disabled={disabled}
               placeholder="Chọn ngôn ngữ..."
               options={languageOptions}
               value="vi"
@@ -504,6 +515,8 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
                   <SelectBox
                     label="Trạng thái"
                     required
+                    disabled={disabled}
+                    textClassName="body-text"
                     options={STATUS_OPTIONS}
                     value={field.value}
                     onChange={field.onChange}
@@ -514,6 +527,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
             ) : (
               <SelectBox
                 label="Trạng thái"
+                disabled={disabled}
                 options={STATUS_OPTIONS}
                 value="PENDING_APPROVAL"
               />

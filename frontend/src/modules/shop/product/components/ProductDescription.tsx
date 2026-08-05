@@ -11,6 +11,7 @@ export interface ProductDescriptionProps {
   onChange?: (val: string) => void;
   bookName?: string;
   authorNames?: string;
+  disabled?: boolean;
 }
 
 const ProductDescription = ({
@@ -19,6 +20,7 @@ const ProductDescription = ({
   onChange = () => {},
   bookName,
   authorNames,
+  disabled = false,
 }: ProductDescriptionProps) => {
   return (
     <div className="col-span-12 card-custom space-y-4">
@@ -39,6 +41,7 @@ const ProductDescription = ({
               onChange={field.onChange}
               bookName={bookName}
               authorNames={authorNames}
+              disabled={disabled}
             />
           )}
         />
@@ -48,6 +51,7 @@ const ProductDescription = ({
           onChange={onChange}
           bookName={bookName}
           authorNames={authorNames}
+          disabled={disabled}
         />
       )}
     </div>

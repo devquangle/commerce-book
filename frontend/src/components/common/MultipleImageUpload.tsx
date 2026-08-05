@@ -21,6 +21,7 @@ export interface MultipleImageUploadProps {
   onChange?: (images: UploadImageItem[]) => void;
   control?: Control<ProductRequest>;
   error?: string;
+  disabled?: boolean;
 }
 
 const MultipleImageUploadContent: React.FC<
@@ -38,6 +39,7 @@ const MultipleImageUploadContent: React.FC<
   value,
   onValueChange,
   error,
+  disabled = false,
 }) => {
   const [imageUploadMode, setImageUploadMode] = useState<"file" | "url">("file");
   const [imageUrl, setImageUrl] = useState("");
@@ -153,76 +155,79 @@ const MultipleImageUploadContent: React.FC<
         </span>
       </div>
 
-      {/* Mode Tabs */}
-      <div className="flex rounded-xl bg-slate-100 dark:bg-zinc-800 p-1">
-        <button
-          type="button"
-          onClick={() => setImageUploadMode("file")}
-          className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
-            imageUploadMode === "file"
-              ? "bg-white dark:bg-zinc-900 shadow-sm text-indigo-600 dark:text-indigo-400"
-              : "text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:hover:text-zinc-200"
-          }`}
-        >
-          Tải tệp ảnh
-        </button>
-        <button
-          type="button"
-          onClick={() => setImageUploadMode("url")}
-          className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
-            imageUploadMode === "url"
-              ? "bg-white dark:bg-zinc-900 shadow-sm text-indigo-600 dark:text-indigo-400"
-              : "text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:hover:text-zinc-200"
-          }`}
-        >
-          Nhập URL
-        </button>
-      </div>
+      {/* Mode Tabs & Input (Hidden when disabled) */}
+      {!disabled && (
+        <>
+          <div className="flex rounded-xl bg-slate-100 dark:bg-zinc-800 p-1">
+            <button
+              type="button"
+              onClick={() => setImageUploadMode("file")}
+              className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
+                imageUploadMode === "file"
+                  ? "bg-white dark:bg-zinc-900 shadow-sm text-indigo-600 dark:text-indigo-400"
+                  : "text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:hover:text-zinc-200"
+              }`}
+            >
+              Tải tệp ảnh
+            </button>
+            <button
+              type="button"
+              onClick={() => setImageUploadMode("url")}
+              className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
+                imageUploadMode === "url"
+                  ? "bg-white dark:bg-zinc-900 shadow-sm text-indigo-600 dark:text-indigo-400"
+                  : "text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:hover:text-zinc-200"
+              }`}
+            >
+              Nhập URL
+            </button>
+          </div>
 
-      {/* Mode Content */}
-      {imageUploadMode === "file" ? (
-        <label className="flex flex-col items-center justify-center h-36 border-2 border-dashed border-slate-300 dark:border-zinc-700 rounded-2xl cursor-pointer hover:border-indigo-500 dark:hover:border-indigo-400 bg-slate-50/50 dark:bg-zinc-900/50 hover:bg-indigo-50/20 dark:hover:bg-indigo-950/20 transition-all">
-          <Upload size={24} className="text-slate-400 dark:text-zinc-500 mb-2" />
-          <span className="text-sm font-medium text-slate-700 dark:text-zinc-300">
-            Chọn ảnh từ máy tính
-          </span>
-          <span className="text-xs text-slate-400 dark:text-zinc-500 mt-1">
-            PNG, JPG, WEBP (tối đa {maxFileSizeMB}MB, tối đa {maxImages} ảnh)
-          </span>
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            className="hidden"
-            onChange={handleFileChange}
-            disabled={images.length >= maxImages}
-          />
-        </label>
-      ) : (
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleAddImageUrl();
-              }
-            }}
-            placeholder="https://example.com/image.jpg"
-            className="flex-1 h-11 rounded-xl border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 text-sm outline-none focus:border-indigo-500 dark:text-white"
-            disabled={images.length >= maxImages}
-          />
-          <button
-            type="button"
-            onClick={handleAddImageUrl}
-            disabled={images.length >= maxImages}
-            className="px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-semibold transition-colors flex items-center gap-1 cursor-pointer"
-          >
-            <Plus size={16} /> Thêm
-          </button>
-        </div>
+          {imageUploadMode === "file" ? (
+            <label className="flex flex-col items-center justify-center h-36 border-2 border-dashed border-slate-300 dark:border-zinc-700 rounded-2xl cursor-pointer hover:border-indigo-500 dark:hover:border-indigo-400 bg-slate-50/50 dark:bg-zinc-900/50 hover:bg-indigo-50/20 dark:hover:bg-indigo-950/20 transition-all">
+              <Upload size={24} className="text-slate-400 dark:text-zinc-500 mb-2" />
+              <span className="text-sm font-medium text-slate-700 dark:text-zinc-300">
+                Chọn ảnh từ máy tính
+              </span>
+              <span className="text-xs text-slate-400 dark:text-zinc-500 mt-1">
+                PNG, JPG, WEBP (tối đa {maxFileSizeMB}MB, tối đa {maxImages} ảnh)
+              </span>
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                className="hidden"
+                onChange={handleFileChange}
+                disabled={images.length >= maxImages}
+              />
+            </label>
+          ) : (
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleAddImageUrl();
+                  }
+                }}
+                placeholder="https://example.com/image.jpg"
+                className="flex-1 h-11 rounded-xl border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 text-sm outline-none focus:border-indigo-500 dark:text-white"
+                disabled={images.length >= maxImages}
+              />
+              <button
+                type="button"
+                onClick={handleAddImageUrl}
+                disabled={images.length >= maxImages}
+                className="px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-sm font-semibold transition-colors flex items-center gap-1 cursor-pointer"
+              >
+                <Plus size={16} /> Thêm
+              </button>
+            </div>
+          )}
+        </>
       )}
 
       {/* Grid danh sách ảnh */}
@@ -247,11 +252,16 @@ const MultipleImageUploadContent: React.FC<
               {/* Nút chọn ảnh đại diện */}
               <button
                 type="button"
-                onClick={() => handleSelectThumbnail(index)}
-                className={`absolute top-2 left-2 text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm transition-all cursor-pointer ${
-                  image.isThumbnail
-                    ? "bg-indigo-600 text-white"
-                    : "bg-white/90 dark:bg-zinc-900/90 text-slate-700 dark:text-zinc-200 hover:bg-indigo-50"
+                onClick={() => !disabled && handleSelectThumbnail(index)}
+                disabled={disabled}
+                className={`absolute top-2 left-2 text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm transition-all ${
+                  disabled
+                    ? image.isThumbnail
+                      ? "bg-indigo-600 text-white opacity-80"
+                      : "hidden"
+                    : image.isThumbnail
+                      ? "bg-indigo-600 text-white cursor-pointer"
+                      : "bg-white/90 dark:bg-zinc-900/90 text-slate-700 dark:text-zinc-200 hover:bg-indigo-50 cursor-pointer"
                 }`}
               >
                 {image.isThumbnail ? "Đại diện" : "Chọn"}
@@ -267,26 +277,30 @@ const MultipleImageUploadContent: React.FC<
                 >
                   <Eye size={12} />
                 </button>
-                <button
-                  type="button"
-                  title="Thay thế ảnh"
-                  onClick={() => {
-                    setReplaceIndex(index);
-                    replaceFileInputRef.current?.click();
-                  }}
-                  className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors cursor-pointer"
-                >
-                  <Pencil size={12} />
-                </button>
-                {!image.isThumbnail && (
-                  <button
-                    type="button"
-                    title="Xóa ảnh"
-                    onClick={() => handleRemoveImage(index)}
-                    className="flex items-center justify-center w-7 h-7 rounded-full bg-rose-600 text-white hover:bg-rose-700 transition-colors cursor-pointer"
-                  >
-                    <Trash2 size={12} />
-                  </button>
+                {!disabled && (
+                  <>
+                    <button
+                      type="button"
+                      title="Thay thế ảnh"
+                      onClick={() => {
+                        setReplaceIndex(index);
+                        replaceFileInputRef.current?.click();
+                      }}
+                      className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors cursor-pointer"
+                    >
+                      <Pencil size={12} />
+                    </button>
+                    {!image.isThumbnail && (
+                      <button
+                        type="button"
+                        title="Xóa ảnh"
+                        onClick={() => handleRemoveImage(index)}
+                        className="flex items-center justify-center w-7 h-7 rounded-full bg-rose-600 text-white hover:bg-rose-700 transition-colors cursor-pointer"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
 

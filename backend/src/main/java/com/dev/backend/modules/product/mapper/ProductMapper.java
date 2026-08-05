@@ -114,23 +114,7 @@ public class ProductMapper {
                 entity.getSeries() != null
                         ? entity.getSeries().getId()
                         : null);
-        // response.setAuthorIds(
-        //         entity.getAuthorProducts()
-        //                 .stream()
-        //                 .map(ap -> ap.getAuthor().getId())
-        //                 .toList());
-
-        // response.setGenreIds(
-        //         entity.getGenreProducts()
-        //                 .stream()
-        //                 .map(gp -> gp.getGenre().getId())
-        //                 .toList());
-        // response.setCoverImages(entity.getImages()
-        //         .stream()
-        //         .map(image -> new ImageProductResponse(
-        //                 image.getUrlImage(),
-        //                 image.isThumbnail()))
-        //         .toList());
+      response.setStatus(entity.getStatus());
         return response;
     }
 }

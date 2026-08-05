@@ -6,6 +6,7 @@ export interface UploadImageResponse {
 export interface UploadImageRequest {
   imageRequests: ProductImageRequest[] | [];
 }
+
 export interface ProductImageRequest {
   file?: File | null;
   url?: string | null;
@@ -14,10 +15,8 @@ export interface ProductImageRequest {
 
 export interface ProductImageResponse {
   url: string;
-  publicId: string;
   isThumbnail: boolean;
 }
-
 
 export interface ImageResponse {
   url: string;

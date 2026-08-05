@@ -14,6 +14,7 @@ export interface ProductAttributeProps {
   authorOptions?: { label: string; value: number }[];
   publisherOptions?: { label: string; value: number }[];
   seriesOptions?: { label: string; value: number }[];
+  disabled?: boolean;
 }
 
 const OTHER_OPTION = { label: "Khác", value: -1 };
@@ -25,6 +26,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
   authorOptions = [],
   publisherOptions = [],
   seriesOptions = [],
+  disabled = false,
 }) => {
   const genresWithOther = useMemo(() => {
     if (
@@ -100,6 +102,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
                 <SearchableMultiSelect
                   label="Thể loại"
                   required
+                  disabled={disabled}
                   placeholder="Chọn thể loại..."
                   options={genresWithOther}
                   value={field.value ?? []}
@@ -113,6 +116,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
             <SearchableMultiSelect
               label="Thể loại"
               required
+              disabled={disabled}
               placeholder="Chọn thể loại..."
               options={genresWithOther}
               maxSelection={4}
@@ -133,6 +137,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
                 <SearchableMultiSelect
                   label="Tác giả"
                   required
+                  disabled={disabled}
                   placeholder="Chọn tác giả..."
                   options={authorsWithOther}
                   value={field.value ?? []}
@@ -146,6 +151,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
             <SearchableMultiSelect
               label="Tác giả"
               required
+              disabled={disabled}
               placeholder="Chọn tác giả..."
               options={authorsWithOther}
               maxSelection={4}
@@ -164,6 +170,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
                 <SearchableSelect
                   label="Nhà xuất bản"
                   required
+                  disabled={disabled}
                   placeholder="Chọn nhà xuất bản..."
                   options={publishersWithOther}
                   value={field.value ?? ""}
@@ -179,6 +186,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
             <SearchableSelect
               label="Nhà xuất bản"
               required
+              disabled={disabled}
               placeholder="Chọn nhà xuất bản..."
               options={publishersWithOther}
             />
@@ -192,6 +200,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
               render={({ field }) => (
                 <SearchableSelect
                   label="Bộ sách"
+                  disabled={disabled}
                   placeholder="Chọn bộ sách..."
                   options={seriesWithOther}
                   value={field.value ?? ""}
@@ -206,6 +215,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
           ) : (
             <SearchableSelect
               label="Bộ sách"
+              disabled={disabled}
               placeholder="Chọn bộ sách..."
               options={seriesWithOther}
             />
