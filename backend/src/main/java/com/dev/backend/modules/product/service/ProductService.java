@@ -22,7 +22,7 @@ public interface ProductService {
 
     ProductResponse mapToDTO(Product product);
 
-    ProductResponse add(ProductRequest request, Shop shop);
+    ProductResponse create(ProductRequest request, Shop shop);
 
     PageResponse<ProductResponse> searchProductsByShopId(ProductFilterRequest request, Long shopId);
 }

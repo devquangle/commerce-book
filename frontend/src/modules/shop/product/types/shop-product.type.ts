@@ -1,3 +1,6 @@
+import type {
+  ProductImageResponse,
+} from "@/services/cloudinary/type/cloudinary.type";
 import type { ProductStatus } from "./product-status.type";
 
 export * from "./product-status.type";
@@ -30,9 +33,6 @@ export interface ProductFilterRequest {
 
 export interface ProductRequest {
   name: string;
-  authorIds: number[];
-  publisherId: number | null;
-  genreIds: number[];
   weight: number;
   publishYear: string;
   pages: number;
@@ -40,15 +40,12 @@ export interface ProductRequest {
   price: number;
   originalPrice: number;
   quantity: number;
-  status: ProductStatus;
-  seriesId: number | null;
   isbn: string;
-  coverImages: ProductImageRequest[];
+  authorIds: number[];
+  genreIds: number[];
+  publisherId: number | null;
+  seriesId: number | null;
+  coverImages: ProductImageResponse[];
   description: string;
-}
-
-export interface ProductImageRequest {
-  file?: File | null;
-  url?: string | null;
-  isThumbnail: boolean;
+  status: ProductStatus;
 }

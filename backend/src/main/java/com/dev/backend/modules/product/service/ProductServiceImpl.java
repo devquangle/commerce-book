@@ -60,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
 
         @Override
         @Transactional
-        public ProductResponse add(ProductRequest request, Shop shop) {
+        public ProductResponse create(ProductRequest request, Shop shop) {
                 Product product = new Product();
                 productMapper.toEntity(product, request);
                 product.setStatus(ProductStatus.PENDING_APPROVAL);

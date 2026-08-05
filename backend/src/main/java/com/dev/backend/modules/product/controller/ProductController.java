@@ -4,6 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,6 +13,7 @@ import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.common.response.ResponseData;
 import com.dev.backend.common.response.ResponseUtil;
 import com.dev.backend.modules.product.dto.ProductFilterRequest;
+import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.service.ProductService;
 import com.dev.backend.security.custom.CustomUserDetails;
@@ -30,6 +33,13 @@ public class ProductController {
         PageResponse<ProductResponse> response = productService.searchProductsByShopId(request,
                 userDetails.getShop().getId());
         return ResponseUtil.success("Lấy danh sách sản phẩm thành công", response);
+    }
+
+    @PostMapping("/shop/products")
+    public ResponseEntity<ResponseData<ProductResponse>> create(@RequestBody ProductRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        ProductResponse response = productService.create(request, userDetails.getShop());
+        return ResponseUtil.success("Thêm sản phẩm thành công", response);
     }
 
 }
