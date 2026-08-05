@@ -8,8 +8,12 @@ export const SHOP_PATH = {
 
   PRODUCTS: "products",
   PRODUCTS_FULL: "/shop/products",
+  
   PRODUCT_CREATE: "products/create",
   PRODUCT_CREATE_FULL: "/shop/products/create",
+
+  PRODUCT_UPDATE: "products/update",
+  PRODUCT_UPDATE_FULL: "/shop/products/update",
 
   INVENTORY: "inventory",
   INVENTORY_FULL: "/shop/inventory",

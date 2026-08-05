@@ -64,6 +64,15 @@ export const useProductShopFilter = () => {
     setPage(1);
   }, []);
 
+  const handlePageChange = useCallback((newPage: number) => {
+    setPage(newPage);
+  }, []);
+
+  const handlePageSizeChange = useCallback((newSize: number) => {
+    setSize(newSize);
+    setPage(1);
+  }, []);
+
   const handleResetFilter = useCallback(() => {
     setKeyword(initialFilterOptions.keyword);
     setStatus(initialFilterOptions.status);
@@ -91,6 +100,8 @@ export const useProductShopFilter = () => {
 
     handleKeywordChange,
     handleStatusChange,
+    handlePageChange,
+    handlePageSizeChange,
     handleResetFilter,
   };
 };

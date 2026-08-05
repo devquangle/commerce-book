@@ -12,6 +12,10 @@ const ShopProductPage = lazy(
 const ShopProductCreatePage = lazy(
   () => import("@/modules/shop/product/pages/ShopProductCreatePage"),
 );
+const ShopProductUpdatePage = lazy(
+  () => import("@/modules/shop/product/pages/ShopProductUpdatePage"),
+);
+
 const ShopOrders = lazy(() => import("@/modules/shop/pages/ShopOrders"));
 const ShopOrderDetail = lazy(
   () => import("@/modules/shop/pages/ShopOrderDetail"),
@@ -30,7 +34,14 @@ export const ShopRoutes = () => {
           <Route index element={<ShopDashboard />} />
           <Route path={SHOP_PATH.STORE} element={<StorePage />} />
           <Route path={SHOP_PATH.PRODUCTS} element={<ShopProductPage />} />
-          <Route path={SHOP_PATH.PRODUCT_CREATE} element={<ShopProductCreatePage />} />
+          <Route
+            path={SHOP_PATH.PRODUCT_CREATE}
+            element={<ShopProductCreatePage />}
+          />
+          <Route
+            path={SHOP_PATH.PRODUCT_UPDATE}
+            element={<ShopProductUpdatePage />}
+          />
           <Route path={SHOP_PATH.INVENTORY} element={<ShopInventory />} />
           <Route path={SHOP_PATH.ORDERS} element={<ShopOrders />} />
           <Route path={SHOP_PATH.ORDER_DETAIL} element={<ShopOrderDetail />} />
