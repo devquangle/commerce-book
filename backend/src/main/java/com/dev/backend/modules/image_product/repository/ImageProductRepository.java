@@ -1,5 +1,6 @@
 package com.dev.backend.modules.image_product.repository;
 
+import com.dev.backend.modules.image_product.dto.ImageProductResponse;
 import com.dev.backend.modules.image_product.entity.ImageProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +21,16 @@ public interface ImageProductRepository extends JpaRepository<ImageProduct, Long
                   AND item.isThumbnail = true
             """)
     Optional<String> findDefaultImageUrlByProductId(@Param("productId") Long productId);
+
+    @Query("""
+                SELECT new com.dev.backend.modules.image_product.dto.ImageProductResponse(
+                    item.urlImage,
+                    item.isThumbnail
+                )
+                FROM ImageProduct item
+                WHERE item.product.id = :productId
+                  AND item.isThumbnail = true
+            """)
+    List<ImageProductResponse> findImageResponsesByProductId(@Param("productId") Long productId);
+
 }

@@ -2,6 +2,7 @@ package com.dev.backend.modules.image_product.service;
 
 import com.dev.backend.modules.cloudinary.dto.ImageResponse;
 import com.dev.backend.modules.cloudinary.service.CloudinaryService;
+import com.dev.backend.modules.image_product.dto.ImageProductResponse;
 import com.dev.backend.modules.image_product.entity.ImageProduct;
 import com.dev.backend.modules.image_product.repository.ImageProductRepository;
 import com.dev.backend.modules.product.entity.Product;
@@ -31,11 +32,17 @@ public class ImageProductServiceImpl implements ImageProductService {
     }
 
     @Override
+    public List<ImageProductResponse> getImageResponsesByProductId(Long productId) {
+        return imageProductRepository.findImageResponsesByProductId(productId);
+    }
+
+    @Override
     public void setImagesProduct(Product product, List<ImageResponse> imageResponses) {
         // 1. Lấy tất cả ảnh hiện tại đang lưu dưới DB của Product này
         List<ImageProduct> existingImages = imageProductRepository.findByProductId(product.getId());
 
-        // Nếu danh sách mới trống -> Người dùng đã xóa sạch ảnh của sản phẩm này trên UI
+        // Nếu danh sách mới trống -> Người dùng đã xóa sạch ảnh của sản phẩm này trên
+        // UI
         if (imageResponses == null || imageResponses.isEmpty()) {
             if (!existingImages.isEmpty()) {
                 deleteImagesFromCloudinary(existingImages);
@@ -44,7 +51,8 @@ public class ImageProductServiceImpl implements ImageProductService {
             return;
         }
 
-        // 2. Gom tất cả URL mới từ ImageResponse gửi lên thành một danh sách để đối chiếu
+        // 2. Gom tất cả URL mới từ ImageResponse gửi lên thành một danh sách để đối
+        // chiếu
         List<String> newUrls = imageResponses.stream()
                 .map(ImageResponse::getUrl)
                 .filter(url -> url != null && !url.isBlank())

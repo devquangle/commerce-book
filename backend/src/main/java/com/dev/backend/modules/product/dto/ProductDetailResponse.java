@@ -1,0 +1,38 @@
+package com.dev.backend.modules.product.dto;
+
+import java.util.List;
+
+import com.dev.backend.common.enums.ProductStatus;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProductDetailResponse {
+    private Integer productId;
+    private String name;
+    private String slug;
+    private Integer originalPrice;
+    private Integer price;
+    private Integer quantity;
+    private Integer weight;
+    private String publishYear;
+    private Integer pages;
+    private String language;
+    private String isbn;
+    private String description;
+    
+    private Long publisherId;
+    private Long seriesId;
+
+    private List<Long> genreIds;
+    private List<Long> authorIds;
+    private String urlImageDefault;
+
+    private ProductStatus status;
+}
