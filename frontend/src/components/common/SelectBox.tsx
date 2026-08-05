@@ -18,6 +18,7 @@ export interface SelectBoxProps
   placeholder?: string;
   required?: boolean;
   containerClassName?: string;
+  textClassName?: string;
   value?: string | number;
   defaultValue?: string | number;
   openDirection?: "up" | "down";
@@ -34,6 +35,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
       required,
       className = "",
       containerClassName = "",
+      textClassName = "caption-text",
       id,
       value,
       defaultValue,
@@ -161,7 +163,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
               type="button"
               disabled={disabled}
               onClick={() => setIsOpen((prev) => !prev)}
-              className={`w-full flex items-center justify-between px-3.5 py-2 body-text bg-zinc-50 dark:bg-zinc-800/60 border rounded-xl transition-all text-left ${
+              className={`w-full flex items-center justify-between px-3.5 py-2 ${textClassName} bg-zinc-50 dark:bg-zinc-800/60 border rounded-xl transition-all text-left ${
                 error
                   ? "border-red-500 focus:ring-2 focus:ring-red-500/20"
                   : "border-zinc-200 dark:border-zinc-700/80 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
@@ -190,7 +192,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
 
                 <div className="overflow-y-auto p-1 max-h-48 space-y-0.5">
                   {options.length === 0 ? (
-                    <p className="p-3 caption-text text-center text-zinc-400 font-medium">
+                    <p className={`p-3 ${textClassName} text-center text-zinc-400 font-medium`}>
                       Không có lựa chọn nào
                     </p>
                   ) : (
@@ -202,7 +204,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
                           type="button"
                           disabled={opt.disabled}
                           onClick={() => handleSelectOption(opt)}
-                          className={`w-full flex items-center justify-between px-3 py-2 caption-text font-medium rounded-lg text-left transition-colors ${
+                          className={`w-full flex items-center justify-between px-3 py-2 ${textClassName} font-medium rounded-lg text-left transition-colors ${
                             opt.disabled
                               ? "opacity-40 cursor-not-allowed"
                               : isSelected

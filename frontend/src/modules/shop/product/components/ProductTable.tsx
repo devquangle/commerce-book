@@ -17,10 +17,11 @@ import {
 } from "lucide-react";
 import { Pagination } from "../../../../components/common/Pagination";
 import { Tooltip } from "../../../../components/common/Tooltip";
+import { Badge } from "../../../../components/common/Badge";
 import {
   type ProductResponse,
   type ProductStatus,
-  getLabelProductStatus,
+  getProductStatusInfo,
 } from "../types/shop-product.type";
 import { ProductActionMenu } from "./ProductActionMenu";
 import { formatMoney } from "@/libs/utils/formatMoney.utils";
@@ -57,29 +58,18 @@ const ExpandableGenres = ({ genres }: { genres?: string[] }) => {
 };
 
 const ProductStatusBadge = ({ status }: { status: ProductStatus }) => {
-  return (
-    <span
-      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-        status === "ACTIVE"
-          ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20"
-          : status === "INACTIVE"
-            ? "bg-slate-50 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border border-slate-200 dark:border-zinc-700"
-            : "bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20"
-      }`}
-    >
-      {getLabelProductStatus(status)}
-    </span>
-  );
+  const { label, color } = getProductStatusInfo(status);
+  return <Badge title={label} variant={color} />;
 };
 
-export const ProductTable: React.FC<ProductTableProps> = ({
+export const ProductTable = ({
   products,
   totalElements,
   currentPage,
   totalPages,
   onPageChange,
   onDelete,
-}) => {
+}: ProductTableProps) => {
   const [pageSize, setPageSize] = useState(10);
   const [showDetailsMap, setShowDetailsMap] = useState<Record<number, boolean>>(
     {},
@@ -111,7 +101,11 @@ export const ProductTable: React.FC<ProductTableProps> = ({
           <tbody className="divide-y divide-slate-200 dark:divide-zinc-800">
             {products.map((product, index) => (
               <tr
-                key={product.id}
+                key={
+                  product.productId
+                    ? `product-${product.productId}-${index}`
+                    : index
+                }
                 className="hover:bg-indigo-50/20 dark:hover:bg-indigo-500/10 transition-colors group"
               >
                 {/* ── STT ── */}
@@ -143,7 +137,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
 
                     {/* Nội dung 3 nhóm */}
                     <div className="flex-1 min-w-0 flex flex-col gap-1.5">
-                      {/* ➊ Tên + ISBN */}
+                      {/* ➊ Tên + Slug */}
                       <div className="flex flex-col gap-0.5">
                         <p
                           className="font-semibold text-slate-900 dark:text-zinc-100 body-text leading-snug line-clamp-2"
@@ -151,49 +145,50 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                         >
                           {product.name}
                         </p>
+                        <span className="text-[11px] text-slate-400 dark:text-zinc-500 font-mono truncate">
+                          slug: {product?.slug}
+                        </span>
                       </div>
 
-                      <div
-                        className={`grid transition-all duration-300 ease-in-out ${
-                          showDetailsMap[product.id]
-                            ? "grid-rows-[1fr] opacity-100 mt-1"
-                            : "grid-rows-[0fr] opacity-0"
-                        }`}
-                      >
-                        <div className="overflow-hidden">
-                          <div className="flex flex-col gap-1.5 pb-1">
-                            {/* NXB + Series */}
-                            {(product.publisherName || product.seriesName) && (
-                              <div className="flex flex-wrap gap-1">
-                                {product.publisherName && (
-                                  <span className="inline-flex items-center gap-1 bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-500/20 px-1.5 py-0.5 rounded text-[10px] font-medium">
-                                    <Building2 size={10} />
-                                    <span>{product.publisherName}</span>
-                                  </span>
-                                )}
-                                {product.seriesName && (
-                                  <span className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-400 border border-violet-100 dark:border-violet-500/20 px-1.5 py-0.5 rounded text-[10px] font-medium">
-                                    <Layers size={10} />
-                                    <span>{product.seriesName}</span>
-                                  </span>
-                                )}
-                              </div>
-                            )}
+                      {/* ➋ Tác giả + Thể loại */}
+                      <div className="flex flex-wrap items-center gap-1">
+                        <ExpandableAuthors authors={product.authorsName} />
+                        <ExpandableGenres genres={product.genresName} />
+                      </div>
 
-                            {/* Tác giả + Thể loại */}
-                            <div className="flex flex-wrap items-center">
-                              <ExpandableAuthors
-                                authors={product.authorsName}
-                              />
-                              <ExpandableGenres genres={product.genresName} />
-                            </div>
+                      {/* ➌ NXB + Series (nếu có) */}
+                      {(product.publisherName || product.seriesName) && (
+                        <div className="flex flex-wrap gap-1">
+                          {product.publisherName && (
+                            <span className="inline-flex items-center gap-1 bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-500/20 px-1.5 py-0.5 rounded text-[10px] font-medium">
+                              <Building2 size={10} />
+                              <span>{product.publisherName}</span>
+                            </span>
+                          )}
+                          {product.seriesName && (
+                            <span className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-400 border border-violet-100 dark:border-violet-500/20 px-1.5 py-0.5 rounded text-[10px] font-medium">
+                              <Layers size={10} />
+                              <span>{product.seriesName}</span>
+                            </span>
+                          )}
+                        </div>
+                      )}
 
-                            {/* ➌ Năm XB · Số trang · Trọng lượng · Ngôn ngữ */}
-                            {(product.publishYear ||
-                              product.pages > 0 ||
-                              product.weight > 0 ||
-                              product.language) && (
-                              <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-slate-400 dark:text-zinc-500 mt-1">
+                      {/* ➍ Chi tiết còn lại (Năm XB, số trang, trọng lượng, ngôn ngữ) -> Ẩn/Hiện */}
+                      {(product.publishYear ||
+                        product.pages > 0 ||
+                        product.weight > 0 ||
+                        product.language) && (
+                        <div className="flex flex-col gap-1 mt-0.5">
+                          <div
+                            className={`grid transition-all duration-300 ease-in-out ${
+                              showDetailsMap[product.productId]
+                                ? "grid-rows-[1fr] opacity-100 mt-1"
+                                : "grid-rows-[0fr] opacity-0"
+                            }`}
+                          >
+                            <div className="overflow-hidden">
+                              <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-slate-400 dark:text-zinc-500 pb-1">
                                 {product.publishYear && (
                                   <span className="flex items-center gap-1">
                                     <Calendar size={10} />
@@ -219,27 +214,29 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                                   </span>
                                 )}
                               </div>
-                            )}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center">
+                            <button
+                              type="button"
+                              onClick={(e) =>
+                                toggleDetails(product.productId, e)
+                              }
+                              className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
+                            >
+                              {showDetailsMap[product.productId]
+                                ? "Thu gọn"
+                                : "Xem thêm chi tiết"}
+                              {showDetailsMap[product.productId] ? (
+                                <ChevronUp size={12} />
+                              ) : (
+                                <ChevronDown size={12} />
+                              )}
+                            </button>
                           </div>
                         </div>
-                      </div>
-
-                      <div className="flex items-center mt-0.5">
-                        <button
-                          type="button"
-                          onClick={(e) => toggleDetails(product.id, e)}
-                          className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
-                        >
-                          {showDetailsMap[product.id]
-                            ? "Thu gọn"
-                            : "Xem thêm chi tiết"}
-                          {showDetailsMap[product.id] ? (
-                            <ChevronUp size={12} />
-                          ) : (
-                            <ChevronDown size={12} />
-                          )}
-                        </button>
-                      </div>
+                      )}
                     </div>
                   </div>
                 </td>
@@ -288,7 +285,21 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                           className="w-fit"
                         >
                           <span className="text-rose-500 font-medium text-[11px] cursor-help">
-                            -{formatMoney(product.originalPrice - product.price)}
+                            -
+                            {formatMoney(product.originalPrice - product.price)}
+                          </span>
+                        </Tooltip>
+                      ) : product.originalPrice &&
+                        product.price > product.originalPrice ? (
+                        <Tooltip
+                          content={`Lời +${formatMoney(product.price - product.originalPrice)} so với giá nhập`}
+                          position="top"
+                          variant="emerald"
+                          className="w-fit"
+                        >
+                          <span className="text-emerald-500 font-medium text-[11px] cursor-help">
+                            +
+                            {formatMoney(product.price - product.originalPrice)}
                           </span>
                         </Tooltip>
                       ) : null}
@@ -308,7 +319,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                         />
                         {product.quantity > 0 ? (
                           <span>
-                            Kho còn{" "}
+                            Tồn kho{" "}
                             <span
                               className={`font-semibold ${
                                 product.quantity <= 10

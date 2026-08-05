@@ -6,10 +6,6 @@ import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.entity.Product;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-
 public interface ProductService {
     // List<ProductResponse> getAllProducts();
 

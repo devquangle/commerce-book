@@ -13,7 +13,7 @@ const ProductShopService = {
   ): Promise<Pagination<ProductResponse>> => {
     const response = await authAxios.get<
       ApiResponse<Pagination<ProductResponse>>
-    >(`/api/v1/shop/products`, { params: options });
+    >(`/api/v1/shop/products/filter`, { params: options });
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message || "Failed to fetch product data");
     }

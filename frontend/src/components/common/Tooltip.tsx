@@ -4,7 +4,7 @@ interface TooltipProps {
   content: string;
   children: ReactNode;
   position?: "top" | "bottom" | "left" | "right";
-  variant?: "dark" | "indigo" | "rose" | "amber" | "slate";
+  variant?: "dark" | "indigo" | "rose" | "amber" | "slate" | "emerald";
   className?: string;
 }
 
@@ -21,6 +21,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
     rose: "bg-rose-600 text-white border border-rose-500/50 shadow-rose-500/25",
     amber: "bg-amber-600 text-white border border-amber-500/50 shadow-amber-500/25",
     slate: "bg-slate-800 text-slate-100 border border-slate-700 shadow-md",
+    emerald: "bg-emerald-600 text-white border border-emerald-500/50 shadow-emerald-500/25",
   };
 
   const positionStyles = {

@@ -1,6 +1,6 @@
 import React from "react";
 import { Edit, Trash2, Eye } from "lucide-react";
-import { type ProductResponse, getLabelProductStatus } from "../types/shop-product.type";
+import { type ProductResponse, getProductStatusInfo } from "../types/shop-product.type";
 
 interface ProductMobileCardProps {
   product: ProductResponse;
@@ -38,7 +38,7 @@ export const ProductMobileCard: React.FC<ProductMobileCardProps> = ({ product, o
               ? "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
               : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
           }`}>
-            {getLabelProductStatus(product.status)}
+            {getProductStatusInfo(product.status).label}
           </span>
         </div>
         
