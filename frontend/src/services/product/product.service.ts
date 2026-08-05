@@ -4,11 +4,11 @@ import type {
   ProductFilterRequest,
   ProductRequest,
   ProductResponse,
-} from "../types/shop-product.type";
+} from "../../modules/shop/products/types/shop-product.type";
 import type { ApiResponse } from "@/libs/utils/api-response";
 import type { Pagination } from "@/libs/utils/pagination";
 
-const ProductShopService = {
+const ProductService = {
   fetchProductShop: async (
     options?: ProductFilterRequest,
   ): Promise<Pagination<ProductResponse>> => {
@@ -70,4 +70,4 @@ const ProductShopService = {
     }
   },
 };
-export default ProductShopService;
+export default ProductService;
