@@ -1,7 +1,6 @@
 package com.dev.backend.modules.product.mapper;
 
 import com.dev.backend.common.utils.TextUtils;
-import com.dev.backend.modules.image_product.dto.ImageProductResponse;
 import com.dev.backend.modules.product.dto.ProductDetailResponse;
 import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;

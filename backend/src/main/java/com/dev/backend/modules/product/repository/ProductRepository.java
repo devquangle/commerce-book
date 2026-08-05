@@ -16,45 +16,59 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findByShopId(Long shopId);
+        List<Product> findByShopId(Long shopId);
 
-    @EntityGraph(attributePaths = {
-            "publisher",
-            "series"
-    })
-    @Query("""
-                SELECT item
-                FROM Product item
-                WHERE (
-                    :keyword IS NULL
-                    OR LOWER(item.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
-                )
-                AND (
-                    :status IS NULL
-                    OR item.status = :status
-                )
-                AND item.shop.id=:shopId
-            """)
-    Page<Product> searchProductsByShopId(
-            @Param("keyword") String keyword,
-            @Param("status") ProductStatus status,
-            @Param("shopId") Long shopId,
-            Pageable pageable);
+        @EntityGraph(attributePaths = {
+                        "publisher",
+                        "series"
+        })
+        @Query("""
+                            SELECT item
+                            FROM Product item
+                            WHERE (
+                                :keyword IS NULL
+                                OR LOWER(item.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                            )
+                            AND (
+                                :status IS NULL
+                                OR item.status = :status
+                            )
+                            AND item.shop.id=:shopId
+                        """)
+        Page<Product> searchProductsByShopId(
+                        @Param("keyword") String keyword,
+                        @Param("status") ProductStatus status,
+                        @Param("shopId") Long shopId,
+                        Pageable pageable);
 
-    @Query("SELECT COUNT(item)>0 FROM Product item WHERE item.shop.id =:shopId AND item.slug = :slug ")
-    boolean existsByShopIdAndSlug(@Param("shopId") Long shopId, @Param("slug") String slug);
+        @Query("SELECT COUNT(item)>0 FROM Product item WHERE item.shop.id =:shopId AND item.slug = :slug ")
+        boolean existsByShopIdAndSlug(@Param("shopId") Long shopId, @Param("slug") String slug);
 
-    @EntityGraph(attributePaths = {
-            "publisher",
-            "series",
-    })
-    @Query("""
-                SELECT p
-                FROM Product p
-                WHERE p.slug = :slug
-                  AND p.shop.id = :shopId
-            """)
-    Optional<Product> findProductBySlugAndShopId(
-            @Param("slug") String slug,
-            @Param("shopId") Long shopId);
+        @EntityGraph(attributePaths = {
+                        "publisher",
+                        "series",
+        })
+        @Query("""
+                            SELECT p
+                            FROM Product p
+                            WHERE p.slug = :slug
+                              AND p.shop.id = :shopId
+                        """)
+        Optional<Product> findProductBySlugAndShopId(
+                        @Param("slug") String slug,
+                        @Param("shopId") Long shopId);
+
+        @EntityGraph(attributePaths = {
+                        "publisher",
+                        "series",
+        })
+        @Query("""
+                            SELECT p
+                            FROM Product p
+                            WHERE p.id = :id
+                              AND p.shop.id = :shopId
+                        """)
+        Optional<Product> findProductByIdAndShopId(
+                        @Param("id") Long id,
+                        @Param("shopId") Long shopId);
 }

@@ -46,17 +46,19 @@ export const useCreateProductShop = () => {
   });
 };
 
-export const useUpdateProductShop = (slug: string) => {
+export const useUpdateProductShop = (id?: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: ProductRequest) =>
-      ProductShopService.update(slug, data),
+    mutationFn: (req: ProductRequest) => {
+      if (!id) {
+        throw new Error("Mã sản phẩm không hợp lệ");
+      }
+      return ProductShopService.update(id, req);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shop-products-filter"] });
-      queryClient.invalidateQueries({
-        queryKey: ["shop-product-detail", slug],
-      });
+      queryClient.invalidateQueries({ queryKey: ["shop-product-detail"] });
       showSuccessToast("Cập nhật sản phẩm thành công!");
     },
     onError: (error: unknown) => {

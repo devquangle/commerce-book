@@ -27,7 +27,7 @@ const ShopProductUpdatePage = () => {
   const { data: productDetail, isLoading: isLoadingDetail } =
     useProductShopDetail(slug);
   const { mutateAsync: updateProduct, isPending: isUpdating } =
-    useUpdateProductShop(slug);
+    useUpdateProductShop(productDetail?.productId);
   const { mutateAsync: uploadImages, isPending: isUploading } =
     useUploadImages();
 

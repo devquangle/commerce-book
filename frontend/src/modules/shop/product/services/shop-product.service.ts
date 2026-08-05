@@ -47,15 +47,12 @@ const ProductShopService = {
     return res.data.data;
   },
   update: async (
-    slug: string,
+    id: number,
     data: ProductRequest,
   ): Promise<ProductResponse> => {
     const res = await authAxios.put<ApiResponse<ProductResponse>>(
-      "/api/v1/shop/products",
+      `/api/v1/shop/products/${id}`,
       data,
-      {
-        params: { slug },
-      },
     );
 
     if (!res.data.success || !res.data.data) {

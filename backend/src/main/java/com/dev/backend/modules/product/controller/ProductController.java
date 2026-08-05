@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,7 +51,15 @@ public class ProductController {
     public ResponseEntity<ResponseData<ProductDetailResponse>> detail(@Param("slug") String slug,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         ProductDetailResponse response = productService.detail(slug, userDetails.getShop().getId());
-        return ResponseUtil.success("Thêm sản phẩm thành công", response);
+        return ResponseUtil.success("Lấy thông tin sản phẩm thành công", response);
+    }
+
+    @PutMapping("/shop/products/{id}")
+    public ResponseEntity<ResponseData<ProductResponse>> update(@PathVariable("id") Long id,
+            @RequestBody @Valid ProductRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        ProductResponse response = productService.update(id, request, userDetails.getShop().getId());
+        return ResponseUtil.success("Cập nhật sản phẩm thành công", response);
     }
 
 }

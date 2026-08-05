@@ -23,9 +23,13 @@ public interface ProductService {
 
     Product getProductBySlugAndShopId(String slug, Long shopId);
 
+    Product getProductByIdAndShopId(Long id, Long shopId);
+
     ProductResponse mapToDTO(Product product);
 
     ProductResponse create(ProductRequest request, Shop shop);
+
+    ProductResponse update(Long id, ProductRequest request, Long shopId);
 
     ProductDetailResponse detail(String slug, Long shopId);
 

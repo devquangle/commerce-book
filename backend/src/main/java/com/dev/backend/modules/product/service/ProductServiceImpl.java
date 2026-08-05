@@ -53,6 +53,12 @@ public class ProductServiceImpl implements ProductService {
         }
 
         @Override
+        public Product getProductByIdAndShopId(Long id, Long shopId) {
+                return productRepository.findProductByIdAndShopId(id, shopId)
+                                .orElseThrow(() -> new NotFoundException("Product not found id " + id));
+        }
+
+        @Override
         public ProductResponse mapToDTO(Product product) {
                 ProductResponse response = productMapper.toDTO(product);
                 Long productId = product.getId();
@@ -87,6 +93,23 @@ public class ProductServiceImpl implements ProductService {
                 product.setStatus(ProductStatus.PENDING_APPROVAL);
                 product.setShop(shop);
                 product.setSlug(generateUniqueSlug(shop.getId(), product.getSlug()));
+                product.setPublisher(publisherService.getById(request.getPublisherId()));
+                product.setSeries(
+                                request.getSeriesId() != null ? seriesService.getById(request.getPublisherId()) : null);
+
+                Product saveProduct = productRepository.save(product);
+                authorProductService.setAuthorsProduct(saveProduct, request.getAuthorIds());
+                genreProductService.setGenresProduct(saveProduct, request.getGenreIds());
+                imageProductService.setImagesProduct(saveProduct, request.getCoverImages());
+                return productMapper.toDTO(saveProduct);
+        }
+
+        @Override
+        public ProductResponse update(Long id, ProductRequest request, Long shopId) {
+                Product product = getProductByIdAndShopId(id, shopId);
+                productMapper.toEntity(product, request);
+                product.setStatus(request.getStatus());
+                product.setSlug(generateUniqueSlug(shopId, product.getSlug()));
                 product.setPublisher(publisherService.getById(request.getPublisherId()));
                 product.setSeries(
                                 request.getSeriesId() != null ? seriesService.getById(request.getPublisherId()) : null);
