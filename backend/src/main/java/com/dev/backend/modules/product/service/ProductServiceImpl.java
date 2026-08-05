@@ -1,5 +1,6 @@
 package com.dev.backend.modules.product.service;
 
+import com.dev.backend.common.enums.ProductStatus;
 import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.modules.author_product.service.AuthorProductService;
 import com.dev.backend.modules.genre.dto.GenreResponse;
@@ -50,6 +51,17 @@ public class ProductServiceImpl implements ProductService {
         }
 
         @Override
+        public ProductResponse add(ProductRequest request, Long shopId) {
+                Product product = new Product();
+                productMapper.toEntity(product, request);
+                product.setStatus(ProductStatus.PENDING_APPROVAL);
+                Product saveProduct = productRepository.save(product);
+                authorProductService.setAuthorsProduct(saveProduct, request.getAuthorIds());
+                genreProductService.setGenresProduct(saveProduct, request.getGenreIds());
+                return productMapper.toDTO(saveProduct);
+        }
+
+        @Override
         @Transactional(readOnly = true)
         public PageResponse<ProductResponse> searchProductsByShopId(ProductFilterRequest request, Long shopId) {
                 Pageable pageable = PageRequest.of(
@@ -74,14 +86,14 @@ public class ProductServiceImpl implements ProductService {
         }
 
         // public String generateUniqueSlug(Integer shopId, String productName) {
-        //         String baseSlug = SlugUtils.toSlug(productName);
-        //         String slug = baseSlug;
-        //         int index = 1;
+        // String baseSlug = SlugUtils.toSlug(productName);
+        // String slug = baseSlug;
+        // int index = 1;
 
-        //         while (productRepository.existsByShopIdAndSlug(shopId, slug)) {
-        //                 slug = baseSlug + "-" + index++;
-        //         }
+        // while (productRepository.existsByShopIdAndSlug(shopId, slug)) {
+        // slug = baseSlug + "-" + index++;
+        // }
 
-        //         return slug;
+        // return slug;
         // }
 }

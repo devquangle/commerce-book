@@ -1,5 +1,6 @@
 package com.dev.backend.modules.product.mapper;
 
+import com.dev.backend.common.utils.TextUtils;
 import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.entity.Product;
@@ -8,11 +9,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductMapper {
 
-    public Product toEntity(ProductRequest request) {
+    public Product toEntity(Product product, ProductRequest request) {
         if (request == null) {
             return null;
         }
-        return null;
+        product.setName(TextUtils.capitalizeFully(request.getName().strip()));
+        product.setSlug(TextUtils.toSlug(request.getName().strip()));
+        product.setOriginalPrice(request.getOriginalPrice());
+        product.setPrice(request.getPrice());
+        product.setQuantity(request.getQuantity());
+        product.setWeight(request.getWeight());
+        product.setPublishYear(request.getPublishYear());
+        product.setPages(request.getPages());
+        product.setLanguage(request.getLanguage());
+        product.setIsbn(request.getIsbn());
+        product.setStatus(request.getStatus());
+        product.setDescription(request.getDescription());
+        return product;
     }
 
     public ProductResponse toDTO(Product entity) {
@@ -47,28 +60,27 @@ public class ProductMapper {
                         : null);
 
         // response.setGenresName(
-        //         genreProductService.getGenreNamesByProductId(entity.getId()));
+        // genreProductService.getGenreNamesByProductId(entity.getId()));
 
         // response.setAuthorsName(
-        //         authorProductService.getAuthorNamesByProductId(entity.getId()));
+        // authorProductService.getAuthorNamesByProductId(entity.getId()));
 
         // response.setUrlImageDefault(
-        //         imageProductService.getDefaultImageUrlByProductId(entity.getId()));
+        // imageProductService.getDefaultImageUrlByProductId(entity.getId()));
 
         response.setStatus(entity.getStatus());
 
         return response;
 
-
     }
 
     // public ProductInfo toDTO(Product entity) {
-    //     if (entity == null) {
-    //         return null;
-    //     }
-    //     ProductInfo response = new ProductInfo();
+    // if (entity == null) {
+    // return null;
+    // }
+    // ProductInfo response = new ProductInfo();
 
-    //     return response;
+    // return response;
     // }
 
 }

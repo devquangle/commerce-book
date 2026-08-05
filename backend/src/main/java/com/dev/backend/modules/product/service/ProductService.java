@@ -21,5 +21,7 @@ public interface ProductService {
 
     ProductResponse mapToDTO(Product product);
 
+    ProductResponse add(ProductRequest request, Long shopId);
+
     PageResponse<ProductResponse> searchProductsByShopId(ProductFilterRequest request, Long shopId);
 }

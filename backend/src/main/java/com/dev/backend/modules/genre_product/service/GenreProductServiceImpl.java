@@ -1,11 +1,17 @@
 package com.dev.backend.modules.genre_product.service;
 
+import com.dev.backend.modules.genre.entity.Genre;
+import com.dev.backend.modules.genre_product.entity.GenreProduct;
 import com.dev.backend.modules.genre_product.repository.GenreProductRepository;
+import com.dev.backend.modules.product.entity.Product;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,6 +21,8 @@ public class GenreProductServiceImpl implements GenreProductService {
     private static final String OTHER = "Khác";
     private static final String UNKNOWN = "Chưa có thông thể loại";
     private final GenreProductRepository genreProductRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public List<String> getGenreNamesByProductId(Long productId) {
@@ -23,5 +31,28 @@ public class GenreProductServiceImpl implements GenreProductService {
                 .stream()
                 .map(name -> OTHER.equals(name) ? UNKNOWN : name)
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public void setGenresProduct(Product product, List<Long> genreIds) {
+        genreProductRepository.deleteByProductId(product.getId());
+        if (genreIds == null || genreIds.isEmpty()) {
+            return;
+        }
+
+        List<GenreProduct> items = new ArrayList<>();
+        List<Long> uniqueIds = genreIds.stream()
+                .distinct()
+                .toList();
+        for (Long genreId : uniqueIds) {
+            GenreProduct entity = new GenreProduct();
+            entity.setProduct(product);
+            Genre genreProxy = entityManager.getReference(Genre.class, genreId);
+            entity.setGenre(genreProxy);
+            items.add(entity);
+        }
+        genreProductRepository.saveAll(items);
+
     }
 }
