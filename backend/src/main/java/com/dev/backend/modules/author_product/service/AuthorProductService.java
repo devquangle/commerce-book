@@ -8,6 +8,8 @@ public interface AuthorProductService {
 
     List<String> getAuthorNamesByProductId(Long productId);
 
+    List<Long> getAuthorIdsByProductId(Long productId);
+
     void setAuthorsProduct(Product product, List<Long> authorIds);
 
 }

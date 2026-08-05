@@ -1,6 +1,7 @@
 package com.dev.backend.modules.product.service;
 
 import com.dev.backend.common.response.PageResponse;
+import com.dev.backend.modules.product.dto.ProductDetailResponse;
 import com.dev.backend.modules.product.dto.ProductFilterRequest;
 import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
@@ -20,9 +21,13 @@ public interface ProductService {
 
     // void deleteProduct(Long id);
 
+    Product getProductBySlugAndShopId(String slug, Long shopId);
+
     ProductResponse mapToDTO(Product product);
 
     ProductResponse create(ProductRequest request, Shop shop);
+
+    ProductDetailResponse detail(String slug, Long shopId);
 
     PageResponse<ProductResponse> searchProductsByShopId(ProductFilterRequest request, Long shopId);
 }

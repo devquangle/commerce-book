@@ -1,5 +1,6 @@
 import { authAxios } from "@/libs/config/axios.config";
 import type {
+  ProductDetailResponse,
   ProductFilterRequest,
   ProductRequest,
   ProductResponse,
@@ -19,7 +20,7 @@ const ProductShopService = {
     }
     return response.data.data;
   },
-  async create(data: ProductRequest) {
+  create: async (data: ProductRequest): Promise<ProductResponse> => {
     const res = await authAxios.post<ApiResponse<ProductResponse>>(
       "/api/v1/shop/products",
       data,
@@ -27,6 +28,40 @@ const ProductShopService = {
     if (!res.data.success || !res.data.data) {
       throw new Error(res.data.message || "Add product failed");
     }
+    return res.data.data;
+  },
+  detail: async (slug: string): Promise<ProductDetailResponse> => {
+    const res = await authAxios.get<ApiResponse<ProductDetailResponse>>(
+      "/api/v1/shop/products",
+      {
+        params: {
+          slug,
+        },
+      },
+    );
+
+    if (!res.data.success || !res.data.data) {
+      throw new Error(res.data.message || "Get product failed");
+    }
+
+    return res.data.data;
+  },
+  update: async (
+    slug: string,
+    data: ProductRequest,
+  ): Promise<ProductResponse> => {
+    const res = await authAxios.put<ApiResponse<ProductResponse>>(
+      "/api/v1/shop/products",
+      data,
+      {
+        params: { slug },
+      },
+    );
+
+    if (!res.data.success || !res.data.data) {
+      throw new Error(res.data.message || "Update product failed");
+    }
+
     return res.data.data;
   },
 };

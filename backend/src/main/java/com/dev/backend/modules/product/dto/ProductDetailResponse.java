@@ -3,6 +3,7 @@ package com.dev.backend.modules.product.dto;
 import java.util.List;
 
 import com.dev.backend.common.enums.ProductStatus;
+import com.dev.backend.modules.image_product.dto.ImageProductResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDetailResponse {
-    private Integer productId;
+    private Long productId;
     private String name;
     private String slug;
     private Integer originalPrice;
@@ -25,6 +26,7 @@ public class ProductDetailResponse {
     private Integer pages;
     private String language;
     private String isbn;
+    
     private String description;
     
     private Long publisherId;
@@ -32,7 +34,7 @@ public class ProductDetailResponse {
 
     private List<Long> genreIds;
     private List<Long> authorIds;
-    private String urlImageDefault;
+    private List<ImageProductResponse> coverImages;
 
     private ProductStatus status;
 }

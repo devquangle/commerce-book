@@ -7,5 +7,7 @@ import com.dev.backend.modules.product.entity.Product;
 public interface GenreProductService {
     List<String> getGenreNamesByProductId(Long productId);
 
+    List<Long> getGenreIdsByProductId(Long productId);
+
     void setGenresProduct(Product product, List<Long> genreIds);
 }

@@ -17,3 +17,9 @@ export interface ProductImageResponse {
   publicId: string;
   isThumbnail: boolean;
 }
+
+
+export interface ImageResponse {
+  url: string;
+  isThumbnail: boolean;
+}

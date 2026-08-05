@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -42,4 +43,18 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT COUNT(item)>0 FROM Product item WHERE item.shop.id =:shopId AND item.slug = :slug ")
     boolean existsByShopIdAndSlug(@Param("shopId") Long shopId, @Param("slug") String slug);
+
+    @EntityGraph(attributePaths = {
+            "publisher",
+            "series",
+    })
+    @Query("""
+                SELECT p
+                FROM Product p
+                WHERE p.slug = :slug
+                  AND p.shop.id = :shopId
+            """)
+    Optional<Product> findProductBySlugAndShopId(
+            @Param("slug") String slug,
+            @Param("shopId") Long shopId);
 }

@@ -1,10 +1,13 @@
 package com.dev.backend.modules.product.service;
 
 import com.dev.backend.common.enums.ProductStatus;
+import com.dev.backend.common.exception.NotFoundException;
 import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.modules.author_product.service.AuthorProductService;
 import com.dev.backend.modules.genre_product.service.GenreProductService;
+import com.dev.backend.modules.image_product.dto.ImageProductResponse;
 import com.dev.backend.modules.image_product.service.ImageProductService;
+import com.dev.backend.modules.product.dto.ProductDetailResponse;
 import com.dev.backend.modules.product.dto.ProductFilterRequest;
 import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
@@ -44,6 +47,12 @@ public class ProductServiceImpl implements ProductService {
         private final ImageProductService imageProductService;
 
         @Override
+        public Product getProductBySlugAndShopId(String slug, Long shopId) {
+                return productRepository.findProductBySlugAndShopId(slug, shopId)
+                                .orElseThrow(() -> new NotFoundException("Product not found slug " + slug));
+        }
+
+        @Override
         public ProductResponse mapToDTO(Product product) {
                 ProductResponse response = productMapper.toDTO(product);
                 Long productId = product.getId();
@@ -53,6 +62,20 @@ public class ProductServiceImpl implements ProductService {
                 response.setAuthorsName(authorsName);
                 response.setGenresName(genresName);
                 response.setUrlImageDefault(urlImageDefault);
+                return response;
+        }
+
+        @Override
+        public ProductDetailResponse detail(String slug, Long shopId) {
+                Product product = getProductBySlugAndShopId(slug, shopId);
+                Long productId = product.getId();
+                ProductDetailResponse response = productMapper.toDetailDTO(product);
+                List<Long> authorIds = authorProductService.getAuthorIdsByProductId(productId);
+                List<Long> genreIds = genreProductService.getGenreIdsByProductId(productId);
+                List<ImageProductResponse> images = imageProductService.getImageResponsesByProductId(productId);
+                response.setAuthorIds(authorIds);
+                response.setGenreIds(genreIds);
+                response.setCoverImages(images);
                 return response;
         }
 

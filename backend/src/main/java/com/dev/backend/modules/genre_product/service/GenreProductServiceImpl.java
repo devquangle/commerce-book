@@ -24,13 +24,21 @@ public class GenreProductServiceImpl implements GenreProductService {
     @PersistenceContext
     private EntityManager entityManager;
 
+
     @Override
+    @Transactional(readOnly = true)
     public List<String> getGenreNamesByProductId(Long productId) {
 
         return genreProductRepository.findGenreNamesByProductId(productId)
                 .stream()
                 .map(name -> OTHER.equals(name) ? UNKNOWN : name)
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> getGenreIdsByProductId(Long productId) {
+        return genreProductRepository.findGenreIdsByProductId(productId);
     }
 
     @Override

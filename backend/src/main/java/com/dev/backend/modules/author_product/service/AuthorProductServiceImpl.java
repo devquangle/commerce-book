@@ -33,6 +33,10 @@ public class AuthorProductServiceImpl implements AuthorProductService {
                 .map(name -> OTHER.equals(name) ? UNKNOWN : name)
                 .toList();
     }
+    @Override
+    public List<Long> getAuthorIdsByProductId(Long productId) {
+        return authorProductRepository.findAuthorIdsByProductId(productId);
+    }
 
     @Override
     @Transactional

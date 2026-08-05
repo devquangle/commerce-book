@@ -70,5 +70,6 @@ public class ProductRequest {
     @NotEmpty(message = "Phải có ít nhất một ảnh bìa")
     @Size(max = 6, message = "Tối đa chỉ được 6 ảnh bìa")
     private List<ImageResponse> coverImages;
+    
     private ProductStatus status;
 }

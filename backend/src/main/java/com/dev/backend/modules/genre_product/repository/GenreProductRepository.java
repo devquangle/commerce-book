@@ -27,4 +27,12 @@ public interface GenreProductRepository extends JpaRepository<GenreProduct, Long
                 ORDER BY item.genre.name
             """)
     List<String> findGenreNamesByProductId(@Param("productId") Long productId);
+
+    @Query("""
+                SELECT DISTINCT item.genre.id
+                FROM GenreProduct item
+                WHERE item.product.id = :productId
+                ORDER BY item.genre.id
+            """)
+    List<Long> findGenreIdsByProductId(@Param("productId") Long productId);
 }

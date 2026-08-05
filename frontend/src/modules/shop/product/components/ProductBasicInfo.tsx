@@ -317,6 +317,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
                 register={register}
                 rules={{ required: "Tên sách là bắt buộc." }}
                 error={errors?.name}
+                value={watch ? watch("name") : null}
                 dataOptions={dataOptionsToUse}
                 displayKey={displayKey as keyof GoogleBookResponse}
                 isLoading={isLoadingToUse}

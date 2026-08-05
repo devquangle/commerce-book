@@ -24,4 +24,12 @@ public interface AuthorProductRepository extends JpaRepository<AuthorProduct, Lo
             """)
     List<String> findAuthorNamesByProductId(@Param("productId") Long productId);
 
+    @Query("""
+                SELECT DISTINCT item.author.id
+                FROM AuthorProduct item
+                WHERE item.product.id = :productId
+                ORDER BY item.author.id
+            """)
+    List<Long> findAuthorIdsByProductId(@Param("productId") Long productId);
+
 }

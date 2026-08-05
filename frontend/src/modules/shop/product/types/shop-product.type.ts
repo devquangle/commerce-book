@@ -1,4 +1,5 @@
 import type {
+  ImageResponse,
   ProductImageRequest,
 } from "@/services/cloudinary/type/cloudinary.type";
 import type { ProductStatus } from "./product-status.type";
@@ -49,3 +50,24 @@ export interface ProductRequest {
   description: string;
   status: ProductStatus;
 }
+
+export interface ProductDetailResponse{
+  productId:number;
+  name: string;
+  weight: number;
+  publishYear: string;
+  pages: number;
+  language: string;
+  price: number;
+  originalPrice: number;
+  quantity: number;
+  isbn: string;
+  authorIds: number[];
+  genreIds: number[];
+  publisherId: number | null;
+  seriesId: number | null;
+  coverImages: ImageResponse[];
+  description: string;
+  status: ProductStatus;
+}
+

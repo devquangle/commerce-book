@@ -18,7 +18,7 @@ interface SearchInputProps<TForm extends FieldValues, TOption> extends Omit<
   register: UseFormRegister<TForm>;
   rules?: RegisterOptions<TForm, Path<TForm>>;
   error?: FieldError;
-  required?: boolean;
+  value?: string | number | readonly string[] | null;
   dataOptions: TOption[];
   displayKey: keyof TOption;
   valueKey?: keyof TOption;
@@ -72,7 +72,16 @@ export const SearchInput = <TForm extends FieldValues, TOption>({
   const safeDataOptions = useMemo(() => dataOptions || [], [dataOptions]);
 
   // Đồng bộ với value từ bên ngoài (nếu có, ví dụ từ react-hook-form useWatch)
-  const currentValue = rest.value !== undefined ? String(rest.value) : query;
+  const currentValue =
+    rest.value !== undefined && rest.value !== null
+      ? String(rest.value)
+      : query;
+
+  useEffect(() => {
+    if (rest.value !== undefined && rest.value !== null) {
+      setQuery(String(rest.value));
+    }
+  }, [rest.value]);
 
   // Lọc danh sách theo query có tối ưu hiệu suất (chỉ tính toán lại khi data hoặc currentValue thay đổi)
   const filtered = useMemo(() => {

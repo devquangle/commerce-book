@@ -1,6 +1,8 @@
 package com.dev.backend.modules.product.mapper;
 
 import com.dev.backend.common.utils.TextUtils;
+import com.dev.backend.modules.image_product.dto.ImageProductResponse;
+import com.dev.backend.modules.product.dto.ProductDetailResponse;
 import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.entity.Product;
@@ -83,4 +85,53 @@ public class ProductMapper {
     // return response;
     // }
 
+    public ProductDetailResponse toDetailDTO(Product entity) {
+        if (entity == null) {
+            return null;
+        }
+        ProductDetailResponse response = new ProductDetailResponse();
+        response.setProductId(entity.getId());
+        response.setName(entity.getName());
+        response.setSlug(entity.getSlug());
+        response.setOriginalPrice(entity.getOriginalPrice());
+        response.setPrice(entity.getPrice());
+        response.setQuantity(entity.getQuantity());
+        response.setWeight(entity.getWeight());
+        response.setPublishYear(
+                entity.getPublishYear() != null
+                        ? entity.getPublishYear().toString()
+                        : null);
+        response.setPages(entity.getPages());
+        response.setLanguage(entity.getLanguage());
+        response.setIsbn(entity.getIsbn());
+        response.setDescription(entity.getDescription());
+
+        response.setPublisherId(
+                entity.getPublisher() != null
+                        ? entity.getPublisher().getId()
+                        : null);
+
+        response.setSeriesId(
+                entity.getSeries() != null
+                        ? entity.getSeries().getId()
+                        : null);
+        // response.setAuthorIds(
+        //         entity.getAuthorProducts()
+        //                 .stream()
+        //                 .map(ap -> ap.getAuthor().getId())
+        //                 .toList());
+
+        // response.setGenreIds(
+        //         entity.getGenreProducts()
+        //                 .stream()
+        //                 .map(gp -> gp.getGenre().getId())
+        //                 .toList());
+        // response.setCoverImages(entity.getImages()
+        //         .stream()
+        //         .map(image -> new ImageProductResponse(
+        //                 image.getUrlImage(),
+        //                 image.isThumbnail()))
+        //         .toList());
+        return response;
+    }
 }
