@@ -1,5 +1,7 @@
 package com.dev.backend.modules.product.controller;
 
+import java.util.List;
+
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,6 +22,7 @@ import com.dev.backend.modules.product.dto.ProductDetailResponse;
 import com.dev.backend.modules.product.dto.ProductFilterRequest;
 import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
+import com.dev.backend.modules.product.dto.ProductShopResponse;
 import com.dev.backend.modules.product.service.ProductService;
 import com.dev.backend.security.custom.CustomUserDetails;
 
@@ -68,5 +71,14 @@ public class ProductController {
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         productService.delete(id, userDetails.getShop().getId());
         return ResponseUtil.successMessage("Xoá sản phẩm thành công");
+    }
+
+    @PostMapping("/products/shops")
+    public ResponseEntity<ResponseData<List<ProductShopResponse>>> getShopsByProductIds(
+            @RequestBody List<Long> productIds) {
+
+        return ResponseUtil.success(
+                "Lấy danh sách shop thành công",
+                productService.findByIdIn(productIds));
     }
 }

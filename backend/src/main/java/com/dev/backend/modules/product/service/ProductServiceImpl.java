@@ -4,7 +4,6 @@ import com.dev.backend.common.enums.ProductStatus;
 import com.dev.backend.common.exception.DuplicateFieldException;
 import com.dev.backend.common.exception.NotFoundException;
 import com.dev.backend.common.response.PageResponse;
-import com.dev.backend.common.utils.TextUtils;
 import com.dev.backend.modules.author_product.service.AuthorProductService;
 import com.dev.backend.modules.genre_product.service.GenreProductService;
 import com.dev.backend.modules.image_product.dto.ImageProductResponse;
@@ -13,11 +12,13 @@ import com.dev.backend.modules.product.dto.ProductDetailResponse;
 import com.dev.backend.modules.product.dto.ProductFilterRequest;
 import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
+import com.dev.backend.modules.product.dto.ProductShopResponse;
 import com.dev.backend.modules.product.entity.Product;
 import com.dev.backend.modules.product.mapper.ProductMapper;
 import com.dev.backend.modules.product.repository.ProductRepository;
 import com.dev.backend.modules.publisher.service.PublisherService;
 import com.dev.backend.modules.series.service.SeriesService;
+import com.dev.backend.modules.shop.dto.ShopSimpleResponse;
 import com.dev.backend.modules.shop.entity.Shop;
 
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,19 @@ public class ProductServiceImpl implements ProductService {
         private final AuthorProductService authorProductService;
         private final GenreProductService genreProductService;
         private final ImageProductService imageProductService;
+
+        @Override
+        @Transactional(readOnly = true)
+        public List<ProductShopResponse> findByIdIn(List<Long> productIds) {
+                return productRepository.findByIdIn(productIds)
+                                .stream()
+                                .map(product -> new ProductShopResponse(
+                                                product.getId(),
+                                                new ShopSimpleResponse(
+                                                                product.getShop().getName(),
+                                                                product.getShop().getSlug())))
+                                .toList();
+        }
 
         @Override
         public Product getProductBySlugAndShopId(String slug, Long shopId) {
@@ -153,6 +167,12 @@ public class ProductServiceImpl implements ProductService {
                                 page.getSize(),
                                 page.getTotalElements(),
                                 page.getTotalPages());
+        }
+
+        @Override
+        public PageResponse<ProductResponse> searchProducts(ProductFilterRequest request) {
+                // TODO Auto-generated method stub
+                return null;
         }
 
         public String generateUniqueSlug(Long shopId, String slug) {

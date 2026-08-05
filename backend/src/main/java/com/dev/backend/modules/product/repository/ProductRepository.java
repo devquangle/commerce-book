@@ -16,24 +16,23 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-        List<Product> findByShopId(Long shopId);
+        @EntityGraph(attributePaths = {
+                "shop"
+        })
+        List<Product> findByIdIn(List<Long> productIds);
 
         @EntityGraph(attributePaths = {
                         "publisher",
-                        "series"
+                        "series",
+                        "shop"
         })
         @Query("""
                             SELECT item
                             FROM Product item
-                            WHERE (
-                                :keyword IS NULL
-                                OR LOWER(item.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
-                            )
-                            AND (
-                                :status IS NULL
-                                OR item.status = :status
-                            )
-                            AND item.shop.id=:shopId
+                            WHERE (:shopId IS NULL OR item.shop.id = :shopId)
+                              AND (:status IS NULL OR item.status = :status)
+                              AND (:keyword IS NULL
+                                   OR LOWER(item.name) LIKE LOWER(CONCAT('%', :keyword, '%')))
                         """)
         Page<Product> searchProductsByShopId(
                         @Param("keyword") String keyword,
