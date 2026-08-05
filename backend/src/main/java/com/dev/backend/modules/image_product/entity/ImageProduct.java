@@ -30,6 +30,7 @@ public class ImageProduct extends BaseEntity {
     @Column(name = "url_image", nullable = false)
     private String urlImage;
 
-    @Column(name = "is_default")
-    private boolean isDefault;
+    private String publicId;
+
+    private boolean isThumbnail;
 }
