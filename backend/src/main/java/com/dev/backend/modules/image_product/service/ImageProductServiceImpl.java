@@ -46,7 +46,7 @@ public class ImageProductServiceImpl implements ImageProductService {
 
         // 2. Gom tất cả URL mới từ ImageResponse gửi lên thành một danh sách để đối chiếu
         List<String> newUrls = imageResponses.stream()
-                .map(ImageResponse::url)
+                .map(ImageResponse::getUrl)
                 .filter(url -> url != null && !url.isBlank())
                 .toList();
 
@@ -65,12 +65,12 @@ public class ImageProductServiceImpl implements ImageProductService {
         List<ImageProduct> toSave = new ArrayList<>();
 
         for (ImageResponse item : imageResponses) {
-            if (item.url() == null || item.url().isBlank()) {
+            if (item.getUrl() == null || item.getUrl().isBlank()) {
                 continue;
             }
 
             Optional<ImageProduct> existingImageOpt = existingImages.stream()
-                    .filter(img -> img.getUrlImage().equals(item.url()))
+                    .filter(img -> img.getUrlImage().equals(item.getUrl()))
                     .findFirst();
 
             if (existingImageOpt.isPresent()) {
@@ -81,9 +81,9 @@ public class ImageProductServiceImpl implements ImageProductService {
                 }
             } else {
                 ImageProduct newImage = new ImageProduct();
-                newImage.setUrlImage(item.url());
+                newImage.setUrlImage(item.getUrl());
                 newImage.setThumbnail(item.isThumbnail());
-                newImage.setPublicId(item.publicId());
+                newImage.setPublicId(item.getPublicId());
                 newImage.setProduct(product);
                 toSave.add(newImage);
             }

@@ -43,7 +43,7 @@ public class SecurityConfig {
                         "/api/v1/auth/login",
                         "/api/v1/auth/register",
                         "/api/v1/auth/refresh",
-                        "/api/v1/upload",
+                        "/api/v1/upload/**",
                         "/api/v1/wikipedia/**",
                         "/api/v1/gemini/**",
                         "/api/v1/search-api/**",

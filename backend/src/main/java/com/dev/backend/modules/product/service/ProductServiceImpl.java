@@ -2,9 +2,7 @@ package com.dev.backend.modules.product.service;
 
 import com.dev.backend.common.enums.ProductStatus;
 import com.dev.backend.common.response.PageResponse;
-import com.dev.backend.common.utils.TextUtils;
 import com.dev.backend.modules.author_product.service.AuthorProductService;
-import com.dev.backend.modules.genre.dto.GenreResponse;
 import com.dev.backend.modules.genre_product.service.GenreProductService;
 import com.dev.backend.modules.image_product.service.ImageProductService;
 import com.dev.backend.modules.product.dto.ProductFilterRequest;

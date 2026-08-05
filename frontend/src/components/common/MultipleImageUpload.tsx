@@ -1,36 +1,32 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import type { Control } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import type { ProductRequest } from "@/modules/shop/product/types/shop-product.type";
 import { ImageIcon, Upload, Plus, Eye, Pencil, Trash2, X } from "lucide-react";
 import { showErrorToast } from "@/libs/utils/toastUtil";
+import {
+  type UploadImageItem,
+  ensureThumbnail,
+  DEFAULT_SAMPLE_IMAGES,
+} from "./multiple-image-upload.utils";
+
+export type { UploadImageItem };
 
 export interface MultipleImageUploadProps {
   label?: string;
   maxFileSizeMB?: number;
   maxImages?: number;
   required?: boolean;
-  initialImages?: { url: string; isThumbnail?: boolean }[];
-  onChange?: (images: { url: string; isThumbnail?: boolean }[]) => void;
+  initialImages?: UploadImageItem[];
+  onChange?: (images: UploadImageItem[]) => void;
   control?: Control<ProductRequest>;
   error?: string;
 }
 
-const DEFAULT_SAMPLE_IMAGES = [
-  {
-    url: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&auto=format&fit=crop&q=80",
-    isThumbnail: true,
-  },
-  {
-    url: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&auto=format&fit=crop&q=80",
-    isThumbnail: false,
-  },
-];
-
 const MultipleImageUploadContent: React.FC<
   MultipleImageUploadProps & {
-    value?: { url: string; isThumbnail?: boolean }[];
-    onValueChange?: (images: { url: string; isThumbnail?: boolean }[]) => void;
+    value?: UploadImageItem[];
+    onValueChange?: (images: UploadImageItem[]) => void;
   }
 > = ({
   label = "Hình ảnh sản phẩm",
@@ -45,21 +41,40 @@ const MultipleImageUploadContent: React.FC<
 }) => {
   const [imageUploadMode, setImageUploadMode] = useState<"file" | "url">("file");
   const [imageUrl, setImageUrl] = useState("");
-  const [localImages, setLocalImages] = useState(initialImages || DEFAULT_SAMPLE_IMAGES);
+  const [localImages, setLocalImages] = useState<UploadImageItem[]>(
+    ensureThumbnail(initialImages || DEFAULT_SAMPLE_IMAGES)
+  );
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const replaceFileInputRef = useRef<HTMLInputElement | null>(null);
   const [replaceIndex, setReplaceIndex] = useState<number | null>(null);
 
-  const images = value !== undefined ? (value as any) : localImages;
+  const images = useMemo(() => {
+    const raw = value !== undefined ? value : localImages;
+    return ensureThumbnail(raw || []);
+  }, [value, localImages]);
 
-  const notifyChange = (updated: { url: string; isThumbnail?: boolean }[]) => {
-    setLocalImages(updated);
-    onChange?.(updated);
-    onValueChange?.(updated);
+  const notifyChange = (updated: UploadImageItem[]) => {
+    const cleaned = ensureThumbnail(updated);
+    setLocalImages(cleaned);
+    onChange?.(cleaned);
+    onValueChange?.(cleaned);
   };
 
+  useEffect(() => {
+    if (value && Array.isArray(value) && value.length > 0) {
+      const sanitized = ensureThumbnail(value);
+      const isMismatch = value.some(
+        (img, idx) => img.isThumbnail !== sanitized[idx]?.isThumbnail
+      );
+      if (isMismatch) {
+        onValueChange?.(sanitized);
+        onChange?.(sanitized);
+      }
+    }
+  }, [value, onChange, onValueChange]);
+
   const handleSelectThumbnail = (index: number) => {
-    const updated = images.map((img: any, idx: number) => ({
+    const updated = images.map((img, idx) => ({
       ...img,
       isThumbnail: idx === index,
     }));
@@ -71,10 +86,7 @@ const MultipleImageUploadContent: React.FC<
       showErrorToast("Phải giữ lại ít nhất 1 hình ảnh sản phẩm!");
       return;
     }
-    const updated = images.filter((_: any, idx: number) => idx !== index);
-    if (images[index]?.isThumbnail && updated.length > 0) {
-      updated[0].isThumbnail = true;
-    }
+    const updated = images.filter((_, idx) => idx !== index);
     notifyChange(updated);
   };
 
@@ -84,7 +96,7 @@ const MultipleImageUploadContent: React.FC<
       showErrorToast(`Chỉ được tải lên tối đa ${maxImages} hình ảnh!`);
       return;
     }
-    const newImg = {
+    const newImg: UploadImageItem = {
       url: imageUrl.trim(),
       isThumbnail: images.length === 0,
     };
@@ -102,8 +114,9 @@ const MultipleImageUploadContent: React.FC<
       return;
     }
 
-    const newImgs = Array.from(files).map((file, idx) => ({
+    const newImgs: UploadImageItem[] = Array.from(files).map((file, idx) => ({
       url: URL.createObjectURL(file),
+      file: file,
       isThumbnail: images.length === 0 && idx === 0,
     }));
 
@@ -119,6 +132,7 @@ const MultipleImageUploadContent: React.FC<
     updated[replaceIndex] = {
       ...updated[replaceIndex],
       url: URL.createObjectURL(file),
+      file: file,
     };
     setReplaceIndex(null);
     notifyChange(updated);
@@ -214,7 +228,7 @@ const MultipleImageUploadContent: React.FC<
       {/* Grid danh sách ảnh */}
       {images.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 pt-2">
-          {images.map((image: any, index: number) => (
+          {images.map((image, index) => (
             <div
               key={index}
               className={`group relative aspect-[3/4] rounded-none overflow-hidden border-2 bg-slate-100/80 dark:bg-zinc-900/80 transition-all ${
@@ -348,7 +362,7 @@ export const MultipleImageUpload: React.FC<MultipleImageUploadProps> = (props) =
         render={({ field, fieldState: { error } }) => (
           <MultipleImageUploadContent
             {...props}
-            value={field.value as any}
+            value={field.value as UploadImageItem[]}
             onValueChange={field.onChange}
             error={error?.message}
           />

@@ -14,7 +14,7 @@ export const INITIAL_FORM: ProductRequest = {
   publisherId: null,
   seriesId: null,
   isbn: "",
-  status: "ACTIVE",
+  status: "PENDING_APPROVAL",
   coverImages: [],
   description: `
     <h2 style="margin-top: 24px; margin-bottom: 12px;">Nội dung chính</h2>

@@ -38,11 +38,13 @@ export interface ProductBasicInfoProps {
   displayKey?: string;
   isLoadingBookSearch?: boolean;
   onSelectBook?: (item: GoogleBookResponse) => void;
+  showStatus?: boolean;
 }
 
 const STATUS_OPTIONS = [
-  { label: "Hoạt động", value: "ACTIVE" },
-  { label: "Không hoạt động", value: "INACTIVE" },
+  { label: "Đang bán", value: "ACTIVE" },
+  { label: "Tạm ngưng", value: "INACTIVE" },
+  { label: "Chờ duyệt", value: "PENDING_APPROVAL" },
 ];
 
 const MAX_IMAGES = 6;
@@ -58,6 +60,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
   displayKey = "name",
   isLoadingBookSearch,
   onSelectBook,
+  showStatus = false,
 }) => {
   const watchedPrice = watch ? watch("price") : 0;
   const watchedOriginalPrice = watch ? watch("originalPrice") : 0;
@@ -200,8 +203,10 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
       }
 
       // Handle SearchAPI result — update additional images safely
-      if (searchResult.status === "fulfilled") {
-        const rawData: any = searchResult.value;
+        const rawData = searchResult.value as
+          | string[]
+          | { urlImage?: string[]; urlImages?: string[]; data?: string[] }
+          | undefined;
         const allSearchUrls: string[] = Array.isArray(rawData)
           ? rawData
           : rawData?.urlImage || rawData?.urlImages || rawData?.data || [];
@@ -487,28 +492,29 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
             />
           )}
 
-          {control ? (
-            <Controller
-              name="status"
-              control={control}
-              render={({ field }) => (
-                <SelectBox
-                  label="Trạng thái"
-                  required
-                  options={STATUS_OPTIONS}
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors?.status?.message}
-                />
-              )}
-            />
-          ) : (
-            <SelectBox
-              label="Trạng thái"
-              options={STATUS_OPTIONS}
-              value="ACTIVE"
-            />
-          )}
+          {showStatus &&
+            (control ? (
+              <Controller
+                name="status"
+                control={control}
+                render={({ field }) => (
+                  <SelectBox
+                    label="Trạng thái"
+                    required
+                    options={STATUS_OPTIONS}
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors?.status?.message}
+                  />
+                )}
+              />
+            ) : (
+              <SelectBox
+                label="Trạng thái"
+                options={STATUS_OPTIONS}
+                value="PENDING_APPROVAL"
+              />
+            ))}
         </div>
       </div>
     </div>

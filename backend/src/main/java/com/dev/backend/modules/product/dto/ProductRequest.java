@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -54,9 +53,6 @@ public class ProductRequest {
     @NotBlank(message = "Ngôn ngữ không được để trống")
     private String language;
 
-    @NotBlank(message = "Trạng thái không được để trống")
-    private ProductStatus status;
-
     @NotBlank(message = "Mô tả sản phẩm không được để trống")
     private String description;
 
@@ -74,4 +70,5 @@ public class ProductRequest {
     @NotEmpty(message = "Phải có ít nhất một ảnh bìa")
     @Size(max = 6, message = "Tối đa chỉ được 6 ảnh bìa")
     private List<ImageResponse> coverImages;
+    private ProductStatus status;
 }

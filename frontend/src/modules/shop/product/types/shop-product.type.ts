@@ -1,5 +1,5 @@
 import type {
-  ProductImageResponse,
+  ProductImageRequest,
 } from "@/services/cloudinary/type/cloudinary.type";
 import type { ProductStatus } from "./product-status.type";
 
@@ -45,7 +45,7 @@ export interface ProductRequest {
   genreIds: number[];
   publisherId: number | null;
   seriesId: number | null;
-  coverImages: ProductImageResponse[];
+  coverImages: ProductImageRequest[];
   description: string;
   status: ProductStatus;
 }

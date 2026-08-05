@@ -18,6 +18,7 @@ import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.service.ProductService;
 import com.dev.backend.security.custom.CustomUserDetails;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -36,7 +37,7 @@ public class ProductController {
     }
 
     @PostMapping("/shop/products")
-    public ResponseEntity<ResponseData<ProductResponse>> create(@RequestBody ProductRequest request,
+    public ResponseEntity<ResponseData<ProductResponse>> create(@RequestBody  @Valid  ProductRequest request,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         ProductResponse response = productService.create(request, userDetails.getShop());
         return ResponseUtil.success("Thêm sản phẩm thành công", response);

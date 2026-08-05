@@ -1,7 +1,5 @@
 package com.dev.backend.modules.cloudinary.controller;
-
 import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,28 +18,27 @@ import com.dev.backend.modules.cloudinary.service.CloudinaryService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class CloudinaryController {
     private final CloudinaryService cloudinaryService;
 
-    @PostMapping("/upload-file")
+    @PostMapping("/upload/file")
     public ResponseEntity<ResponseData<UploadImageResponse>> postUploadImage(
             @RequestPart(value = "file", required = false) MultipartFile file) {
         return ResponseUtil.success("Upload pass", cloudinaryService.uploadImage(file));
     }
 
-    @PostMapping("/upload-url")
+    @PostMapping("/upload/url")
     public ResponseEntity<ResponseData<UploadImageResponse>> upload(
             @RequestParam(value = "url", required = false) String url) {
         return ResponseUtil.success("Tải ảnh thành công", cloudinaryService.uploadImageUrl(url));
     }
 
-    @PostMapping("/upload-images")
+    @PostMapping("/upload/images")
     public ResponseEntity<ResponseData<List<ImageResponse>>> uploadImages(
             @ModelAttribute ImageUploadForm request) {
-        List<ImageResponse> response = cloudinaryService.imageResponses(request.imageRequests());
+        List<ImageResponse> response = cloudinaryService.imageResponses(request.getImageRequests());
         return ResponseUtil.success("Tải ảnh thành công", response);
     }
-
 }

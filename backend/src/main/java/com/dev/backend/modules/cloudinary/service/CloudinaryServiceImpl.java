@@ -74,7 +74,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         if (cleanedUrl.contains("res.cloudinary.com/" + cloudName)) {
             return new UploadImageResponse(
                     cleanedUrl,
-                    null);
+                    extractPublicIdFromUrl(cleanedUrl));
         }
 
         try {
@@ -113,26 +113,36 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         }
 
         for (ImageRequest req : imageRequests) {
-            String finalUrl = req.url();
+
+            String finalUrl = req.getUrl();
             String publicId = null;
 
-            if (req.file() != null && !req.file().isEmpty()) {
-                UploadImageResponse uploadRes = this.uploadImage(req.file());
-                finalUrl = uploadRes.url();
-                publicId = uploadRes.publicId();
+            if (req.getFile() != null && !req.getFile().isEmpty()) {
+
+                UploadImageResponse upload = uploadImage(req.getFile());
+                finalUrl = upload.getUrl();
+                publicId = upload.getPublicId();
+
             } else if (finalUrl != null && !finalUrl.isBlank()) {
+
                 String trimmedUrl = finalUrl.strip();
 
                 if (!trimmedUrl.contains("res.cloudinary.com/" + cloudName)) {
-                    UploadImageResponse uploadRes = this.uploadImageUrl(trimmedUrl);
-                    finalUrl = uploadRes.url();
-                    publicId = uploadRes.publicId();
+
+                    UploadImageResponse upload = uploadImageUrl(trimmedUrl);
+                    finalUrl = upload.getUrl();
+                    publicId = upload.getPublicId();
+
                 } else {
+                    publicId = extractPublicIdFromUrl(trimmedUrl);
                     finalUrl = trimmedUrl;
                 }
             }
 
-            responses.add(new ImageResponse(finalUrl, publicId, req.isThumbnail()));
+            responses.add(new ImageResponse(
+                    finalUrl,
+                    publicId,
+                    req.isThumbnail()));
         }
 
         return responses;
