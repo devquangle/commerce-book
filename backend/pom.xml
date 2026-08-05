@@ -136,6 +136,11 @@
 			<artifactId>commons-text</artifactId>
 			<version>1.14.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.slugify</groupId>
+			<artifactId>slugify</artifactId>
+			<version>3.0.7</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

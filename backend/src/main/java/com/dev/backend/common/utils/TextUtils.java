@@ -1,9 +1,15 @@
 package com.dev.backend.common.utils;
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.text.Normalizer;
+import com.github.slugify.Slugify;
 
-public class TextUtils {
+public final class TextUtils {
+    private static final Slugify SLUGIFY = Slugify.builder().build();
+
+    private TextUtils() {
+    }
+
     public static String capitalizeFully(String input) {
         if (input == null || input.isEmpty()) {
             return input;
@@ -27,22 +33,11 @@ public class TextUtils {
     }
 
     public static String toSlug(String name) {
-        if (name == null || name.isBlank()) {
-            return "";
-        }
-
-        String slug = Normalizer.normalize(name, Normalizer.Form.NFD)
-                .replaceAll("\\p{M}", "") // bỏ dấu
-                .replace("đ", "d")
-                .replace("Đ", "D")
-                .toLowerCase()
-                .replaceAll("[^a-z0-9\\s-]", "") // bỏ ký tự đặc biệt
-                .trim()
-                .replaceAll("\\s+", "-") // space -> -
-                .replaceAll("-+", "-"); // nhiều dấu - liên tiếp
-
+        String slug = SLUGIFY.slugify(name);
         return slug;
     }
+
+   
 
     public static String urlImage(String name) {
         if (name == null || name.isBlank()) {
