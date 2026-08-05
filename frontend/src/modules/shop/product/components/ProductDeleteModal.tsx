@@ -1,4 +1,3 @@
-import React from "react";
 import { AlertTriangle, X } from "lucide-react";
 import type { ProductResponse } from "../types/shop-product.type";
 import { Button } from "@/components/common/Button";
@@ -14,7 +13,6 @@ interface ProductDeleteModalProps {
 export const ProductDeleteModal = ({
   isOpen,
   item,
-  isDeleting = false,
   onClose,
   onConfirm,
 }: ProductDeleteModalProps) => {

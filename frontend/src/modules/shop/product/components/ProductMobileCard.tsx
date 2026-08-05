@@ -91,7 +91,7 @@ export const ProductMobileCard: React.FC<ProductMobileCardProps> = ({
         <div className="flex-1 min-w-0 flex flex-col gap-1">
           {/* Dòng 1: Tên sách */}
           <h3
-            className="font-semibold text-zinc-900 dark:text-white body-text leading-snug line-clamp-2 break-words"
+            className="font-semibold text-zinc-900 dark:text-white body-text leading-snug line-clamp-2 wrap-break-word"
             title={product.name}
           >
             {product.name}

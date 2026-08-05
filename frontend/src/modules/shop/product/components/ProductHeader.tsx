@@ -66,7 +66,7 @@ export const ProductHeader: React.FC<ProductHeaderProps> = ({
           icon={<Plus className="w-4 h-4" />}
           onClick={onAddClick || (() => navigate("/shop/products/create"))}
         >
-          Thêm sản phẩm
+          Thêm mới
         </Button>
       </div>
     );
@@ -81,7 +81,7 @@ export const ProductHeader: React.FC<ProductHeaderProps> = ({
     (isUpdateMode
       ? "Chỉnh sửa các thông tin và hình ảnh sản phẩm sách trong hệ thống."
       : "Điền đầy đủ thông tin bên dưới và tải ảnh để khởi tạo sản phẩm sách mới trong hệ thống.");
-  const displaySubmitText = submitText || (isUpdateMode ? "Cập nhật" : "Lưu");
+  const displaySubmitText = submitText || (isUpdateMode ? "Cập nhật" : "Thêm");
 
   return (
     <div className="col-span-12 flex flex-col gap-4 md:flex-row md:items-center md:justify-between card-custom">

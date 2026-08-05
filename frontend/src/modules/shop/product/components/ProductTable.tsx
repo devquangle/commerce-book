@@ -180,7 +180,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                         {/* ➊ Tên + Slug */}
                         <div className="flex flex-col gap-0.5">
                           <p
-                            className="font-semibold text-zinc-900 dark:text-zinc-100 body-text leading-snug line-clamp-2 break-words"
+                            className="font-semibold text-zinc-900 dark:text-zinc-100 body-text leading-snug line-clamp-2 warp-break-word"
                             title={product.name}
                           >
                             {product.name}
