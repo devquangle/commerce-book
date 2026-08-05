@@ -9,4 +9,6 @@ public interface ImageProductService {
     String getDefaultImageUrlByProductId(Long productId);
 
     void setImagesProduct(Product product, List<ImageResponse> imageResponses);
+
+    void deleteImagesByProductId(Long productId);
 }

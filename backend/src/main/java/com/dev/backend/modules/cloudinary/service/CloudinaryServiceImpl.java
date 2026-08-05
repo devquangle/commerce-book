@@ -157,10 +157,38 @@ public class CloudinaryServiceImpl implements CloudinaryService {
             return;
         }
 
+        List<String> validIds = publicIds.stream()
+                .filter(id -> id != null && !id.isBlank())
+                .toList();
+
+        if (validIds.isEmpty()) {
+            return;
+        }
+
         try {
-            cloudinary.api().deleteResources(publicIds, ObjectUtils.emptyMap());
+            cloudinary.api().deleteResources(validIds, ObjectUtils.emptyMap());
         } catch (Exception e) {
-            throw new RuntimeException("Không thể xóa danh sách ảnh", e);
+            System.err.println("Không thể xóa danh sách ảnh: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public String extractPublicIdFromUrl(String url) {
+        if (url == null || url.isBlank() || !url.contains("/upload/")) {
+            return null;
+        }
+        try {
+            String path = url.substring(url.indexOf("/upload/") + 8);
+            if (path.matches("^v\\d+/.*")) {
+                path = path.substring(path.indexOf('/') + 1);
+            }
+            int lastDot = path.lastIndexOf('.');
+            if (lastDot != -1) {
+                path = path.substring(0, lastDot);
+            }
+            return path;
+        } catch (Exception e) {
+            return null;
         }
     }
 }

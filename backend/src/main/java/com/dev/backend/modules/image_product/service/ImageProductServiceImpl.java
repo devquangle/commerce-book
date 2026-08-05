@@ -1,6 +1,7 @@
 package com.dev.backend.modules.image_product.service;
 
 import com.dev.backend.modules.cloudinary.dto.ImageResponse;
+import com.dev.backend.modules.cloudinary.service.CloudinaryService;
 import com.dev.backend.modules.image_product.entity.ImageProduct;
 import com.dev.backend.modules.image_product.repository.ImageProductRepository;
 import com.dev.backend.modules.product.entity.Product;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ImageProductServiceImpl implements ImageProductService {
     private static final String URL_DEFAULT = "https://res.cloudinary.com/dox0mkwaz/image/upload/v1782366403/vjyqfyoqhtelnbqo6x4k.jpg";
     private final ImageProductRepository imageProductRepository;
+    private final CloudinaryService cloudinaryService;
 
     @Override
     @Transactional(readOnly = true)
@@ -33,19 +35,18 @@ public class ImageProductServiceImpl implements ImageProductService {
         // 1. Lấy tất cả ảnh hiện tại đang lưu dưới DB của Product này
         List<ImageProduct> existingImages = imageProductRepository.findByProductId(product.getId());
 
-        // Nếu danh sách mới trống -> Người dùng đã xóa sạch ảnh của sản phẩm này trên
-        // UI
+        // Nếu danh sách mới trống -> Người dùng đã xóa sạch ảnh của sản phẩm này trên UI
         if (imageResponses == null || imageResponses.isEmpty()) {
             if (!existingImages.isEmpty()) {
+                deleteImagesFromCloudinary(existingImages);
                 imageProductRepository.deleteAll(existingImages);
             }
             return;
         }
 
-        // 2. Gom tất cả URL mới từ ImageResponse gửi lên thành một danh sách để đối
-        // chiếu
+        // 2. Gom tất cả URL mới từ ImageResponse gửi lên thành một danh sách để đối chiếu
         List<String> newUrls = imageResponses.stream()
-                .map(item -> item.url()) // Gọi đúng method url() từ Record của bạn
+                .map(ImageResponse::url)
                 .filter(url -> url != null && !url.isBlank())
                 .toList();
 
@@ -55,49 +56,66 @@ public class ImageProductServiceImpl implements ImageProductService {
                 .filter(img -> !newUrls.contains(img.getUrlImage()))
                 .toList();
 
+        if (!toDelete.isEmpty()) {
+            deleteImagesFromCloudinary(toDelete);
+            imageProductRepository.deleteAll(toDelete);
+        }
+
         // 3. Phân loại để THÊM MỚI hoặc CẬP NHẬT trạng thái Thumbnail
         List<ImageProduct> toSave = new ArrayList<>();
 
         for (ImageResponse item : imageResponses) {
             if (item.url() == null || item.url().isBlank()) {
-                continue; // Bỏ qua nếu dữ liệu lỗi không có URL
+                continue;
             }
 
-            // Tìm xem URL từ Cloudinary này đã tồn tại dưới DB của Product này chưa
             Optional<ImageProduct> existingImageOpt = existingImages.stream()
                     .filter(img -> img.getUrlImage().equals(item.url()))
                     .findFirst();
 
             if (existingImageOpt.isPresent()) {
-                // 📌 HÀNH ĐỘNG 2: CẬP NHẬT TRẠNG THÁI THUMBNAIL
-                // Ảnh cũ vẫn giữ lại, nhưng check xem người dùng có thay đổi nút tích chọn ảnh
-                // đại diện hay không
                 ImageProduct existingImage = existingImageOpt.get();
-                if (existingImage.isThumbnail() != item.isThumbnail()) { // Gọi đúng item.isThumbnail() từ Record của
-                                                                         // bạn
+                if (existingImage.isThumbnail() != item.isThumbnail()) {
                     existingImage.setThumbnail(item.isThumbnail());
-                    toSave.add(existingImage); // Thêm vào danh sách để UPDATE
+                    toSave.add(existingImage);
                 }
             } else {
-                // 📌 HÀNH ĐỘNG 3: THÊM MỚI BẢN GHI
-                // URL này hoàn toàn mới (Do Frontend vừa up lên Cloudinary thành công rồi
-                // truyền vào đây)
                 ImageProduct newImage = new ImageProduct();
                 newImage.setUrlImage(item.url());
                 newImage.setThumbnail(item.isThumbnail());
+                newImage.setPublicId(item.publicId());
                 newImage.setProduct(product);
-                toSave.add(newImage); // Thêm vào danh sách để INSERT
+                toSave.add(newImage);
             }
         }
 
-        // 4. Đồng bộ tất cả thay đổi xuống Database
-        if (!toDelete.isEmpty()) {
-            imageProductRepository.deleteAll(toDelete); // Bắn lệnh DELETE
-        }
-
         if (!toSave.isEmpty()) {
-            imageProductRepository.saveAll(toSave); // Tự động INSERT bản ghi mới và UPDATE bản ghi cũ có sự thay đổi
+            imageProductRepository.saveAll(toSave);
         }
     }
 
+    @Override
+    public void deleteImagesByProductId(Long productId) {
+        List<ImageProduct> existingImages = imageProductRepository.findByProductId(productId);
+        if (existingImages != null && !existingImages.isEmpty()) {
+            deleteImagesFromCloudinary(existingImages);
+            imageProductRepository.deleteAll(existingImages);
+        }
+    }
+
+    private void deleteImagesFromCloudinary(List<ImageProduct> images) {
+        if (images == null || images.isEmpty()) {
+            return;
+        }
+        List<String> publicIdsToDelete = images.stream()
+                .map(img -> (img.getPublicId() != null && !img.getPublicId().isBlank())
+                        ? img.getPublicId()
+                        : cloudinaryService.extractPublicIdFromUrl(img.getUrlImage()))
+                .filter(id -> id != null && !id.isBlank())
+                .toList();
+
+        if (!publicIdsToDelete.isEmpty()) {
+            cloudinaryService.deletePublicIds(publicIdsToDelete);
+        }
+    }
 }

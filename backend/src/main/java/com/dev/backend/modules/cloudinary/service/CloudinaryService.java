@@ -25,4 +25,6 @@ public interface CloudinaryService {
 
         void deletePublicIds(List<String> publicIds);
 
+        String extractPublicIdFromUrl(String url);
+
 }
