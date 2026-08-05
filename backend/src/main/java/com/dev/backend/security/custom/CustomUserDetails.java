@@ -1,6 +1,7 @@
 package com.dev.backend.security.custom;
 
 import com.dev.backend.common.exception.BadRequestException;
+import com.dev.backend.modules.shop.entity.Shop;
 import com.dev.backend.modules.user.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -43,11 +44,11 @@ public class CustomUserDetails implements UserDetails {
         return user.getId();
     }
 
-    public Long getShopId() {
+    public Shop getShop() {
         if (user.getShop() == null) {
             throw new BadRequestException("Người dùng chưa có cửa hàng.");
         }
-        return user.getShop().getId();
+        return user.getShop();
     }
 
     @Override

@@ -34,4 +34,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("status") ProductStatus status,
             @Param("shopId") Long shopId,
             Pageable pageable);
+
+    @Query("SELECT COUNT(item)>0 FROM Product item WHERE item.shop.id =:shopId AND item.slug = :slug ")
+    boolean existsByShopIdAndSlug(@Param("shopId") Long shopId, @Param("slug") String slug);
 }

@@ -2,6 +2,7 @@ package com.dev.backend.modules.product.service;
 
 import com.dev.backend.common.enums.ProductStatus;
 import com.dev.backend.common.response.PageResponse;
+import com.dev.backend.common.utils.TextUtils;
 import com.dev.backend.modules.author_product.service.AuthorProductService;
 import com.dev.backend.modules.genre.dto.GenreResponse;
 import com.dev.backend.modules.genre_product.service.GenreProductService;
@@ -12,6 +13,9 @@ import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.entity.Product;
 import com.dev.backend.modules.product.mapper.ProductMapper;
 import com.dev.backend.modules.product.repository.ProductRepository;
+import com.dev.backend.modules.publisher.service.PublisherService;
+import com.dev.backend.modules.series.service.SeriesService;
+import com.dev.backend.modules.shop.entity.Shop;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +37,10 @@ public class ProductServiceImpl implements ProductService {
 
         private final ProductRepository productRepository;
         private final ProductMapper productMapper;
+
+        private final PublisherService publisherService;
+        private final SeriesService seriesService;
+
         private final AuthorProductService authorProductService;
         private final GenreProductService genreProductService;
         private final ImageProductService imageProductService;
@@ -51,13 +59,21 @@ public class ProductServiceImpl implements ProductService {
         }
 
         @Override
-        public ProductResponse add(ProductRequest request, Long shopId) {
+        @Transactional
+        public ProductResponse add(ProductRequest request, Shop shop) {
                 Product product = new Product();
                 productMapper.toEntity(product, request);
                 product.setStatus(ProductStatus.PENDING_APPROVAL);
+                product.setShop(shop);
+                product.setSlug(generateUniqueSlug(shop.getId(), product.getSlug()));
+                product.setPublisher(publisherService.getById(request.getPublisherId()));
+                product.setSeries(
+                                request.getSeriesId() != null ? seriesService.getById(request.getPublisherId()) : null);
+
                 Product saveProduct = productRepository.save(product);
                 authorProductService.setAuthorsProduct(saveProduct, request.getAuthorIds());
                 genreProductService.setGenresProduct(saveProduct, request.getGenreIds());
+                imageProductService.setImagesProduct(saveProduct, request.getCoverImages());
                 return productMapper.toDTO(saveProduct);
         }
 
@@ -85,15 +101,12 @@ public class ProductServiceImpl implements ProductService {
                                 page.getTotalPages());
         }
 
-        // public String generateUniqueSlug(Integer shopId, String productName) {
-        // String baseSlug = SlugUtils.toSlug(productName);
-        // String slug = baseSlug;
-        // int index = 1;
+        public String generateUniqueSlug(Long shopId, String slug) {
+                int index = 1;
+                while (productRepository.existsByShopIdAndSlug(shopId, slug)) {
+                        slug = slug + "-" + index++;
+                }
 
-        // while (productRepository.existsByShopIdAndSlug(shopId, slug)) {
-        // slug = baseSlug + "-" + index++;
-        // }
-
-        // return slug;
-        // }
+                return slug;
+        }
 }

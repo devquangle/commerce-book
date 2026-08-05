@@ -28,8 +28,8 @@ public class ProductController {
             @ModelAttribute ProductFilterRequest request,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         PageResponse<ProductResponse> response = productService.searchProductsByShopId(request,
-                userDetails.getShopId());
-        return ResponseUtil.success("Lấy danh sách thể loại thành công", response);
+                userDetails.getShop().getId());
+        return ResponseUtil.success("Lấy danh sách sản phẩm thành công", response);
     }
 
 }
