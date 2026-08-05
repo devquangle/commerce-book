@@ -231,7 +231,7 @@ const MultipleImageUploadContent: React.FC<
           {images.map((image, index) => (
             <div
               key={index}
-              className={`group relative aspect-[3/4] rounded-none overflow-hidden border-2 bg-slate-100/80 dark:bg-zinc-900/80 transition-all ${
+              className={`group relative aspect-3/4 rounded-none overflow-hidden border-2 bg-slate-100/80 dark:bg-zinc-900/80 transition-all ${
                 image.isThumbnail
                   ? "border-indigo-500 ring-2 ring-indigo-500/20"
                   : "border-slate-200 dark:border-zinc-800"

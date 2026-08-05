@@ -7,14 +7,8 @@ import type {
   UseFormSetValue,
   UseFormGetValues,
 } from "react-hook-form";
-import type { ProductRequest, ProductImageRequest } from "../types/shop-product.type";
+import type { ProductRequest } from "../types/shop-product.type";
 import type { GoogleBookResponse } from "../types/googlebook";
-import { BookOpen, AlertTriangle, Sparkles } from "lucide-react";
-import { InputField } from "@/components/common/InputField";
-import { SelectBox } from "@/components/common/SelectBox";
-import { SearchableSelect } from "@/components/common/SearchableSelect";
-import { SearchInput } from "@/components/common/SearchInput";
-import Spinner from "@/components/common/Spinner";
 import { useMemo, useState } from "react";
 import { registerLocale, getNames } from "@cospired/i18n-iso-languages";
 import viLocale from "@cospired/i18n-iso-languages/langs/vi.json";
@@ -24,6 +18,13 @@ import { useGetUrlImages } from "../hooks/useSearchApi";
 import { useDebounce } from "@/hooks/useDebounce";
 import { showSuccessToast, showWarningToast } from "@/libs/utils/toastUtil";
 import { INITIAL_FORM } from "../types/product-data.type";
+import { InputField } from "@/components/common/InputField";
+import { AlertTriangle, BookOpen, Sparkles } from "lucide-react";
+import Spinner from "@/components/common/Spinner";
+import { SearchInput } from "@/components/common/SearchInput";
+import { SearchableSelect } from "@/components/common/SearchableSelect";
+import { SelectBox } from "@/components/common/SelectBox";
+import type { ProductImageRequest } from "@/services/cloudinary/type/cloudinary.type";
 
 registerLocale(viLocale);
 
@@ -203,6 +204,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
       }
 
       // Handle SearchAPI result — update additional images safely
+      if (searchResult.status === "fulfilled") {
         const rawData = searchResult.value as
           | string[]
           | { urlImage?: string[]; urlImages?: string[]; data?: string[] }

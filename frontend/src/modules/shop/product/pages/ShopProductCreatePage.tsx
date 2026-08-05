@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, useWatch } from "react-hook-form";
-import ProductHeaderAdd from "../components/ProductHeaderAdd";
+import { ProductHeader } from "../components/ProductHeader";
 import { ProductBasicInfo } from "../components/ProductBasicInfo";
 import ProductAttribute from "../components/ProductAttribute";
 import MultipleImageUpload from "@/components/common/MultipleImageUpload";
@@ -56,9 +56,7 @@ const ShopProductCreatePage = () => {
   const onFormSubmit = async (data: ProductRequest) => {
     try {
       const uploadedImages: ProductImageResponse[] =
-        coverImages.length > 0
-          ? await uploadImages(coverImages)
-          : [];
+        coverImages.length > 0 ? await uploadImages(coverImages) : [];
 
       const payloadData: ProductRequest = {
         ...data,
@@ -66,7 +64,7 @@ const ShopProductCreatePage = () => {
       };
       await createProduct(payloadData);
 
-      navigate("/shop/products");
+      handleBack();
     } catch (error: unknown) {
       mapServerErrors(error, setError);
     }
@@ -74,6 +72,10 @@ const ShopProductCreatePage = () => {
 
   const onFormError = (formErrors: typeof errors) => {
     console.log("=== SUBMIT FORM VALIDATION ERRORS ===", formErrors);
+  };
+
+  const handleBack = () => {
+    navigate("/shop/products");
   };
 
   if (isUploading || isCreating) {
@@ -90,8 +92,10 @@ const ShopProductCreatePage = () => {
       onSubmit={handleSubmit(onFormSubmit, onFormError)}
       className="grid grid-cols-12 gap-6 w-full min-h-full pb-6"
     >
-      <ProductHeaderAdd
+      <ProductHeader
+        mode="add"
         onSubmit={handleSubmit(onFormSubmit, onFormError)}
+        onBack={handleBack}
         onReset={() => reset()}
       />
       <ProductBasicInfo

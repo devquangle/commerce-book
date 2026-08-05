@@ -25,6 +25,10 @@ import {
 } from "../types/shop-product.type";
 import { ProductActionMenu } from "./ProductActionMenu";
 import { formatMoney } from "@/libs/utils/formatMoney.utils";
+import { registerLocale, getNames } from "@cospired/i18n-iso-languages";
+import viLocale from "@cospired/i18n-iso-languages/langs/vi.json";
+
+registerLocale(viLocale);
 
 interface ProductTableProps {
   products: ProductResponse[];
@@ -35,7 +39,12 @@ interface ProductTableProps {
   onDelete: (id: number) => void;
 }
 
-const getLanguageName = (code: string) => code;
+const getLanguageName = (code: string) => {
+  if (!code) return "";
+  const names = getNames("vi");
+  const name = names[code.toLowerCase()];
+  return name ? name.charAt(0).toUpperCase() + name.slice(1) : code;
+};
 
 const ExpandableAuthors = ({ authors }: { authors?: string[] }) => {
   if (!authors || authors.length === 0) return null;
