@@ -1,12 +1,13 @@
 import { authAxios } from "@/libs/config/axios.config";
 import type { ApiResponse } from "@/libs/utils/api-response";
+import type { UploadImageResponse } from "../type/cloudinary.type";
 
 const UploadImageService = {
-  uploadFile: async (file: File): Promise<string> => {
+  uploadFile: async (file: File): Promise<UploadImageResponse> => {
     const formData = new FormData();
     formData.append("file", file);
 
-    const res = await authAxios.post<ApiResponse<string>>(
+    const res = await authAxios.post<ApiResponse<UploadImageResponse>>(
       "/api/v1/upload-file",
       formData,
       { headers: { "Content-Type": "multipart/form-data" } },
@@ -17,8 +18,8 @@ const UploadImageService = {
     }
     return res.data.data;
   },
-  uploadImageUrl: async (url: string): Promise<string> => {
-    const res = await authAxios.post<ApiResponse<string>>(
+  uploadImageUrl: async (url: string): Promise<UploadImageResponse> => {
+    const res = await authAxios.post<ApiResponse<UploadImageResponse>>(
       "/api/v1/upload-url",
       { url }
     );

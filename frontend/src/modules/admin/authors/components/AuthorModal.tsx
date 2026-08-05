@@ -18,7 +18,7 @@ import SingleImageUpload from "@/components/common/SingleImageUpload";
 import useDebounce from "@/libs/utils/useDebounce";
 import { useWikipedia } from "../hooks/useWikipedia";
 import { showSuccessToast, showErrorToast } from "@/libs/utils/toastUtil";
-import UploadImageService from "@/services/upload-image.service";
+import UploadImageService from "@/services/cloudinary/services/cloudinary.service";
 import type { AuthorRequest, AuthorResponse } from "../types/author.type";
 import axios from "axios";
 

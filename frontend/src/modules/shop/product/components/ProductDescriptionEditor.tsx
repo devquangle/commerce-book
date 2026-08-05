@@ -20,7 +20,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import ProductDescriptionToolbar from "./ProductDescriptionToolbar";
 import ProductDescriptionView from "./ProductDescriptionView";
 
-import UploadImageService from "@/services/upload-image.service";
+import UploadImageService from "@/services/cloudinary/services/cloudinary.service";
 import { showErrorToast } from "@/libs/utils/toastUtil";
 import { Loader2, Sparkles, Check, Copy } from "lucide-react";
 import ResizableImageNodeView from "./ResizableImageNodeView";

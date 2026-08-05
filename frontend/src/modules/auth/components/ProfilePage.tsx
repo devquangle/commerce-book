@@ -11,7 +11,7 @@ import {
 } from "@/libs/utils/toastUtil";
 import { AuthService } from "@/modules/auth/services/auth.service";
 import type { UserRequest } from "@/modules/auth/types/user.type";
-import UploadImageService from "@/services/upload-image.service";
+import UploadImageService from "@/services/cloudinary/services/cloudinary.service";
 
 import { ProfileHeader } from "./ProfileHeader";
 import { ProfileForm } from "./ProfileForm";
