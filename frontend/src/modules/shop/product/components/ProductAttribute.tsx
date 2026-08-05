@@ -96,7 +96,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
               rules={{
                 validate: (val) =>
                   (Array.isArray(val) && val.length > 0) ||
-                  "Vui lòng chọn ít nhất 1 thể loại",
+                  "Vui lòng chọn ít nhất 1 thể loại.",
               }}
               render={({ field }) => (
                 <SearchableMultiSelect
@@ -131,7 +131,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
               rules={{
                 validate: (val) =>
                   (Array.isArray(val) && val.length > 0) ||
-                  "Vui lòng chọn ít nhất 1 tác giả",
+                  "Vui lòng chọn ít nhất 1 tác giả.",
               }}
               render={({ field }) => (
                 <SearchableMultiSelect
@@ -164,7 +164,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
               name="publisherId"
               control={control}
               rules={{
-                required: "Vui lòng chọn nhà xuất bản",
+                required: "Vui lòng chọn nhà xuất bản.",
               }}
               render={({ field }) => (
                 <SearchableSelect

@@ -15,7 +15,6 @@ public class ProductMapper {
             return null;
         }
         product.setName(TextUtils.capitalizeFully(request.getName().strip()));
-        product.setSlug(TextUtils.toSlug(request.getName().strip()));
         product.setOriginalPrice(request.getOriginalPrice());
         product.setPrice(request.getPrice());
         product.setQuantity(request.getQuantity());

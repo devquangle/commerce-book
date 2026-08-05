@@ -365,11 +365,11 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
             placeholder="0"
             {...(register
               ? register("originalPrice", {
-                  required: "Giá nhập là bắt buộc",
+                  required: "Giá nhập là bắt buộc.",
                   valueAsNumber: true,
                   min: {
                     value: 0,
-                    message: "Giá nhập phải lớn hơn hoặc bằng 0",
+                    message: "Giá nhập phải lớn hơn hoặc bằng 0.",
                   },
                 })
               : {})}
@@ -384,11 +384,11 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
             placeholder="0"
             {...(register
               ? register("price", {
-                  required: "Giá bán là bắt buộc",
+                  required: "Giá bán là bắt buộc.",
                   valueAsNumber: true,
                   min: {
                     value: 0,
-                    message: "Giá bán phải lớn hơn hoặc bằng 0",
+                    message: "Giá bán phải lớn hơn hoặc bằng 0.",
                   },
                 })
               : {})}
@@ -402,11 +402,11 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
             placeholder="0"
             {...(register
               ? register("quantity", {
-                  required: "Số lượng là bắt buộc",
+                  required: "Số lượng là bắt buộc.",
                   valueAsNumber: true,
                   min: {
                     value: 0,
-                    message: "Số lượng phải lớn hơn hoặc bằng 0",
+                    message: "Số lượng phải lớn hơn hoặc bằng 0.",
                   },
                 })
               : {})}
@@ -431,7 +431,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
             placeholder="0"
             {...(register
               ? register("pages", {
-                  required: "Số trang là bắt buộc",
+                  required: "Số trang là bắt buộc.",
                   valueAsNumber: true,
                 })
               : {})}
@@ -446,7 +446,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
             placeholder="0"
             {...(register
               ? register("weight", {
-                  required: "Trọng lượng là bắt buộc",
+                  required: "Trọng lượng là bắt buộc.",
                   valueAsNumber: true,
                 })
               : {})}
@@ -460,7 +460,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
             type="date"
             {...(register
               ? register("publishYear", {
-                  required: "Ngày xuất bản là bắt buộc",
+                  required: "Ngày xuất bản là bắt buộc.",
                 })
               : {})}
             error={errors?.publishYear?.message}
@@ -480,7 +480,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
               name="language"
               control={control}
               rules={{
-                required: "Vui lòng chọn ngôn ngữ",
+                required: "Vui lòng chọn ngôn ngữ.",
               }}
               render={({ field }) => (
                 <SearchableSelect

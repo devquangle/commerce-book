@@ -35,5 +35,9 @@ public interface ProductService {
 
     void delete(Long id, Long shopId);
 
+    void validate(ProductRequest request);
+
     PageResponse<ProductResponse> searchProductsByShopId(ProductFilterRequest request, Long shopId);
+
+    PageResponse<ProductResponse> searchProducts(ProductFilterRequest request);
 }

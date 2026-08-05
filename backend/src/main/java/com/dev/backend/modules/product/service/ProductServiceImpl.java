@@ -1,8 +1,10 @@
 package com.dev.backend.modules.product.service;
 
 import com.dev.backend.common.enums.ProductStatus;
+import com.dev.backend.common.exception.DuplicateFieldException;
 import com.dev.backend.common.exception.NotFoundException;
 import com.dev.backend.common.response.PageResponse;
+import com.dev.backend.common.utils.TextUtils;
 import com.dev.backend.modules.author_product.service.AuthorProductService;
 import com.dev.backend.modules.genre_product.service.GenreProductService;
 import com.dev.backend.modules.image_product.dto.ImageProductResponse;
@@ -28,7 +30,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -56,6 +60,17 @@ public class ProductServiceImpl implements ProductService {
         public Product getProductByIdAndShopId(Long id, Long shopId) {
                 return productRepository.findProductByIdAndShopId(id, shopId)
                                 .orElseThrow(() -> new NotFoundException("Product not found id " + id));
+        }
+
+        @Override
+        public void validate(ProductRequest request) {
+                DuplicateFieldException errors = new DuplicateFieldException(new HashMap<>());
+                if (request.getWeight() > 50000) {
+                        errors.addError("weight", "Cân nặng không vượt quá 50000.");
+                }
+                if (!errors.getErrors().isEmpty()) {
+                        throw errors;
+                }
         }
 
         @Override
@@ -90,6 +105,7 @@ public class ProductServiceImpl implements ProductService {
         @Transactional
         public ProductResponse create(ProductRequest request, Shop shop) {
                 Product product = new Product();
+                validate(request);
                 product.setShop(shop);
                 product.setStatus(ProductStatus.PENDING_APPROVAL);
                 Product saved = saveProduct(product, request, shop.getId());
@@ -101,6 +117,7 @@ public class ProductServiceImpl implements ProductService {
         @Transactional
         public ProductResponse update(Long id, ProductRequest request, Long shopId) {
                 Product product = getProductByIdAndShopId(id, shopId);
+                validate(request);
                 product.setStatus(request.getStatus());
                 Product saved = saveProduct(product, request, shopId);
                 return productMapper.toDTO(saved);
@@ -148,9 +165,12 @@ public class ProductServiceImpl implements ProductService {
         }
 
         private Product saveProduct(Product product, ProductRequest request, Long shopId) {
+                String oldName = product.getName();
                 productMapper.toEntity(product, request);
 
-                product.setSlug(generateUniqueSlug(shopId, product.getSlug()));
+                if (!Objects.equals(oldName, product.getName())) {
+                        product.setSlug(generateUniqueSlug(shopId, product.getSlug()));
+                }
                 product.setPublisher(publisherService.getById(request.getPublisherId()));
                 product.setSeries(
                                 request.getSeriesId() != null

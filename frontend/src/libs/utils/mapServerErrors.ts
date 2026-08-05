@@ -13,6 +13,8 @@ export function mapServerErrors<T extends FieldValues>(
   error: unknown,
   setError: UseFormSetError<T>,
 ) {
+  const ensurePeriod = (msg: string) => (msg.trim().endsWith(".") ? msg.trim() : `${msg.trim()}.`);
+
   if (axios.isAxiosError(error)) {
     const serverData = error.response?.data;
 
@@ -29,22 +31,22 @@ export function mapServerErrors<T extends FieldValues>(
       Object.entries(serverData.data).forEach(([field, message]) => {
         setError(field as Path<T>, {
           type: "server",
-          message: String(message),
+          message: ensurePeriod(String(message)),
         });
       });
 
-      return; 
+      return;
     }
 
     // Map lỗi chung vào 'root'
     setError("root" as Path<T>, {
       type: "server",
-      message: serverData?.message ?? "Có lỗi xảy ra từ máy chủ",
+      message: ensurePeriod(serverData?.message ?? "Có lỗi xảy ra từ máy chủ"),
     });
   } else {
     setError("root" as Path<T>, {
       type: "server",
-      message: getErrorMessage(error),
+      message: ensurePeriod(getErrorMessage(error)),
     });
   }
 }
