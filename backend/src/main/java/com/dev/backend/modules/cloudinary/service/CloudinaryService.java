@@ -7,18 +7,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.dev.backend.modules.cloudinary.dto.ImageRequest;
 import com.dev.backend.modules.cloudinary.dto.ImageResponse;
+import com.dev.backend.modules.cloudinary.dto.UploadImageResponse;
 
 public interface CloudinaryService {
 
-        String uploadImage(MultipartFile file);
+        UploadImageResponse uploadImage(MultipartFile file);
 
-        String uploadImage(byte[] imageBytes);
+        UploadImageResponse uploadImage(byte[] imageBytes);
 
-        String uploadImageUrl(String imageUrl);
+        UploadImageResponse uploadImageUrl(String imageUrl);
 
         List<ImageResponse> imageResponses(List<ImageRequest> imageRequests);
 
-        Map<String, String> map(MultipartFile file,String imageUrl);
+        UploadImageResponse map(MultipartFile file, String imageUrl);
 
+        void deletePublicId(String publicId);
+
+        void deletePublicIds(List<String> publicIds);
 
 }

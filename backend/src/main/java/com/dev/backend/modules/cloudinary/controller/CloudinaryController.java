@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.dev.backend.common.response.ResponseData;
 import com.dev.backend.common.response.ResponseUtil;
+import com.dev.backend.modules.cloudinary.dto.UploadImageResponse;
 import com.dev.backend.modules.cloudinary.service.CloudinaryService;
 
 import lombok.RequiredArgsConstructor;
@@ -20,13 +21,13 @@ public class CloudinaryController {
     private final CloudinaryService cloudinaryService;
 
     @PostMapping("/upload-file")
-    public ResponseEntity<ResponseData<String>> postUploadImage(
+    public ResponseEntity<ResponseData<UploadImageResponse>> postUploadImage(
             @RequestPart(value = "file", required = false) MultipartFile file) {
         return ResponseUtil.success("Upload pass", cloudinaryService.uploadImage(file));
     }
 
     @PostMapping("/upload-url")
-    public ResponseEntity<ResponseData<String>> upload(
+    public ResponseEntity<ResponseData<UploadImageResponse>> upload(
             @RequestParam(value = "url", required = false) String url) {
         return ResponseUtil.success("Tải ảnh thành công", cloudinaryService.uploadImageUrl(url));
     }

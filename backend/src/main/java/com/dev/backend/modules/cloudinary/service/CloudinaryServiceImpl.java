@@ -1,139 +1,107 @@
 package com.dev.backend.modules.cloudinary.service;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import org.springframework.beans.factory.annotation.Value;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.dev.backend.modules.cloudinary.dto.ImageRequest;
 import com.dev.backend.modules.cloudinary.dto.ImageResponse;
+import com.dev.backend.modules.cloudinary.dto.UploadImageResponse;
 
-import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class CloudinaryServiceImpl implements CloudinaryService {
 
     // Đường dẫn ảnh mặc định khi không tìm thấy hoặc lỗi hệ thống bên thứ ba
     private static final String DEFAULT_AVATAR_URL = "https://ui-avatars.com/api/?name=Kh%C3%A1c&background=random&color=fff&size=128";
 
+    private final Cloudinary cloudinary;
+
     @Value("${cloudinary.cloud-name}")
     private String cloudName;
 
-    @Value("${cloudinary.api-key}")
-    private String apiKey;
-
-    @Value("${cloudinary.api-secret}")
-    private String apiSecret;
-
-    private Cloudinary cloudinary;
-
-    @PostConstruct
-    public void init() {
-        cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", cloudName,
-                "api_key", apiKey,
-                "api_secret", apiSecret));
-    }
-
     @Override
-    public String uploadImage(MultipartFile file) {
+    public UploadImageResponse uploadImage(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return new UploadImageResponse(DEFAULT_AVATAR_URL, null);
+        }
         try {
-            if (file == null || file.isEmpty()) {
-                throw new IllegalArgumentException("File upload không được để trống");
-            }
-            return (String) cloudinary.uploader()
-                    .upload(file.getBytes(), ObjectUtils.emptyMap())
-                    .get("secure_url");
+            Map<?, ?> result = cloudinary.uploader()
+                    .upload(file.getBytes(), ObjectUtils.emptyMap());
+
+            return new UploadImageResponse(
+                    result.get("secure_url").toString(),
+                    result.get("public_id").toString());
         } catch (Exception e) {
-            System.err.println("Lỗi khi upload MultipartFile lên Cloudinary: " + e.getMessage());
             throw new RuntimeException("Upload ảnh thất bại: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public String uploadImage(byte[] imageBytes) {
+    public UploadImageResponse uploadImage(byte[] imageBytes) {
+        if (imageBytes == null || imageBytes.length == 0) {
+            return new UploadImageResponse(DEFAULT_AVATAR_URL, null);
+        }
         try {
-            if (imageBytes == null || imageBytes.length == 0) {
-                throw new IllegalArgumentException("Dữ liệu byte ảnh không được để trống");
-            }
-            return cloudinary.uploader()
-                    .upload(imageBytes, ObjectUtils.emptyMap())
-                    .get("secure_url")
-                    .toString();
+            Map<?, ?> result = cloudinary.uploader()
+                    .upload(imageBytes, ObjectUtils.emptyMap());
+
+            return new UploadImageResponse(
+                    result.get("secure_url").toString(),
+                    result.get("public_id").toString());
         } catch (Exception e) {
-            System.err.println("Lỗi khi upload byte[] lên Cloudinary: " + e.getMessage());
-            throw new RuntimeException("Upload ảnh từ byte array thất bại: " + e.getMessage(), e);
+            throw new RuntimeException("Upload thất bại", e);
         }
     }
 
     @Override
-    public String uploadImageUrl(String imageUrl) {
+    public UploadImageResponse uploadImageUrl(String imageUrl) {
         if (imageUrl == null || imageUrl.isBlank()) {
             throw new IllegalArgumentException("Đường dẫn URL không được để trống");
         }
 
         String cleanedUrl = imageUrl.strip();
 
-        // Nếu ảnh đã thuộc hệ thống Cloudinary của bạn rồi thì giữ nguyên
+        // Nếu đã là ảnh Cloudinary của bạn
         if (cleanedUrl.contains("res.cloudinary.com/" + cloudName)) {
-            return cleanedUrl;
+            return new UploadImageResponse(
+                    cleanedUrl,
+                    null);
         }
 
         try {
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("User-Agent",
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+            // Cloudinary SDK hỗ trợ truyền trực tiếp URL
+            Map<?, ?> result = cloudinary.uploader().upload(cleanedUrl, ObjectUtils.emptyMap());
 
-            HttpEntity<String> entity = new HttpEntity<>(headers);
-
-            URI uri = URI.create(cleanedUrl);
-
-            ResponseEntity<byte[]> response = restTemplate.exchange(
-                    uri, // Truyền đối tượng URI vào đây thay vì cleanedUrl kiểu String
-                    HttpMethod.GET,
-                    entity,
-                    byte[].class);
-
-            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                return this.uploadImage(response.getBody());
-            }
-
-            throw new RuntimeException("Phản hồi từ máy chủ chứa ảnh không hợp lệ: " + response.getStatusCode());
-
+            return new UploadImageResponse(
+                    result.get("secure_url").toString(),
+                    result.get("public_id").toString());
         } catch (Exception e) {
-          
-            System.err.println("Mã lỗi upload ảnh từ URL: " + cleanedUrl + " -> " + e.getMessage());
+            System.err.println("Upload ảnh từ URL thất bại: " + e.getMessage());
 
-          
-            return DEFAULT_AVATAR_URL;
+            return new UploadImageResponse(
+                    DEFAULT_AVATAR_URL,
+                    null);
         }
     }
 
     @Override
-    public Map<String, String> map(MultipartFile file, String imageUrl) {
-        String urlImage;
+    public UploadImageResponse map(MultipartFile file, String imageUrl) {
         if (file != null && !file.isEmpty()) {
-            urlImage = uploadImage(file);
+            return uploadImage(file);
         } else if (imageUrl != null && !imageUrl.isBlank()) {
-            urlImage = uploadImageUrl(imageUrl);
+            return uploadImageUrl(imageUrl);
         } else {
-            urlImage = DEFAULT_AVATAR_URL;
+            return new UploadImageResponse(DEFAULT_AVATAR_URL, null);
         }
-
-        return Map.of("urlImage", urlImage);
     }
 
     @Override
@@ -146,19 +114,53 @@ public class CloudinaryServiceImpl implements CloudinaryService {
 
         for (ImageRequest req : imageRequests) {
             String finalUrl = req.url();
+            String publicId = null;
+
             if (req.file() != null && !req.file().isEmpty()) {
-                finalUrl = this.uploadImage(req.file());
+                UploadImageResponse uploadRes = this.uploadImage(req.file());
+                finalUrl = uploadRes.url();
+                publicId = uploadRes.publicId();
             } else if (finalUrl != null && !finalUrl.isBlank()) {
                 String trimmedUrl = finalUrl.strip();
 
                 if (!trimmedUrl.contains("res.cloudinary.com/" + cloudName)) {
-                    finalUrl = this.uploadImageUrl(trimmedUrl);
+                    UploadImageResponse uploadRes = this.uploadImageUrl(trimmedUrl);
+                    finalUrl = uploadRes.url();
+                    publicId = uploadRes.publicId();
+                } else {
+                    finalUrl = trimmedUrl;
                 }
             }
 
-            responses.add(new ImageResponse(finalUrl, req.isThumbnail()));
+            responses.add(new ImageResponse(finalUrl, publicId, req.isThumbnail()));
         }
 
         return responses;
+    }
+
+    @Override
+    public void deletePublicId(String publicId) {
+        if (publicId == null || publicId.isBlank()) {
+            return;
+        }
+
+        try {
+            cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+        } catch (Exception e) {
+            throw new RuntimeException("Không thể xóa ảnh trên Cloudinary", e);
+        }
+    }
+
+    @Override
+    public void deletePublicIds(List<String> publicIds) {
+        if (publicIds == null || publicIds.isEmpty()) {
+            return;
+        }
+
+        try {
+            cloudinary.api().deleteResources(publicIds, ObjectUtils.emptyMap());
+        } catch (Exception e) {
+            throw new RuntimeException("Không thể xóa danh sách ảnh", e);
+        }
     }
 }
