@@ -144,7 +144,10 @@ const ShopProductUpdatePage = () => {
   const currentStatus: ProductStatus =
     watch("status") || productDetail?.status || "PENDING_APPROVAL";
 
-  const isReadOnly = !["ACTIVE", "INACTIVE", "REJECTED"].includes(currentStatus);
+  const isReadOnly =
+    currentStatus === "DELETED" ||
+    currentStatus === "DELETE" ||
+    !["ACTIVE", "INACTIVE", "REJECTED"].includes(currentStatus);
 
   if (isLoadingDetail) {
     return (
@@ -213,11 +216,13 @@ const ShopProductUpdatePage = () => {
           <div className="text-sm font-medium">
             Sản phẩm đang ở trạng thái{" "}
             <span className="font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200">
-              {currentStatus === "PENDING_APPROVAL"
-                ? "Chờ duyệt"
-                : currentStatus === "REJECTED"
-                  ? "Từ chối"
-                  : "Khóa (Banned)"}
+              {currentStatus === "DELETED" || currentStatus === "DELETE"
+                ? "Đã xóa"
+                : currentStatus === "PENDING_APPROVAL"
+                  ? "Chờ duyệt"
+                  : currentStatus === "REJECTED"
+                    ? "Từ chối"
+                    : "Khóa (Banned)"}
             </span>
             . Bạn không thể chỉnh sửa thông tin hoặc thực hiện cập nhật sản phẩm.
           </div>

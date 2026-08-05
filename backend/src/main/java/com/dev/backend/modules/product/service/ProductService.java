@@ -33,5 +33,7 @@ public interface ProductService {
 
     ProductDetailResponse detail(String slug, Long shopId);
 
+    void delete(Long id, Long shopId);
+
     PageResponse<ProductResponse> searchProductsByShopId(ProductFilterRequest request, Long shopId);
 }

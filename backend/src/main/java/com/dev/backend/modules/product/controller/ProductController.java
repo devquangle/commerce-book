@@ -3,6 +3,7 @@ package com.dev.backend.modules.product.controller;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,4 +63,10 @@ public class ProductController {
         return ResponseUtil.success("Cập nhật sản phẩm thành công", response);
     }
 
+    @DeleteMapping("/shop/products/{id}")
+    public ResponseEntity<ResponseData<Void>> dete(@PathVariable("id") Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        productService.delete(id, userDetails.getShop().getId());
+        return ResponseUtil.successMessage("Xoá sản phẩm thành công");
+    }
 }

@@ -10,18 +10,26 @@ export const useBookFormData = () => {
       {
         queryKey: ["genres"],
         queryFn: () => GenreService.search(),
+        staleTime: 5 * 60 * 1000,
+        gcTime: 30 * 60 * 1000,
       },
       {
         queryKey: ["authors"],
         queryFn: () => AuthorService.search(),
+        staleTime: 5 * 60 * 1000,
+        gcTime: 30 * 60 * 1000,
       },
       {
         queryKey: ["publishers"],
         queryFn: () => PublisherService.search(),
+        staleTime: 5 * 60 * 1000,
+        gcTime: 30 * 60 * 1000,
       },
       {
         queryKey: ["series"],
         queryFn: () => SeriesService.search(),
+        staleTime: 5 * 60 * 1000,
+        gcTime: 30 * 60 * 1000,
       },
     ],
   });

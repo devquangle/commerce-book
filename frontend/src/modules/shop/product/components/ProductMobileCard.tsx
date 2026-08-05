@@ -138,13 +138,13 @@ export const ProductMobileCard: React.FC<ProductMobileCardProps> = ({
           {/* Tác giả & Thể loại */}
           <div className="flex flex-wrap gap-1">
             {product.authorsName && product.authorsName.length > 0 && (
-              <span className="inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-100 dark:border-amber-500/20 px-1.5 py-0.5 rounded text-[10px] font-medium">
+              <span className="inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-100 dark:border-amber-500/20 px-1.5 py-0.5 rounded text-muted font-medium">
                 <PenTool size={10} />
                 <span>{product.authorsName.join(", ")}</span>
               </span>
             )}
             {product.genresName && product.genresName.length > 0 && (
-              <span className="inline-flex items-center gap-1 bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-100 dark:border-sky-500/20 px-1.5 py-0.5 rounded text-[10px] font-medium">
+              <span className="inline-flex items-center gap-1 bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-100 dark:border-sky-500/20 px-1.5 py-0.5 rounded text-muted font-medium">
                 <Tag size={10} />
                 <span>{product.genresName.join(", ")}</span>
               </span>
@@ -155,13 +155,13 @@ export const ProductMobileCard: React.FC<ProductMobileCardProps> = ({
           {(product.publisherName || product.seriesName) && (
             <div className="flex flex-wrap gap-1">
               {product.publisherName && (
-                <span className="inline-flex items-center gap-1 bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-500/20 px-1.5 py-0.5 rounded text-[10px] font-medium">
+                <span className="inline-flex items-center gap-1 bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-500/20 px-1.5 py-0.5 rounded text-muted font-medium">
                   <Building2 size={10} />
                   <span>{product.publisherName}</span>
                 </span>
               )}
               {product.seriesName && (
-                <span className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-400 border border-violet-100 dark:border-violet-500/20 px-1.5 py-0.5 rounded text-[10px] font-medium">
+                <span className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-400 border border-violet-100 dark:border-violet-500/20 px-1.5 py-0.5 rounded text-muted font-medium">
                   <Layers size={10} />
                   <span>{product.seriesName}</span>
                 </span>

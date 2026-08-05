@@ -11,37 +11,37 @@ export const getProductStatusInfo = (status: ProductStatus) => {
     case "ACTIVE":
       return {
         label: "Đang bán",
-        color: "success",
+        color: "success", // Xanh lá
       };
 
     case "INACTIVE":
       return {
         label: "Tạm ngưng",
-        color: "secondary",
+        color: "secondary", // Xám
       };
 
     case "PENDING_APPROVAL":
       return {
         label: "Chờ duyệt",
-        color: "warning",
+        color: "warning", // Vàng
       };
 
     case "REJECTED":
       return {
         label: "Từ chối",
-        color: "danger",
+        color: "danger", // Đỏ
       };
 
     case "BANNED":
       return {
         label: "Bị khóa",
-        color: "dark",
+        color: "dark", // Đen / xám đậm
       };
 
     case "DELETED":
       return {
         label: "Đã xóa",
-        color: "secondary",
+        color: "secondary", // Xám
       };
 
     default:

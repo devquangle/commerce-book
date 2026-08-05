@@ -10,7 +10,8 @@ import {
 } from "../components/ProductSkeleton";
 import { ProductDeleteModal } from "../components/ProductDeleteModal";
 import { useProductShopFilter } from "../hooks/useProductShopFilter";
-import { useProductShop } from "../hooks/useProductShop";
+import { useProductShop, useDeleteProductShop } from "../hooks/useProductShop";
+import type { ProductResponse } from "../types/shop-product.type";
 
 const ShopProducts = () => {
   const {
@@ -27,30 +28,37 @@ const ShopProducts = () => {
   } = useProductShopFilter();
 
   const { data, isLoading } = useProductShop(filterParams);
+  const deleteProductMutation = useDeleteProductShop();
 
   const products = data?.items || [];
   const totalElements = data?.totalItems || 0;
 
   // Trạng thái cho Delete Modal
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [productToDelete, setProductToDelete] = useState<number | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<ProductResponse | null>(null);
 
-  const handleDeleteClick = (id: number) => {
-    setProductToDelete(id);
+  const handleDeleteClick = (product: ProductResponse | number) => {
+    if (typeof product === "number") {
+      const found = products.find(
+        (p) => (p.productId || p.id) === product
+      );
+      setProductToDelete(found || null);
+    } else {
+      setProductToDelete(product);
+    }
     setIsDeleteModalOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    if (productToDelete === null) return;
+    const id = productToDelete?.productId || productToDelete?.id;
+    if (!id) return;
 
-    setIsDeleting(true);
-    // Mô phỏng gọi API xóa (Simulate delete API call)
-    setTimeout(() => {
-      setIsDeleting(false);
-      setIsDeleteModalOpen(false);
-      setProductToDelete(null);
-    }, 800);
+    deleteProductMutation.mutate(id, {
+      onSuccess: () => {
+        setIsDeleteModalOpen(false);
+        setProductToDelete(null);
+      },
+    });
   };
 
   return (
@@ -86,7 +94,7 @@ const ShopProducts = () => {
               totalElements={totalElements}
               onPageChange={handlePageChange}
               onPageSizeChange={handlePageSizeChange}
-              onDelete={handleDeleteClick}
+              onDelete={(idOrProduct) => handleDeleteClick(idOrProduct as any)}
             />
           </div>
 
@@ -101,7 +109,7 @@ const ShopProducts = () => {
                       : index
                   }
                   product={product}
-                  onDelete={handleDeleteClick}
+                  onDelete={(idOrProduct) => handleDeleteClick(idOrProduct as any)}
                 />
               ))}
               {products.length === 0 && (
@@ -130,7 +138,8 @@ const ShopProducts = () => {
       {/* Modal xác nhận xóa */}
       <ProductDeleteModal
         isOpen={isDeleteModalOpen}
-        isDeleting={isDeleting}
+        item={productToDelete}
+        isDeleting={deleteProductMutation.isPending}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
       />

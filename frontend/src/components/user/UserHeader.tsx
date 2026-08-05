@@ -50,7 +50,7 @@ export const UserHeader: React.FC = () => {
                 className="p-2 text-zinc-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors relative"
               >
                 <ShoppingCart className="w-5 h-5" />
-                <span className="absolute top-0.5 right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full">
+                <span className="absolute top-0.5 right-0.5 w-4 h-4 bg-red-500 text-white text-muted font-bold flex items-center justify-center rounded-full">
                   3
                 </span>
               </Link>

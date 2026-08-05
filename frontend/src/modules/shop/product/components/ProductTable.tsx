@@ -55,7 +55,7 @@ const getLanguageName = (code: string) => {
 const ExpandableAuthors = ({ authors }: { authors?: string[] }) => {
   if (!authors || authors.length === 0) return null;
   return (
-    <span className="inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-100 dark:border-amber-500/20 px-1.5 py-0.5 rounded text-[10px] font-medium mr-1">
+    <span className="inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-100 dark:border-amber-500/20 px-1.5 py-0.5 rounded text-muted font-medium mr-1">
       <PenTool size={10} />
       <span>{authors.join(", ")}</span>
     </span>
@@ -65,7 +65,7 @@ const ExpandableAuthors = ({ authors }: { authors?: string[] }) => {
 const ExpandableGenres = ({ genres }: { genres?: string[] }) => {
   if (!genres || genres.length === 0) return null;
   return (
-    <span className="inline-flex items-center gap-1 bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-100 dark:border-sky-500/20 px-1.5 py-0.5 rounded text-[10px] font-medium">
+    <span className="inline-flex items-center gap-1 bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-100 dark:border-sky-500/20 px-1.5 py-0.5 rounded text-muted font-medium">
       <Tag size={10} />
       <span>{genres.join(", ")}</span>
     </span>
@@ -185,28 +185,28 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                           >
                             {product.name}
                           </p>
-                          <span className="caption-text font-mono text-zinc-400 dark:text-zinc-500 break-all line-clamp-2" title={product?.slug}>
+                          <span className="text-muted font-mono break-all line-clamp-2" title={product?.slug}>
                             Slug: {product?.slug}
                           </span>
                         </div>
 
                         {/* ➋ Tác giả + Thể loại */}
-                        <div className="flex flex-wrap items-center gap-1">
+                        <div className="flex flex-wrap items-center gap-1 text-muted">
                           <ExpandableAuthors authors={product.authorsName} />
                           <ExpandableGenres genres={product.genresName} />
                         </div>
 
                         {/* ➌ NXB + Series (nếu có) */}
                         {(product.publisherName || product.seriesName) && (
-                          <div className="flex flex-wrap gap-1">
+                          <div className="flex flex-wrap gap-1 text-muted">
                             {product.publisherName && (
-                              <span className="inline-flex items-center gap-1 bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-500/20 px-1.5 py-0.5 rounded text-[10px] font-medium">
+                              <span className="inline-flex items-center gap-1 bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-500/20 px-1.5 py-0.5 rounded font-medium">
                                 <Building2 size={10} />
                                 <span>{product.publisherName}</span>
                               </span>
                             )}
                             {product.seriesName && (
-                              <span className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-400 border border-violet-100 dark:border-violet-500/20 px-1.5 py-0.5 rounded text-[10px] font-medium">
+                              <span className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-400 border border-violet-100 dark:border-violet-500/20 px-1.5 py-0.5 rounded font-medium">
                                 <Layers size={10} />
                                 <span>{product.seriesName}</span>
                               </span>
@@ -228,7 +228,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                               }`}
                             >
                               <div className="overflow-hidden">
-                                <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-zinc-400 dark:text-zinc-500 pb-1">
+                                <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-muted pb-1">
                                   {product.publishYear && (
                                     <span className="flex items-center gap-1">
                                       <Calendar size={10} />
@@ -267,7 +267,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                                     [product.productId]: !prev[product.productId],
                                   }));
                                 }}
-                                className="inline-flex items-center gap-1 text-[11px] font-medium text-zinc-500 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
+                                className="inline-flex items-center gap-1 text-muted font-medium hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
                               >
                                 {isDetailsOpen ? "Thu gọn" : "Xem thêm chi tiết"}
                                 {isDetailsOpen ? (

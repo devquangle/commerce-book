@@ -61,5 +61,13 @@ const ProductShopService = {
 
     return res.data.data;
   },
+  delete: async (id: number): Promise<void> => {
+    const response = await authAxios.delete<ApiResponse<void>>(
+      `/api/v1/shop/products/${id}`,
+    );
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Delete product failed");
+    }
+  },
 };
 export default ProductShopService;

@@ -59,6 +59,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         @Override
+        @Transactional(readOnly = true)
         public ProductResponse mapToDTO(Product product) {
                 ProductResponse response = productMapper.toDTO(product);
                 Long productId = product.getId();
@@ -89,36 +90,28 @@ public class ProductServiceImpl implements ProductService {
         @Transactional
         public ProductResponse create(ProductRequest request, Shop shop) {
                 Product product = new Product();
-                productMapper.toEntity(product, request);
-                product.setStatus(ProductStatus.PENDING_APPROVAL);
                 product.setShop(shop);
-                product.setSlug(generateUniqueSlug(shop.getId(), product.getSlug()));
-                product.setPublisher(publisherService.getById(request.getPublisherId()));
-                product.setSeries(
-                                request.getSeriesId() != null ? seriesService.getById(request.getSeriesId()) : null);
+                product.setStatus(ProductStatus.PENDING_APPROVAL);
+                Product saved = saveProduct(product, request, shop.getId());
+                return productMapper.toDTO(saved);
 
-                Product saveProduct = productRepository.save(product);
-                authorProductService.setAuthorsProduct(saveProduct, request.getAuthorIds());
-                genreProductService.setGenresProduct(saveProduct, request.getGenreIds());
-                imageProductService.setImagesProduct(saveProduct, request.getCoverImages());
-                return productMapper.toDTO(saveProduct);
         }
 
         @Override
+        @Transactional
         public ProductResponse update(Long id, ProductRequest request, Long shopId) {
                 Product product = getProductByIdAndShopId(id, shopId);
-                productMapper.toEntity(product, request);
                 product.setStatus(request.getStatus());
-                product.setSlug(generateUniqueSlug(shopId, product.getSlug()));
-                product.setPublisher(publisherService.getById(request.getPublisherId()));
-                product.setSeries(
-                                request.getSeriesId() != null ? seriesService.getById(request.getSeriesId()) : null);
+                Product saved = saveProduct(product, request, shopId);
+                return productMapper.toDTO(saved);
+        }
 
-                Product saveProduct = productRepository.save(product);
-                authorProductService.setAuthorsProduct(saveProduct, request.getAuthorIds());
-                genreProductService.setGenresProduct(saveProduct, request.getGenreIds());
-                imageProductService.setImagesProduct(saveProduct, request.getCoverImages());
-                return productMapper.toDTO(saveProduct);
+        @Override
+        @Transactional
+        public void delete(Long id, Long shopId) {
+                Product product = getProductByIdAndShopId(id, shopId);
+                product.setStatus(ProductStatus.DELETED);
+                productRepository.save(product);
         }
 
         @Override
@@ -152,5 +145,24 @@ public class ProductServiceImpl implements ProductService {
                 }
 
                 return slug;
+        }
+
+        private Product saveProduct(Product product, ProductRequest request, Long shopId) {
+                productMapper.toEntity(product, request);
+
+                product.setSlug(generateUniqueSlug(shopId, product.getSlug()));
+                product.setPublisher(publisherService.getById(request.getPublisherId()));
+                product.setSeries(
+                                request.getSeriesId() != null
+                                                ? seriesService.getById(request.getSeriesId())
+                                                : null);
+
+                Product savedProduct = productRepository.save(product);
+
+                authorProductService.setAuthorsProduct(savedProduct, request.getAuthorIds());
+                genreProductService.setGenresProduct(savedProduct, request.getGenreIds());
+                imageProductService.setImagesProduct(savedProduct, request.getCoverImages());
+
+                return savedProduct;
         }
 }

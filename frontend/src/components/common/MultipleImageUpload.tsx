@@ -254,7 +254,7 @@ const MultipleImageUploadContent: React.FC<
                 type="button"
                 onClick={() => !disabled && handleSelectThumbnail(index)}
                 disabled={disabled}
-                className={`absolute top-2 left-2 text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm transition-all ${
+                className={`absolute top-2 left-2 text-muted font-bold px-2 py-1 rounded-lg shadow-sm transition-all ${
                   disabled
                     ? image.isThumbnail
                       ? "bg-indigo-600 text-white opacity-80"
@@ -304,7 +304,7 @@ const MultipleImageUploadContent: React.FC<
                 )}
               </div>
 
-              <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-xs text-white text-[10px] font-medium px-1.5 py-0.5 rounded-md">
+              <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-xs text-white text-muted font-medium px-1.5 py-0.5 rounded-md">
                 {index + 1}/{maxImages}
               </div>
             </div>

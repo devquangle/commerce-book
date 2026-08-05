@@ -39,4 +39,19 @@ public class ResponseUtil {
 
         return ResponseEntity.status(status).body(response);
     }
+
+    public static <T> ResponseEntity<ResponseData<T>> successMessage(
+            String message) {
+
+        ResponseData<T> response = new ResponseData<T>();
+        response.setSuccess(true);
+        response.setMessage(message);
+        response.setCode(null);
+        response.setError(null);
+        response.setPath(null);
+        response.setData(null);
+        response.setTimestamp(LocalDateTime.now());
+        return ResponseEntity.ok(response);
+    }
+
 }

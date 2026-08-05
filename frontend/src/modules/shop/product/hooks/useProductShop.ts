@@ -22,6 +22,7 @@ export const useProductShopDetail = (slug: string) => {
     queryKey: ["shop-product-detail", slug],
     queryFn: () => ProductShopService.detail(slug),
     enabled: Boolean(slug),
+    staleTime: 2 * 60 * 1000,
   });
 };
 
@@ -72,4 +73,26 @@ export const useUpdateProductShop = (id?: number) => {
     },
   });
 };
+
+export const useDeleteProductShop = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: number) => ProductShopService.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["shop-products-filter"] });
+      showSuccessToast("Xóa sản phẩm thành công!");
+    },
+    onError: (error: unknown) => {
+      let errorMsg = "Đã xảy ra lỗi khi xóa sản phẩm.";
+      if (axios.isAxiosError(error)) {
+        errorMsg = error.response?.data?.message || error.message || errorMsg;
+      } else if (error instanceof Error) {
+        errorMsg = error.message;
+      }
+      showErrorToast(errorMsg);
+    },
+  });
+};
+
 
