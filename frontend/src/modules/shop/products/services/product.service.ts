@@ -7,7 +7,6 @@ import type {
 } from "../types/product.type";
 import type { ApiResponse } from "@/libs/utils/api-response";
 import type { Pagination } from "@/libs/utils/pagination";
-import type { ProductShopResponse } from "../types/product-shop.type";
 
 const ProductService = {
   fetchProductShop: async (
@@ -64,16 +63,16 @@ const ProductService = {
     }
   },
 
-  fetchShopsByProductIds: async (productIds: number[]): Promise<ProductShopResponse[]> => {
-    const res = await authAxios.post<ApiResponse<ProductShopResponse[]>>(
-      "/api/v1/products/shops",
-      productIds,
-    );
-    if (!res.data.success || !res.data.data) {
-      throw new Error(res.data.message || "Lấy danh sách shop thất bại");
-    }
-    return res.data.data;
-  },
+  // fetchShopsByProductIds: async (productIds: number[]): Promise<ProductShopResponse[]> => {
+  //   const res = await authAxios.post<ApiResponse<ProductShopResponse[]>>(
+  //     "/api/v1/products/shops",
+  //     productIds,
+  //   );
+  //   if (!res.data.success || !res.data.data) {
+  //     throw new Error(res.data.message || "Lấy danh sách shop thất bại");
+  //   }
+  //   return res.data.data;
+  // },
 
   approve: async (id: number): Promise<void> => {
     const response = await authAxios.put<ApiResponse<void>>(

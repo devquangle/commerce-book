@@ -5,6 +5,7 @@ import com.dev.backend.common.exception.BadRequestException;
 import com.dev.backend.common.exception.DuplicateFieldException;
 import com.dev.backend.common.exception.NotFoundException;
 import com.dev.backend.common.response.PageResponse;
+import com.dev.backend.common.utils.TextUtils;
 import com.dev.backend.modules.author_product.service.AuthorProductService;
 import com.dev.backend.modules.genre_product.service.GenreProductService;
 import com.dev.backend.modules.image_product.dto.ImageProductResponse;
@@ -132,10 +133,12 @@ public class ProductServiceImpl implements ProductService {
         @Transactional
         public ProductResponse create(ProductRequest request, Shop shop) {
                 Product product = new Product();
+                Long shopId=shop.getId();
                 validate(request);
+                product.setSlug(generateUniqueSlug(shopId, TextUtils.toSlug(request.getName())));
                 product.setShop(shop);
                 product.setStatus(ProductStatus.PENDING_APPROVAL);
-                Product saved = saveProduct(product, request, shop.getId());
+                Product saved = saveProduct(product, request, shopId);
                 return productMapper.toDTO(saved);
 
         }
@@ -224,7 +227,7 @@ public class ProductServiceImpl implements ProductService {
         @Override
         public void reject(Long id, String reasons) {
                 Product product = getById(id);
-                 if (product.getStatus() != ProductStatus.PENDING_APPROVAL) {
+                if (product.getStatus() != ProductStatus.PENDING_APPROVAL) {
                         throw new BadRequestException("Chỉ có thể tử chối sản phẩm đang ở trạng thái chờ duyệt.");
                 }
                 product.setReason(reasons);
@@ -255,12 +258,16 @@ public class ProductServiceImpl implements ProductService {
         }
 
         private Product saveProduct(Product product, ProductRequest request, Long shopId) {
+
                 String oldName = product.getName();
+                String oldSlug = product.getSlug();
+
                 productMapper.toEntity(product, request);
 
-                if (!Objects.equals(oldName, product.getName())) {
-                        product.setSlug(generateUniqueSlug(shopId, product.getSlug()));
-                }
+                product.setSlug(
+                                Objects.equals(oldName, product.getName())
+                                                ? oldSlug
+                                                : generateUniqueSlug(shopId, product.getSlug()));
                 product.setPublisher(publisherService.getById(request.getPublisherId()));
                 product.setSeries(
                                 request.getSeriesId() != null
