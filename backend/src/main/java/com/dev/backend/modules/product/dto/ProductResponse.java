@@ -28,11 +28,11 @@ public class ProductResponse {
 
     private String publisherName;
     private String seriesName;
-    
+    private String reason;
     private List<String> genresName;
     private List<String> authorsName;
     private String urlImageDefault;
- 
+
     private ShopSimpleResponse shop;
 
     private ProductStatus status;

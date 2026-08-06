@@ -35,6 +35,6 @@ public class ProductDetailResponse {
     private List<Long> genreIds;
     private List<Long> authorIds;
     private List<ImageProductResponse> coverImages;
-
+    private String reason;
     private ProductStatus status;
 }

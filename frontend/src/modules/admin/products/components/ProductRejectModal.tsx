@@ -6,8 +6,6 @@ import type {
 } from "@/modules/shop/products/types/product.type";
 import { Button } from "@/components/common/Button";
 import { useRejectProduct } from "@/modules/shop/products/hooks/useProduct";
-import Spinner from "@/components/common/Spinner";
-
 interface ProductRejectModalProps {
   isOpen: boolean;
   item: ProductResponse | ProductDetailResponse | null;
@@ -92,9 +90,6 @@ export const ProductRejectModal: React.FC<ProductRejectModalProps> = ({
     onClose();
   };
 
-  if (isPending) {
-    return <Spinner />;
-  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

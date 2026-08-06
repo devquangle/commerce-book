@@ -69,6 +69,7 @@ export interface ProductDetailResponse {
   seriesId: number | null;
   coverImages: ImageResponse[];
   description: string;
+  reason:string;
   status: ProductStatus;
   shop: ShopSimpleResponse;
 }

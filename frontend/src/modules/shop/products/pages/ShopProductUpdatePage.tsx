@@ -17,8 +17,9 @@ import {
   useUpdateProductShop,
 } from "../hooks/useProduct";
 import Spinner from "@/components/common/Spinner";
+import { AlertTriangle, XCircle } from "lucide-react";
+import { Badge } from "@/components/common/Badge";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
-import { AlertTriangle } from "lucide-react";
 
 const ShopProductUpdatePage = () => {
   const navigate = useNavigate();
@@ -141,12 +142,12 @@ const ShopProductUpdatePage = () => {
     navigate("/shop/products");
   };
 
+  const statusWatched = useWatch({ control, name: "status" });
   const currentStatus: ProductStatus =
-    watch("status") || productDetail?.status || "PENDING_APPROVAL";
+    statusWatched || productDetail?.status || "PENDING_APPROVAL";
 
   const isReadOnly =
-    currentStatus === "DELETED" ||
-    currentStatus === "DELETE" ||
+    currentStatus === "DELETED"  ||
     !["ACTIVE", "INACTIVE", "REJECTED"].includes(currentStatus);
 
   if (isLoadingDetail) {
@@ -210,19 +211,72 @@ const ShopProductUpdatePage = () => {
         }
       />
 
+      {/* Modern Premium Rejection Card */}
+      {currentStatus === "REJECTED" && (
+        <div className="col-span-12 rounded-2xl bg-gradient-to-r from-rose-500/10 via-rose-500/5 to-transparent dark:from-rose-950/40 dark:via-rose-900/10 dark:to-transparent border border-rose-200/80 dark:border-rose-800/60 p-5 shadow-xs flex flex-col gap-4 animate-in fade-in duration-200">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-rose-500/20 mt-0.5">
+                <XCircle className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  <h3 className="text-base font-bold text-zinc-900 dark:text-white">
+                    Sản phẩm bị từ chối phê duyệt
+                  </h3>
+                </div>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  Vui lòng chỉnh sửa các thông tin chưa đạt yêu cầu dưới đây và nhấn nút <span className="font-semibold text-zinc-700 dark:text-zinc-300">"Cập nhật"</span> để gửi duyệt lại.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Reasons List */}
+          <div className="space-y-2 pt-1 border-t border-rose-200/60 dark:border-rose-800/40">
+            <span className="text-xs font-bold uppercase tracking-wider text-rose-700 dark:text-rose-400 block pt-1">
+              Lý do từ chối từ Quản trị viên:
+            </span>
+
+            {productDetail?.reason ? (
+              <div className="grid grid-cols-1 gap-2">
+                {productDetail.reason
+                  .split("\n")
+                  .map((r) => r.trim())
+                  .filter(Boolean)
+                  .map((reasonLine, idx) => {
+                    const cleanText = reasonLine.replace(/^•\s*/, "");
+                    return (
+                      <div
+                        key={idx}
+                        className="flex items-start gap-3 p-3.5 rounded-xl bg-white dark:bg-zinc-900 border border-rose-100 dark:border-rose-900/40 text-sm text-zinc-800 dark:text-zinc-200 shadow-2xs transition-all hover:border-rose-300 dark:hover:border-rose-700"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0 mt-1.5 shadow-xs shadow-rose-500/50" />
+                        <span className="leading-relaxed font-medium">{cleanText}</span>
+                      </div>
+                    );
+                  })}
+              </div>
+            ) : (
+              <p className="text-xs text-rose-600 dark:text-rose-400 italic">
+                Chưa có lý do chi tiết được cung cấp. Vui lòng kiểm tra lại thông tin sản phẩm.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
       {isReadOnly && (
         <div className="col-span-12 flex items-center gap-3 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/80 text-amber-800 dark:text-amber-300 shadow-xs">
           <AlertTriangle className="w-5 h-5 shrink-0 text-amber-600 dark:text-amber-400" />
           <div className="text-sm font-medium">
             Sản phẩm đang ở trạng thái{" "}
             <span className="font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200">
-              {currentStatus === "DELETED" || currentStatus === "DELETE"
+              {currentStatus === "DELETED"
                 ? "Đã xóa"
                 : currentStatus === "PENDING_APPROVAL"
                   ? "Chờ duyệt"
-                  : currentStatus === "REJECTED"
-                    ? "Từ chối"
-                    : "Khóa (Banned)"}
+                  : "Khóa (Banned)"}
             </span>
             . Bạn không thể chỉnh sửa thông tin hoặc thực hiện cập nhật sản phẩm.
           </div>

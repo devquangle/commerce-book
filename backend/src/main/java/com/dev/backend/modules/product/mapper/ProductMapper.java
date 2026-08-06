@@ -58,7 +58,7 @@ public class ProductMapper {
                 entity.getSeries() != null
                         ? entity.getSeries().getName()
                         : null);
-
+        response.setReason(entity.getReason());
         // response.setGenresName(
         // genreProductService.getGenreNamesByProductId(entity.getId()));
 
@@ -114,6 +114,7 @@ public class ProductMapper {
                         ? entity.getSeries().getId()
                         : null);
       response.setStatus(entity.getStatus());
+         response.setReason(entity.getReason());
         return response;
     }
 }

@@ -6,10 +6,8 @@ import type {
   ProductRequest,
   ProductResponse,
 } from "../types/product.type";
-import type { ProductShopResponse } from "../types/product-shop.type";
 import ProductShopService from "../services/product.service";
 import { showErrorToast, showSuccessToast } from "@/libs/utils/toastUtil";
-import { useMemo } from "react";
 import axios from "axios";
 
 export const useProductShop = (options?: ProductFilterRequest) => {
@@ -97,29 +95,6 @@ export const useDeleteProductShop = () => {
   });
 };
 
-export const useShopsByProductIds = (productIds: number[]) => {
-  const enabled = productIds.length > 0;
-
-  const query = useQuery<ProductShopResponse[]>({
-    queryKey: ["shops-by-product-ids", productIds],
-    queryFn: () => ProductShopService.fetchShopsByProductIds(productIds),
-    enabled,
-    staleTime: 5 * 60 * 1000,
-  });
-
-  // Build a Map: productId → shop info for O(1) lookup in tables
-  const shopMap = useMemo(() => {
-    const map = new Map<number, ProductShopResponse["shop"]>();
-    if (query.data) {
-      for (const item of query.data) {
-        map.set(item.productId, item.shop);
-      }
-    }
-    return map;
-  }, [query.data]);
-
-  return { ...query, shopMap };
-};
 
 export const useApproveProduct = () => {
   const queryClient = useQueryClient();
