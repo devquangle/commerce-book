@@ -65,7 +65,7 @@ export const ProductMobileCard= ({
     <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 shadow-xs flex flex-col gap-3">
       {/* Khúc trên: Ảnh + Tên + Slug + Kho + Giá */}
       <div className="flex items-start gap-3">
-        <div className="w-18 h-24 rounded-xl bg-zinc-100 dark:bg-zinc-800 overflow-hidden shrink-0 border border-slate-200/80 dark:border-zinc-700">
+        <div className="w-16 h-24 rounded-xl bg-zinc-100 dark:bg-zinc-800 overflow-hidden shrink-0 border border-slate-200/80 dark:border-zinc-700">
           {product.urlImageDefault ? (
             <img
               src={product.urlImageDefault}

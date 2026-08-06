@@ -162,11 +162,11 @@ export const ProductTable = ({
                             <img
                               src={product.urlImageDefault}
                               alt={product.name}
-                              className="w-15 h-21.5 object-cover"
+                              className="w-14 h-20 object-cover"
                             />
                           </div>
                         ) : (
-                          <div className="relative shrink-0 overflow-hidden w-15 h-21.5 rounded-xl border border-dashed border-slate-200/80 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 flex items-center justify-center shadow-xs">
+                          <div className="relative shrink-0 overflow-hidden w-14 h-20 rounded-xl border border-dashed border-slate-200/80 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 flex items-center justify-center shadow-xs">
                             <BookOpen
                               size={20}
                               className="text-slate-300 dark:text-zinc-600"
@@ -197,7 +197,6 @@ export const ProductTable = ({
                                 className="shrink-0 text-indigo-500"
                               />
                               {product.shop.shopName}
-                              {product.shop.shopId}
                             </Link>
                           )}
                         </div>
