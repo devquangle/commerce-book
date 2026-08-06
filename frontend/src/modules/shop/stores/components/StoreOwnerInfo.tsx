@@ -6,8 +6,6 @@ import {
   Calendar,
   ShieldCheck,
   ShieldX,
-  Venus,
-  Mars,
 } from "lucide-react";
 import { InputField } from "@/components/common/InputField";
 import { SelectBox } from "@/components/common/SelectBox";

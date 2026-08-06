@@ -18,7 +18,6 @@ import {
 } from "../hooks/useProduct";
 import Spinner from "@/components/common/Spinner";
 import { AlertTriangle, XCircle } from "lucide-react";
-import { Badge } from "@/components/common/Badge";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
 
 const ShopProductUpdatePage = () => {
@@ -213,7 +212,7 @@ const ShopProductUpdatePage = () => {
 
       {/* Modern Premium Rejection Card */}
       {currentStatus === "REJECTED" && (
-        <div className="col-span-12 rounded-2xl bg-gradient-to-r from-rose-500/10 via-rose-500/5 to-transparent dark:from-rose-950/40 dark:via-rose-900/10 dark:to-transparent border border-rose-200/80 dark:border-rose-800/60 p-5 shadow-xs flex flex-col gap-4 animate-in fade-in duration-200">
+        <div className="col-span-12 rounded-2xl bg-linear-to-r from-rose-500/10 via-rose-500/5 to-transparent dark:from-rose-950/40 dark:via-rose-900/10 dark:to-transparent border border-rose-200/80 dark:border-rose-800/60 p-5 shadow-xs flex flex-col gap-4 animate-in fade-in duration-200">
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-start gap-3.5">
               <div className="w-10 h-10 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-rose-500/20 mt-0.5">
