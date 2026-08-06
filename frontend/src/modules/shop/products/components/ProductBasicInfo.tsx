@@ -67,6 +67,8 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
   const watchedPrice = watch ? watch("price") : 0;
   const watchedOriginalPrice = watch ? watch("originalPrice") : 0;
   const watchedName = watch ? watch("name") : "";
+  const watchedStatus = watch ? watch("status") : undefined;
+  const isRejected = watchedStatus === "REJECTED";
 
   // Debounced search query for Google Books
   const debouncedName = useDebounce(watchedName || "", 1000);
@@ -507,6 +509,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
           )}
 
           {showStatus &&
+            !isRejected &&
             (control ? (
               <Controller
                 name="status"

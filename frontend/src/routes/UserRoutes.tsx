@@ -17,7 +17,7 @@ const Search = lazy(() => import("@/modules/user/pages/Search"));
 const NotFound = lazy(() => import("@/modules/user/pages/NotFound"));
 const LoginPage = lazy(() => import("@/modules/user/login/LoginPage"));
 const ProfilePage = lazy(() => import("@/modules/auth/components/ProfilePage"));
-
+const RegisterShopPage=lazy(() => import("@/modules/user/register-shop/pages/RegisterShopPage"));
 export const UserRoutes: React.FC = () => {
   return (
     <UserLayout>
@@ -25,6 +25,7 @@ export const UserRoutes: React.FC = () => {
         <Routes>
           <Route index element={<Home />} />
           <Route path="login" element={<LoginPage />} />
+          <Route path="register-shop" element={<RegisterShopPage />} />
           <Route path="books" element={<BookList />} />
           <Route path="books/:id" element={<BookDetail />} />
           <Route path="search" element={<Search />} />

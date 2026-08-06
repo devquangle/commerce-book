@@ -14,6 +14,7 @@ import { useProductShopDetail } from "@/modules/shop/products/hooks/useProduct";
 import Spinner from "@/components/common/Spinner";
 import { ProductApproveModal } from "../components/ProductApproveModal";
 import { ProductRejectModal } from "../components/ProductRejectModal";
+import ProductReason from "@/modules/shop/products/components/ProductReason";
 
 const AdminProductDetailPage = () => {
   const navigate = useNavigate();
@@ -75,10 +76,7 @@ const AdminProductDetailPage = () => {
 
   const bookName = useWatch({ control, name: "name" });
   const coverImagesRaw = useWatch({ name: "coverImages", control });
-  useMemo(
-    () => ensureThumbnail(coverImagesRaw || []),
-    [coverImagesRaw],
-  );
+  useMemo(() => ensureThumbnail(coverImagesRaw || []), [coverImagesRaw]);
 
   const handleBack = () => {
     navigate("/admin/products");
@@ -115,7 +113,12 @@ const AdminProductDetailPage = () => {
         onApprove={() => setIsApproveModalOpen(true)}
         onReject={() => setIsRejectModalOpen(true)}
       />
-
+      <ProductReason
+        mode="admin"
+        status={productDetail?.status}
+        showSubTitLe={true}
+        reason={productDetail?.reason}
+      />
       {/* Thông tin cơ bản - Readonly (disabled=true) */}
       <ProductBasicInfo
         register={register}
