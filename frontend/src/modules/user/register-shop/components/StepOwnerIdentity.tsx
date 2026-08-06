@@ -1,17 +1,11 @@
 import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { User, CreditCard, Calendar, MapPin, Camera, ShieldCheck } from "lucide-react";
+import { User, CreditCard, Calendar, MapPin, Camera, ShieldCheck, CheckCircle } from "lucide-react";
 import { InputField } from "@/components/common/InputField";
-import { SelectBox } from "@/components/common/SelectBox";
 import { Button } from "@/components/common/Button";
 import SingleImageUpload from "@/components/common/SingleImageUpload";
+import { CameraModal } from "./CameraModal";
 import type { RegisterShopRequest } from "../types/register-shop.type";
-
-const GENDER_OPTIONS = [
-  { label: "Nam", value: "Nam" },
-  { label: "Nữ", value: "Nữ" },
-  { label: "Khác", value: "Khác" },
-];
 
 export const StepOwnerIdentity: React.FC = () => {
   const {
@@ -24,6 +18,9 @@ export const StepOwnerIdentity: React.FC = () => {
 
   const [backCccdFile, setBackCccdFile] = useState<File | null>(null);
   const [backCccdUrl, setBackCccdUrl] = useState<string>("");
+
+  const [isCameraOpen, setIsCameraOpen] = useState<boolean>(false);
+  const [faceImage, setFaceImage] = useState<string | null>(null);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
@@ -75,12 +72,12 @@ export const StepOwnerIdentity: React.FC = () => {
       <div className="flex flex-col sm:flex-row items-center gap-3 pt-1">
         <Button
           type="button"
-          variant="outline"
+          variant={faceImage ? "outline" : "outline"}
           fullWidth
           icon={<Camera className="w-4 h-4 text-blue-600 dark:text-blue-400" />}
-          onClick={() => alert("Mở camera xác thực khuôn mặt")}
+          onClick={() => setIsCameraOpen(true)}
         >
-          Mở camera xác thực khuôn mặt
+          {faceImage ? "Chụp lại ảnh khuôn mặt (Camera)" : "Mở camera xác thực khuôn mặt"}
         </Button>
 
         <Button
@@ -88,11 +85,39 @@ export const StepOwnerIdentity: React.FC = () => {
           variant="primary"
           fullWidth
           icon={<ShieldCheck className="w-4 h-4" />}
-          onClick={() => alert("Đang tự động trích xuất thông tin CCCD...")}
+          onClick={() => alert("Đang tự động trích xuất thông tin từ CCCD...")}
         >
           Xác thực Căn cước công dân
         </Button>
       </div>
+
+      {/* Face Image Verification Badge */}
+      {faceImage && (
+        <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img
+              src={faceImage}
+              alt="Khuôn mặt đã chụp"
+              className="w-12 h-12 rounded-lg object-cover border border-emerald-300"
+            />
+            <div>
+              <p className="text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1">
+                <CheckCircle className="w-4 h-4 text-emerald-600" /> Đã xác thực khuôn mặt bằng Camera
+              </p>
+              <p className="text-[11px] text-emerald-600 dark:text-emerald-400">
+                Ảnh đã được lưu và sẵn sàng đối soát với CCCD.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="text-xs text-rose-600 hover:underline font-medium"
+            onClick={() => setFaceImage(null)}
+          >
+            Xóa ảnh
+          </button>
+        </div>
+      )}
 
       {/* 3. Form Fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
@@ -213,6 +238,15 @@ export const StepOwnerIdentity: React.FC = () => {
           className="body-text"
         />
       </div>
+
+      {/* Camera Modal */}
+      <CameraModal
+        isOpen={isCameraOpen}
+        onClose={() => setIsCameraOpen(false)}
+        onCaptureSuccess={(imgSrc) => {
+          setFaceImage(imgSrc);
+        }}
+      />
     </div>
   );
 };
