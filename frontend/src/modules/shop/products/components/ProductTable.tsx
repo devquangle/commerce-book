@@ -42,7 +42,7 @@ export interface ProductTableProps {
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (size: number) => void;
   onEdit?: (product: ProductResponse) => void;
-  onDelete?: (id: number) => void;
+  onDelete?: (product: ProductResponse) => void;
 }
 
 const getLanguageName = (code: string) => {
@@ -114,9 +114,9 @@ export const ProductTable: React.FC<ProductTableProps> = ({
     }
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (product: ProductResponse) => {
     if (onDelete) {
-      onDelete(id);
+      onDelete(product);
     }
   };
 
@@ -391,7 +391,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                   <td className="py-3 px-6 text-right align-middle">
                     <ProductActionMenu
                       item={product}
-                      onDelete={() => handleDelete(product.productId || product.id)}
+                      onDelete={() => handleDelete(product)}
                       onEdit={() => handleEdit(product)}
                     />
                   </td>

@@ -40,7 +40,7 @@ const ProductStatusBadge = ({ status }: { status: ProductStatus }) => {
 
 interface ProductMobileCardProps {
   product: ProductResponse;
-  onDelete: (id: number) => void;
+  onDelete: (product: ProductResponse) => void;
   onEdit?: (product: ProductResponse) => void;
 }
 
@@ -218,7 +218,7 @@ export const ProductMobileCard: React.FC<ProductMobileCardProps> = ({
 
         <ProductActionMenu
           item={product}
-          onDelete={() => onDelete(product.productId || product.id)}
+          onDelete={() => onDelete(product)}
           onEdit={() => handleEdit(product)}
         />
       </div>

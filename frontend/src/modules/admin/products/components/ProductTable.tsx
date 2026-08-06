@@ -40,7 +40,9 @@ export interface ProductTableProps {
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (size: number) => void;
   onEdit?: (product: ProductResponse) => void;
-  onDelete?: (id: number) => void;
+  onView?: (product: ProductResponse) => void;
+  onApprove?: (product: ProductResponse) => void;
+  onReject?: (product: ProductResponse) => void;
 }
 
 const getLanguageName = (code: string) => {
@@ -85,7 +87,9 @@ export const ProductTable: React.FC<ProductTableProps> = ({
   onPageChange,
   onPageSizeChange,
   onEdit,
-  onDelete,
+  onView,
+  onApprove,
+  onReject,
 }) => {
   const [pageSize, setPageSize] = useState(initialPageSize);
   const [showDetailsMap, setShowDetailsMap] = useState<Record<number, boolean>>({});
@@ -108,13 +112,15 @@ export const ProductTable: React.FC<ProductTableProps> = ({
     if (onEdit) {
       onEdit(product);
     } else {
-      navigate(`/shop/products/update?slug=${product.slug}`);
+      navigate(`/admin/products/update?slug=${product.slug}`);
     }
   };
 
-  const handleDelete = (id: number) => {
-    if (onDelete) {
-      onDelete(id);
+  const handleView = (product: ProductResponse) => {
+    if (onView) {
+      onView(product);
+    } else {
+      navigate(`/admin/products/detail?slug=${product.slug}`);
     }
   };
 
@@ -134,7 +140,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
           <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
             {products.map((product, index) => {
               const stt = (activePage - 1) * pageSize + index + 1;
-              const isDetailsOpen = !!showDetailsMap[product.productId];
+              const isDetailsOpen = !!showDetailsMap[product.productId || product.id];
 
               return (
                 <tr
@@ -212,7 +218,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                           </div>
                         )}
 
-                        {/* ➍ Chi tiết còn lại (Năm XB, số trang, trọng lượng, ngôn ngữ) -> Ẩn/Hiện */}
+                        {/* ➍ Chi tiết còn lại -> Ẩn/Hiện */}
                         {(product.publishYear ||
                           product.pages > 0 ||
                           product.weight > 0 ||
@@ -260,9 +266,10 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                                 type="button"
                                 onClick={(e) => {
                                   e.preventDefault();
+                                  const idKey = product.productId || product.id;
                                   setShowDetailsMap((prev) => ({
                                     ...prev,
-                                    [product.productId]: !prev[product.productId],
+                                    [idKey]: !prev[idKey],
                                   }));
                                 }}
                                 className="inline-flex items-center gap-1 text-muted font-medium hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
@@ -389,8 +396,10 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                   <td className="py-3 px-6 text-right align-middle">
                     <ProductActionMenu
                       item={product}
-                      onDelete={() => handleDelete(product.productId || product.id)}
                       onEdit={() => handleEdit(product)}
+                      onView={() => handleView(product)}
+                      onApprove={onApprove}
+                      onReject={onReject}
                     />
                   </td>
                 </tr>

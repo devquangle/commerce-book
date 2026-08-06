@@ -37,15 +37,8 @@ const ShopProducts = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<ProductResponse | null>(null);
 
-  const handleDeleteClick = (product: ProductResponse | number) => {
-    if (typeof product === "number") {
-      const found = products.find(
-        (p) => (p.productId || p.id) === product
-      );
-      setProductToDelete(found || null);
-    } else {
-      setProductToDelete(product);
-    }
+  const handleDeleteClick = (product: ProductResponse) => {
+    setProductToDelete(product);
     setIsDeleteModalOpen(true);
   };
 
@@ -94,7 +87,7 @@ const ShopProducts = () => {
               totalElements={totalElements}
               onPageChange={handlePageChange}
               onPageSizeChange={handlePageSizeChange}
-              onDelete={(idOrProduct) => handleDeleteClick(idOrProduct as any)}
+              onDelete={handleDeleteClick}
             />
           </div>
 
@@ -109,7 +102,7 @@ const ShopProducts = () => {
                       : index
                   }
                   product={product}
-                  onDelete={(idOrProduct) => handleDeleteClick(idOrProduct as any)}
+                  onDelete={handleDeleteClick}
                 />
               ))}
               {products.length === 0 && (

@@ -6,7 +6,7 @@ import type {
   ProductRequest,
   ProductResponse,
 } from "../types/shop-product.type";
-import ProductShopService from "../../../../services/product/product.service";
+import ProductShopService from "../services/product.service";
 import { showErrorToast, showSuccessToast } from "@/libs/utils/toastUtil";
 import axios from "axios";
 

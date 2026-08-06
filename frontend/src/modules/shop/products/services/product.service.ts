@@ -4,7 +4,7 @@ import type {
   ProductFilterRequest,
   ProductRequest,
   ProductResponse,
-} from "../../modules/shop/products/types/shop-product.type";
+} from "../types/shop-product.type";
 import type { ApiResponse } from "@/libs/utils/api-response";
 import type { Pagination } from "@/libs/utils/pagination";
 

@@ -7,13 +7,13 @@ import { SHOP_PATH } from "@/libs/constant/shop-path";
 // Lazy-loaded pages
 const ShopDashboard = lazy(() => import("@/modules/shop/pages/ShopDashboard"));
 const ShopProductPage = lazy(
-  () => import("@/modules/shop/product/pages/ShopProductPage"),
+  () => import("@/modules/shop/products/pages/ShopProductPage"),
 );
 const ShopProductCreatePage = lazy(
-  () => import("@/modules/shop/product/pages/ShopProductCreatePage"),
+  () => import("@/modules/shop/products/pages/ShopProductCreatePage"),
 );
 const ShopProductUpdatePage = lazy(
-  () => import("@/modules/shop/product/pages/ShopProductUpdatePage"),
+  () => import("@/modules/shop/products/pages/ShopProductUpdatePage"),
 );
 
 const ShopOrders = lazy(() => import("@/modules/shop/pages/ShopOrders"));
