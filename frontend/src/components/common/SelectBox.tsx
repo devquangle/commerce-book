@@ -161,7 +161,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
               type="button"
               disabled={disabled}
               onClick={() => setIsOpen((prev) => !prev)}
-              className={`w-full flex items-center justify-between px-4 py-2.5 sm:py-3 text-sm bg-zinc-50 dark:bg-zinc-800/60 border rounded-xl transition-all text-left ${
+              className={`w-full h-10 flex items-center justify-between px-4 py-2 text-sm bg-zinc-50 dark:bg-zinc-800/60 border rounded-xl transition-all text-left ${
                 error
                   ? "border-red-500 focus:ring-2 focus:ring-red-500/20"
                   : "border-zinc-200 dark:border-zinc-700/80 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import {  Search, ShoppingCart, Menu, X } from "lucide-react";
+import { Search, ShoppingCart, Menu, X, Store } from "lucide-react";
 import { StorefrontUserMenu } from "./StorefrontUserMenu";
 import { StorefrontMegaMenu } from "./StorefrontMegaMenu";
 import Container from "../common/Container";
@@ -30,6 +30,15 @@ export const UserHeader: React.FC = () => {
               <nav className="hidden md:flex items-center gap-6">
                 <StorefrontMegaMenu />
               </nav>
+
+              {/* Register as Seller - Desktop */}
+              <Link
+                to="/register-shop"
+                className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 rounded-full hover:bg-blue-100 dark:hover:bg-blue-950 transition-colors whitespace-nowrap"
+              >
+                <Store className="w-3.5 h-3.5" />
+                Đăng ký Người Bán
+              </Link>
             </div>
 
             {/* Search, Actions & Mobile Menu Toggle */}
@@ -126,6 +135,18 @@ export const UserHeader: React.FC = () => {
               </Link>
             ))}
           </nav>
+
+          {/* Register as Seller - Mobile */}
+          <div className="border-t border-zinc-200 dark:border-zinc-800 pt-4">
+            <Link
+              to="/register-shop"
+              className="flex items-center gap-2.5 px-3 py-2.5 text-sm font-semibold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-950 transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <Store className="w-4 h-4" />
+              Đăng ký thành Người Bán
+            </Link>
+          </div>
         </div>
       </div>
     </>

@@ -26,8 +26,7 @@ export interface SearchableMultiSelectProps {
   id?: string;
   name?: string;
 }
-
-export const SearchableMultiSelect: React.FC<SearchableMultiSelectProps> = ({
+const SearchableMultiSelect: React.FC<SearchableMultiSelectProps> = ({
   label,
   error,
   helperText,
@@ -141,7 +140,7 @@ export const SearchableMultiSelect: React.FC<SearchableMultiSelectProps> = ({
           id={selectId}
           tabIndex={disabled ? -1 : 0}
           onClick={() => !disabled && setIsOpen((prev) => !prev)}
-          className={`w-full min-h-[42px] flex items-center justify-between pl-3 pr-8 py-2 body-text bg-zinc-50 dark:bg-zinc-800/60 border rounded-xl transition-all cursor-pointer relative ${
+          className={`w-full min-h-10 flex items-center justify-between pl-3 pr-8 py-2 body-text bg-zinc-50 dark:bg-zinc-800/60 border rounded-xl transition-all cursor-pointer relative ${
             error
               ? "border-red-500 focus:ring-2 focus:ring-red-500/20"
               : "border-zinc-200 dark:border-zinc-700/80 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"

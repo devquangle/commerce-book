@@ -197,7 +197,7 @@ export const SearchInput = <TForm extends FieldValues, TOption>({
       <div className="relative">
         <div
           className={`
-            relative flex h-11 w-full mb-1.5 items-center rounded-xl border bg-white px-3 transition-all
+            relative flex h-10 w-full mb-1.5 items-center rounded-xl border bg-zinc-50 dark:bg-zinc-800/60 px-3 transition-all
             ${
               error
                 ? "border-red-500 bg-red-50"

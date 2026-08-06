@@ -55,7 +55,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
           <input
             ref={ref}
             id={inputId}
-            className={`w-full px-4 py-2.5 sm:py-3 text-sm bg-zinc-50 dark:bg-zinc-800/60 border rounded-xl focus:outline-none transition-all text-zinc-900 dark:text-white placeholder-zinc-400 ${
+            className={`w-full h-10 px-4 py-2 text-sm bg-zinc-50 dark:bg-zinc-800/60 border rounded-xl focus:outline-none transition-all text-zinc-900 dark:text-white placeholder-zinc-400 ${
               icon ? "pl-11" : ""
             } ${isPasswordType ? "pr-11" : ""} ${
               error
