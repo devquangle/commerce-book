@@ -1,16 +1,11 @@
 import React, { useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { Store, Building2, CreditCard, UserCheck, Image as ImageIcon } from "lucide-react";
 import { InputField } from "@/components/common/InputField";
 import { TextAreaField } from "@/components/common/TextAreaField";
 import { SelectBox } from "@/components/common/SelectBox";
 import SingleImageUpload from "@/components/common/SingleImageUpload";
-import type { ShopInfo } from "../types/register-shop.type";
-
-export interface StepShopInfoProps {
-  data: ShopInfo;
-  onChange: (fields: Partial<ShopInfo>) => void;
-  errors: Record<string, string>;
-}
+import type { RegisterShopRequest } from "../types/register-shop.type";
 
 const BANK_OPTIONS = [
   { label: "Vietcombank (Ngân hàng TMCP Ngoại thương Việt Nam)", value: "Vietcombank" },
@@ -25,21 +20,19 @@ const BANK_OPTIONS = [
   { label: "Agribank (Ngân hàng Nông nghiệp và PTNT)", value: "Agribank" },
 ];
 
-export const StepShopInfo: React.FC<StepShopInfoProps> = ({
-  data,
-  onChange,
-  errors,
-}) => {
+export const StepShopInfo: React.FC = () => {
+  const {
+    register,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useFormContext<RegisterShopRequest>();
+
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [bannerFile, setBannerFile] = useState<File | null>(null);
 
-  const handleLogoUrlChange = (url: string) => {
-    onChange({ logo: url });
-  };
-
-  const handleBannerUrlChange = (url: string) => {
-    onChange({ banner: url });
-  };
+  const logoUrl = watch("logo") || "";
+  const bannerUrl = watch("banner") || "";
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
@@ -64,19 +57,21 @@ export const StepShopInfo: React.FC<StepShopInfoProps> = ({
           placeholder="Ví dụ: Tiệm Sách Tri Thức, BookZone Store..."
           required
           icon={<Store className="w-4 h-4 text-zinc-400" />}
-          value={data.shopName || ""}
-          onChange={(e) => onChange({ shopName: e.target.value })}
-          error={errors.shopName}
+          {...register("shopName", {
+            required: "Vui lòng nhập tên Cửa hàng",
+          })}
+          error={errors.shopName?.message}
           helperText="Tên shop hiển thị công khai cho khách hàng mua sắm"
+          className="body-text"
         />
 
         <TextAreaField
           label="Mô tả Cửa hàng"
           placeholder="Giới thiệu ngắn gọn về các loại sản phẩm, dịch vụ hoặc thông điệp của Shop..."
           rows={3}
-          value={data.shopDescription || ""}
-          onChange={(e) => onChange({ shopDescription: e.target.value })}
-          error={errors.shopDescription}
+          {...register("shopDescription")}
+          error={errors.shopDescription?.message}
+          className="body-text"
         />
 
         {/* Logo and Banner Upload */}
@@ -90,11 +85,11 @@ export const StepShopInfo: React.FC<StepShopInfoProps> = ({
               setFile={(f) => {
                 setLogoFile(f);
                 if (f) {
-                  onChange({ logo: URL.createObjectURL(f) });
+                  setValue("logo", URL.createObjectURL(f));
                 }
               }}
-              avatarUrl={data.logo || ""}
-              setAvatarUrl={handleLogoUrlChange}
+              avatarUrl={logoUrl}
+              setAvatarUrl={(url) => setValue("logo", url)}
             />
           </div>
 
@@ -107,11 +102,11 @@ export const StepShopInfo: React.FC<StepShopInfoProps> = ({
               setFile={(f) => {
                 setBannerFile(f);
                 if (f) {
-                  onChange({ banner: URL.createObjectURL(f) });
+                  setValue("banner", URL.createObjectURL(f));
                 }
               }}
-              avatarUrl={data.banner || ""}
-              setAvatarUrl={handleBannerUrlChange}
+              avatarUrl={bannerUrl}
+              setAvatarUrl={(url) => setValue("banner", url)}
             />
           </div>
         </div>
@@ -128,9 +123,11 @@ export const StepShopInfo: React.FC<StepShopInfoProps> = ({
           required
           options={BANK_OPTIONS}
           placeholder="Chọn ngân hàng thụ hưởng"
-          value={data.bankName || ""}
-          onChange={(e) => onChange({ bankName: e.target.value })}
-          error={errors.bankName}
+          {...register("bankName", {
+            required: "Vui lòng chọn ngân hàng thụ hưởng",
+          })}
+          error={errors.bankName?.message}
+          textClassName="body-text"
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -139,9 +136,11 @@ export const StepShopInfo: React.FC<StepShopInfoProps> = ({
             placeholder="0123456789"
             required
             icon={<CreditCard className="w-4 h-4 text-zinc-400" />}
-            value={data.bankNumber || ""}
-            onChange={(e) => onChange({ bankNumber: e.target.value })}
-            error={errors.bankNumber}
+            {...register("bankNumber", {
+              required: "Vui lòng nhập số tài khoản ngân hàng",
+            })}
+            error={errors.bankNumber?.message}
+            className="body-text"
           />
 
           <InputField
@@ -149,10 +148,12 @@ export const StepShopInfo: React.FC<StepShopInfoProps> = ({
             placeholder="NGUYEN VAN A"
             required
             icon={<UserCheck className="w-4 h-4 text-zinc-400" />}
-            value={data.ownerName || ""}
-            onChange={(e) => onChange({ ownerName: e.target.value })}
-            error={errors.ownerName}
+            {...register("ownerName", {
+              required: "Vui lòng nhập tên chủ tài khoản ngân hàng",
+            })}
+            error={errors.ownerName?.message}
             helperText="Tên tài khoản phải trùng với tên trên thẻ / giấy tờ"
+            className="body-text"
           />
         </div>
       </div>

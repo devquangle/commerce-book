@@ -1,14 +1,9 @@
 import React, { useMemo } from "react";
+import { useFormContext } from "react-hook-form";
 import { MapPin, Navigation, Home } from "lucide-react";
 import { InputField } from "@/components/common/InputField";
 import { SelectBox } from "@/components/common/SelectBox";
-import type { ShopAddressInfo } from "../types/register-shop.type";
-
-export interface StepShopAddressProps {
-  data: ShopAddressInfo;
-  onChange: (fields: Partial<ShopAddressInfo>) => void;
-  errors: Record<string, string>;
-}
+import type { RegisterShopRequest } from "../types/register-shop.type";
 
 // Administrative address datasets
 const PROVINCES = [
@@ -96,11 +91,19 @@ const WARDS_MAP: Record<number, Array<{ code: string; name: string }>> = {
   ],
 };
 
-export const StepShopAddress: React.FC<StepShopAddressProps> = ({
-  data,
-  onChange,
-  errors,
-}) => {
+export const StepShopAddress: React.FC = () => {
+  const {
+    register,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useFormContext<RegisterShopRequest>();
+
+  const provinceId = Number(watch("provinceId")) || 0;
+  const districtId = Number(watch("districtId")) || 0;
+  const wardCode = watch("wardCode") || "";
+  const street = watch("street") || "";
+
   // Convert provinces to select options
   const provinceOptions = useMemo(
     () => PROVINCES.map((p) => ({ label: p.name, value: p.id })),
@@ -109,20 +112,20 @@ export const StepShopAddress: React.FC<StepShopAddressProps> = ({
 
   // Filter districts based on selected provinceId
   const districtOptions = useMemo(() => {
-    if (!data.provinceId) return [];
-    const list = DISTRICTS_MAP[data.provinceId] || [];
+    if (!provinceId) return [];
+    const list = DISTRICTS_MAP[provinceId] || [];
     return list.map((d) => ({ label: d.name, value: d.id }));
-  }, [data.provinceId]);
+  }, [provinceId]);
 
   // Filter wards based on selected districtId
   const wardOptions = useMemo(() => {
-    if (!data.districtId) return [];
-    const list = WARDS_MAP[data.districtId] || [
-      { code: `W${data.districtId}01`, name: "Phường Trung Tâm" },
-      { code: `W${data.districtId}02`, name: "Phường Tân Tiến" },
+    if (!districtId) return [];
+    const list = WARDS_MAP[districtId] || [
+      { code: `W${districtId}01`, name: "Phường Trung Tâm" },
+      { code: `W${districtId}02`, name: "Phường Tân Tiến" },
     ];
     return list.map((w) => ({ label: w.name, value: w.code }));
-  }, [data.districtId]);
+  }, [districtId]);
 
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
@@ -143,46 +146,50 @@ export const StepShopAddress: React.FC<StepShopAddressProps> = ({
           required
           options={provinceOptions}
           placeholder="Chọn Tỉnh / Thành phố"
-          value={data.provinceId || ""}
-          onChange={(e) => {
-            const pid = Number(e.target.value);
-            onChange({
-              provinceId: pid,
-              districtId: 0,
-              wardCode: "",
-            });
-          }}
-          error={errors.provinceId}
+          {...register("provinceId", {
+            required: "Vui lòng chọn Tỉnh / Thành phố",
+            onChange: (e) => {
+              const pid = Number(e.target.value);
+              setValue("provinceId", pid);
+              setValue("districtId", 0);
+              setValue("wardCode", "");
+            },
+          })}
+          error={errors.provinceId?.message}
+          textClassName="body-text"
         />
 
         {/* District */}
         <SelectBox
           label="Quận / Huyện"
           required
-          disabled={!data.provinceId}
+          disabled={!provinceId}
           options={districtOptions}
-          placeholder={data.provinceId ? "Chọn Quận / Huyện" : "Hãy chọn Tỉnh/Thành trước"}
-          value={data.districtId || ""}
-          onChange={(e) => {
-            const did = Number(e.target.value);
-            onChange({
-              districtId: did,
-              wardCode: "",
-            });
-          }}
-          error={errors.districtId}
+          placeholder={provinceId ? "Chọn Quận / Huyện" : "Hãy chọn Tỉnh/Thành trước"}
+          {...register("districtId", {
+            required: "Vui lòng chọn Quận / Huyện",
+            onChange: (e) => {
+              const did = Number(e.target.value);
+              setValue("districtId", did);
+              setValue("wardCode", "");
+            },
+          })}
+          error={errors.districtId?.message}
+          textClassName="body-text"
         />
 
         {/* Ward */}
         <SelectBox
           label="Phường / Xã"
           required
-          disabled={!data.districtId}
+          disabled={!districtId}
           options={wardOptions}
-          placeholder={data.districtId ? "Chọn Phường / Xã" : "Hãy chọn Quận/Huyện trước"}
-          value={data.wardCode || ""}
-          onChange={(e) => onChange({ wardCode: e.target.value })}
-          error={errors.wardCode}
+          placeholder={districtId ? "Chọn Phường / Xã" : "Hãy chọn Quận/Huyện trước"}
+          {...register("wardCode", {
+            required: "Vui lòng chọn Phường / Xã",
+          })}
+          error={errors.wardCode?.message}
+          textClassName="body-text"
         />
       </div>
 
@@ -192,14 +199,16 @@ export const StepShopAddress: React.FC<StepShopAddressProps> = ({
         placeholder="Ví dụ: Số 45 Đường Nguyễn Huệ, Tòa nhà Bitexco..."
         required
         icon={<Home className="w-4 h-4 text-zinc-400" />}
-        value={data.street || ""}
-        onChange={(e) => onChange({ street: e.target.value })}
-        error={errors.street}
+        {...register("street", {
+          required: "Vui lòng nhập số nhà, tên đường chi tiết",
+        })}
+        error={errors.street?.message}
         helperText="Địa chỉ chính xác giúp shiper tìm vị trí kho lấy hàng dễ dàng hơn"
+        className="body-text"
       />
 
       {/* Summary box of full address */}
-      {data.provinceId && data.districtId && data.wardCode && data.street && (
+      {provinceId > 0 && districtId > 0 && wardCode && street && (
         <div className="p-3.5 bg-blue-50/60 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/60 rounded-xl flex items-start gap-2.5">
           <Navigation className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
           <div>
@@ -207,10 +216,10 @@ export const StepShopAddress: React.FC<StepShopAddressProps> = ({
               Địa chỉ lấy hàng đầy đủ:
             </p>
             <p className="text-xs text-blue-700 dark:text-blue-300 font-medium mt-0.5">
-              {data.street},{" "}
-              {wardOptions.find((w) => w.value === data.wardCode)?.label},{" "}
-              {districtOptions.find((d) => Number(d.value) === data.districtId)?.label},{" "}
-              {provinceOptions.find((p) => Number(p.value) === data.provinceId)?.label}
+              {street},{" "}
+              {wardOptions.find((w) => w.value === wardCode)?.label},{" "}
+              {districtOptions.find((d) => Number(d.value) === districtId)?.label},{" "}
+              {provinceOptions.find((p) => Number(p.value) === provinceId)?.label}
             </p>
           </div>
         </div>

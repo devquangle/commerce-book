@@ -1,19 +1,18 @@
 import React from "react";
+import { useFormContext } from "react-hook-form";
 import { Mail, Phone, Lock, ShieldCheck } from "lucide-react";
 import { InputField } from "@/components/common/InputField";
-import type { ShopAccountInfo } from "../types/register-shop.type";
+import type { RegisterShopRequest } from "../types/register-shop.type";
 
-export interface StepAccountInfoProps {
-  data: ShopAccountInfo;
-  onChange: (fields: Partial<ShopAccountInfo>) => void;
-  errors: Record<string, string>;
-}
+export const StepAccountInfo: React.FC = () => {
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useFormContext<RegisterShopRequest>();
 
-export const StepAccountInfo: React.FC<StepAccountInfoProps> = ({
-  data,
-  onChange,
-  errors,
-}) => {
+  const passwordValue = watch("password");
+
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
       <div className="border-b border-zinc-200 dark:border-zinc-800 pb-3 mb-4">
@@ -34,10 +33,16 @@ export const StepAccountInfo: React.FC<StepAccountInfoProps> = ({
           placeholder="example@domain.com"
           required
           icon={<Mail className="w-4 h-4 text-zinc-400" />}
-          value={data.email || ""}
-          onChange={(e) => onChange({ email: e.target.value })}
-          error={errors.email}
+          {...register("email", {
+            required: "Vui lòng nhập email chủ sở hữu",
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "Định dạng email không hợp lệ",
+            },
+          })}
+          error={errors.email?.message}
           helperText="Dùng để đăng nhập và nhận thông báo từ hệ thống"
+          className="body-text"
         />
 
         {/* Phone */}
@@ -47,10 +52,16 @@ export const StepAccountInfo: React.FC<StepAccountInfoProps> = ({
           placeholder="0987654321"
           required
           icon={<Phone className="w-4 h-4 text-zinc-400" />}
-          value={data.phone || ""}
-          onChange={(e) => onChange({ phone: e.target.value })}
-          error={errors.phone}
+          {...register("phone", {
+            required: "Vui lòng nhập số điện thoại",
+            pattern: {
+              value: /^(0[3|5|7|8|9])+([0-9]{8})$/,
+              message: "Số điện thoại không đúng định dạng Việt Nam (10 chữ số)",
+            },
+          })}
+          error={errors.phone?.message}
           helperText="Số điện thoại nhận OTP xác thực chính chủ"
+          className="body-text"
         />
       </div>
 
@@ -62,9 +73,15 @@ export const StepAccountInfo: React.FC<StepAccountInfoProps> = ({
           placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)"
           required
           icon={<Lock className="w-4 h-4 text-zinc-400" />}
-          value={data.password || ""}
-          onChange={(e) => onChange({ password: e.target.value })}
-          error={errors.password}
+          {...register("password", {
+            required: "Vui lòng nhập mật khẩu",
+            minLength: {
+              value: 6,
+              message: "Mật khẩu phải có ít nhất 6 ký tự",
+            },
+          })}
+          error={errors.password?.message}
+          className="body-text"
         />
 
         {/* Confirm Password */}
@@ -74,9 +91,13 @@ export const StepAccountInfo: React.FC<StepAccountInfoProps> = ({
           placeholder="Nhập lại mật khẩu vừa đặt"
           required
           icon={<ShieldCheck className="w-4 h-4 text-zinc-400" />}
-          value={data.confirmPassword || ""}
-          onChange={(e) => onChange({ confirmPassword: e.target.value })}
-          error={errors.confirmPassword}
+          {...register("confirmPassword", {
+            required: "Vui lòng xác nhận mật khẩu",
+            validate: (value) =>
+              value === passwordValue || "Mật khẩu xác nhận không khớp",
+          })}
+          error={errors.confirmPassword?.message}
+          className="body-text"
         />
       </div>
     </div>

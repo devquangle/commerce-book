@@ -47,10 +47,10 @@ export const RegisterShopStepper: React.FC<RegisterShopStepperProps> = ({
   onStepClick,
 }) => {
   return (
-    <div className="w-full py-4 mb-6">
-      <div className="flex items-center justify-between relative max-w-4xl mx-auto">
-        {/* Connecting progress bar line */}
-        <div className="absolute top-1/2 left-0 right-0 h-1 bg-zinc-200 dark:bg-zinc-800 -translate-y-1/2 z-0 hidden sm:block">
+    <div className="w-full py-2 mb-6">
+      <div className="flex items-start justify-between relative max-w-4xl mx-auto">
+        {/* Connecting progress bar line aligned strictly to circle centers */}
+        <div className="absolute top-[22px] left-[12%] right-[12%] h-[3px] bg-zinc-200 dark:bg-zinc-800 -translate-y-1/2 z-0 hidden sm:block">
           <div
             className="h-full bg-blue-600 transition-all duration-500 ease-in-out"
             style={{
@@ -94,7 +94,7 @@ export const RegisterShopStepper: React.FC<RegisterShopStepperProps> = ({
               </div>
 
               {/* Step Title & Subtitle */}
-              <div className="mt-2.5 text-center">
+              <div className="mt-3 text-center">
                 <p
                   className={`text-xs sm:text-sm font-semibold transition-colors ${
                     isActive
@@ -107,7 +107,7 @@ export const RegisterShopStepper: React.FC<RegisterShopStepperProps> = ({
                   <span className="hidden sm:inline">Bước {step.id}: </span>
                   {step.title}
                 </p>
-                <p className="text-[11px] text-zinc-400 dark:text-zinc-500 hidden md:block mt-0.5">
+                <p className="text-[11px] text-zinc-400 dark:text-zinc-500 hidden md:block mt-1">
                   {step.subtitle}
                 </p>
               </div>
