@@ -1,4 +1,5 @@
 export interface ShopSimpleResponse {
+  shopId:number;
   shopName: string;
-  ShopSlug: string;
+  shopSlug: string;
 }

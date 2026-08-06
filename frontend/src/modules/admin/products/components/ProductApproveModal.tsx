@@ -47,17 +47,27 @@ export const ProductApproveModal= ({
               <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             </div>
 
-            <p className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed">
-              Bạn có chắc chắn muốn phê duyệt sản phẩm{" "}
-              {item?.name ? (
-                <span className="font-semibold text-zinc-900 dark:text-zinc-100">
-                  "{item.name}"
-                </span>
-              ) : (
-                "này"
-              )}{" "}
-              để hiển thị bán trên hệ thống không?
-            </p>
+            <div className="flex flex-col gap-1">
+              <p className="text-zinc-500 dark:text-zinc-400 text-sm leading-relaxed">
+                Bạn có chắc chắn muốn phê duyệt sản phẩm{" "}
+                {item?.name ? (
+                  <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+                    "{item.name}"
+                  </span>
+                ) : (
+                  "này"
+                )}{" "}
+                để hiển thị bán trên hệ thống không?
+              </p>
+              {item && "shopName" in item && item.shopName && (
+                <p className="text-xs text-zinc-400 dark:text-zinc-500">
+                  Cửa hàng:{" "}
+                  <span className="font-medium text-zinc-600 dark:text-zinc-300">
+                    {item.shopName}
+                  </span>
+                </p>
+              )}
+            </div>
           </div>
 
           <div className="flex items-center gap-3 justify-end">

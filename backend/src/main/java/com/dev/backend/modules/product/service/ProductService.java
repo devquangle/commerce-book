@@ -1,6 +1,7 @@
 package com.dev.backend.modules.product.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.modules.product.dto.ProductDetailResponse;
@@ -9,6 +10,7 @@ import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.dto.ProductShopResponse;
 import com.dev.backend.modules.product.entity.Product;
+import com.dev.backend.modules.shop.dto.ShopSimpleResponse;
 import com.dev.backend.modules.shop.entity.Shop;
 
 public interface ProductService {
@@ -45,4 +47,10 @@ public interface ProductService {
     PageResponse<ProductResponse> searchProductsByShopId(ProductFilterRequest request, Long shopId);
 
     PageResponse<ProductResponse> searchProducts(ProductFilterRequest request);
+
+    void approval(Long id, Long shopId);
+
+    void reject(Long id, Long shopId,String reasons);
+
+    Map<Long, ShopSimpleResponse> findShopMap(List<Long> productIds);
 }

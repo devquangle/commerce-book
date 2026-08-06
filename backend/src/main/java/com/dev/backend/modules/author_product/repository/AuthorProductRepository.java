@@ -12,6 +12,8 @@ import java.util.List;
 @Repository
 public interface AuthorProductRepository extends JpaRepository<AuthorProduct, Long> {
 
+    List<AuthorProduct> findByProductIdIn(List<Long> productIds);
+
     @Modifying
     @Query("DELETE FROM AuthorProduct item WHERE item.product.id = :productId")
     void deleteByProductId(@Param("productId") Long productId);

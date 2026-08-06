@@ -13,7 +13,7 @@ import { ProductRejectModal } from "../components/ProductRejectModal";
 import { useProductShopFilter } from "@/modules/shop/products/hooks/useProductShopFilter";
 import type { ProductResponse } from "@/modules/shop/products/types/product.type";
 import { useNavigate } from "react-router-dom";
-import { useProductShop } from "@/modules/shop/products/hooks/useProductShop";
+import { useProductShop } from "@/modules/shop/products/hooks/useProduct";
 
 const AdminProductListPage = () => {
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ const AdminProductListPage = () => {
   const handleConfirmReject = (reason: string) => {
     if (!selectedProduct) return;
     // TODO: Call API reject product with reason here when backend hook is integrated
-    console.log("Rejecting product:", selectedProduct.id, "Reason:", reason);
+    console.log("Rejecting product:", selectedProduct.productId, "Reason:", reason);
     setTimeout(() => {
       setIsRejectModalOpen(false);
       setSelectedProduct(null);
@@ -130,8 +130,8 @@ const AdminProductListPage = () => {
               {products.map((product, index) => (
                 <ProductMobileCard
                   key={
-                    product.id
-                      ? `product-mobile-${product.id}-${index}`
+                    product.productId
+                      ? `product-mobile-${product.productId}-${index}`
                       : index
                   }
                   product={product}

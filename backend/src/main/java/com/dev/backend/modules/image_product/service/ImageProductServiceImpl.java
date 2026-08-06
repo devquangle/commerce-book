@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,16 @@ public class ImageProductServiceImpl implements ImageProductService {
     public String getDefaultImageUrlByProductId(Long productId) {
         String urlImage = imageProductRepository.findDefaultImageUrlByProductId(productId).orElse(URL_DEFAULT);
         return urlImage;
+    }
+
+    @Override
+    public Map<Long, String> findThumbnailMap(List<Long> productIds) {
+         return imageProductRepository.findByProductIdInAndIsThumbnailTrue(productIds)
+            .stream()
+            .collect(Collectors.toMap(
+                    item -> item.getProduct().getId(),
+                    ImageProduct::getUrlImage
+            ));
     }
 
     @Override

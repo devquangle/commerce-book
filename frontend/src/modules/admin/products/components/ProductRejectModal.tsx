@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AlertCircle, X } from "lucide-react";
+import { AlertCircle, Check, X } from "lucide-react";
 import type {
   ProductDetailResponse,
   ProductResponse,
@@ -27,26 +27,46 @@ export const ProductRejectModal: React.FC<ProductRejectModalProps> = ({
   onClose,
   onConfirm,
 }) => {
-  const [reason, setReason] = useState("");
+  const [selectedReasons, setSelectedReasons] = useState<Set<string>>(new Set());
+  const [customReason, setCustomReason] = useState("");
   const [error, setError] = useState("");
 
   if (!isOpen) return null;
 
-  const handleSelectReason = (selectedReason: string) => {
-    setReason(selectedReason);
+  const toggleReason = (r: string) => {
+    setSelectedReasons((prev) => {
+      const next = new Set(prev);
+      if (next.has(r)) {
+        next.delete(r);
+      } else {
+        next.add(r);
+      }
+      return next;
+    });
     if (error) setError("");
   };
 
+  const buildFinalReason = () => {
+    const parts: string[] = [];
+    REJECT_REASONS.forEach((r) => {
+      if (selectedReasons.has(r)) parts.push(`• ${r}`);
+    });
+    if (customReason.trim()) parts.push(customReason.trim());
+    return parts.join("\n");
+  };
+
   const handleConfirm = () => {
-    if (!reason.trim()) {
-      setError("Vui lòng nhập hoặc chọn lý do từ chối");
+    const final = buildFinalReason();
+    if (!final) {
+      setError("Vui lòng chọn hoặc nhập ít nhất một lý do từ chối");
       return;
     }
-    onConfirm(reason.trim());
+    onConfirm(final);
   };
 
   const handleModalClose = () => {
-    setReason("");
+    setSelectedReasons(new Set());
+    setCustomReason("");
     setError("");
     onClose();
   };
@@ -94,43 +114,64 @@ export const ProductRejectModal: React.FC<ProductRejectModalProps> = ({
             </p>
           </div>
 
-          {/* Gợi ý lý do */}
+          {/* Gợi ý lý do – multi-select */}
           <div className="space-y-2">
             <label className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
-              Gợi ý lý do nhanh:
+              Gợi ý lý do nhanh{" "}
+              <span className="text-zinc-400 dark:text-zinc-500 font-normal">
+                (có thể chọn nhiều)
+              </span>
             </label>
-            <div className="flex flex-wrap gap-1.5">
-              {REJECT_REASONS.map((r, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => handleSelectReason(r)}
-                  className={`text-xs px-2.5 py-1 rounded-lg border transition-colors cursor-pointer text-left ${
-                    reason === r
-                      ? "bg-rose-50 border-rose-300 text-rose-700 dark:bg-rose-950/40 dark:border-rose-800 dark:text-rose-300"
-                      : "bg-zinc-50 border-zinc-200 text-zinc-600 hover:bg-zinc-100 dark:bg-zinc-800/50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
-                  }`}
-                >
-                  {r}
-                </button>
-              ))}
+            <div className="flex flex-col gap-1.5">
+              {REJECT_REASONS.map((r, index) => {
+                const isSelected = selectedReasons.has(r);
+                return (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => toggleReason(r)}
+                    className={`flex items-center gap-2.5 text-xs px-3 py-2 rounded-xl border transition-all cursor-pointer text-left w-full ${
+                      isSelected
+                        ? "bg-rose-50 border-rose-300 text-rose-700 dark:bg-rose-950/40 dark:border-rose-700 dark:text-rose-300"
+                        : "bg-zinc-50 border-zinc-200 text-zinc-600 hover:bg-zinc-100 dark:bg-zinc-800/50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                    }`}
+                  >
+                    {/* Checkbox indicator */}
+                    <span
+                      className={`shrink-0 w-4 h-4 rounded border flex items-center justify-center transition-colors ${
+                        isSelected
+                          ? "bg-rose-500 border-rose-500 dark:bg-rose-600 dark:border-rose-600"
+                          : "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900"
+                      }`}
+                    >
+                      {isSelected && (
+                        <Check size={10} className="text-white" strokeWidth={3} />
+                      )}
+                    </span>
+                    {r}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Ô nhập lý do chi tiết */}
+          {/* Ô nhập lý do bổ sung */}
           <div className="space-y-1">
             <label className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
-              Lý do từ chối <span className="text-rose-500">*</span>
+              Lý do bổ sung{" "}
+              {selectedReasons.size === 0 && (
+                <span className="text-rose-500">*</span>
+              )}
             </label>
             <textarea
               rows={3}
-              value={reason}
+              value={customReason}
               onChange={(e) => {
-                setReason(e.target.value);
+                setCustomReason(e.target.value);
                 if (error) setError("");
               }}
-              placeholder="Nhập lý do từ chối sản phẩm..."
-              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-rose-500/20"
+              placeholder="Nhập thêm lý do chi tiết (nếu có)..."
+              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-rose-500/20 resize-none"
             />
             {error && <p className="text-xs text-rose-500">{error}</p>}
           </div>

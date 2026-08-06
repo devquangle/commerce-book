@@ -3,10 +3,10 @@ import type {
   ProductImageRequest,
 } from "@/services/cloudinary/type/cloudinary.type";
 import type { ProductStatus } from "./product-status.type";
+import type { ShopSimpleResponse } from "../../stores/types/store";
 
 export * from "./product-status.type";
 export interface ProductResponse {
-  id: number;
   productId: number;
   name: string;
   slug: string;
@@ -22,6 +22,7 @@ export interface ProductResponse {
   genresName: string[] | [];
   authorsName: string[] | [];
   urlImageDefault: string;
+  shop: ShopSimpleResponse;
   status: ProductStatus;
 }
 
@@ -51,8 +52,8 @@ export interface ProductRequest {
   status: ProductStatus;
 }
 
-export interface ProductDetailResponse{
-  productId:number;
+export interface ProductDetailResponse {
+  productId: number;
   name: string;
   weight: number;
   publishYear: string;
@@ -69,5 +70,5 @@ export interface ProductDetailResponse{
   coverImages: ImageResponse[];
   description: string;
   status: ProductStatus;
+  shop: ShopSimpleResponse;
 }
-

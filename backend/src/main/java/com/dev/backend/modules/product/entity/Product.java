@@ -81,6 +81,10 @@ public class Product extends BaseEntity {
     @Column(name = "pages")
     private Integer pages;
 
+    
+    @Column(name = "reason")
+    private String reason;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private ProductStatus status;

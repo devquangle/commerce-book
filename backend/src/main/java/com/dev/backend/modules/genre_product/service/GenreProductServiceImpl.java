@@ -13,32 +13,41 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class GenreProductServiceImpl implements GenreProductService {
-    private static final String OTHER = "Khác";
-    private static final String UNKNOWN = "Chưa có thông thể loại";
     private final GenreProductRepository genreProductRepository;
     @PersistenceContext
     private EntityManager entityManager;
-
 
     @Override
     @Transactional(readOnly = true)
     public List<String> getGenreNamesByProductId(Long productId) {
 
-        return genreProductRepository.findGenreNamesByProductId(productId)
-                .stream()
-                .map(name -> OTHER.equals(name) ? UNKNOWN : name)
-                .toList();
+        return genreProductRepository.findGenreNamesByProductId(productId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Long> getGenreIdsByProductId(Long productId) {
         return genreProductRepository.findGenreIdsByProductId(productId);
+    }
+
+    @Override
+    public Map<Long, List<String>> findGenreMap(List<Long> productIds) {
+       return genreProductRepository.findByProductIdIn(productIds)
+            .stream()
+            .collect(Collectors.groupingBy(
+                    item -> item.getProduct().getId(),
+                    Collectors.mapping(
+                            item -> item.getGenre().getName(),
+                            Collectors.toList()
+                    )
+            ));
     }
 
     @Override

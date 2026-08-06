@@ -16,7 +16,7 @@ public interface GenreProductRepository extends JpaRepository<GenreProduct, Long
     @Query("DELETE FROM GenreProduct item WHERE item.product.id = :productId")
     void deleteByProductId(@Param("productId") Long productId);
 
-    List<GenreProduct> findByProductId(Long productId);
+    List<GenreProduct> findByProductIdIn(List<Long> productIds);
 
     List<GenreProduct> findByGenreId(Long genreId);
 

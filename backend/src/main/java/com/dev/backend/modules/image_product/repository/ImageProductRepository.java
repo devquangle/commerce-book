@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface ImageProductRepository extends JpaRepository<ImageProduct, Long> {
     List<ImageProduct> findByProductId(@Param("productId") Long productId);
 
+    List<ImageProduct> findByProductIdInAndIsThumbnailTrue(@Param("productIds") List<Long> productIds);
+
     @Query("""
                 SELECT item.urlImage
                 FROM ImageProduct item

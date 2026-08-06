@@ -1,11 +1,14 @@
 package com.dev.backend.modules.genre_product.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.dev.backend.modules.product.entity.Product;
 
 public interface GenreProductService {
     List<String> getGenreNamesByProductId(Long productId);
+
+    Map<Long, List<String>> findGenreMap(List<Long> productIds);
 
     List<Long> getGenreIdsByProductId(Long productId);
 

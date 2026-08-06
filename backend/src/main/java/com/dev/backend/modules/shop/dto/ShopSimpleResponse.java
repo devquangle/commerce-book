@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShopSimpleResponse {
+    private Long shopId;
     private String shopName;
     private String shopSlug;
 }

@@ -13,13 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class AuthorProductServiceImpl implements AuthorProductService {
-    private static final String OTHER = "Khác";
-    private static final String UNKNOWN = "Chưa có thông tin tác giả";
+
     private final AuthorProductRepository authorProductRepository;
 
     @PersistenceContext
@@ -28,11 +29,20 @@ public class AuthorProductServiceImpl implements AuthorProductService {
     @Override
     @Transactional(readOnly = true)
     public List<String> getAuthorNamesByProductId(Long productId) {
-        return authorProductRepository.findAuthorNamesByProductId(productId)
-                .stream()
-                .map(name -> OTHER.equals(name) ? UNKNOWN : name)
-                .toList();
+        return authorProductRepository.findAuthorNamesByProductId(productId);
     }
+
+    @Override
+    public Map<Long, List<String>> findAuthorMap(List<Long> productIds) {
+        return authorProductRepository.findByProductIdIn(productIds)
+                .stream()
+                .collect(Collectors.groupingBy(
+                        item -> item.getProduct().getId(),
+                        Collectors.mapping(
+                                item -> item.getAuthor().getName(),
+                                Collectors.toList())));
+    }
+
     @Override
     public List<Long> getAuthorIdsByProductId(Long productId) {
         return authorProductRepository.findAuthorIdsByProductId(productId);

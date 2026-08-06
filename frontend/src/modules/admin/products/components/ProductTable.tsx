@@ -1,4 +1,4 @@
-import{ useState } from "react";
+import { useMemo, useState } from "react";
 import {
   BookOpen,
   Building2,
@@ -14,20 +14,20 @@ import {
   BadgeDollarSign,
   Receipt,
   Package,
+  Store,
 } from "lucide-react";
 import { Pagination } from "@/components/common/Pagination";
 import { Tooltip } from "@/components/common/Tooltip";
 import { Badge } from "@/components/common/Badge";
 import { EmptyState } from "@/components/common/EmptyState";
-
-
 import { formatMoney } from "@/libs/utils/formatMoney.utils";
 import { registerLocale, getNames } from "@cospired/i18n-iso-languages";
 import viLocale from "@cospired/i18n-iso-languages/langs/vi.json";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getProductStatusInfo, type ProductStatus } from "@/modules/shop/products/types/product-status.type";
 import type { ProductResponse } from "@/modules/shop/products/types/product.type";
 import { ProductActionMenu } from "./ProductActionMenu";
+import { useShopsByProductIds } from "@/modules/shop/products/hooks/useProduct";
 
 registerLocale(viLocale);
 
@@ -94,6 +94,13 @@ export const ProductTable= ({
   const [showDetailsMap, setShowDetailsMap] = useState<Record<number, boolean>>({});
   const navigate = useNavigate();
 
+  // Fetch shop info for all products in the current page
+  const productIds = useMemo(
+    () => products.map((p) => p.productId).filter(Boolean),
+    [products],
+  );
+  const { shopMap } = useShopsByProductIds(productIds);
+
   const activePage = page ?? currentPage ?? 1;
   const computedTotalPages =
     totalPages ?? (Math.ceil(totalElements / pageSize) || 1);
@@ -131,7 +138,7 @@ export const ProductTable= ({
           <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
             {products.map((product, index) => {
               const stt = (activePage - 1) * pageSize + index + 1;
-              const isDetailsOpen = !!showDetailsMap[product.productId || product.id];
+              const isDetailsOpen = !!showDetailsMap[product.productId];
 
               return (
                 <tr
@@ -172,45 +179,33 @@ export const ProductTable= ({
 
                       {/* Nội dung 3 nhóm */}
                       <div className="flex-1 min-w-0 flex flex-col gap-1.5">
-                        {/* ➊ Tên + Slug */}
+                        {/* ➊ Tên + Shop */}
                         <div className="flex flex-col gap-0.5">
-                          <p
-                            className="font-semibold text-zinc-900 dark:text-zinc-100 body-text leading-snug line-clamp-2 warp-break-word"
+                          <Link
+                            to={`/admin/products/detail?slug=${product.slug}`}
+                            className="font-semibold text-zinc-900 dark:text-zinc-100 body-text leading-snug line-clamp-2 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                             title={product.name}
                           >
                             {product.name}
-                          </p>
-                          <span className="text-muted font-mono break-all line-clamp-2" title={product?.slug}>
-                            Slug: {product?.slug}
-                          </span>
+                          </Link>
+                          {/* Shop info */}
+                          {shopMap.get(product.productId) && (
+                            <Link
+                              to={`/admin/shops/detail?slug=${shopMap.get(product.productId)!.shopSlug}`}
+                              className="body-text text-zinc-500 dark:text-zinc-400 flex items-center gap-1 font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors w-fit"
+                            >
+                              <Store size={11} className="shrink-0 text-indigo-500" />
+                              {shopMap.get(product.productId)!.shopName}                {shopMap.get(product.productId)!.shopId}
+                            </Link>
+                          )}
                         </div>
 
-                        {/* ➋ Tác giả + Thể loại */}
-                        <div className="flex flex-wrap items-center gap-1 text-muted">
-                          <ExpandableAuthors authors={product.authorsName} />
-                          <ExpandableGenres genres={product.genresName} />
-                        </div>
-
-                        {/* ➌ NXB + Series (nếu có) */}
-                        {(product.publisherName || product.seriesName) && (
-                          <div className="flex flex-wrap gap-1 text-muted">
-                            {product.publisherName && (
-                              <span className="inline-flex items-center gap-1 bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-500/20 px-1.5 py-0.5 rounded font-medium">
-                                <Building2 size={10} />
-                                <span>{product.publisherName}</span>
-                              </span>
-                            )}
-                            {product.seriesName && (
-                              <span className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-400 border border-violet-100 dark:border-violet-500/20 px-1.5 py-0.5 rounded font-medium">
-                                <Layers size={10} />
-                                <span>{product.seriesName}</span>
-                              </span>
-                            )}
-                          </div>
-                        )}
-
-                        {/* ➍ Chi tiết còn lại -> Ẩn/Hiện */}
-                        {(product.publishYear ||
+                        {/* ➋ Tác giả / Thể loại / NXB / Series / Chi tiết → Ẩn/Hiện */}
+                        {(product.authorsName?.length ||
+                          product.genresName?.length ||
+                          product.publisherName ||
+                          product.seriesName ||
+                          product.publishYear ||
                           product.pages > 0 ||
                           product.weight > 0 ||
                           product.language) && (
@@ -223,30 +218,61 @@ export const ProductTable= ({
                               }`}
                             >
                               <div className="overflow-hidden">
-                                <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-muted pb-1">
-                                  {product.publishYear && (
-                                    <span className="flex items-center gap-1">
-                                      <Calendar size={10} />
-                                      {product.publishYear}
-                                    </span>
+                                <div className="flex flex-col gap-1.5 pb-1">
+                                  {/* Tác giả + Thể loại */}
+                                  {(product.authorsName?.length || product.genresName?.length) && (
+                                    <div className="flex flex-wrap items-center gap-1 text-muted">
+                                      <ExpandableAuthors authors={product.authorsName} />
+                                      <ExpandableGenres genres={product.genresName} />
+                                    </div>
                                   )}
-                                  {product.pages > 0 && (
-                                    <span className="flex items-center gap-1">
-                                      <FileText size={10} />
-                                      {product.pages} trang
-                                    </span>
+
+                                  {/* NXB + Series */}
+                                  {(product.publisherName || product.seriesName) && (
+                                    <div className="flex flex-wrap gap-1 text-muted">
+                                      {product.publisherName && (
+                                        <span className="inline-flex items-center gap-1 bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-500/20 px-1.5 py-0.5 rounded font-medium">
+                                          <Building2 size={10} />
+                                          <span>{product.publisherName}</span>
+                                        </span>
+                                      )}
+                                      {product.seriesName && (
+                                        <span className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-400 border border-violet-100 dark:border-violet-500/20 px-1.5 py-0.5 rounded font-medium">
+                                          <Layers size={10} />
+                                          <span>{product.seriesName}</span>
+                                        </span>
+                                      )}
+                                    </div>
                                   )}
-                                  {product.weight > 0 && (
-                                    <span className="flex items-center gap-1">
-                                      <Weight size={10} />
-                                      {product.weight}g
-                                    </span>
-                                  )}
-                                  {product.language && (
-                                    <span className="flex items-center gap-1">
-                                      <Languages size={10} />
-                                      {getLanguageName(product.language)}
-                                    </span>
+
+                                  {/* Năm / Trang / Cân nặng / Ngôn ngữ */}
+                                  {(product.publishYear || product.pages > 0 || product.weight > 0 || product.language) && (
+                                    <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-muted">
+                                      {product.publishYear && (
+                                        <span className="flex items-center gap-1">
+                                          <Calendar size={10} />
+                                          {product.publishYear}
+                                        </span>
+                                      )}
+                                      {product.pages > 0 && (
+                                        <span className="flex items-center gap-1">
+                                          <FileText size={10} />
+                                          {product.pages} trang
+                                        </span>
+                                      )}
+                                      {product.weight > 0 && (
+                                        <span className="flex items-center gap-1">
+                                          <Weight size={10} />
+                                          {product.weight}g
+                                        </span>
+                                      )}
+                                      {product.language && (
+                                        <span className="flex items-center gap-1">
+                                          <Languages size={10} />
+                                          {getLanguageName(product.language)}
+                                        </span>
+                                      )}
+                                    </div>
                                   )}
                                 </div>
                               </div>
@@ -257,7 +283,7 @@ export const ProductTable= ({
                                 type="button"
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  const idKey = product.productId || product.id;
+                                  const idKey = product.productId;
                                   setShowDetailsMap((prev) => ({
                                     ...prev,
                                     [idKey]: !prev[idKey],
@@ -265,7 +291,7 @@ export const ProductTable= ({
                                 }}
                                 className="inline-flex items-center gap-1 text-muted font-medium hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
                               >
-                                {isDetailsOpen ? "Thu gọn" : "Xem thêm chi tiết"}
+                                {isDetailsOpen ? "Thu gọn" : "Xem thêm"}
                                 {isDetailsOpen ? (
                                   <ChevronUp size={12} />
                                 ) : (

@@ -12,7 +12,7 @@ import type { ProductRequest } from "../types/product.type";
 import { useBookFormData } from "../hooks/useBookFormData";
 import type { ProductImageResponse } from "@/services/cloudinary/type/cloudinary.type";
 import { useUploadImages } from "@/services/cloudinary/hooks/useCloudinary";
-import { useCreateProductShop } from "../hooks/useProductShop";
+import { useCreateProductShop } from "../hooks/useProduct";
 import Spinner from "@/components/common/Spinner";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
 

@@ -10,7 +10,7 @@ import {
 } from "../components/ProductSkeleton";
 import { ProductDeleteModal } from "../components/ProductDeleteModal";
 import { useProductShopFilter } from "../hooks/useProductShopFilter";
-import { useProductShop, useDeleteProductShop } from "../hooks/useProductShop";
+import { useProductShop, useDeleteProductShop } from "../hooks/useProduct";
 import type { ProductResponse } from "../types/product.type";
 
 const ShopProducts = () => {

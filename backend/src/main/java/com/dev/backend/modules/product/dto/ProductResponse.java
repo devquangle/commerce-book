@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 import com.dev.backend.common.enums.ProductStatus;
+import com.dev.backend.modules.shop.dto.ShopSimpleResponse;
 
 @Data
 @NoArgsConstructor
@@ -31,6 +32,8 @@ public class ProductResponse {
     private List<String> genresName;
     private List<String> authorsName;
     private String urlImageDefault;
+ 
+    private ShopSimpleResponse shop;
 
     private ProductStatus status;
 }

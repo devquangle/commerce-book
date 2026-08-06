@@ -33,8 +33,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -59,6 +61,7 @@ public class ProductServiceImpl implements ProductService {
                                 .map(product -> new ProductShopResponse(
                                                 product.getId(),
                                                 new ShopSimpleResponse(
+                                                                product.getShop().getId(),
                                                                 product.getShop().getName(),
                                                                 product.getShop().getSlug())))
                                 .toList();
@@ -148,21 +151,44 @@ public class ProductServiceImpl implements ProductService {
         @Override
         @Transactional(readOnly = true)
         public PageResponse<ProductResponse> searchProductsByShopId(ProductFilterRequest request, Long shopId) {
+
                 Pageable pageable = PageRequest.of(
                                 Math.max(0, Optional.ofNullable(request.getPage()).orElse(1) - 1),
                                 Optional.ofNullable(request.getSize()).filter(s -> s > 0).orElse(10),
                                 Sort.by(Sort.Direction.DESC, "id"));
 
-                Page<ProductResponse> page = productRepository
-                                .searchProductsByShopId(
-                                                StringUtils.trimToNull(request.getKeyword()),
-                                                request.getStatus(),
-                                                shopId,
-                                                pageable)
-                                .map(this::mapToDTO);
+                Page<Product> page = productRepository.searchProductsByShopId(
+                                StringUtils.trimToNull(request.getKeyword()),
+                                request.getStatus(),
+                                shopId,
+                                pageable);
+
+                List<Product> products = page.getContent();
+
+                List<Long> productIds = products.stream()
+                                .map(Product::getId)
+                                .toList();
+
+                Map<Long, List<String>> authorMap = authorProductService.findAuthorMap(productIds);
+                Map<Long, List<String>> genreMap = genreProductService.findGenreMap(productIds);
+                Map<Long, String> imageMap = imageProductService.findThumbnailMap(productIds);
+                List<ProductResponse> responses = products.stream()
+                                .map(product -> {
+                                        ProductResponse dto = productMapper.toDTO(product);
+                                        Long productId = product.getId();
+                                        dto.setAuthorsName(authorMap.getOrDefault(productId, List.of()));
+                                        dto.setGenresName(genreMap.getOrDefault(productId, List.of()));
+                                        dto.setUrlImageDefault(imageMap.get(productId));
+                                        dto.setShop(new ShopSimpleResponse(
+                                                        product.getShop().getId(),
+                                                        product.getShop().getName(),
+                                                        product.getShop().getSlug()));
+                                        return dto;
+                                })
+                                .toList();
 
                 return new PageResponse<>(
-                                page.getContent(),
+                                responses,
                                 page.getNumber(),
                                 page.getSize(),
                                 page.getTotalElements(),
@@ -173,6 +199,33 @@ public class ProductServiceImpl implements ProductService {
         public PageResponse<ProductResponse> searchProducts(ProductFilterRequest request) {
                 // TODO Auto-generated method stub
                 return null;
+        }
+
+        @Override
+        public void approval(Long id, Long shopId) {
+                Product product = getProductByIdAndShopId(id, shopId);
+                product.setStatus(ProductStatus.ACTIVE);
+                productRepository.save(product);
+        }
+
+        @Override
+        public void reject(Long id, Long shopId, String reasons) {
+                Product product = getProductByIdAndShopId(id, shopId);
+                product.setStatus(ProductStatus.ACTIVE);
+                productRepository.save(product);
+        }
+
+        @Override
+        @Transactional(readOnly = true)
+        public Map<Long, ShopSimpleResponse> findShopMap(List<Long> productIds) {
+                return productRepository.findByIdIn(productIds)
+                                .stream()
+                                .collect(Collectors.toMap(
+                                                Product::getId,
+                                                product -> new ShopSimpleResponse(
+                                                                product.getShop().getId(),
+                                                                product.getShop().getName(),
+                                                                product.getShop().getSlug())));
         }
 
         public String generateUniqueSlug(Long shopId, String slug) {

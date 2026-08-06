@@ -15,7 +15,7 @@ import { useUploadImages } from "@/services/cloudinary/hooks/useCloudinary";
 import {
   useProductShopDetail,
   useUpdateProductShop,
-} from "../hooks/useProductShop";
+} from "../hooks/useProduct";
 import Spinner from "@/components/common/Spinner";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
 import { AlertTriangle } from "lucide-react";

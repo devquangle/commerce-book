@@ -57,7 +57,7 @@ export const ProductFilter: React.FC<ProductFilterProps> = ({
           type="text"
           value={keyword}
           onChange={(e) => onKeywordChange(e.target.value)}
-          placeholder="Tìm kiếm theo tên sản phẩm, slug..."
+          placeholder="Tìm kiếm theo tên sản phẩm..."
           className="block w-full pl-10 pr-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
         />
       </div>
