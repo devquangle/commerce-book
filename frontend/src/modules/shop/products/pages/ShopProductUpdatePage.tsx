@@ -8,7 +8,7 @@ import MultipleImageUpload from "@/components/common/MultipleImageUpload";
 import { ensureThumbnail } from "@/components/common/multiple-image-upload.utils";
 import ProductDescription from "../components/ProductDescription";
 import { INITIAL_FORM } from "../types/product-data.type";
-import type { ProductRequest, ProductStatus } from "../types/shop-product.type";
+import type { ProductRequest, ProductStatus } from "../types/product.type";
 import { useBookFormData } from "../hooks/useBookFormData";
 import type { ProductImageResponse } from "@/services/cloudinary/type/cloudinary.type";
 import { useUploadImages } from "@/services/cloudinary/hooks/useCloudinary";

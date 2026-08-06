@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Edit, Trash2, Eye, MoreVertical } from "lucide-react";
-import { type ProductResponse } from "../types/shop-product.type";
+import { type ProductResponse } from "../types/product.type";
 
 interface ProductActionMenuProps {
   item: ProductResponse;

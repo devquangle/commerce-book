@@ -5,7 +5,7 @@ import type {
   ProductFilterRequest,
   ProductRequest,
   ProductResponse,
-} from "../types/shop-product.type";
+} from "../types/product.type";
 import ProductShopService from "../services/product.service";
 import { showErrorToast, showSuccessToast } from "@/libs/utils/toastUtil";
 import axios from "axios";

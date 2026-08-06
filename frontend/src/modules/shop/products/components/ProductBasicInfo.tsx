@@ -7,7 +7,7 @@ import type {
   UseFormSetValue,
   UseFormGetValues,
 } from "react-hook-form";
-import type { ProductRequest } from "../types/shop-product.type";
+import type { ProductRequest } from "../types/product.type";
 import type { GoogleBookResponse } from "../types/googlebook";
 import { useMemo, useState } from "react";
 import { registerLocale, getNames } from "@cospired/i18n-iso-languages";

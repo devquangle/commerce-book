@@ -1,4 +1,4 @@
-import type { ProductRequest } from "./shop-product.type";
+import type { ProductRequest } from "./product.type";
 
 export const INITIAL_FORM: ProductRequest = {
   name: "",

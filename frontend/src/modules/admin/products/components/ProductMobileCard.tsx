@@ -19,7 +19,7 @@ import { Badge } from "@/components/common/Badge";
 import { registerLocale, getNames } from "@cospired/i18n-iso-languages";
 import viLocale from "@cospired/i18n-iso-languages/langs/vi.json";
 import { getProductStatusInfo, type ProductStatus } from "@/modules/shop/products/types/product-status.type";
-import type { ProductResponse } from "@/modules/shop/products/types/shop-product.type";
+import type { ProductResponse } from "@/modules/shop/products/types/product.type";
 
 registerLocale(viLocale);
 

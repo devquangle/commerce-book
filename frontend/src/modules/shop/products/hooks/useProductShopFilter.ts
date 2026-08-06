@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import type { ProductFilterRequest, ProductStatus } from "../types/shop-product.type";
+import type { ProductFilterRequest, ProductStatus } from "../types/product.type";
 import useDebounce from "@/libs/utils/useDebounce";
 
 const initialFilterOptions = {

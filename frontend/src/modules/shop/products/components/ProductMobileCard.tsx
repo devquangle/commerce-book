@@ -17,7 +17,7 @@ import {
   type ProductResponse,
   type ProductStatus,
   getProductStatusInfo,
-} from "../types/shop-product.type";
+} from "../types/product.type";
 import { ProductActionMenu } from "./ProductActionMenu";
 import { formatMoney } from "@/libs/utils/formatMoney.utils";
 import { Badge } from "@/components/common/Badge";

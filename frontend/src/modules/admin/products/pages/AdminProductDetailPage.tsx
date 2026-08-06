@@ -8,7 +8,7 @@ import MultipleImageUpload from "@/components/common/MultipleImageUpload";
 import { ensureThumbnail } from "@/components/common/multiple-image-upload.utils";
 import ProductDescription from "@/modules/shop/products/components/ProductDescription";
 import { INITIAL_FORM } from "@/modules/shop/products/types/product-data.type";
-import type { ProductRequest } from "@/modules/shop/products/types/shop-product.type";
+import type { ProductRequest } from "@/modules/shop/products/types/product.type";
 import { useBookFormData } from "@/modules/shop/products/hooks/useBookFormData";
 import { useProductShopDetail } from "@/modules/shop/products/hooks/useProductShop";
 import Spinner from "@/components/common/Spinner";

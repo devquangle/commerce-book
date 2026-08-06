@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Eye, CheckCircle, XCircle, MoreVertical } from "lucide-react";
-import { type ProductResponse } from "@/modules/shop/products/types/shop-product.type";
+import { type ProductResponse } from "@/modules/shop/products/types/product.type";
 
 interface ProductActionMenuProps {
   item: ProductResponse;

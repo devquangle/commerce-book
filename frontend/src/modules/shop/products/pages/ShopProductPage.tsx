@@ -11,7 +11,7 @@ import {
 import { ProductDeleteModal } from "../components/ProductDeleteModal";
 import { useProductShopFilter } from "../hooks/useProductShopFilter";
 import { useProductShop, useDeleteProductShop } from "../hooks/useProductShop";
-import type { ProductResponse } from "../types/shop-product.type";
+import type { ProductResponse } from "../types/product.type";
 
 const ShopProducts = () => {
   const {

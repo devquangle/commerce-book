@@ -1,5 +1,5 @@
 import { CheckCircle2, X } from "lucide-react";
-import type { ProductDetailResponse, ProductResponse } from "@/modules/shop/products/types/shop-product.type";
+import type { ProductDetailResponse, ProductResponse } from "@/modules/shop/products/types/product.type";
 import { Button } from "@/components/common/Button";
 
 interface ProductApproveModalProps {

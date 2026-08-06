@@ -1,5 +1,5 @@
 import { AlertTriangle, X } from "lucide-react";
-import type { ProductResponse } from "../types/shop-product.type";
+import type { ProductResponse } from "../types/product.type";
 import { Button } from "@/components/common/Button";
 
 interface ProductDeleteModalProps {

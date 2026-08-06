@@ -11,7 +11,7 @@ import { ProductMobileCard } from "../components/ProductMobileCard";
 import { ProductApproveModal } from "../components/ProductApproveModal";
 import { ProductRejectModal } from "../components/ProductRejectModal";
 import { useProductShopFilter } from "@/modules/shop/products/hooks/useProductShopFilter";
-import type { ProductResponse } from "@/modules/shop/products/types/shop-product.type";
+import type { ProductResponse } from "@/modules/shop/products/types/product.type";
 import { useNavigate } from "react-router-dom";
 import { useProductShop } from "@/modules/shop/products/hooks/useProductShop";
 

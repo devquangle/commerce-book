@@ -3,7 +3,7 @@ import { AlertCircle, X } from "lucide-react";
 import type {
   ProductDetailResponse,
   ProductResponse,
-} from "@/modules/shop/products/types/shop-product.type";
+} from "@/modules/shop/products/types/product.type";
 import { Button } from "@/components/common/Button";
 
 interface ProductRejectModalProps {

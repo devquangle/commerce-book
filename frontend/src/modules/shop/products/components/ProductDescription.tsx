@@ -1,6 +1,6 @@
 import type { Control } from "react-hook-form";
 import { Controller } from "react-hook-form";
-import type { ProductRequest } from "../types/shop-product.type";
+import type { ProductRequest } from "../types/product.type";
 import { FileText } from "lucide-react";
 import ProductDescriptionEditor from "./ProductDescriptionEditor";
 

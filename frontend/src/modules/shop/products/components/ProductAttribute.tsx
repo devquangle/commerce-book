@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import type { Control, FieldErrors } from "react-hook-form";
 import { Controller } from "react-hook-form";
-import type { ProductRequest } from "../types/shop-product.type";
+import type { ProductRequest } from "../types/product.type";
 import { SlidersHorizontal } from "lucide-react";
 
 import SearchableMultiSelect from "@/components/common/SearchableMultiSelect";
