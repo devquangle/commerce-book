@@ -11,8 +11,9 @@ import {
   ChevronUp,
   PenTool,
   Tag,
+  Store,
 } from "lucide-react";
-
+import { Link } from "react-router-dom";
 import { ProductActionMenu } from "./ProductActionMenu";
 import { formatMoney } from "@/libs/utils/formatMoney.utils";
 import { Badge } from "@/components/common/Badge";
@@ -79,18 +80,25 @@ export const ProductMobileCard= ({
         </div>
 
         <div className="flex-1 min-w-0 flex flex-col gap-1">
-          {/* Dòng 1: Tên sách */}
-          <h3
-            className="font-semibold text-zinc-900 dark:text-white body-text leading-snug line-clamp-2 wrap-break-word"
+          {/* Dòng 1: Tên sách → link đến detail */}
+          <Link
+            to={`/admin/products/detail?slug=${product.slug}`}
+            className="font-semibold text-zinc-900 dark:text-white body-text leading-snug line-clamp-2 wrap-break-word hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
             title={product.name}
           >
             {product.name}
-          </h3>
+          </Link>
 
-          {/* Dòng 2: Slug */}
-          <span className="caption-text font-mono text-zinc-400 dark:text-zinc-500 break-all line-clamp-2 block mt-0.5" title={product?.slug}>
-            Slug: {product?.slug}
-          </span>
+          {/* Dòng 2: Shop → link đến shop detail */}
+          {product.shop && (
+            <Link
+              to={`/admin/shops/detail?slug=${product.shop.shopSlug}`}
+              className="body-text text-zinc-500 dark:text-zinc-400 flex items-center gap-1 font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors w-fit mt-0.5"
+            >
+              <Store size={11} className="shrink-0 text-indigo-500" />
+              {product.shop.shopName}
+            </Link>
+          )}
 
           {/* Giá nhập, Giá bán, Tồn kho */}
           <div className="flex flex-col gap-1 mt-1.5 pt-1.5 border-t border-zinc-100 dark:border-zinc-800/60 text-xs">

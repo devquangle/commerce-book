@@ -22,7 +22,7 @@ export interface ProductResponse {
   genresName: string[] | [];
   authorsName: string[] | [];
   urlImageDefault: string;
-  shop: ShopSimpleResponse;
+  shop?: ShopSimpleResponse;
   status: ProductStatus;
 }
 

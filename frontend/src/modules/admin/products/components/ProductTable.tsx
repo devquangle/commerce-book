@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   BookOpen,
   Building2,
@@ -24,10 +24,13 @@ import { formatMoney } from "@/libs/utils/formatMoney.utils";
 import { registerLocale, getNames } from "@cospired/i18n-iso-languages";
 import viLocale from "@cospired/i18n-iso-languages/langs/vi.json";
 import { Link, useNavigate } from "react-router-dom";
-import { getProductStatusInfo, type ProductStatus } from "@/modules/shop/products/types/product-status.type";
+import {
+  getProductStatusInfo,
+  type ProductStatus,
+} from "@/modules/shop/products/types/product-status.type";
 import type { ProductResponse } from "@/modules/shop/products/types/product.type";
 import { ProductActionMenu } from "./ProductActionMenu";
-import { useShopsByProductIds } from "@/modules/shop/products/hooks/useProduct";
+
 
 registerLocale(viLocale);
 
@@ -77,7 +80,7 @@ const ProductStatusBadge = ({ status }: { status: ProductStatus }) => {
   return <Badge title={label} variant={color} />;
 };
 
-export const ProductTable= ({
+export const ProductTable = ({
   products,
   page,
   currentPage,
@@ -89,17 +92,12 @@ export const ProductTable= ({
   onView,
   onApprove,
   onReject,
-}:ProductTableProps) => {
+}: ProductTableProps) => {
   const [pageSize, setPageSize] = useState(initialPageSize);
-  const [showDetailsMap, setShowDetailsMap] = useState<Record<number, boolean>>({});
-  const navigate = useNavigate();
-
-  // Fetch shop info for all products in the current page
-  const productIds = useMemo(
-    () => products.map((p) => p.productId).filter(Boolean),
-    [products],
+  const [showDetailsMap, setShowDetailsMap] = useState<Record<number, boolean>>(
+    {},
   );
-  const { shopMap } = useShopsByProductIds(productIds);
+  const navigate = useNavigate();
 
   const activePage = page ?? currentPage ?? 1;
   const computedTotalPages =
@@ -189,13 +187,17 @@ export const ProductTable= ({
                             {product.name}
                           </Link>
                           {/* Shop info */}
-                          {shopMap.get(product.productId) && (
+                          {product.shop && (
                             <Link
-                              to={`/admin/shops/detail?slug=${shopMap.get(product.productId)!.shopSlug}`}
+                              to={`/admin/shops/detail?slug=${product.shop.shopSlug}`}
                               className="body-text text-zinc-500 dark:text-zinc-400 flex items-center gap-1 font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors w-fit"
                             >
-                              <Store size={11} className="shrink-0 text-indigo-500" />
-                              {shopMap.get(product.productId)!.shopName}                {shopMap.get(product.productId)!.shopId}
+                              <Store
+                                size={11}
+                                className="shrink-0 text-indigo-500"
+                              />
+                              {product.shop.shopName}
+                              {product.shop.shopId}
                             </Link>
                           )}
                         </div>
@@ -220,15 +222,21 @@ export const ProductTable= ({
                               <div className="overflow-hidden">
                                 <div className="flex flex-col gap-1.5 pb-1">
                                   {/* Tác giả + Thể loại */}
-                                  {(product.authorsName?.length || product.genresName?.length) && (
+                                  {(product.authorsName?.length ||
+                                    product.genresName?.length) && (
                                     <div className="flex flex-wrap items-center gap-1 text-muted">
-                                      <ExpandableAuthors authors={product.authorsName} />
-                                      <ExpandableGenres genres={product.genresName} />
+                                      <ExpandableAuthors
+                                        authors={product.authorsName}
+                                      />
+                                      <ExpandableGenres
+                                        genres={product.genresName}
+                                      />
                                     </div>
                                   )}
 
                                   {/* NXB + Series */}
-                                  {(product.publisherName || product.seriesName) && (
+                                  {(product.publisherName ||
+                                    product.seriesName) && (
                                     <div className="flex flex-wrap gap-1 text-muted">
                                       {product.publisherName && (
                                         <span className="inline-flex items-center gap-1 bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-500/20 px-1.5 py-0.5 rounded font-medium">
@@ -246,7 +254,10 @@ export const ProductTable= ({
                                   )}
 
                                   {/* Năm / Trang / Cân nặng / Ngôn ngữ */}
-                                  {(product.publishYear || product.pages > 0 || product.weight > 0 || product.language) && (
+                                  {(product.publishYear ||
+                                    product.pages > 0 ||
+                                    product.weight > 0 ||
+                                    product.language) && (
                                     <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-muted">
                                       {product.publishYear && (
                                         <span className="flex items-center gap-1">
@@ -350,7 +361,9 @@ export const ProductTable= ({
                           >
                             <span className="text-rose-500 font-medium text-[11px] cursor-help">
                               -
-                              {formatMoney(product.originalPrice - product.price)}
+                              {formatMoney(
+                                product.originalPrice - product.price,
+                              )}
                             </span>
                           </Tooltip>
                         ) : product.originalPrice &&
@@ -363,7 +376,9 @@ export const ProductTable= ({
                           >
                             <span className="text-emerald-500 font-medium text-[11px] cursor-help">
                               +
-                              {formatMoney(product.price - product.originalPrice)}
+                              {formatMoney(
+                                product.price - product.originalPrice,
+                              )}
                             </span>
                           </Tooltip>
                         ) : null}
