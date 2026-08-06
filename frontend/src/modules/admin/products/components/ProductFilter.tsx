@@ -24,7 +24,7 @@ interface ProductFilterProps {
 }
 
 const statusOptions = [
-  { label: "Tất cả trạng thái", value: "" },
+  { label: "Tất cả", value: "" },
   ...PRODUCT_STATUS_LIST.map((st) => ({
     label: getProductStatusValue(st),
     value: st,

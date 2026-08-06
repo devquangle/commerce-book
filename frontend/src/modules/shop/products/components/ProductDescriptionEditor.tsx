@@ -31,6 +31,7 @@ type Props = {
   bookName?: string;
   authorNames?: string;
   disabled?: boolean;
+  showTools?: boolean;
 };
 
 const CustomImage = Image.extend({
@@ -60,6 +61,7 @@ const ProductDescriptionEditor = ({
   bookName,
   authorNames,
   disabled = false,
+  showTools = true,
 }: Props) => {
   const fileRef = useRef<HTMLInputElement>(null);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
@@ -222,138 +224,140 @@ Yêu cầu: Sử dụng thẻ <h2> cho các đề mục, giọng văn chuyên ng
         <ProductDescriptionView editor={editor} />
       </div>
 
-      <div className="card-custom space-y-4">
-        <div className="flex flex-col sm:flex-row justify-between sm:items-center border-b border-slate-200 dark:border-zinc-800 pb-3 gap-3">
-          <div className="flex items-center gap-2">
-            <Sparkles size={18} className="text-violet-600 animate-pulse" />
-            <h3 className="font-bold text-slate-800 dark:text-zinc-200 text-sm tracking-wide uppercase">
-              Công cụ hỗ trợ mô tả sách
-            </h3>
-          </div>
-          <div className="flex bg-slate-200/60 dark:bg-zinc-800 p-0.5 rounded-lg self-start sm:self-auto">
-            <button
-              type="button"
-              onClick={() => setActiveTab("guidelines")}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer ${
-                activeTab === "guidelines"
-                  ? "bg-white dark:bg-zinc-900 text-slate-800 dark:text-white shadow-sm"
-                  : "text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-white"
-              }`}
-            >
-              Tiêu chuẩn SEO
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab("ai-prompt")}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer ${
-                activeTab === "ai-prompt"
-                  ? "bg-white dark:bg-zinc-900 text-slate-800 dark:text-white shadow-sm"
-                  : "text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-white"
-              }`}
-            >
-              Tạo Prompt AI
-            </button>
-          </div>
-        </div>
-
-        {activeTab === "guidelines" ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-600 dark:text-zinc-400 leading-relaxed">
-            <div className="space-y-2.5">
-              <div className="flex items-start gap-2">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 font-bold">
-                  1
-                </span>
-                <div>
-                  <strong className="text-slate-800 dark:text-zinc-200">
-                    Tiêu đề phụ:
-                  </strong>{" "}
-                  Sử dụng thẻ <code>H2</code> cho các đề mục chính (
-                  <em>
-                    Nội dung chính, Điểm nổi bật, Giá trị nghệ thuật, Đối tượng
-                    độc giả, Về tác giả
-                  </em>
-                  ).
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 font-bold">
-                  2
-                </span>
-                <div>
-                  <strong className="text-slate-800 dark:text-zinc-200">
-                    Đoạn văn ngắn gọn:
-                  </strong>{" "}
-                  Mỗi đoạn chỉ nên từ 3-5 câu để độc giả không bị mỏi mắt và dễ
-                  theo dõi cốt truyện/chủ đề.
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 font-bold">
-                  3
-                </span>
-                <div>
-                  <strong className="text-slate-800 dark:text-zinc-200">
-                    Danh sách:
-                  </strong>{" "}
-                  Sử dụng Bullet list (dấu chấm tròn) cho phần{" "}
-                  <em>Điểm nổi bật</em>, <em>Giá trị nghệ thuật</em> hoặc{" "}
-                  <em>Đối tượng độc giả</em> để thông tin trực quan hơn.
-                </div>
-              </div>
+      {showTools && (
+        <div className="card-custom space-y-4">
+          <div className="flex flex-col sm:flex-row justify-between sm:items-center border-b border-slate-200 dark:border-zinc-800 pb-3 gap-3">
+            <div className="flex items-center gap-2">
+              <Sparkles size={18} className="text-violet-600 animate-pulse" />
+              <h3 className="font-bold text-slate-800 dark:text-zinc-200 text-sm tracking-wide uppercase">
+                Công cụ hỗ trợ mô tả sách
+              </h3>
             </div>
-            <div className="space-y-2.5">
-              <div className="flex items-start gap-2">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 font-bold">
-                  4
-                </span>
-                <div>
-                  <strong className="text-slate-800 dark:text-zinc-200">
-                    Giọng văn:
-                  </strong>{" "}
-                  Khách quan, lôi cuốn, thuyết phục độc giả và tránh các lỗi
-                  chính tả.
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            <p className="text-xs text-slate-500 dark:text-zinc-400 leading-normal">
-              Copy prompt mẫu bên dưới và dán vào AI của bạn (như ChatGPT/Gemini)
-              để tự động viết một bản mô tả sách chuẩn cấu trúc SEO.
-            </p>
-            <div className="relative">
-              <textarea
-                readOnly
-                value={aiPrompt}
-                rows={6}
-                className="w-full text-xs font-mono text-slate-700 dark:text-zinc-300 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 rounded-xl p-3.5 pr-12 focus:outline-none resize-none leading-relaxed shadow-inner"
-              />
+            <div className="flex bg-slate-200/60 dark:bg-zinc-800 p-0.5 rounded-lg self-start sm:self-auto">
               <button
                 type="button"
-                onClick={handleCopyPrompt}
-                className={`absolute top-2.5 right-2.5 p-2 rounded-lg border transition cursor-pointer ${
-                  copied
-                    ? "bg-emerald-50 border-emerald-200 text-emerald-600"
-                    : "bg-slate-50 border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-700 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400"
+                onClick={() => setActiveTab("guidelines")}
+                className={`px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer ${
+                  activeTab === "guidelines"
+                    ? "bg-white dark:bg-zinc-900 text-slate-800 dark:text-white shadow-sm"
+                    : "text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-white"
                 }`}
-                title="Copy prompt"
               >
-                {copied ? <Check size={14} /> : <Copy size={14} />}
+                Tiêu chuẩn SEO
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("ai-prompt")}
+                className={`px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer ${
+                  activeTab === "ai-prompt"
+                    ? "bg-white dark:bg-zinc-900 text-slate-800 dark:text-white shadow-sm"
+                    : "text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-white"
+                }`}
+              >
+                Tạo Prompt AI
               </button>
             </div>
-            <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-[11px] text-slate-500 dark:text-zinc-400 bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100/50 dark:border-violet-900/50 rounded-lg p-2.5">
-              <span>
-                <strong>Tên sách:</strong> {bookTitle}
-              </span>
-              <span>•</span>
-              <span>
-                <strong>Tác giả:</strong> {bookAuthors}
-              </span>
-            </div>
           </div>
-        )}
-      </div>
+
+          {activeTab === "guidelines" ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-600 dark:text-zinc-400 leading-relaxed">
+              <div className="space-y-2.5">
+                <div className="flex items-start gap-2">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 font-bold">
+                    1
+                  </span>
+                  <div>
+                    <strong className="text-slate-800 dark:text-zinc-200">
+                      Tiêu đề phụ:
+                    </strong>{" "}
+                    Sử dụng thẻ <code>H2</code> cho các đề mục chính (
+                    <em>
+                      Nội dung chính, Điểm nổi bật, Giá trị nghệ thuật, Đối tượng
+                      độc giả, Về tác giả
+                    </em>
+                    ).
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 font-bold">
+                    2
+                  </span>
+                  <div>
+                    <strong className="text-slate-800 dark:text-zinc-200">
+                      Đoạn văn ngắn gọn:
+                    </strong>{" "}
+                    Mỗi đoạn chỉ nên từ 3-5 câu để độc giả không bị mỏi mắt và dễ
+                    theo dõi cốt truyện/chủ đề.
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 font-bold">
+                    3
+                  </span>
+                  <div>
+                    <strong className="text-slate-800 dark:text-zinc-200">
+                      Danh sách:
+                    </strong>{" "}
+                    Sử dụng Bullet list (dấu chấm tròn) cho phần{" "}
+                    <em>Điểm nổi bật</em>, <em>Giá trị nghệ thuật</em> hoặc{" "}
+                    <em>Đối tượng độc giả</em> để thông tin trực quan hơn.
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2.5">
+                <div className="flex items-start gap-2">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 font-bold">
+                    4
+                  </span>
+                  <div>
+                    <strong className="text-slate-800 dark:text-zinc-200">
+                      Giọng văn:
+                    </strong>{" "}
+                    Khách quan, lôi cuốn, thuyết phục độc giả và tránh các lỗi
+                    chính tả.
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-xs text-slate-500 dark:text-zinc-400 leading-normal">
+                Copy prompt mẫu bên dưới và dán vào AI của bạn (như ChatGPT/Gemini)
+                để tự động viết một bản mô tả sách chuẩn cấu trúc SEO.
+              </p>
+              <div className="relative">
+                <textarea
+                  readOnly
+                  value={aiPrompt}
+                  rows={6}
+                  className="w-full text-xs font-mono text-slate-700 dark:text-zinc-300 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 rounded-xl p-3.5 pr-12 focus:outline-none resize-none leading-relaxed shadow-inner"
+                />
+                <button
+                  type="button"
+                  onClick={handleCopyPrompt}
+                  className={`absolute top-2.5 right-2.5 p-2 rounded-lg border transition cursor-pointer ${
+                    copied
+                      ? "bg-emerald-50 border-emerald-200 text-emerald-600"
+                      : "bg-slate-50 border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-700 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400"
+                  }`}
+                  title="Copy prompt"
+                >
+                  {copied ? <Check size={14} /> : <Copy size={14} />}
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-[11px] text-slate-500 dark:text-zinc-400 bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100/50 dark:border-violet-900/50 rounded-lg p-2.5">
+                <span>
+                  <strong>Tên sách:</strong> {bookTitle}
+                </span>
+                <span>•</span>
+                <span>
+                  <strong>Tác giả:</strong> {bookAuthors}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

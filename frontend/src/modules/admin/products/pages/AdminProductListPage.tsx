@@ -7,15 +7,15 @@ import {
   ProductSkeleton,
   ProductMobileSkeleton,
 } from "@/modules/shop/products/components/ProductSkeleton";
-import { ProductMobileCard } from "@/modules/shop/products/components/ProductMobileCard";
+import { ProductMobileCard } from "../components/ProductMobileCard";
 import { ProductApproveModal } from "../components/ProductApproveModal";
 import { ProductRejectModal } from "../components/ProductRejectModal";
 import { useProductShopFilter } from "@/modules/shop/products/hooks/useProductShopFilter";
-import { useProductShop } from "@/modules/shop/products/hooks/useProductShop";
 import type { ProductResponse } from "@/modules/shop/products/types/shop-product.type";
 import { useNavigate } from "react-router-dom";
+import { useProductShop } from "@/modules/shop/products/hooks/useProductShop";
 
-const AdminProductPage = () => {
+const AdminProductListPage = () => {
   const navigate = useNavigate();
   const {
     keyword,
@@ -43,7 +43,6 @@ const AdminProductPage = () => {
   const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductResponse | null>(null);
-  const [isActionLoading, setIsActionLoading] = useState(false);
 
   const handleApproveClick = (product: ProductResponse) => {
     setSelectedProduct(product);
@@ -57,10 +56,8 @@ const AdminProductPage = () => {
 
   const handleConfirmApprove = () => {
     if (!selectedProduct) return;
-    setIsActionLoading(true);
     // TODO: Call API approve product here when backend hook is integrated
     setTimeout(() => {
-      setIsActionLoading(false);
       setIsApproveModalOpen(false);
       setSelectedProduct(null);
     }, 500);
@@ -68,18 +65,12 @@ const AdminProductPage = () => {
 
   const handleConfirmReject = (reason: string) => {
     if (!selectedProduct) return;
-    setIsActionLoading(true);
     // TODO: Call API reject product with reason here when backend hook is integrated
     console.log("Rejecting product:", selectedProduct.id, "Reason:", reason);
     setTimeout(() => {
-      setIsActionLoading(false);
       setIsRejectModalOpen(false);
       setSelectedProduct(null);
     }, 500);
-  };
-
-  const handleEdit = (product: ProductResponse) => {
-    navigate(`/admin/products/update?slug=${product.slug}`);
   };
 
   const handleView = (product: ProductResponse) => {
@@ -127,7 +118,6 @@ const AdminProductPage = () => {
               totalElements={totalElements}
               onPageChange={handlePageChange}
               onPageSizeChange={handlePageSizeChange}
-              onEdit={handleEdit}
               onView={handleView}
               onApprove={handleApproveClick}
               onReject={handleRejectClick}
@@ -145,6 +135,9 @@ const AdminProductPage = () => {
                       : index
                   }
                   product={product}
+                  onView={handleView}
+                  onApprove={handleApproveClick}
+                  onReject={handleRejectClick}
                 />
               ))}
               {products.length === 0 && (
@@ -174,7 +167,6 @@ const AdminProductPage = () => {
       <ProductApproveModal
         isOpen={isApproveModalOpen}
         item={selectedProduct}
-        isLoading={isActionLoading}
         onClose={() => setIsApproveModalOpen(false)}
         onConfirm={handleConfirmApprove}
       />
@@ -183,7 +175,6 @@ const AdminProductPage = () => {
       <ProductRejectModal
         isOpen={isRejectModalOpen}
         item={selectedProduct}
-        isLoading={isActionLoading}
         onClose={() => setIsRejectModalOpen(false)}
         onConfirm={handleConfirmReject}
       />
@@ -191,4 +182,4 @@ const AdminProductPage = () => {
   );
 };
 
-export default AdminProductPage;
+export default AdminProductListPage;

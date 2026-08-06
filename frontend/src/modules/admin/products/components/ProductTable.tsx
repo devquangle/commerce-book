@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import{ useState } from "react";
 import {
   BookOpen,
   Building2,
@@ -20,13 +20,14 @@ import { Tooltip } from "@/components/common/Tooltip";
 import { Badge } from "@/components/common/Badge";
 import { EmptyState } from "@/components/common/EmptyState";
 
-import { ProductActionMenu } from "./ProductActionMenu";
+
 import { formatMoney } from "@/libs/utils/formatMoney.utils";
 import { registerLocale, getNames } from "@cospired/i18n-iso-languages";
 import viLocale from "@cospired/i18n-iso-languages/langs/vi.json";
 import { useNavigate } from "react-router-dom";
 import { getProductStatusInfo, type ProductStatus } from "@/modules/shop/products/types/product-status.type";
 import type { ProductResponse } from "@/modules/shop/products/types/shop-product.type";
+import { ProductActionMenu } from "./ProductActionMenu";
 
 registerLocale(viLocale);
 
@@ -39,7 +40,6 @@ export interface ProductTableProps {
   totalPages?: number;
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (size: number) => void;
-  onEdit?: (product: ProductResponse) => void;
   onView?: (product: ProductResponse) => void;
   onApprove?: (product: ProductResponse) => void;
   onReject?: (product: ProductResponse) => void;
@@ -77,7 +77,7 @@ const ProductStatusBadge = ({ status }: { status: ProductStatus }) => {
   return <Badge title={label} variant={color} />;
 };
 
-export const ProductTable: React.FC<ProductTableProps> = ({
+export const ProductTable= ({
   products,
   page,
   currentPage,
@@ -86,11 +86,10 @@ export const ProductTable: React.FC<ProductTableProps> = ({
   totalPages,
   onPageChange,
   onPageSizeChange,
-  onEdit,
   onView,
   onApprove,
   onReject,
-}) => {
+}:ProductTableProps) => {
   const [pageSize, setPageSize] = useState(initialPageSize);
   const [showDetailsMap, setShowDetailsMap] = useState<Record<number, boolean>>({});
   const navigate = useNavigate();
@@ -105,14 +104,6 @@ export const ProductTable: React.FC<ProductTableProps> = ({
       onPageSizeChange(size);
     } else if (onPageChange) {
       onPageChange(1);
-    }
-  };
-
-  const handleEdit = (product: ProductResponse) => {
-    if (onEdit) {
-      onEdit(product);
-    } else {
-      navigate(`/admin/products/update?slug=${product.slug}`);
     }
   };
 
@@ -396,7 +387,6 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                   <td className="py-3 px-6 text-right align-middle">
                     <ProductActionMenu
                       item={product}
-                      onEdit={() => handleEdit(product)}
                       onView={() => handleView(product)}
                       onApprove={onApprove}
                       onReject={onReject}

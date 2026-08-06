@@ -1,23 +1,20 @@
-import React from "react";
 import { CheckCircle2, X } from "lucide-react";
-import type { ProductResponse } from "@/modules/shop/products/types/shop-product.type";
+import type { ProductDetailResponse, ProductResponse } from "@/modules/shop/products/types/shop-product.type";
 import { Button } from "@/components/common/Button";
 
 interface ProductApproveModalProps {
   isOpen: boolean;
-  item: ProductResponse | null;
-  isLoading?: boolean;
+  item: ProductResponse | ProductDetailResponse | null;
   onClose: () => void;
   onConfirm: () => void;
 }
 
-export const ProductApproveModal: React.FC<ProductApproveModalProps> = ({
+export const ProductApproveModal= ({
   isOpen,
   item,
-  isLoading = false,
   onClose,
   onConfirm,
-}) => {
+}:ProductApproveModalProps) => {
   if (!isOpen) return null;
 
   return (
@@ -67,7 +64,6 @@ export const ProductApproveModal: React.FC<ProductApproveModalProps> = ({
             <Button
               variant="outline"
               onClick={onClose}
-              disabled={isLoading}
               className="cursor-pointer"
             >
               Hủy
@@ -75,7 +71,6 @@ export const ProductApproveModal: React.FC<ProductApproveModalProps> = ({
             <Button
               variant="primary"
               onClick={onConfirm}
-              isLoading={isLoading}
               className="bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
             >
               Phê duyệt

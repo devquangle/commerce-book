@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Edit, Eye, CheckCircle, XCircle, MoreVertical } from "lucide-react";
+import { Eye, CheckCircle, XCircle, MoreVertical } from "lucide-react";
 import { type ProductResponse } from "@/modules/shop/products/types/shop-product.type";
 
 interface ProductActionMenuProps {
   item: ProductResponse;
-  onEdit?: (product: ProductResponse) => void;
   onView?: (product: ProductResponse) => void;
   onApprove?: (product: ProductResponse) => void;
   onReject?: (product: ProductResponse) => void;
@@ -12,7 +11,6 @@ interface ProductActionMenuProps {
 
 export const ProductActionMenu: React.FC<ProductActionMenuProps> = ({
   item,
-  onEdit,
   onView,
   onApprove,
   onReject,
@@ -113,19 +111,6 @@ export const ProductActionMenu: React.FC<ProductActionMenuProps> = ({
             >
               <XCircle className="w-4 h-4 text-rose-500" />
               <span>Từ chối</span>
-            </button>
-          )}
-
-          {onEdit && (
-            <button
-              onClick={() => {
-                setIsOpen(false);
-                onEdit(item);
-              }}
-              className="flex items-center gap-2 w-full px-3 py-2 body-text text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-amber-600 transition-colors cursor-pointer"
-            >
-              <Edit className="w-4 h-4 text-amber-500" />
-              <span>Cập nhật</span>
             </button>
           )}
         </div>

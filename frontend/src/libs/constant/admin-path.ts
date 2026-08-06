@@ -6,6 +6,9 @@ export const ADMIN_PATH = {
   PRODUCTS: "products",
   PRODUCTS_FULL: "/admin/products",
 
+  PRODUCTS_DETAIL: "products/detail",
+  PRODUCTS_DETAIL_FULL: "/admin/products/detail",
+
   STORES: "stores",
   STORES_FULL: "/admin/stores",
 

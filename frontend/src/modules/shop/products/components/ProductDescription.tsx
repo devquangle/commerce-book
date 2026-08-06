@@ -11,6 +11,7 @@ export interface ProductDescriptionProps {
   bookName?: string;
   authorNames?: string;
   disabled?: boolean;
+  showTools?: boolean;
 }
 
 const ProductDescription = ({
@@ -20,6 +21,7 @@ const ProductDescription = ({
   bookName,
   authorNames,
   disabled = false,
+  showTools = true,
 }: ProductDescriptionProps) => {
   return (
     <div className="col-span-12 card-custom space-y-4">
@@ -41,6 +43,7 @@ const ProductDescription = ({
               bookName={bookName}
               authorNames={authorNames}
               disabled={disabled}
+              showTools={showTools}
             />
           )}
         />
@@ -51,6 +54,7 @@ const ProductDescription = ({
           bookName={bookName}
           authorNames={authorNames}
           disabled={disabled}
+          showTools={showTools}
         />
       )}
     </div>

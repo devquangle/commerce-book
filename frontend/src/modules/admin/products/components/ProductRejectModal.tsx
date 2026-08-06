@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { AlertCircle, X } from "lucide-react";
-import type { ProductResponse } from "@/modules/shop/products/types/shop-product.type";
+import type {
+  ProductDetailResponse,
+  ProductResponse,
+} from "@/modules/shop/products/types/shop-product.type";
 import { Button } from "@/components/common/Button";
 
 interface ProductRejectModalProps {
   isOpen: boolean;
-  item: ProductResponse | null;
-  isLoading?: boolean;
+  item: ProductResponse | ProductDetailResponse | null;
   onClose: () => void;
   onConfirm: (reason: string) => void;
 }
@@ -22,7 +24,6 @@ const REJECT_REASONS = [
 export const ProductRejectModal: React.FC<ProductRejectModalProps> = ({
   isOpen,
   item,
-  isLoading = false,
   onClose,
   onConfirm,
 }) => {
@@ -138,7 +139,6 @@ export const ProductRejectModal: React.FC<ProductRejectModalProps> = ({
             <Button
               variant="outline"
               onClick={handleModalClose}
-              disabled={isLoading}
               className="cursor-pointer"
             >
               Hủy
@@ -146,7 +146,6 @@ export const ProductRejectModal: React.FC<ProductRejectModalProps> = ({
             <Button
               variant="danger"
               onClick={handleConfirm}
-              isLoading={isLoading}
               className="cursor-pointer"
             >
               Từ chối sản phẩm
