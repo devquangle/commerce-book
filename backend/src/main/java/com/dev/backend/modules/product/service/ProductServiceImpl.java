@@ -1,6 +1,7 @@
 package com.dev.backend.modules.product.service;
 
 import com.dev.backend.common.enums.ProductStatus;
+import com.dev.backend.common.exception.BadRequestException;
 import com.dev.backend.common.exception.DuplicateFieldException;
 import com.dev.backend.common.exception.NotFoundException;
 import com.dev.backend.common.response.PageResponse;
@@ -55,6 +56,27 @@ public class ProductServiceImpl implements ProductService {
 
         @Override
         @Transactional(readOnly = true)
+        public Product getProductBySlugAndShopId(String slug, Long shopId) {
+                return productRepository.findProductBySlugAndShopId(slug, shopId)
+                                .orElseThrow(() -> new NotFoundException("Product not found slug " + slug));
+        }
+
+        @Override
+        @Transactional(readOnly = true)
+        public Product getProductByIdAndShopId(Long id, Long shopId) {
+                return productRepository.findProductByIdAndShopId(id, shopId)
+                                .orElseThrow(() -> new NotFoundException("Product not found id " + id));
+        }
+
+        @Override
+        @Transactional(readOnly = true)
+        public Product getById(Long id) {
+                return productRepository.findById(id)
+                                .orElseThrow(() -> new NotFoundException("Product not found id " + id));
+        }
+
+        @Override
+        @Transactional(readOnly = true)
         public List<ProductShopResponse> findByIdIn(List<Long> productIds) {
                 return productRepository.findByIdIn(productIds)
                                 .stream()
@@ -65,18 +87,6 @@ public class ProductServiceImpl implements ProductService {
                                                                 product.getShop().getName(),
                                                                 product.getShop().getSlug())))
                                 .toList();
-        }
-
-        @Override
-        public Product getProductBySlugAndShopId(String slug, Long shopId) {
-                return productRepository.findProductBySlugAndShopId(slug, shopId)
-                                .orElseThrow(() -> new NotFoundException("Product not found slug " + slug));
-        }
-
-        @Override
-        public Product getProductByIdAndShopId(Long id, Long shopId) {
-                return productRepository.findProductByIdAndShopId(id, shopId)
-                                .orElseThrow(() -> new NotFoundException("Product not found id " + id));
         }
 
         @Override
@@ -202,16 +212,23 @@ public class ProductServiceImpl implements ProductService {
         }
 
         @Override
-        public void approval(Long id, Long shopId) {
-                Product product = getProductByIdAndShopId(id, shopId);
+        @Transactional
+        public void approve(Long id) {
+                Product product = getById(id);
+                if (product.getStatus() != ProductStatus.PENDING_APPROVAL) {
+                        throw new BadRequestException("Chỉ có thể duyệt sản phẩm đang ở trạng thái chờ duyệt.");
+                }
                 product.setStatus(ProductStatus.ACTIVE);
-                productRepository.save(product);
         }
 
         @Override
-        public void reject(Long id, Long shopId, String reasons) {
-                Product product = getProductByIdAndShopId(id, shopId);
-                product.setStatus(ProductStatus.ACTIVE);
+        public void reject(Long id, String reasons) {
+                Product product = getById(id);
+                 if (product.getStatus() != ProductStatus.PENDING_APPROVAL) {
+                        throw new BadRequestException("Chỉ có thể tử chối sản phẩm đang ở trạng thái chờ duyệt.");
+                }
+                product.setReason(reasons);
+                product.setStatus(ProductStatus.REJECTED);
                 productRepository.save(product);
         }
 

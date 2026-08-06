@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import { AlertCircle, Check, X } from "lucide-react";
+import { AlertCircle, Check, Loader2, X } from "lucide-react";
 import type {
   ProductDetailResponse,
   ProductResponse,
 } from "@/modules/shop/products/types/product.type";
 import { Button } from "@/components/common/Button";
+import { useRejectProduct } from "@/modules/shop/products/hooks/useProduct";
+import Spinner from "@/components/common/Spinner";
 
 interface ProductRejectModalProps {
   isOpen: boolean;
   item: ProductResponse | ProductDetailResponse | null;
   onClose: () => void;
-  onConfirm: (reason: string) => void;
+  onSuccess?: () => void;
 }
 
 const REJECT_REASONS = [
@@ -25,11 +27,15 @@ export const ProductRejectModal: React.FC<ProductRejectModalProps> = ({
   isOpen,
   item,
   onClose,
-  onConfirm,
+  onSuccess,
 }) => {
-  const [selectedReasons, setSelectedReasons] = useState<Set<string>>(new Set());
+  const [selectedReasons, setSelectedReasons] = useState<Set<string>>(
+    new Set(),
+  );
   const [customReason, setCustomReason] = useState("");
   const [error, setError] = useState("");
+
+  const { mutate: reject, isPending } = useRejectProduct();
 
   if (!isOpen) return null;
 
@@ -56,20 +62,39 @@ export const ProductRejectModal: React.FC<ProductRejectModalProps> = ({
   };
 
   const handleConfirm = () => {
+    if (!item) return;
     const final = buildFinalReason();
     if (!final) {
       setError("Vui lòng chọn hoặc nhập ít nhất một lý do từ chối");
       return;
     }
-    onConfirm(final);
+    reject(
+      { id: item.productId, reason: final },
+      {
+        onSuccess: () => {
+          handleReset();
+          onClose();
+          onSuccess?.();
+        },
+      },
+    );
   };
 
-  const handleModalClose = () => {
+  const handleReset = () => {
     setSelectedReasons(new Set());
     setCustomReason("");
     setError("");
+  };
+
+  const handleModalClose = () => {
+    if (isPending) return;
+    handleReset();
     onClose();
   };
+
+  if (isPending) {
+    return <Spinner />;
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -88,7 +113,8 @@ export const ProductRejectModal: React.FC<ProductRejectModalProps> = ({
           </h2>
           <button
             onClick={handleModalClose}
-            className="p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 rounded-full transition-colors cursor-pointer"
+            disabled={isPending}
+            className="p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 rounded-full transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <X className="w-4 h-4" />
           </button>
@@ -129,14 +155,14 @@ export const ProductRejectModal: React.FC<ProductRejectModalProps> = ({
                   <button
                     key={index}
                     type="button"
+                    disabled={isPending}
                     onClick={() => toggleReason(r)}
-                    className={`flex items-center gap-2.5 text-xs px-3 py-2 rounded-xl border transition-all cursor-pointer text-left w-full ${
+                    className={`flex items-center gap-2.5 text-xs px-3 py-2 rounded-xl border transition-all cursor-pointer text-left w-full disabled:opacity-50 disabled:cursor-not-allowed ${
                       isSelected
                         ? "bg-rose-50 border-rose-300 text-rose-700 dark:bg-rose-950/40 dark:border-rose-700 dark:text-rose-300"
                         : "bg-zinc-50 border-zinc-200 text-zinc-600 hover:bg-zinc-100 dark:bg-zinc-800/50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
                     }`}
                   >
-                    {/* Checkbox indicator */}
                     <span
                       className={`shrink-0 w-4 h-4 rounded border flex items-center justify-center transition-colors ${
                         isSelected
@@ -145,7 +171,11 @@ export const ProductRejectModal: React.FC<ProductRejectModalProps> = ({
                       }`}
                     >
                       {isSelected && (
-                        <Check size={10} className="text-white" strokeWidth={3} />
+                        <Check
+                          size={10}
+                          className="text-white"
+                          strokeWidth={3}
+                        />
                       )}
                     </span>
                     {r}
@@ -166,12 +196,13 @@ export const ProductRejectModal: React.FC<ProductRejectModalProps> = ({
             <textarea
               rows={3}
               value={customReason}
+              disabled={isPending}
               onChange={(e) => {
                 setCustomReason(e.target.value);
                 if (error) setError("");
               }}
               placeholder="Nhập thêm lý do chi tiết (nếu có)..."
-              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-rose-500/20 resize-none"
+              className="w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-rose-500/20 resize-none disabled:opacity-50 disabled:cursor-not-allowed"
             />
             {error && <p className="text-xs text-rose-500">{error}</p>}
           </div>
@@ -180,6 +211,7 @@ export const ProductRejectModal: React.FC<ProductRejectModalProps> = ({
             <Button
               variant="outline"
               onClick={handleModalClose}
+              disabled={isPending}
               className="cursor-pointer"
             >
               Hủy
@@ -187,9 +219,15 @@ export const ProductRejectModal: React.FC<ProductRejectModalProps> = ({
             <Button
               variant="danger"
               onClick={handleConfirm}
+              disabled={isPending}
+              icon={
+                isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : undefined
+              }
               className="cursor-pointer"
             >
-              Từ chối sản phẩm
+              {isPending ? "Đang xử lý..." : "Từ chối sản phẩm"}
             </Button>
           </div>
         </div>

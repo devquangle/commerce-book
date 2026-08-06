@@ -23,6 +23,7 @@ import com.dev.backend.modules.product.dto.ProductFilterRequest;
 import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.dto.ProductShopResponse;
+import com.dev.backend.modules.product.dto.RejectProductRequest;
 import com.dev.backend.modules.product.service.ProductService;
 import com.dev.backend.security.custom.CustomUserDetails;
 
@@ -80,5 +81,18 @@ public class ProductController {
         return ResponseUtil.success(
                 "Lấy danh sách shop thành công",
                 productService.findByIdIn(productIds));
+    }
+
+    @PutMapping("/admin/products/approve/{id}")
+    public ResponseEntity<ResponseData<Void>> approve(@PathVariable("id") Long id) {
+        productService.approve(id);
+        return ResponseUtil.successMessage("Duyệt sản phẩm thành công.");
+    }
+
+    @PutMapping("/admin/products/reject/{id}")
+    public ResponseEntity<ResponseData<Void>> reject(@PathVariable("id") Long id,
+            @Valid @RequestBody RejectProductRequest request) {
+        productService.reject(id, request.getReason());
+        return ResponseUtil.successMessage("Từ chối sản phẩm thành công.");
     }
 }

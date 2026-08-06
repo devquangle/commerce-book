@@ -30,8 +30,8 @@ import {
 } from "@/modules/shop/products/types/product-status.type";
 import type { ProductResponse } from "@/modules/shop/products/types/product.type";
 import { ProductActionMenu } from "./ProductActionMenu";
-
-
+import { ProductApproveModal } from "./ProductApproveModal";
+import { ProductRejectModal } from "./ProductRejectModal";
 registerLocale(viLocale);
 
 export interface ProductTableProps {
@@ -44,8 +44,6 @@ export interface ProductTableProps {
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (size: number) => void;
   onView?: (product: ProductResponse) => void;
-  onApprove?: (product: ProductResponse) => void;
-  onReject?: (product: ProductResponse) => void;
 }
 
 const getLanguageName = (code: string) => {
@@ -90,14 +88,15 @@ export const ProductTable = ({
   onPageChange,
   onPageSizeChange,
   onView,
-  onApprove,
-  onReject,
 }: ProductTableProps) => {
   const [pageSize, setPageSize] = useState(initialPageSize);
-  const [showDetailsMap, setShowDetailsMap] = useState<Record<number, boolean>>(
-    {},
-  );
+  const [showDetailsMap, setShowDetailsMap] = useState<Record<number, boolean>>({});
   const navigate = useNavigate();
+
+  // Modal state
+  const [selectedProduct, setSelectedProduct] = useState<ProductResponse | null>(null);
+  const [isApproveOpen, setIsApproveOpen] = useState(false);
+  const [isRejectOpen, setIsRejectOpen] = useState(false);
 
   const activePage = page ?? currentPage ?? 1;
   const computedTotalPages =
@@ -118,6 +117,26 @@ export const ProductTable = ({
     } else {
       navigate(`/admin/products/detail?slug=${product.slug}`);
     }
+  };
+
+  const handleApproveClick = (product: ProductResponse) => {
+    setSelectedProduct(product);
+    setIsApproveOpen(true);
+  };
+
+  const handleRejectClick = (product: ProductResponse) => {
+    setSelectedProduct(product);
+    setIsRejectOpen(true);
+  };
+
+  const handleApproveSuccess = () => {
+    setIsApproveOpen(false);
+    setSelectedProduct(null);
+  };
+
+  const handleRejectSuccess = () => {
+    setIsRejectOpen(false);
+    setSelectedProduct(null);
   };
 
   return (
@@ -428,8 +447,8 @@ export const ProductTable = ({
                     <ProductActionMenu
                       item={product}
                       onView={() => handleView(product)}
-                      onApprove={onApprove}
-                      onReject={onReject}
+                      onApprove={() => handleApproveClick(product)}
+                      onReject={() => handleRejectClick(product)}
                     />
                   </td>
                 </tr>
@@ -459,6 +478,22 @@ export const ProductTable = ({
           />
         </div>
       )}
+
+      {/* Approve Modal */}
+      <ProductApproveModal
+        isOpen={isApproveOpen}
+        item={selectedProduct}
+        onClose={() => setIsApproveOpen(false)}
+        onSuccess={handleApproveSuccess}
+      />
+
+      {/* Reject Modal */}
+      <ProductRejectModal
+        isOpen={isRejectOpen}
+        item={selectedProduct}
+        onClose={() => setIsRejectOpen(false)}
+        onSuccess={handleRejectSuccess}
+      />
     </div>
   );
 };

@@ -84,21 +84,14 @@ const AdminProductDetailPage = () => {
     navigate("/admin/products");
   };
 
-  const handleConfirmApprove = () => {
-    // TODO: Integration API approve
-    setTimeout(() => {
-      setIsApproveModalOpen(false);
-      handleBack();
-    }, 500);
+  const handleApproveSuccess = () => {
+    setIsApproveModalOpen(false);
+    handleBack();
   };
 
-  const handleConfirmReject = (reason: string) => {
-    console.log("Reject reason:", reason);
-    // TODO: Integration API reject
-    setTimeout(() => {
-      setIsRejectModalOpen(false);
-      handleBack();
-    }, 500);
+  const handleRejectSuccess = () => {
+    setIsRejectModalOpen(false);
+    handleBack();
   };
 
   if (isLoadingDetail) {
@@ -162,7 +155,7 @@ const AdminProductDetailPage = () => {
         isOpen={isApproveModalOpen}
         item={productDetail || null}
         onClose={() => setIsApproveModalOpen(false)}
-        onConfirm={handleConfirmApprove}
+        onSuccess={handleApproveSuccess}
       />
 
       {/* Modal Từ chối */}
@@ -170,7 +163,7 @@ const AdminProductDetailPage = () => {
         isOpen={isRejectModalOpen}
         item={productDetail || null}
         onClose={() => setIsRejectModalOpen(false)}
-        onConfirm={handleConfirmReject}
+        onSuccess={handleRejectSuccess}
       />
     </div>
   );

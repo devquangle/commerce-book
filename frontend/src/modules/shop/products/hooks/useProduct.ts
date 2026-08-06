@@ -120,3 +120,46 @@ export const useShopsByProductIds = (productIds: number[]) => {
 
   return { ...query, shopMap };
 };
+
+export const useApproveProduct = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: number) => ProductShopService.approve(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["shop-products-filter"] });
+      showSuccessToast("Phê duyệt sản phẩm thành công!");
+    },
+    onError: (error: unknown) => {
+      let msg = "Đã xảy ra lỗi khi phê duyệt sản phẩm.";
+      if (axios.isAxiosError(error)) {
+        msg = error.response?.data?.message || error.message || msg;
+      } else if (error instanceof Error) {
+        msg = error.message;
+      }
+      showErrorToast(msg);
+    },
+  });
+};
+
+export const useRejectProduct = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, reason }: { id: number; reason: string }) =>
+      ProductShopService.reject(id, reason),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["shop-products-filter"] });
+      showSuccessToast("Từ chối sản phẩm thành công!");
+    },
+    onError: (error: unknown) => {
+      let msg = "Đã xảy ra lỗi khi từ chối sản phẩm.";
+      if (axios.isAxiosError(error)) {
+        msg = error.response?.data?.message || error.message || msg;
+      } else if (error instanceof Error) {
+        msg = error.message;
+      }
+      showErrorToast(msg);
+    },
+  });
+};

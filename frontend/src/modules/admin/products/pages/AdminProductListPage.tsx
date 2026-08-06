@@ -8,8 +8,6 @@ import {
   ProductMobileSkeleton,
 } from "@/modules/shop/products/components/ProductSkeleton";
 import { ProductMobileCard } from "../components/ProductMobileCard";
-import { ProductApproveModal } from "../components/ProductApproveModal";
-import { ProductRejectModal } from "../components/ProductRejectModal";
 import { useProductShopFilter } from "@/modules/shop/products/hooks/useProductShopFilter";
 import type { ProductResponse } from "@/modules/shop/products/types/product.type";
 import { useNavigate } from "react-router-dom";
@@ -38,40 +36,6 @@ const AdminProductListPage = () => {
 
   const products = data?.items || [];
   const totalElements = data?.totalItems || 0;
-
-  // State cho Approve Modal & Reject Modal
-  const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
-  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<ProductResponse | null>(null);
-
-  const handleApproveClick = (product: ProductResponse) => {
-    setSelectedProduct(product);
-    setIsApproveModalOpen(true);
-  };
-
-  const handleRejectClick = (product: ProductResponse) => {
-    setSelectedProduct(product);
-    setIsRejectModalOpen(true);
-  };
-
-  const handleConfirmApprove = () => {
-    if (!selectedProduct) return;
-    // TODO: Call API approve product here when backend hook is integrated
-    setTimeout(() => {
-      setIsApproveModalOpen(false);
-      setSelectedProduct(null);
-    }, 500);
-  };
-
-  const handleConfirmReject = (reason: string) => {
-    if (!selectedProduct) return;
-    // TODO: Call API reject product with reason here when backend hook is integrated
-    console.log("Rejecting product:", selectedProduct.productId, "Reason:", reason);
-    setTimeout(() => {
-      setIsRejectModalOpen(false);
-      setSelectedProduct(null);
-    }, 500);
-  };
 
   const handleView = (product: ProductResponse) => {
     navigate(`/admin/products/detail?slug=${product.slug}`);
@@ -109,7 +73,7 @@ const AdminProductListPage = () => {
         </>
       ) : (
         <>
-          {/* Giao diện Table cho Desktop */}
+          {/* Giao diện Table cho Desktop — modal approve/reject được quản lý bên trong */}
           <div className="hidden md:block">
             <ProductTable
               products={products}
@@ -119,8 +83,6 @@ const AdminProductListPage = () => {
               onPageChange={handlePageChange}
               onPageSizeChange={handlePageSizeChange}
               onView={handleView}
-              onApprove={handleApproveClick}
-              onReject={handleRejectClick}
             />
           </div>
 
@@ -136,8 +98,6 @@ const AdminProductListPage = () => {
                   }
                   product={product}
                   onView={handleView}
-                  onApprove={handleApproveClick}
-                  onReject={handleRejectClick}
                 />
               ))}
               {products.length === 0 && (
@@ -162,22 +122,6 @@ const AdminProductListPage = () => {
           </div>
         </>
       )}
-
-      {/* Modal Phê duyệt sản phẩm */}
-      <ProductApproveModal
-        isOpen={isApproveModalOpen}
-        item={selectedProduct}
-        onClose={() => setIsApproveModalOpen(false)}
-        onConfirm={handleConfirmApprove}
-      />
-
-      {/* Modal Từ chối sản phẩm với gợi ý lý do */}
-      <ProductRejectModal
-        isOpen={isRejectModalOpen}
-        item={selectedProduct}
-        onClose={() => setIsRejectModalOpen(false)}
-        onConfirm={handleConfirmReject}
-      />
     </div>
   );
 };

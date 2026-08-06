@@ -32,6 +32,8 @@ public interface ProductService {
 
     Product getProductByIdAndShopId(Long id, Long shopId);
 
+    Product getById(Long id);
+
     ProductResponse mapToDTO(Product product);
 
     ProductResponse create(ProductRequest request, Shop shop);
@@ -48,9 +50,9 @@ public interface ProductService {
 
     PageResponse<ProductResponse> searchProducts(ProductFilterRequest request);
 
-    void approval(Long id, Long shopId);
+    void approve(Long id);
 
-    void reject(Long id, Long shopId,String reasons);
+    void reject(Long id, String reasons);
 
     Map<Long, ShopSimpleResponse> findShopMap(List<Long> productIds);
 }

@@ -1,28 +1,45 @@
 import { CheckCircle2, X } from "lucide-react";
-import type { ProductDetailResponse, ProductResponse } from "@/modules/shop/products/types/product.type";
+import type {
+  ProductDetailResponse,
+  ProductResponse,
+} from "@/modules/shop/products/types/product.type";
 import { Button } from "@/components/common/Button";
+import { useApproveProduct } from "@/modules/shop/products/hooks/useProduct";
+import { Loader2 } from "lucide-react";
 
 interface ProductApproveModalProps {
   isOpen: boolean;
   item: ProductResponse | ProductDetailResponse | null;
   onClose: () => void;
-  onConfirm: () => void;
+  onSuccess?: () => void;
 }
 
-export const ProductApproveModal= ({
+export const ProductApproveModal = ({
   isOpen,
   item,
   onClose,
-  onConfirm,
-}:ProductApproveModalProps) => {
+  onSuccess,
+}: ProductApproveModalProps) => {
+  const { mutate: approve, isPending } = useApproveProduct();
+
   if (!isOpen) return null;
+
+  const handleConfirm = () => {
+    if (!item) return;
+    approve(item.productId, {
+      onSuccess: () => {
+        onClose();
+        onSuccess?.();
+      },
+    });
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
+        onClick={() => !isPending && onClose()}
       />
 
       {/* Modal */}
@@ -34,7 +51,8 @@ export const ProductApproveModal= ({
           </h2>
           <button
             onClick={onClose}
-            className="p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 rounded-full transition-colors cursor-pointer"
+            disabled={isPending}
+            className="p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 rounded-full transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <X className="w-4 h-4" />
           </button>
@@ -59,11 +77,11 @@ export const ProductApproveModal= ({
                 )}{" "}
                 để hiển thị bán trên hệ thống không?
               </p>
-              {item && "shopName" in item && item.shopName && (
+              {item?.shop?.shopName && (
                 <p className="text-xs text-zinc-400 dark:text-zinc-500">
                   Cửa hàng:{" "}
                   <span className="font-medium text-zinc-600 dark:text-zinc-300">
-                    {item.shopName}
+                    {item.shop.shopName}
                   </span>
                 </p>
               )}
@@ -74,16 +92,19 @@ export const ProductApproveModal= ({
             <Button
               variant="outline"
               onClick={onClose}
+              disabled={isPending}
               className="cursor-pointer"
             >
               Hủy
             </Button>
             <Button
               variant="primary"
-              onClick={onConfirm}
+              onClick={handleConfirm}
+              disabled={isPending}
+              icon={isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : undefined}
               className="bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
             >
-              Phê duyệt
+              {isPending ? "Đang xử lý..." : "Phê duyệt"}
             </Button>
           </div>
         </div>
