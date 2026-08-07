@@ -49,11 +49,11 @@ class OcrService:
             RuntimeError: Nếu không thể khởi tạo PaddleOCR.
         """
         if self._ocr is not None:
-            logger.info("PaddleOCR đã được khởi tạo, bỏ qua.")
+            logger.info("[OCR] PaddleOCR already initialized, skipping.")
             return
 
         try:
-            logger.info("Đang khởi tạo PaddleOCR model (lang=vi)...")
+            logger.info("[OCR] Initializing PaddleOCR model (lang=vi)...")
             from paddleocr import PaddleOCR
 
             self._ocr = PaddleOCR(
@@ -61,14 +61,14 @@ class OcrService:
                 lang="vi",             # Tiếng Việt
                 use_gpu=False,         # CPU inference
                 show_log=False,        # Tắt verbose log của PaddleOCR
-                enable_mkldnn=False,   # Tắt MKL-DNN (tránh conflict trên một số CPU)
+                enable_mkldnn=False,   # Tắt MKL-DNN
             )
-            logger.info("PaddleOCR khởi tạo thành công.")
+            logger.info("[OCR] PaddleOCR initialized successfully.")
         except ImportError as e:
-            logger.error(f"Không tìm thấy paddleocr. Hãy chạy: pip install paddleocr")
+            logger.error(f"[OCR] Cannot find paddleocr package: {e}")
             raise RuntimeError(f"PaddleOCR import failed: {e}") from e
         except Exception as e:
-            logger.error(f"Lỗi khởi tạo PaddleOCR: {e}")
+            logger.error(f"[OCR] Initialization error: {e}")
             raise RuntimeError(f"PaddleOCR initialization failed: {e}") from e
 
     def extract_text(self, image_path: str) -> list[str]:

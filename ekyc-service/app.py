@@ -77,37 +77,34 @@ async def lifespan(app: FastAPI):
     # STARTUP
     # -----------------------------------------------------------------------
     logger.info("=" * 70)
-    logger.info("  eKYC Service đang khởi động...")
+    logger.info("  eKYC Service is starting...")
     logger.info("=" * 70)
 
     # Tạo thư mục cần thiết
     ensure_directories()
-    logger.info("✓ Thư mục uploads/ và temp/ đã sẵn sàng.")
+    logger.info("[OK] Directories uploads/ and temp/ are ready.")
 
     # Khởi tạo PaddleOCR (load model vào RAM)
     try:
-        logger.info("Đang tải PaddleOCR model (lần đầu có thể mất 1-2 phút)...")
+        logger.info("[OCR] Loading PaddleOCR model (lang=vi)...")
         ocr_service.initialize()
-        logger.info("✓ PaddleOCR model đã sẵn sàng.")
+        logger.info("[OK] PaddleOCR model is ready.")
     except Exception as e:
-        logger.error(f"✗ Lỗi khởi tạo PaddleOCR: {e}")
-        logger.warning("Service sẽ chạy nhưng chức năng OCR sẽ không hoạt động.")
+        logger.error(f"[ERROR] Failed to initialize PaddleOCR: {e}")
+        logger.warning("[WARN] Service will run but OCR functionality will be disabled.")
 
     # Khởi tạo InsightFace (download + load model buffalo_l)
     try:
-        logger.info(
-            "Đang tải InsightFace buffalo_l model "
-            "(lần đầu tải về ~500MB, có thể mất vài phút)..."
-        )
+        logger.info("[FACE] Loading InsightFace buffalo_l model...")
         face_service.initialize(model_name="buffalo_l")
-        logger.info("✓ InsightFace model đã sẵn sàng.")
+        logger.info("[OK] InsightFace model is ready.")
     except Exception as e:
-        logger.error(f"✗ Lỗi khởi tạo InsightFace: {e}")
-        logger.warning("Service sẽ chạy nhưng chức năng face verification sẽ không hoạt động.")
+        logger.error(f"[ERROR] Failed to initialize InsightFace: {e}")
+        logger.warning("[WARN] Service will run but Face verification will be disabled.")
 
     logger.info("=" * 70)
-    logger.info("  eKYC Service khởi động THÀNH CÔNG!")
-    logger.info("  Tài liệu API: http://localhost:8000/docs")
+    logger.info("  eKYC Service started SUCCESSFULLY!")
+    logger.info("  API Documentation: http://localhost:8000/docs")
     logger.info("  Health check: http://localhost:8000/health")
     logger.info("=" * 70)
 
@@ -116,7 +113,7 @@ async def lifespan(app: FastAPI):
     # -----------------------------------------------------------------------
     # SHUTDOWN
     # -----------------------------------------------------------------------
-    logger.info("eKYC Service đang tắt... Tạm biệt!")
+    logger.info("[SHUTDOWN] eKYC Service is shutting down. Goodbye!")
 
 
 # ---------------------------------------------------------------------------

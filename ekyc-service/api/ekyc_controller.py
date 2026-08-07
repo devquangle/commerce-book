@@ -68,30 +68,7 @@ def get_ekyc_service() -> EkycService:
         "Trích xuất thông tin OCR từ CCCD và thực hiện face verification."
     ),
     responses={
-        200: {
-            "description": "Kết quả xác minh eKYC",
-            "content": {
-                "application/json": {
-                    "example": {
-                        "success": True,
-                        "message": "Verification completed",
-                        "verified": True,
-                        "similarity": 0.91,
-                        "threshold": 0.75,
-                        "ocr": {
-                            "identityNumber": "001234567890",
-                            "fullName": "NGUYỄN VĂN AN",
-                            "dateOfBirth": "15/08/1990",
-                            "gender": "Nam",
-                            "nationality": "Việt Nam",
-                            "placeOfOrigin": "Hà Nội",
-                            "placeOfResidence": "123 Đường ABC, Quận 1, TP. HCM",
-                            "issueDate": "20/01/2022",
-                        },
-                    }
-                }
-            },
-        },
+        200: {"description": "Kết quả xác minh eKYC (schema mới)"},
         400: {"description": "File không hợp lệ (sai định dạng, quá lớn)"},
         422: {"description": "Validation error"},
         500: {"description": "Lỗi server nội bộ"},
@@ -100,12 +77,16 @@ def get_ekyc_service() -> EkycService:
 async def verify_ekyc(
     idCard: Annotated[
         UploadFile,
-        File(description="Ảnh CCCD Việt Nam (JPEG/PNG/WEBP, tối đa 10MB)"),
+        File(description="Ảnh CCCD mặt trước (JPEG/PNG/WEBP, tối đa 10MB)"),
     ],
+    idCardBack: Annotated[
+        UploadFile | None,
+        File(description="Ảnh CCCD mặt sau (tùy chọn) (JPEG/PNG/WEBP, tối đa 10MB)"),
+    ] = None,
     selfie: Annotated[
-        UploadFile,
-        File(description="Ảnh selfie người dùng (JPEG/PNG/WEBP, tối đa 10MB)"),
-    ],
+        UploadFile | None,
+        File(description="Ảnh selfie/khuôn mặt người dùng (JPEG/PNG/WEBP, tối đa 10MB)"),
+    ] = None,
 ) -> EkycResponse:
     """
     POST /verify – Endpoint chính cho eKYC.
@@ -120,15 +101,20 @@ async def verify_ekyc(
     """
     logger.info(
         f"Nhận request POST /verify: "
-        f"idCard='{idCard.filename}' ({idCard.content_type}), "
-        f"selfie='{selfie.filename}' ({selfie.content_type})"
+        f"idCard='{idCard.filename if idCard else None}', "
+        f"idCardBack='{idCardBack.filename if idCardBack else None}', "
+        f"selfie='{selfie.filename if selfie else None}'"
     )
 
     # Validate input files
     _validate_upload_file(idCard, "idCard")
-    _validate_upload_file(selfie, "selfie")
+    if idCardBack and idCardBack.filename:
+        _validate_upload_file(idCardBack, "idCardBack")
+    if selfie and selfie.filename:
+        _validate_upload_file(selfie, "selfie")
 
     id_card_path: str | None = None
+    id_card_back_path: str | None = None
     selfie_path: str | None = None
 
     try:
@@ -138,15 +124,23 @@ async def verify_ekyc(
         logger.info("[BƯỚC 1] Đang lưu file tạm...")
 
         id_card_bytes = await idCard.read()
-        selfie_bytes = await selfie.read()
-
-        # Kiểm tra kích thước sau khi đọc
         _check_file_size(id_card_bytes, "idCard")
-        _check_file_size(selfie_bytes, "selfie")
-
         id_card_path = save_temp_image(id_card_bytes, prefix="idcard")
-        selfie_path = save_temp_image(selfie_bytes, prefix="selfie")
-        logger.info(f"[BƯỚC 1] Đã lưu: idCard={id_card_path}, selfie={selfie_path}")
+
+        if idCardBack and idCardBack.filename:
+            id_card_back_bytes = await idCardBack.read()
+            _check_file_size(id_card_back_bytes, "idCardBack")
+            id_card_back_path = save_temp_image(id_card_back_bytes, prefix="idcardback")
+
+        if selfie and selfie.filename:
+            selfie_bytes = await selfie.read()
+            _check_file_size(selfie_bytes, "selfie")
+            selfie_path = save_temp_image(selfie_bytes, prefix="selfie")
+        else:
+            # Dùng idCard làm fallback nếu chưa truyền selfie
+            selfie_path = id_card_path
+
+        logger.info(f"[BƯỚC 1] Đã lưu: idCard={id_card_path}, idCardBack={id_card_back_path}, selfie={selfie_path}")
 
         # ---------------------------------------------------------------
         # BƯỚC 2-5: Xử lý eKYC
@@ -155,11 +149,14 @@ async def verify_ekyc(
         response = await ekyc_svc.process_ekyc(
             id_card_path=id_card_path,
             selfie_path=selfie_path,
+            id_card_back_path=id_card_back_path,
         )
 
         logger.info(
-            f"Hoàn tất POST /verify: success={response.success}, "
-            f"verified={response.verified}, similarity={response.similarity}"
+            f"[OK] POST /verify done: success={response.success}, "
+            f"faceMatched={response.verification.face.matched}, "
+            f"similarity={response.verification.face.similarity:.2f}, "
+            f"missingFields={response.validation.missingFields}"
         )
         return response
 
@@ -177,6 +174,8 @@ async def verify_ekyc(
         # ---------------------------------------------------------------
         if id_card_path:
             delete_temp_file(id_card_path)
+        if id_card_back_path:
+            delete_temp_file(id_card_back_path)
         if selfie_path:
             delete_temp_file(selfie_path)
         logger.debug("Đã dọn dẹp file tạm.")

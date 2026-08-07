@@ -1,0 +1,13 @@
+[PI] 'seo cham C.1.5 cm tren sau canh.mui phai'              -> 'Sẹo chấm C.1,5 cm trên sau cánh mũi phải'
+[PI] 'seo cham C.1.5 cm tren sau canh-mui phai'              -> 'Sẹo chấm C.1,5 cm trên sau cánh mũi phải'
+[PI] 'Seo cham C.1,5 cm tren sau canh mui phai'              -> 'Sẹo chấm C.1,5 cm trên sau cánh mũi phải'
+[GENDER] 'Nam'                                                   -> 'MALE'
+[GENDER] 'MALE'                                                  -> 'MALE'
+[GENDER] 'Nu'                                                    -> 'FEMALE'
+[DATE_OK] '04/10/2029'                                            -> '04/10/2029'
+[DATE_BAD] '30/03/202'                                             -> None
+[DATE_BAD] '31/13/2021'                                            -> None
+[ID] '0872 0400 0897'                                        -> '087204000897'
+[ID] '087204000897'                                          -> '087204000897'
+[PLACE] 'CUC TRUONG CUC CANH SAT QUAN LY HANH CHINH VE TRAT TUXAHOI' -> 'CỤC TRƯỞNG CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TRẬT TỰ XÃ HỘI'
+[PLACE] 'BO CONG AN'                                            -> 'BỘ CÔNG AN'

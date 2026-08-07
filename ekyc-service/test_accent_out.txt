@@ -1,0 +1,15 @@
+IN : HUYNH QUANGLE
+OUT: HUỲNH QUANG LÊ
+
+IN : HUYNH QUANG LE
+OUT: HUỲNH QUANG LÊ
+
+IN : Seo cham C.1.5 cm tren sau canh.mui phai
+OUT: Sẹo chấm C.1, 5 cm trên sau cánh mũi phải
+
+IN : seo cham C.1.5 cm tren sau canh-mui phai
+OUT: Sẹo chấm C.1, 5 cm trên sau cánh mũi phải
+
+IN : Tan BinhChau ThanhDong Thap
+OUT: Tân Bình, Châu Thành, Đồng Tháp
+

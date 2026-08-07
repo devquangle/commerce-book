@@ -1,0 +1,51 @@
+=== FRONT LINES ===
+ 0: CONG HOAXAHOI CHU NGHiA VIET NAM
+ 1: Doc lap-Tudo-Hanh phuc
+ 2: SOCIALIST REPUBLIC OFVIET NAM
+ 3: Independence-Freedom-Happiness
+ 4: CAN CU'O'C CONG DAN
+ 5: Citizen ldentity Card
+ 6: 087204000897
+ 7: So/No.:
+ 8: Hovatén/ Full name
+ 9: HUYNH QUANG LE
+10: Ngay sinh/Date of birth:04/10/2004
+11: Viet Nam
+12: Queguan/Place of origin
+13: Tan BinhChau ThanhDong Thap
+14: Noi thuong trü1 Place of residenceAp Tay
+15: Cogiaden04/10/2029
+16: Date.ofsxpiry
+17: Tan BinhChau Thanh,Dong Thap
+
+=== BACK LINES ===
+ 0: Bacdiemnhandang/ Personalidentification
+ 1: seo cham C.1.5 cm tren sau
+ 2: canh-mui phai
+ 3: Ngaythang,nam/Date.month.year30/03/202
+ 4: CUC TRUO'NG CUC CANH SAT
+ 5: QUAN LY HANH CHINH VE TRAT TU'XA HOI
+ 6: OIRECTORGENERAL OF THE POLICE DEPARTMENT
+ 7: ORADMINISTRATIVEMANAGEMENOF SOCIALORDER
+ 8: Ngon tro trai
+ 9: Ngontrophai
+10: Left.index-finger
+11: Pham Cong Nguyén
+12: IDVNM2040008978087204000897<<9
+13: 0410047M2910046VNM<<<<<<<<<<<6
+14: HUYNH<<QUANG<LE<<<<<<<<<<<S<<<
+
+=== PARSED RESULT ===
+{
+  "identityNumber": "087204000897",
+  "fullName": "HUYNH QUANG LE",
+  "dateOfBirth": "04/10/2004",
+  "gender": "MALE",
+  "nationality": "Việt Nam",
+  "placeOfOrigin": "Tan BinhChau ThanhDong Thap",
+  "placeOfResidence": "Date ofsxpiry, Tan BinhChau Thanh,Dong Thap",
+  "issueDate": "04/10/2029",
+  "expiryDate": "04/10/2029",
+  "personalIdentification": "Sẹo chấm C.1,5 cm trên sau cánh mũi phải",
+  "issuePlace": "CỤC TRƯỞNG CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TRẬT TỰ XÃ HỘI"
+}

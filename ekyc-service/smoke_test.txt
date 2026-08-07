@@ -1,0 +1,16 @@
+ID [0872 0400 0897] -> 087204000897
+ID [0872-0400-0897] -> 087204000897
+ID [So CCCD: 087204000897] -> 087204000897
+DATE [04/10/2029] -> 04/10/2029
+DATE [30/03/202] -> None
+DATE [30-03-2021] -> 30/03/2021
+DATE [30.03.2021] -> 30/03/2021
+DATE [31/13/2021] -> None
+GENDER [Sex: Male] -> Gender.MALE
+GENDER [Gioi tinh: Nam] -> Gender.MALE
+GENDER [Nu] -> Gender.FEMALE
+GENDER [Female] -> Gender.FEMALE
+PI_FIX [seo cham C.1.5 cm tren sau canh.mui phai] -> seo cham C.1,5 cm tren sau canh mui phai
+PI_FIX [seo cham C.1.5 cm tren sau canh-mui phai] -> seo cham C.1,5 cm tren sau canh-mui phai
+ISSUE_PLACE [CUC TRUONG CUC CANH SAT QUAN LY HANH CHINH VE TRAT TUXAHOI] -> CỤC TRƯỞNG CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TRẬT TỰ XÃ HỘI
+ISSUE_PLACE [BO CONG AN] -> BỘ CÔNG AN

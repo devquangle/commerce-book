@@ -1,11 +1,10 @@
-package com.dev.backend.modules.shop.service.impl;
+package com.dev.backend.modules.shop.service;
 
 import com.dev.backend.modules.shop.dto.ShopRequest;
 import com.dev.backend.modules.shop.dto.ShopResponse;
 import com.dev.backend.modules.shop.entity.Shop;
 import com.dev.backend.modules.shop.mapper.ShopMapper;
 import com.dev.backend.modules.shop.repository.ShopRepository;
-import com.dev.backend.modules.shop.service.ShopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

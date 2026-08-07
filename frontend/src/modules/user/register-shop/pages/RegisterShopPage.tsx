@@ -22,12 +22,16 @@ const INITIAL_FORM_DATA: RegisterShopRequest = {
 
   // Step 2
   fullName: "",
-  cccd: "",
-  dob: "",
-  sex: "",
+  identityNumber: "",
+  dateOfBirth: "",
+  gender: "Nam",
+  nationality: "Việt Nam",
+  placeOfOrigin: "",
+  placeOfResidence: "",
   issueDate: "",
   expiryDate: "",
-  address: "",
+  personalIdentification: "",
+  issuePlace: "",
 
   // Step 3
   shopName: "",
@@ -45,7 +49,7 @@ const INITIAL_FORM_DATA: RegisterShopRequest = {
   street: "",
 };
 
-export const RegisterShopPage: React.FC = () => {
+const RegisterShopPage = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -70,7 +74,17 @@ export const RegisterShopPage: React.FC = () => {
     if (currentStep === 1) {
       fieldsToValidate = ["email", "phone", "password", "confirmPassword"];
     } else if (currentStep === 2) {
-      fieldsToValidate = ["fullName", "cccd", "dob", "sex", "issueDate", "address"];
+      fieldsToValidate = [
+        "fullName",
+        "identityNumber",
+        "dateOfBirth",
+        "gender",
+        "nationality",
+        "placeOfOrigin",
+        "placeOfResidence",
+        "issueDate",
+        "issuePlace",
+      ];
     } else if (currentStep === 3) {
       fieldsToValidate = ["shopName", "bankName", "bankNumber", "ownerName"];
     }

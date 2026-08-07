@@ -4,7 +4,7 @@ import type { WikipediaResponse } from "@/modules/admin/authors/types/wikipedia.
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 
 // Mock axios config
-vi.mock("./../../src/libs/config/axios.config", () => {
+vi.mock("@/libs/config/axios.config", () => {
   return {
     __esModule: true,
     publicAxios: {

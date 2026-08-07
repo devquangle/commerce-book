@@ -25,29 +25,20 @@ def ensure_directories() -> None:
     """Tạo các thư mục cần thiết nếu chưa tồn tại."""
     TEMP_DIR.mkdir(parents=True, exist_ok=True)
     UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-    logger.info("Đã tạo/kiểm tra thư mục temp và uploads.")
+    logger.info("[OK] Directories temp/ and uploads/ checked.")
 
 
 def load_image_from_bytes(data: bytes) -> Optional[np.ndarray]:
-    """
-    Load ảnh từ bytes (dữ liệu từ multipart upload).
-
-    Args:
-        data: Raw bytes của file ảnh.
-
-    Returns:
-        numpy array (BGR format) hoặc None nếu không load được.
-    """
     try:
         nparr = np.frombuffer(data, np.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         if img is None:
-            logger.warning("Không thể decode ảnh từ bytes.")
+            logger.warning("[WARN] Cannot decode image from bytes.")
             return None
-        logger.debug(f"Đã load ảnh từ bytes, shape: {img.shape}")
+        logger.debug(f"Loaded image from bytes, shape: {img.shape}")
         return img
     except Exception as e:
-        logger.error(f"Lỗi khi load ảnh từ bytes: {e}")
+        logger.error(f"[ERROR] Error loading image from bytes: {e}")
         return None
 
 
