@@ -1,227 +1,56 @@
 """
-app.py
-
-Entry point của eKYC Service.
-
-Khởi tạo FastAPI application với:
-- CORS middleware
-- Lifespan context (load AI models khi startup)
-- Router đăng ký
-- Global exception handler
-- Logging configuration
-
-Chạy với:
-    uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+Main Entrypoint for the eKYC Service.
 """
-
-import logging
-import sys
-from contextlib import asynccontextmanager
-from pathlib import Path
-
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+import uvicorn
 
-from api.ekyc_controller import router as ekyc_router
-from services.face_service import face_service
-from services.ocr_service import ocr_service
-from utils.image_utils import ensure_directories
+from core.config import settings
+from core.logger import logger
+from core.middleware import RequestLoggingMiddleware
+from core.exception import global_exception_handler, EkycException
+from api import ekyc
 
-# ---------------------------------------------------------------------------
-# LOGGING CONFIGURATION
-# ---------------------------------------------------------------------------
-
-def configure_logging() -> None:
-    """Cấu hình logging cho toàn bộ ứng dụng."""
-    log_format = (
-        "%(asctime)s | %(levelname)-8s | %(name)-30s | %(message)s"
-    )
-    logging.basicConfig(
-        level=logging.INFO,
-        format=log_format,
-        datefmt="%Y-%m-%d %H:%M:%S",
-        handlers=[
-            logging.StreamHandler(sys.stdout),
-        ],
-    )
-    # Tắt bớt log verbose từ các thư viện bên ngoài
-    logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
-    logging.getLogger("paddleocr").setLevel(logging.WARNING)
-    logging.getLogger("paddle").setLevel(logging.WARNING)
-    logging.getLogger("ppocr").setLevel(logging.WARNING)
-
-
-configure_logging()
-logger = logging.getLogger(__name__)
-
-
-# ---------------------------------------------------------------------------
-# LIFESPAN – Startup & Shutdown
-# ---------------------------------------------------------------------------
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """
-    Quản lý vòng đời ứng dụng.
-
-    Startup:
-        - Tạo thư mục uploads/ và temp/
-        - Khởi tạo PaddleOCR model
-        - Khởi tạo InsightFace model
-
-    Shutdown:
-        - Log thông báo tắt server
-    """
-    # -----------------------------------------------------------------------
-    # STARTUP
-    # -----------------------------------------------------------------------
-    logger.info("=" * 70)
-    logger.info("  eKYC Service is starting...")
-    logger.info("=" * 70)
-
-    # Tạo thư mục cần thiết
-    ensure_directories()
-    logger.info("[OK] Directories uploads/ and temp/ are ready.")
-
-    # Khởi tạo PaddleOCR (load model vào RAM)
-    try:
-        logger.info("[OCR] Loading PaddleOCR model (lang=vi)...")
-        ocr_service.initialize()
-        logger.info("[OK] PaddleOCR model is ready.")
-    except Exception as e:
-        logger.error(f"[ERROR] Failed to initialize PaddleOCR: {e}")
-        logger.warning("[WARN] Service will run but OCR functionality will be disabled.")
-
-    # Khởi tạo InsightFace (download + load model buffalo_l)
-    try:
-        logger.info("[FACE] Loading InsightFace buffalo_l model...")
-        face_service.initialize(model_name="buffalo_l")
-        logger.info("[OK] InsightFace model is ready.")
-    except Exception as e:
-        logger.error(f"[ERROR] Failed to initialize InsightFace: {e}")
-        logger.warning("[WARN] Service will run but Face verification will be disabled.")
-
-    logger.info("=" * 70)
-    logger.info("  eKYC Service started SUCCESSFULLY!")
-    logger.info("  API Documentation: http://localhost:8000/docs")
-    logger.info("  Health check: http://localhost:8000/health")
-    logger.info("=" * 70)
-
-    yield  # Ứng dụng chạy ở đây
-
-    # -----------------------------------------------------------------------
-    # SHUTDOWN
-    # -----------------------------------------------------------------------
-    logger.info("[SHUTDOWN] eKYC Service is shutting down. Goodbye!")
-
-
-# ---------------------------------------------------------------------------
-# FASTAPI APPLICATION
-# ---------------------------------------------------------------------------
-
+# Initialize FastAPI app
 app = FastAPI(
-    title="eKYC Service",
-    description=(
-        "Microservice xác minh danh tính điện tử (eKYC) cho CCCD Việt Nam.\n\n"
-        "## Tính năng\n"
-        "- **OCR** trích xuất thông tin từ CCCD bằng PaddleOCR\n"
-        "- **Face Verification** so khớp khuôn mặt bằng InsightFace (buffalo_l)\n"
-        "- **REST API** tích hợp dễ dàng với Spring Boot, React, v.v.\n\n"
-        "## Sử dụng\n"
-        "Gửi ảnh CCCD và ảnh selfie tới `POST /verify` để nhận kết quả xác minh."
-    ),
-    version="1.0.0",
-    contact={
-        "name": "eKYC Service",
-        "url": "https://github.com/your-repo/ekyc-service",
-    },
-    license_info={
-        "name": "MIT",
-    },
-    lifespan=lifespan,
+    title=settings.APP_NAME,
+    version=settings.APP_VERSION,
+    description="REST API eKYC Production Ready cho CCCD Việt Nam",
     docs_url="/docs",
-    redoc_url="/redoc",
-    openapi_url="/openapi.json",
+    redoc_url="/redoc"
 )
 
-
-# ---------------------------------------------------------------------------
-# MIDDLEWARE
-# ---------------------------------------------------------------------------
-
+# CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # Production: thay bằng domain cụ thể
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Custom Logging Middleware
+app.add_middleware(RequestLoggingMiddleware)
 
-# ---------------------------------------------------------------------------
-# GLOBAL EXCEPTION HANDLERS
-# ---------------------------------------------------------------------------
+# Global Exception Handlers
+app.add_exception_handler(Exception, global_exception_handler)
+app.add_exception_handler(EkycException, global_exception_handler)
 
-@app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception) -> JSONResponse:
-    """
-    Global exception handler – bắt tất cả các exception không được xử lý.
+# Include Routers
+app.include_router(ekyc.router, prefix="/api/v1/ekyc", tags=["eKYC"])
 
-    Trả về JSON response thay vì HTML error page mặc định.
-    """
-    logger.error(
-        f"Unhandled exception tại {request.method} {request.url}: {exc}",
-        exc_info=True,
-    )
-    return JSONResponse(
-        status_code=500,
-        content={
-            "success": False,
-            "message": "Internal server error",
-            "detail": str(exc) if app.debug else "An unexpected error occurred",
-        },
-    )
+@app.get("/api/v1/health", tags=["Health"])
+def health_check():
+    """Health check endpoint."""
+    return {"status": "UP", "version": settings.APP_VERSION}
 
-
-# ---------------------------------------------------------------------------
-# ROUTES
-# ---------------------------------------------------------------------------
-
-app.include_router(ekyc_router)
-
-
-# ---------------------------------------------------------------------------
-# ROOT ENDPOINT
-# ---------------------------------------------------------------------------
-
-@app.get("/", tags=["Root"], summary="Service Info")
-async def root() -> dict:
-    """Thông tin cơ bản của eKYC Service."""
-    return {
-        "service": "eKYC Service",
-        "version": "1.0.0",
-        "description": "OCR + Face Verification cho CCCD Việt Nam",
-        "endpoints": {
-            "verify": "POST /verify",
-            "health": "GET /health",
-            "docs": "GET /docs",
-        },
-    }
-
-
-# ---------------------------------------------------------------------------
-# MAIN
-# ---------------------------------------------------------------------------
+@app.on_event("startup")
+async def startup_event():
+    logger.info(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")
+    # Trigger AI Models Initialization
+    from services.ocr_service import ocr_service
+    logger.info("Application startup completed.")
 
 if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run(
-        "app:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True,             # Hot reload khi dev
-        log_level="info",
-        access_log=True,
-    )
+    logger.info(f"Starting server on {settings.HOST}:{settings.PORT}")
+    uvicorn.run("app:app", host=settings.HOST, port=settings.PORT, reload=settings.DEBUG)

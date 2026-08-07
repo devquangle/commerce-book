@@ -16,14 +16,10 @@ class OcrData(BaseModel):
     dateOfBirth: Optional[str] = Field(default=None, description="Ngày sinh (yyyy-MM-dd)")
     gender: Optional[str] = Field(default=None, description="Giới tính (MALE/FEMALE)")
     nationality: Optional[str] = Field(default=None, description="Quốc tịch")
-    placeOfOrigin: Optional[str] = Field(default=None, description="Quê quán")
-    placeOfResidence: Optional[str] = Field(default=None, description="Nơi thường trú")
+    placeOfResidence: Optional[str] = Field(default=None, description="Nơi thường trú / Nơi cư trú")
     issueDate: Optional[str] = Field(default=None, description="Ngày cấp (yyyy-MM-dd)")
     expiryDate: Optional[str] = Field(default=None, description="Ngày hết hạn (yyyy-MM-dd)")
-    personalIdentification: Optional[str] = Field(default=None, description="Đặc điểm nhận dạng")
-    identifyingFeatures: Optional[str] = Field(default=None, description="Đặc điểm nhận dạng (alias)")
-    issuePlace: Optional[str] = Field(default=None, description="Cơ quan cấp")
-    issuingAuthority: Optional[str] = Field(default=None, description="Cơ quan cấp (alias)")
+
 
 
 class FrontVerification(BaseModel):

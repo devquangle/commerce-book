@@ -52,33 +52,42 @@ class CCCDParser:
     chiến lược trích xuất từng trường dựa trên regex + context.
     """
 
-    def parse(self, ocr_lines: list[str]) -> OcrResult:
+    def parse(self, ocr_lines: list[str], back_lines: list[str] = None) -> OcrResult:
         """
         Parse toàn bộ thông tin CCCD từ danh sách text dòng OCR.
 
         Args:
-            ocr_lines: Danh sách các dòng text do PaddleOCR trả về.
+            ocr_lines: Danh sách các dòng text mặt trước.
+            back_lines: Danh sách các dòng text mặt sau.
 
         Returns:
             OcrResult chứa các trường đã trích xuất (có thể None nếu không tìm thấy).
         """
-        logger.info(f"Bắt đầu parse CCCD từ {len(ocr_lines)} dòng OCR.")
+        from utils.logger_utils import _debug_step
+        _debug_step("PARSER")
+        
         logger.debug(f"OCR Lines: {ocr_lines}")
 
         # Làm sạch danh sách dòng trước khi parse
         cleaned_lines = [clean_text(line) for line in ocr_lines if line.strip()]
+        
+        all_lines = cleaned_lines.copy()
+        if back_lines:
+            cleaned_back_lines = [clean_text(line) for line in back_lines if line.strip()]
+            all_lines.extend(cleaned_back_lines)
 
         identity_number = self._extract_identity_number(cleaned_lines)
         full_name = self._extract_full_name(cleaned_lines)
         date_of_birth = self._extract_date_of_birth(cleaned_lines)
         gender = self._extract_gender(cleaned_lines)
         nationality = self._extract_nationality(cleaned_lines)
-        place_of_origin = self._extract_place_of_origin(cleaned_lines)
-        place_of_residence = self._extract_place_of_residence(cleaned_lines)
-        issue_date = self._extract_issue_date(cleaned_lines)
+        
+        # Origin and Residence can be on front or back depending on card version
+        place_of_residence = self._extract_place_of_residence(all_lines)
+        
+        issue_date = self._extract_issue_date(all_lines)
         expiry_date = self._extract_expiry_date(cleaned_lines)
-        personal_identification = self._extract_personal_identification(cleaned_lines)
-        issue_place = self._extract_issue_place(cleaned_lines)
+
 
         result = OcrResult(
             identityNumber=identity_number,
@@ -86,15 +95,25 @@ class CCCDParser:
             dateOfBirth=date_of_birth,
             gender=gender,
             nationality=nationality,
-            placeOfOrigin=place_of_origin,
             placeOfResidence=place_of_residence,
             issueDate=issue_date,
             expiryDate=expiry_date,
-            personalIdentification=personal_identification,
-            issuePlace=issue_place,
         )
 
-        logger.info(f"Parse CCCD hoàn tất: {result.model_dump()}")
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug("=" * 80)
+            logger.debug("FINAL PARSED RESULT")
+            logger.debug("=" * 80)
+            logger.debug(f"identityNumber: {identity_number}")
+            logger.debug(f"fullName: {full_name}")
+            logger.debug(f"dateOfBirth: {date_of_birth}")
+            logger.debug(f"gender: {gender}")
+            logger.debug(f"nationality: {nationality}")
+            logger.debug(f"placeOfResidence: {place_of_residence}")
+            logger.debug(f"issueDate: {issue_date}")
+            logger.debug(f"expiryDate: {expiry_date}")
+            logger.debug("=" * 80)
+
         return result
 
     # ------------------------------------------------------------------
@@ -227,8 +246,10 @@ class CCCDParser:
             if match:
                 addr_parts = []
                 # 1. Remainder on same line (even if fused without colon)
-                remainder = line[match.end():].strip()
-                remainder = re.sub(r"^[:/\s\-\.0-9]+", "", remainder).strip()
+                remainder = match.group(1).strip()
+                remainder = re.sub(r"^[:/\s\-\.]+", "", remainder).strip()
+                # Remove English labels that might be in the remainder
+                remainder = re.sub(r"(?i)^(?:place\s*of\s*residence|residence|place\s*of\s*origin)\s*[:\-\.]?\s*", "", remainder).strip()
                 if remainder and len(remainder) > 1 and not NOISE_ADDRESS_PATTERNS.search(remainder):
                     addr_parts.append(remainder)
 
@@ -239,6 +260,8 @@ class CCCDParser:
                         if not next_line:
                             continue
                         if self._is_any_label(next_line):
+                            if re.search(r"(?i)^(?:place\s*of\s*residence|residence|place\s*of\s*origin)\s*[:\-\.]?\s*$", next_line):
+                                continue
                             break
                         if NOISE_ADDRESS_PATTERNS.search(next_line):
                             continue
@@ -253,10 +276,7 @@ class CCCDParser:
                         logger.info(f"[CCCD] placeOfResidence: {res}")
                         return res
 
-        logger.warning("[CCCD] Không tìm thấy placeOfResidence.")
-        return None
-
-        logger.warning("[CCCD] Không tìm thấy placeOfResidence.")
+        logger.debug("[CCCD] Không tìm thấy placeOfResidence.")
         return None
 
     def _extract_issue_date(self, lines: list[str]) -> Optional[str]:
@@ -355,7 +375,7 @@ class CCCDParser:
                                 if any(kw in nxt.lower() for kw in ["cánh", "canh", "mũi", "mui", "phải", "phai", "trái", "trai", "tai"]):
                                     val = val + " " + nxt
                     val = clean_text(val)
-                    val = restore_vietnamese_accents(val)
+                    val = fix_personal_identification(val)
                     logger.info(f"[CCCD] personalIdentification (via label): {val}")
                     return val
 
@@ -370,11 +390,11 @@ class CCCDParser:
                     if nxt and not self._is_any_label(nxt) and not PATTERN_DATE.search(nxt):
                         if any(kw in nxt.lower() for kw in ["cánh", "canh", "mũi", "mui", "phải", "phai", "trái", "trai"]):
                             clean_val = clean_val + " " + nxt
-                clean_val = restore_vietnamese_accents(clean_val)
+                clean_val = fix_personal_identification(clean_val)
                 logger.info(f"[CCCD] personalIdentification (fallback kw): {clean_val}")
                 return clean_val
 
-        logger.warning("[CCCD] Không tìm thấy personalIdentification.")
+        logger.debug("[CCCD] Không tìm thấy personalIdentification.")
         return None
 
     def _extract_issue_place(self, lines: list[str]) -> Optional[str]:
@@ -386,7 +406,7 @@ class CCCDParser:
             if any(kw in line_upper for kw in [
                 "CỤC TRƯỜNG", "CUC TRUONG", "CỤC CẢNH SÁT", "CUC CANH SAT",
                 "GIÁM ĐỐC CÔNG AN", "GIAM DOC CONG AN", "BỘ CÔNG AN", "BO CONG AN",
-                "DIRECTOR GENERAL", "POLICE DEPARTMENT"
+                "DIRECTOR GENERAL", "POLICE DEPARTMENT", "BOCONGAN", "MNISTRY"
             ]):
                 place = line.strip()
                 if i + 1 < len(lines):
@@ -402,7 +422,7 @@ class CCCDParser:
                 logger.info(f"[CCCD] issuePlace: {place}")
                 return place
 
-        logger.warning("[CCCD] Không tìm thấy issuePlace.")
+        logger.debug("[CCCD] Không tìm thấy issuePlace.")
         return None
 
     # ------------------------------------------------------------------

@@ -1,42 +1,12 @@
-# ========================================================
-# eKYC Service – Python Dependencies
-# ========================================================
-
-# Web Framework
-fastapi==0.115.5
-uvicorn[standard]==0.32.1
-python-multipart==0.0.18     # Xử lý multipart/form-data
-
-# Data Validation
-pydantic==2.10.3
-
-# Computer Vision
-opencv-python==4.10.0.84
+fastapi==0.110.0
+uvicorn==0.29.0
+pydantic==2.6.4
+pydantic-settings==2.2.1
+python-multipart==0.0.9
+opencv-python-headless==4.9.0.80
 numpy==1.26.4
-
-# OCR
-paddlepaddle==2.6.2          # PaddlePaddle CPU (Windows/Linux/Mac)
-paddleocr==2.9.1             # PaddleOCR wrapper
-
-# Face Recognition
+paddlepaddle==2.6.1
+paddleocr==2.7.3
+pyzbar==0.1.9
 insightface==0.7.3
-onnxruntime==1.20.1          # ONNX runtime cho InsightFace (CPU)
-
-# HTTP Client (dùng trong tests nếu cần)
-httpx==0.28.1
-
-# ========================================================
-# Ghi chú cài đặt:
-#
-# Windows (CPU only):
-#   pip install paddlepaddle==2.6.2 -f https://www.paddlepaddle.org.cn/whl/windows/cpu/stable.html
-#   pip install -r requirements.txt
-#
-# Ubuntu (CPU only):
-#   pip install paddlepaddle==2.6.2 -f https://www.paddlepaddle.org.cn/whl/linux/cpu/stable.html
-#   pip install -r requirements.txt
-#
-# Nếu dùng GPU (NVIDIA CUDA 11.x):
-#   pip install paddlepaddle-gpu==2.6.2
-#   pip install onnxruntime-gpu==1.20.1
-# ========================================================
+onnxruntime==1.17.1

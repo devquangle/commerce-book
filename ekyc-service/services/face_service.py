@@ -21,7 +21,7 @@ import numpy as np
 logger = logging.getLogger(__name__)
 
 # Threshold cosine similarity mặc định để xác nhận khuôn mặt khớp nhau
-DEFAULT_THRESHOLD: float = 0.75
+DEFAULT_THRESHOLD: float = 0.70
 
 
 class FaceService:

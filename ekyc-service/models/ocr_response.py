@@ -46,17 +46,13 @@ class OcrResult(BaseModel):
         examples=["Việt Nam"],
     )
 
-    placeOfOrigin: Optional[str] = Field(
-        default=None,
-        description="Quê quán",
-        examples=["Hà Nội"],
-    )
-
     placeOfResidence: Optional[str] = Field(
         default=None,
-        description="Nơi thường trú",
+        description="Nơi thường trú / Nơi cư trú",
         examples=["123 Đường ABC, Quận 1, TP. Hồ Chí Minh"],
     )
+
+
 
     issueDate: Optional[str] = Field(
         default=None,
@@ -70,17 +66,7 @@ class OcrResult(BaseModel):
         examples=["20/01/2032"],
     )
 
-    personalIdentification: Optional[str] = Field(
-        default=None,
-        description="Đặc điểm nhận dạng ở mặt sau CCCD",
-        examples=["Sẹo chấm C 1,5 cm trên sau cánh mũi phải"],
-    )
 
-    issuePlace: Optional[str] = Field(
-        default=None,
-        description="Nơi cấp / Cơ quan cấp CCCD ở mặt sau",
-        examples=["CỤC TRƯỞNG CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TRẬT TỰ XÃ HỘI"],
-    )
 
     class Config:
         json_schema_extra = {
@@ -90,11 +76,8 @@ class OcrResult(BaseModel):
                 "dateOfBirth": "15/08/1990",
                 "gender": "Nam",
                 "nationality": "Việt Nam",
-                "placeOfOrigin": "Hà Nội",
                 "placeOfResidence": "123 Đường ABC, Quận 1, TP. Hồ Chí Minh",
                 "issueDate": "20/01/2022",
                 "expiryDate": "20/01/2032",
-                "personalIdentification": "Sẹo chấm C 1,5 cm trên sau cánh mũi phải",
-                "issuePlace": "CỤC TRƯỞNG CỤC CẢNH SÁT QUẢN LÝ HÀNH CHÍNH VỀ TRẬT TỰ XÃ HỘI",
             }
         }

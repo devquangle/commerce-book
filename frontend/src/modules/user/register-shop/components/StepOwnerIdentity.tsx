@@ -23,7 +23,7 @@ import {
 import axios from "axios";
 import { InputField } from "@/components/common/InputField";
 import { Button } from "@/components/common/Button";
-import SingleImageUpload from "@/components/common/SingleImageUpload";
+import SingleImageUploadNoUrl from "@/components/common/SingleImageUploadNoUrl";
 import { CameraModal } from "./CameraModal";
 import type { RegisterShopRequest } from "../types/register-shop.type";
 
@@ -200,15 +200,7 @@ export const StepOwnerIdentity: React.FC = () => {
       setEkycStatus("error");
       return;
     }
-    if (!hasFaceData) {
-      setEkycError(
-        faceInputMode === "camera"
-          ? "Vui lòng chụp ảnh khuôn mặt bằng camera."
-          : "Vui lòng upload ảnh hoặc video khuôn mặt."
-      );
-      setEkycStatus("error");
-      return;
-    }
+
 
     setEkycStatus("loading");
     setEkycError("");
@@ -243,6 +235,7 @@ export const StepOwnerIdentity: React.FC = () => {
 
       // ---- Điền dữ liệu OCR vào form (từ schema mới: data.data) ------------------
       const ocr = data.data;
+      console.log(ocr)
       if (ocr) {
         if (ocr.fullName) setValue("fullName", ocr.fullName, { shouldValidate: true });
         if (ocr.identityNumber) setValue("identityNumber", ocr.identityNumber, { shouldValidate: true });
@@ -325,11 +318,12 @@ export const StepOwnerIdentity: React.FC = () => {
                 <CheckCircle className="w-3.5 h-3.5 text-emerald-500 ml-auto" />
               )}
             </p>
-            <SingleImageUpload
+            <SingleImageUploadNoUrl
               file={frontCccdFile}
               setFile={setFrontCccdFile}
-              avatarUrl={frontCccdUrl}
-              setAvatarUrl={setFrontCccdUrl}
+              currentImageUrl={frontCccdUrl}
+              onClearImage={() => setFrontCccdUrl("")}
+              label=""
             />
           </div>
 
@@ -349,11 +343,12 @@ export const StepOwnerIdentity: React.FC = () => {
                 <CheckCircle className="w-3.5 h-3.5 text-emerald-500 ml-auto" />
               )}
             </p>
-            <SingleImageUpload
+            <SingleImageUploadNoUrl
               file={backCccdFile}
               setFile={setBackCccdFile}
-              avatarUrl={backCccdUrl}
-              setAvatarUrl={setBackCccdUrl}
+              currentImageUrl={backCccdUrl}
+              onClearImage={() => setBackCccdUrl("")}
+              label=""
             />
           </div>
         </div>
@@ -361,45 +356,7 @@ export const StepOwnerIdentity: React.FC = () => {
 
       {/* ===== 2. Xác thực khuôn mặt ===== */}
       <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <label className="block text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-            Xác thực khuôn mặt{" "}
-            <span className="text-red-500">*</span>
-          </label>
-          {/* Toggle giữa 2 chế độ */}
-          <div className="flex items-center bg-zinc-100 dark:bg-zinc-800 rounded-lg p-0.5 gap-0.5 text-xs">
-            <button
-              type="button"
-              onClick={() => {
-                setFaceInputMode("camera");
-                clearFaceMedia();
-              }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-semibold transition-all ${
-                faceInputMode === "camera"
-                  ? "bg-white dark:bg-zinc-700 text-blue-600 dark:text-blue-400 shadow-sm"
-                  : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
-              }`}
-            >
-              <Camera className="w-3.5 h-3.5" />
-              Chụp Camera
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setFaceInputMode("upload");
-                setFaceImageBase64(null);
-              }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-semibold transition-all ${
-                faceInputMode === "upload"
-                  ? "bg-white dark:bg-zinc-700 text-blue-600 dark:text-blue-400 shadow-sm"
-                  : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
-              }`}
-            >
-              <Upload className="w-3.5 h-3.5" />
-              Upload Ảnh / Video
-            </button>
-          </div>
-        </div>
+
 
         {/* === Chế độ CAMERA === */}
         {faceInputMode === "camera" && (
@@ -411,50 +368,46 @@ export const StepOwnerIdentity: React.FC = () => {
             }`}
           >
             {faceImageBase64 ? (
-              <div className="flex items-center gap-4">
-                <img
-                  src={faceImageBase64}
-                  alt="Khuôn mặt đã chụp"
-                  className="w-16 h-16 rounded-xl object-cover border-2 border-emerald-400 shadow-sm"
-                />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
-                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-                    Đã chụp ảnh khuôn mặt thành công
-                  </p>
-                  <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-0.5">
-                    Ảnh đã được lưu và sẵn sàng đối soát với CCCD.
-                  </p>
+              <div className="py-2 w-full">
+                <div className="grid grid-cols-2 gap-3 mt-4 w-full">
+                  <button
+                    type="button"
+                    className="w-full py-2.5 px-4 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                    onClick={(e) => { e.preventDefault(); handleVerifyEkyc(); }}
+                    disabled={!frontCccdFile || !backCccdFile || ekycStatus === "loading"}
+                  >
+                    {ekycStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                   Nhận diện giấy  tờ 
+                  </button>
+                  <button
+                    type="button"
+                    className="w-full py-2.5 px-4 bg-[#8e94a4] hover:bg-[#7b8191] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2"
+                    onClick={() => setFaceImageBase64(null)}
+                  >
+                    <RefreshCw className="w-4 h-4" /> Chụp lại ảnh
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setFaceImageBase64(null)}
-                  className="text-xs text-rose-600 hover:underline font-semibold flex items-center gap-1 shrink-0"
-                >
-                  <RefreshCw className="w-3.5 h-3.5" /> Chụp lại
-                </button>
               </div>
             ) : (
-              <div className="flex flex-col items-center gap-3 py-4">
-                <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
-                  <Camera className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              <div className="py-2 w-full">
+                <div className="grid grid-cols-2 gap-3 w-full">
+                  <button
+                    type="button"
+                    className="w-full py-2.5 px-4 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                    onClick={(e) => { e.preventDefault(); handleVerifyEkyc(); }}
+                    disabled={!frontCccdFile || !backCccdFile || ekycStatus === "loading"}
+                  >
+                    {ekycStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                    Nhận diện giấy  tờ
+                  </button>
+                  <button
+                    type="button"
+                    className="w-full py-2.5 px-4 bg-[#8e94a4] hover:bg-[#7b8191] text-white text-sm font-medium rounded-lg shadow-sm transition-colors"
+                    onClick={() => setIsCameraOpen(true)}
+                  >
+                    Xác thực khuôn mặt
+                  </button>
                 </div>
-                <div className="text-center">
-                  <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-                    Chụp ảnh khuôn mặt bằng camera
-                  </p>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-                    Hệ thống sẽ đối chiếu khuôn mặt với ảnh trên CCCD
-                  </p>
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  icon={<Camera className="w-4 h-4 text-blue-600 dark:text-blue-400" />}
-                  onClick={() => setIsCameraOpen(true)}
-                >
-                  Mở camera xác thực khuôn mặt
-                </Button>
               </div>
             )}
           </div>
@@ -515,42 +468,66 @@ export const StepOwnerIdentity: React.FC = () => {
                     </p>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={clearFaceMedia}
-                    className="shrink-0 w-7 h-7 rounded-full bg-rose-100 dark:bg-rose-900/40 flex items-center justify-center text-rose-600 hover:bg-rose-200 dark:hover:bg-rose-900/60 transition-colors"
-                    title="Xóa file"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
+                  <div className="grid grid-cols-2 gap-3 mt-4 w-full">
+                    <button
+                      type="button"
+                      className="w-full py-2.5 px-4 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                      onClick={(e) => { e.preventDefault(); handleVerifyEkyc(); }}
+                      disabled={!frontCccdFile || !backCccdFile || ekycStatus === "loading"}
+                    >
+                      {ekycStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                      Nhận diện giấy  tờ
+                    </button>
+                    <button
+                      type="button"
+                      className="w-full py-2.5 px-4 bg-rose-500 hover:bg-rose-600 text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2"
+                      onClick={clearFaceMedia}
+                    >
+                      <X className="w-4 h-4" /> Xóa ảnh / video này
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
-              /* Drop zone */
-              <label
-                htmlFor="face-media-upload"
-                className="flex flex-col items-center gap-3 py-8 px-4 cursor-pointer group"
-              >
-                <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/60 transition-colors">
-                  <Upload className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div className="text-center">
-                  <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    Nhấn để chọn ảnh hoặc video khuôn mặt
-                  </p>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-                    Hỗ trợ: JPG, PNG, WEBP, MP4, MOV, WEBM • Tối đa 50 MB
-                  </p>
-                  <div className="flex items-center justify-center gap-3 mt-2">
-                    <span className="inline-flex items-center gap-1 text-xs bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300 px-2 py-0.5 rounded-full">
-                      <ImageIcon className="w-3 h-3" /> Ảnh selfie
-                    </span>
-                    <span className="inline-flex items-center gap-1 text-xs bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300 px-2 py-0.5 rounded-full">
-                      <Video className="w-3 h-3" /> Video khuôn mặt
-                    </span>
+              <>
+                /* Drop zone */
+                <label
+                  htmlFor="face-media-upload"
+                  className="flex flex-col items-center gap-3 py-8 px-4 cursor-pointer group"
+                >
+                  <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/60 transition-colors">
+                    <Upload className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                   </div>
+                  <div className="text-center">
+                    <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      Nhấn để chọn ảnh hoặc video khuôn mặt
+                    </p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                      Hỗ trợ: JPG, PNG, WEBP, MP4, MOV, WEBM • Tối đa 50 MB
+                    </p>
+                    <div className="flex items-center justify-center gap-3 mt-2">
+                      <span className="inline-flex items-center gap-1 text-xs bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300 px-2 py-0.5 rounded-full">
+                        <ImageIcon className="w-3 h-3" /> Ảnh selfie
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-xs bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300 px-2 py-0.5 rounded-full">
+                        <Video className="w-3 h-3" /> Video khuôn mặt
+                      </span>
+                    </div>
+                  </div>
+                </label>
+                
+                <div className="flex flex-col items-center gap-3 pb-4 w-full">
+                  <button
+                    type="button"
+                    className="w-full max-w-[280px] py-2.5 px-4 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                    onClick={(e) => { e.preventDefault(); handleVerifyEkyc(); }}
+                    disabled={!frontCccdFile || !backCccdFile || ekycStatus === "loading"}
+                  >
+                    {ekycStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                    Nhận diện giấy  tờ
+                  </button>
                 </div>
-              </label>
+              </>
             )}
 
             {/* Hidden file input */}
@@ -566,58 +543,9 @@ export const StepOwnerIdentity: React.FC = () => {
         )}
       </div>
 
-      {/* ===== 3. Checklist status trước khi xác thực ===== */}
-      <div className="flex flex-wrap gap-2">
-        <span
-          className={`inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-semibold border transition-colors ${
-            frontCccdFile
-              ? "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300"
-              : "bg-zinc-100 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400"
-          }`}
-        >
-          {frontCccdFile ? <CheckCircle className="w-3.5 h-3.5" /> : <span className="w-3.5 h-3.5 rounded-full border-2 border-current inline-block" />}
-          CCCD mặt trước
-        </span>
-        <span
-          className={`inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-semibold border transition-colors ${
-            backCccdFile
-              ? "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300"
-              : "bg-zinc-100 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400"
-          }`}
-        >
-          {backCccdFile ? <CheckCircle className="w-3.5 h-3.5" /> : <span className="w-3.5 h-3.5 rounded-full border-2 border-current inline-block" />}
-          CCCD mặt sau
-        </span>
-        <span
-          className={`inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-semibold border transition-colors ${
-            hasFaceData
-              ? "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300"
-              : "bg-zinc-100 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400"
-          }`}
-        >
-          {hasFaceData ? <CheckCircle className="w-3.5 h-3.5" /> : <span className="w-3.5 h-3.5 rounded-full border-2 border-current inline-block" />}
-          {faceInputMode === "camera" ? "Ảnh khuôn mặt (camera)" : "Ảnh / Video khuôn mặt"}
-        </span>
-      </div>
 
-      {/* ===== 4. Nút xác thực ===== */}
-      <Button
-        type="button"
-        variant="primary"
-        fullWidth
-        isLoading={ekycStatus === "loading"}
-        icon={
-          ekycStatus === "loading" ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <ShieldCheck className="w-4 h-4" />
-          )
-        }
-        onClick={handleVerifyEkyc}
-        disabled={!frontCccdFile || !backCccdFile || !hasFaceData || ekycStatus === "loading"}
-      >
-        {ekycStatus === "loading" ? "Đang xử lý eKYC..." : "Xác thực Căn cước công dân"}
-      </Button>
+
+      {/* ===== 4. Nút xác thực (Đã được chuyển lên trên cạnh nút chụp) ===== */}
 
       {/* ===== 5. eKYC Result: Success ===== */}
       {ekycStatus === "success" && ekycResult && (
@@ -662,6 +590,12 @@ export const StepOwnerIdentity: React.FC = () => {
 
       {/* ===== 7. Form Fields (Đầy đủ 11 input theo OwnerIdentityInfo) ===== */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+        <div className="col-span-1 md:col-span-2 pb-1">
+          <h4 className="text-base font-bold text-zinc-800 dark:text-zinc-200">
+            Thông tin giấy tờ
+          </h4>
+        </div>
+        
         {/* 1. Full Name */}
         <InputField
           label="Họ và tên chủ sở hữu"
@@ -754,15 +688,7 @@ export const StepOwnerIdentity: React.FC = () => {
           className="body-text"
         />
 
-        {/* 6. Personal Identification (kế Quốc tịch) */}
-        <InputField
-          label="Đặc điểm nhận dạng"
-          placeholder="Ví dụ: Nốt ruồi C 1cm trên sau cánh mũi trái"
-          icon={<Fingerprint className="w-4 h-4 text-zinc-400" />}
-          {...register("personalIdentification")}
-          error={errors.personalIdentification?.message}
-          className="body-text"
-        />
+
 
         {/* 7. Issue Date */}
         <InputField
@@ -781,27 +707,18 @@ export const StepOwnerIdentity: React.FC = () => {
         <InputField
           label="Ngày hết hạn CCCD"
           type="date"
+          required
           icon={<Calendar className="w-4 h-4 text-zinc-400" />}
-          {...register("expiryDate")}
+          {...register("expiryDate", {
+            required: "Vui lòng chọn ngày hết hạn CCCD",
+          })}
           error={errors.expiryDate?.message}
           className="body-text"
         />
 
-        {/* 9. Issue Place (Full Width) */}
-        <InputField
-          label="Nơi cấp CCCD"
-          placeholder="Cục Cảnh sát quản lý hành chính về trật tự xã hội"
-          required
-          icon={<Building2 className="w-4 h-4 text-zinc-400" />}
-          {...register("issuePlace", {
-            required: "Vui lòng nhập nơi cấp CCCD",
-          })}
-          error={errors.issuePlace?.message}
-          containerClassName="col-span-1 md:col-span-2"
-          className="body-text"
-        />
 
-        {/* 10. Place of Origin (Full Width - phía trên Nơi thường trú) */}
+
+        {/* 10. Place of Origin */}
         <InputField
           label="Quê quán"
           placeholder="Phường X, Quận Y, Tỉnh Z"
@@ -811,23 +728,10 @@ export const StepOwnerIdentity: React.FC = () => {
             required: "Vui lòng nhập quê quán",
           })}
           error={errors.placeOfOrigin?.message}
-          containerClassName="col-span-1 md:col-span-2"
           className="body-text"
         />
 
-        {/* 11. Place of Residence (Full Width) */}
-        <InputField
-          label="Nơi thường trú (Địa chỉ trên CCCD)"
-          placeholder="Số 123 Đường ABC, Phường X, Quận Y, Tỉnh Z"
-          required
-          icon={<MapPin className="w-4 h-4 text-zinc-400" />}
-          {...register("placeOfResidence", {
-            required: "Vui lòng nhập nơi thường trú",
-          })}
-          error={errors.placeOfResidence?.message}
-          containerClassName="col-span-1 md:col-span-2"
-          className="body-text"
-        />
+
       </div>
 
       {/* Camera Modal */}
