@@ -11,7 +11,10 @@ import type {
   UserResponse,
   ChangePasswordRequest,
 } from "../types/user.type";
-import type { RegisterUserRequest } from "../types/register-user";
+import type {
+  RegisterUserRequest,
+  VerifyTokenRequest,
+} from "../types/register-user";
 
 export const AuthService = {
   login: async (request: LoginRequest): Promise<LoginResponse> => {
@@ -71,6 +74,28 @@ export const AuthService = {
     );
     if (!response.data.success) {
       throw new Error(response.data.message || "Failed register");
+    }
+    return response.data.message;
+  },
+  verifyRegister: async (request: VerifyTokenRequest): Promise<string> => {
+    const response = await publicAxios.post<ApiResponse<void>>(
+      "/api/v1/auth/verify-register",
+      request,
+    );
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Failed verify register");
+    }
+    return response.data.message;
+  },
+  resendVerificationEmail: async (
+    request: VerifyTokenRequest,
+  ): Promise<string> => {
+    const response = await publicAxios.post<ApiResponse<void>>(
+      "/api/v1/auth/resend-verify-register",
+      request,
+    );
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Failed resend verify register");
     }
     return response.data.message;
   },

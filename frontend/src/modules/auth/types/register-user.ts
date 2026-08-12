@@ -3,3 +3,7 @@ export interface RegisterUserRequest {
   password: string;
   confirmPassword: string;
 }
+
+export interface VerifyTokenRequest {
+  token: string;
+}

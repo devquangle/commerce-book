@@ -114,6 +114,43 @@ public class GlobalExceptionHandler {
                                 null);
         }
 
+        @ExceptionHandler(org.springframework.web.bind.MissingServletRequestParameterException.class)
+        public ResponseEntity<ResponseData<Object>> handleMissingParams(
+                        org.springframework.web.bind.MissingServletRequestParameterException ex,
+                        HttpServletRequest request) {
+                String name = ex.getParameterName();
+                return ResponseUtil.error(
+                                HttpStatus.BAD_REQUEST,
+                                "Thiếu tham số bắt buộc: " + name,
+                                ApiErrorCode.VALIDATION_ERROR,
+                                request.getRequestURI(),
+                                null);
+        }
+
+        @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
+        public ResponseEntity<ResponseData<Object>> handleHttpMessageNotReadable(
+                        org.springframework.http.converter.HttpMessageNotReadableException ex,
+                        HttpServletRequest request) {
+                return ResponseUtil.error(
+                                HttpStatus.BAD_REQUEST,
+                                "Dữ liệu yêu cầu không hợp lệ hoặc bị thiếu",
+                                ApiErrorCode.VALIDATION_ERROR,
+                                request.getRequestURI(),
+                                null);
+        }
+
+        @ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
+        public ResponseEntity<ResponseData<Object>> handleHttpRequestMethodNotSupported(
+                        org.springframework.web.HttpRequestMethodNotSupportedException ex,
+                        HttpServletRequest request) {
+                return ResponseUtil.error(
+                                HttpStatus.METHOD_NOT_ALLOWED,
+                                "Phương thức HTTP không được hỗ trợ",
+                                "METHOD_NOT_ALLOWED",
+                                request.getRequestURI(),
+                                null);
+        }
+
         @ExceptionHandler(Exception.class)
         public ResponseEntity<ResponseData<Object>> handleException(Exception ex, HttpServletRequest request) {
                 log.error("Unhandled exception at {}", request.getRequestURI(), ex);

@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AuthService } from "../services/auth.service";
 import type { LoginRequest } from "../types/login.type";
 import type { UserRequest, ChangePasswordRequest } from "../types/user.type";
-import type { RegisterUserRequest } from "../types/register-user";
+import type { RegisterUserRequest, VerifyTokenRequest } from "../types/register-user";
 
 export const authKeys = {
   all: ["auth"] as const,
@@ -49,5 +49,17 @@ export const useRefreshTokenMutation = () => {
 export const useRegisterMutation = () => {
   return useMutation({
     mutationFn: (request: RegisterUserRequest) => AuthService.register(request),
+  });
+};
+
+export const useVerifyRegisterMutation = () => {
+  return useMutation({
+    mutationFn: (request: VerifyTokenRequest) => AuthService.verifyRegister(request),
+  });
+};
+
+export const useResendVerificationEmailMutation = () => {
+  return useMutation({
+    mutationFn: (request: VerifyTokenRequest) => AuthService.resendVerificationEmail(request),
   });
 };

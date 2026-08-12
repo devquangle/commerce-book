@@ -28,6 +28,7 @@ export const UserRoutes: React.FC = () => {
       <Suspense fallback={<Spinner />}>
         <Routes>
           <Route index element={<Home />} />
+          <Route path="home" element={<Home />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
           <Route path="verify-email" element={<ConfirmEmailPage />} />

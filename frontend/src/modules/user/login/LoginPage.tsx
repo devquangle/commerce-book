@@ -27,9 +27,7 @@ const LoginPage = () => {
       const user = await auth.login(requestData);
       showSuccessToast("Đăng nhập thành công!");
       if (user && user.role === "USER") {
-        navigate("/home");
-      } else if (user && (user.role === "SHOP" || user.role === "STAFF") ) {
-        navigate("/shop");
+        navigate("/home")
       } else {
         navigate("/admin");
       }

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -89,16 +90,18 @@ public class AuthController {
         return ResponseUtil.successMessage("Đăng ký thành công vui lòng kiểm tra email để kích hoạt tài khoản.");
     }
 
-    @PostMapping("/resend-verify-register")
-    public ResponseEntity<ResponseData<Object>> sendMailRegister(@RequestBody @Valid VerifyTokenRequest request) {
-        authService.resendVerificationEmail(request.token());
-        return ResponseUtil.successMessage("Đã gửi lại email xác thực");
-    }
-
     @PostMapping("/verify-register")
     public ResponseEntity<ResponseData<Object>> verifyRegister(@RequestBody @Valid VerifyTokenRequest request) {
         authService.verifyRegister(request.token());
         return ResponseUtil.successMessage("Xác thực thành công");
+    }
+
+
+
+    @PostMapping("/resend-verify-register")
+    public ResponseEntity<ResponseData<Object>> sendMailRegister(@RequestBody @Valid VerifyTokenRequest request) {
+        authService.resendVerificationEmail(request.token());
+        return ResponseUtil.successMessage("Đã gửi lại email xác thực");
     }
 
 }
