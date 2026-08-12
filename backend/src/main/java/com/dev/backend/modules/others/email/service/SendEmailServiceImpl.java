@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class SendEmailServiceImpl implements SendEmailService {
     private final JavaMailSender mailSender;
 
-    @Value("${mail.username}")
+    @Value("${spring.mail.username}")
     private String fromEmail;
 
     @Override
