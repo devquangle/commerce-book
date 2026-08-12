@@ -139,17 +139,6 @@ public class GlobalExceptionHandler {
                                 null);
         }
 
-        @ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
-        public ResponseEntity<ResponseData<Object>> handleHttpRequestMethodNotSupported(
-                        org.springframework.web.HttpRequestMethodNotSupportedException ex,
-                        HttpServletRequest request) {
-                return ResponseUtil.error(
-                                HttpStatus.METHOD_NOT_ALLOWED,
-                                "Phương thức HTTP không được hỗ trợ",
-                                "METHOD_NOT_ALLOWED",
-                                request.getRequestURI(),
-                                null);
-        }
 
         @ExceptionHandler(Exception.class)
         public ResponseEntity<ResponseData<Object>> handleException(Exception ex, HttpServletRequest request) {

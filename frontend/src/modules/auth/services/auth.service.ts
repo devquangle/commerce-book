@@ -75,7 +75,7 @@ export const AuthService = {
     if (!response.data.success) {
       throw new Error(response.data.message || "Failed register");
     }
-    return response.data.message;
+       return response.data.message;
   },
   verifyRegister: async (request: VerifyTokenRequest): Promise<string> => {
     const response = await publicAxios.post<ApiResponse<void>>(

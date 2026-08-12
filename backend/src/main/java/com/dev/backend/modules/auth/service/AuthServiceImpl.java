@@ -1,5 +1,6 @@
 package com.dev.backend.modules.auth.service;
 
+import com.dev.backend.common.constant.ApiErrorCode;
 import com.dev.backend.common.constant.JwtType;
 import com.dev.backend.common.exception.AppException;
 import com.dev.backend.common.exception.BadRequestException;
@@ -267,7 +268,10 @@ public class AuthServiceImpl implements AuthService {
         User user = getUserFromVerifyToken(token);
 
         if (user.isEnabled()) {
-            throw new UnauthorizedException("Tài khoản đã được kích hoạt");
+            throw new AppException(
+                    HttpStatus.BAD_REQUEST.value(),
+                    "Tài khoản đã được kích hoạt",
+                    ApiErrorCode.ACCOUNT_ALREADY_VERIFIED);
         }
 
         user.setEnabled(true);
@@ -279,7 +283,10 @@ public class AuthServiceImpl implements AuthService {
         User user = getUserFromVerifyToken(token);
 
         if (user.isEnabled()) {
-            throw new UnauthorizedException("Tài khoản đã được kích hoạt");
+            throw new AppException(
+                    HttpStatus.BAD_REQUEST.value(),
+                    "Tài khoản đã được kích hoạt",
+                    ApiErrorCode.ACCOUNT_ALREADY_VERIFIED);
         }
 
         user.setTokenVersion(user.getTokenVersion() + 1);
@@ -301,7 +308,7 @@ public class AuthServiceImpl implements AuthService {
             throw new AppException(
                     HttpStatus.BAD_REQUEST.value(),
                     "Token không hợp lệ hoặc đã hết hạn",
-                    "JWT_INVALID");
+                    ApiErrorCode.JWT_INVALID);
         }
 
         Long userId = jwtUtil.extractUserId(token);

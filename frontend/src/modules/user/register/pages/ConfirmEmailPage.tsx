@@ -7,6 +7,8 @@ import {
 } from "@/modules/auth/hooks/useAuth";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { showErrorToast, showSuccessToast } from "@/libs/utils/toastUtil";
+import { AxiosError } from "axios";
+import type { ApiResponse } from "@/libs/utils/api-response";
 
 const ConfirmEmailPage = () => {
   const [searchParams] = useSearchParams();
@@ -15,7 +17,7 @@ const ConfirmEmailPage = () => {
   const token = searchParams.get("verifyToken");
 
   const [error, setError] = useState<string | null>(
-    token ? null : "INVALID_TOKEN",
+    token ? null : "JWT_INVALID",
   );
   const [isSuccess, setIsSuccess] = useState(false);
   const [countdown, setCountdown] = useState(3);
@@ -38,14 +40,24 @@ const ConfirmEmailPage = () => {
             setError(null);
           },
           onError: (err: unknown) => {
-            const error = err as Error;
+            const axiosError = err as AxiosError<ApiResponse<unknown>>;
+            const errorCode = axiosError.response?.data?.error || (err as Error).message;
+            console.log("=== API Verify Error ===");
+            console.log("Full response data:", axiosError.response?.data);
+            console.log("Extracted errorCode:", errorCode);
             // Hiển thị JWT_INVALID nếu token hết hạn, hoặc lưu lỗi mặc định
             if (
-              error.message === "JWT_INVALID" ||
-              error.message?.includes("expired") ||
-              error.message?.includes("invalid")
+              errorCode === "JWT_INVALID" ||
+          
+              errorCode?.toLowerCase().includes("expired") ||
+              errorCode?.toLowerCase().includes("invalid")
             ) {
               setError("JWT_INVALID");
+            } else if (
+              errorCode === "ACCOUNT_ALREADY_VERIFIED" ||
+              errorCode?.includes("already verified")
+            ) {
+              setError("ACCOUNT_ALREADY_VERIFIED");
             } else {
               setError("VERIFY_FAILED");
             }
@@ -85,8 +97,10 @@ const ConfirmEmailPage = () => {
           );
         },
         onError: (err: unknown) => {
-          const error = err as Error;
-          showErrorToast(error.message || "Có lỗi xảy ra khi gửi lại email.");
+          const axiosError = err as AxiosError<ApiResponse<unknown>>;
+          const errorMessage =
+            axiosError.response?.data?.message || (err as Error).message;
+          showErrorToast(errorMessage || "Có lỗi xảy ra khi gửi lại email.");
         },
       },
     );
@@ -125,6 +139,40 @@ const ConfirmEmailPage = () => {
                 {countdown}s
               </span>
               ...
+            </p>
+            <div className="pt-4">
+              <Button
+                onClick={() => navigate("/login")}
+                variant="primary"
+                fullWidth
+                size="lg"
+              >
+                Đăng nhập ngay
+              </Button>
+            </div>
+          </>
+        ) : error === "ACCOUNT_ALREADY_VERIFIED" ? (
+          <>
+            <div className="w-16 h-16 mx-auto bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-500 rounded-full flex items-center justify-center mb-4">
+              <svg
+                className="w-8 h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">
+              Tài khoản đã được xác thực
+            </h2>
+            <p className="text-zinc-500 dark:text-zinc-400">
+              Tài khoản của bạn đã xác thực, hãy đăng nhập.
             </p>
             <div className="pt-4">
               <Button
