@@ -1,5 +1,6 @@
 package com.dev.backend.modules.user.service;
 
+import com.dev.backend.modules.user.dto.RegisterUserRequest;
 import com.dev.backend.modules.user.dto.UserResponse;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface UserService {
     void deleteUser(Long id);
 
     void insertData();
+
+    void register(RegisterUserRequest request);
 }

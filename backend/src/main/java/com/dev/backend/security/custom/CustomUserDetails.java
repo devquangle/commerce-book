@@ -7,7 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
-import java.util.Collections;
 
 public class CustomUserDetails implements UserDetails {
 
@@ -20,7 +19,7 @@ public class CustomUserDetails implements UserDetails {
     }
 
     public static CustomUserDetails build(User user) {
-        Collection<GrantedAuthority> authorities = Collections.emptyList();
+        Collection<GrantedAuthority> authorities = java.util.Collections.emptyList();
 
         if (user.getRole() != null) {
             String code = user.getRole().getCode();
@@ -29,7 +28,7 @@ public class CustomUserDetails implements UserDetails {
 
             if (roleStr != null && !roleStr.isBlank()) {
                 String authorityName = roleStr.startsWith("ROLE_") ? roleStr : "ROLE_" + roleStr;
-                authorities = Collections.singletonList(new SimpleGrantedAuthority(authorityName));
+                authorities = java.util.Collections.singletonList(new SimpleGrantedAuthority(authorityName));
             }
         }
 

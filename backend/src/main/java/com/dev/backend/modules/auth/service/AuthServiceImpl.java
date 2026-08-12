@@ -111,38 +111,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public UserResponse register(RegisterRequest request) {
-        if (Boolean.TRUE.equals(authRepository.existsByEmail(request.getEmail()))) {
-            throw new RuntimeException("Email đã được sử dụng");
-        }
-
-        if (Boolean.TRUE.equals(authRepository.existsByUsername(request.getUsername()))) {
-            throw new RuntimeException("Tên đăng nhập đã được sử dụng");
-        }
-
-        User user = User.builder()
-                .username(request.getUsername())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .fullName(request.getFullName())
-                .phone(request.getPhone())
-                .enabled(true)
-                .accountNonLocked(true)
-                .tokenVersion(0)
-                .failedAttempt(0)
-                .build();
-
-        User savedUser = authRepository.save(user);
-
-        Optional<Role> defaultRole = roleRepository.findByCode("ROLE_USER")
-                .or(() -> roleRepository.findByName("USER"))
-                .or(() -> roleRepository.findByName("ROLE_USER"));
-
-        defaultRole.ifPresent(role -> {
-            savedUser.setRole(role);
-            authRepository.save(savedUser);
-        });
-
-        return userMapper.toResponse(savedUser);
+        return null;
     }
 
     @Override

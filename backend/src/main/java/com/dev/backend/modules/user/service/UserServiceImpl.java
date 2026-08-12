@@ -1,15 +1,14 @@
-package com.dev.backend.modules.user.service.impl;
+package com.dev.backend.modules.user.service;
 
 import com.dev.backend.common.constant.ModuleConstants;
 import com.dev.backend.common.enums.UserStatus;
 import com.dev.backend.modules.role.entity.Role;
 import com.dev.backend.modules.role.repository.RoleRepository;
+import com.dev.backend.modules.user.dto.RegisterUserRequest;
 import com.dev.backend.modules.user.dto.UserResponse;
 import com.dev.backend.modules.user.entity.User;
 import com.dev.backend.modules.user.mapper.UserMapper;
 import com.dev.backend.modules.user.repository.UserRepository;
-import com.dev.backend.modules.user.service.UserService;
-
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +63,6 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponse(user);
     }
 
-
     @Override
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
@@ -76,10 +74,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void insertData() {
         Object[][] roleUserData = {
-            {"ROLE_ADMIN", "ADMIN", ModuleConstants.SYSTEM, "Quản trị viên hệ thống", "admin", "admin@gmail.com", "Quản Trị Viên", "0901234567"},
-            {"ROLE_STAFF", "STAFF", ModuleConstants.SYSTEM, "Nhân viên hệ thống", "staff", "staff@gmail.com", "Nhân Viên System", "0901234568"},
-            {"ROLE_SHOP", "SHOP", ModuleConstants.SHOP, "Chủ gian hàng / Cửa hàng", "shop", "shop@gmail.com", "Chủ Cửa Hàng", "0901234569"},
-            {"ROLE_USER", "USER", ModuleConstants.USER, "Khách hàng người dùng", "user", "user@gmail.com", "Khách Hàng", "0901234570"}
+                { "ROLE_ADMIN", "ADMIN", ModuleConstants.SYSTEM, "Quản trị viên hệ thống", "admin", "admin@gmail.com",
+                        "Quản Trị Viên", "0901234567" },
+                { "ROLE_STAFF", "STAFF", ModuleConstants.SYSTEM, "Nhân viên hệ thống", "staff", "staff@gmail.com",
+                        "Nhân Viên System", "0901234568" },
+                { "ROLE_SHOP", "SHOP", ModuleConstants.SHOP, "Chủ gian hàng / Cửa hàng", "shop", "shop@gmail.com",
+                        "Chủ Cửa Hàng", "0901234569" },
+                { "ROLE_USER", "USER", ModuleConstants.USER, "Khách hàng người dùng", "user", "user@gmail.com",
+                        "Khách Hàng", "0901234570" }
         };
 
         for (Object[] item : roleUserData) {
@@ -125,5 +127,14 @@ public class UserServiceImpl implements UserService {
                 savedUser = userRepository.save(user);
             }
         }
+    }
+
+    @Override
+    public void register(RegisterUserRequest request) {
+        User user = new User();
+        user.setEmail(request.email());
+        user.setPassword(request.password());
+        roleRepository.findByName(ModuleConstants.USER);
+        user.setRole( roleRepository.findByName(ModuleConstants.USER));
     }
 }
