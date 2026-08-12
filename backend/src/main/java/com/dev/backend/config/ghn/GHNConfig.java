@@ -1,6 +1,5 @@
 package com.dev.backend.config.ghn;
 
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 

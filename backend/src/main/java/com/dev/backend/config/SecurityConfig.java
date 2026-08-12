@@ -40,11 +40,8 @@ public class SecurityConfig {
         @org.springframework.beans.factory.annotation.Value("${app.cors.allowedOrigins:http://localhost:5173}")
         private List<String> allowedOrigins;
         public static final String[] PUBLIC_URLS = {
-                        "/api/v1/auth/login",
-                        "/api/v1/auth/register",
-                        "/api/v1/auth/refresh",
-                        "/api/v1/auth/verify-register",
-                        "/api/v1/auth/resend-verify-register",
+                        "/api/v1/auth/**",
+                        "/api/v1/ghn/**",
                         "/api/v1/upload/**",
                         "/api/v1/wikipedia/**",
                         "/api/v1/gemini/**",
