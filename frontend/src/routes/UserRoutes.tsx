@@ -7,6 +7,7 @@ import RegisterPage from "@/modules/user/register/pages/RegisterPage";
 import ConfirmEmailPage from "@/modules/user/register/pages/ConfirmEmailPage";
 import AddressPage from "@/modules/user/address/pages/AddressPage";
 import AddressCreatePage from "@/modules/user/address/pages/AddressCreatePage";
+import AddressUpdatePage from "@/modules/user/address/pages/AddressUpdatePage";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("@/modules/user/pages/Home"));
@@ -47,6 +48,7 @@ export const UserRoutes: React.FC = () => {
             <Route path="orders" element={<OrderHistory />} />
             <Route path="address" element={<AddressPage />} />
             <Route path="address/create" element={<AddressCreatePage />} />
+            <Route path="address/edit/:id" element={<AddressUpdatePage />} />
             <Route path="orders/:id" element={<OrderDetail />} />
           </Route>
 

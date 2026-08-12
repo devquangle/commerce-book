@@ -18,7 +18,6 @@ public class AddressMapper {
         address.setDistrictId(request.districtId());
         address.setWardCode(request.wardCode());
         address.setStreet(request.street());
-        address.setDefault(request.defaultAddress());
         address.setShop(false);
         return address;
     }

@@ -1,7 +1,6 @@
 import React from "react";
 import { Modal } from "@/components/common/Modal";
 import { useDeleteAddress } from "../hooks/useAddress";
-import { Button } from "@/components/common/Button";
 import type { AddressResponse } from "../types/address.type";
 import type { AxiosError } from "axios";
 import type { ApiResponse } from "@/libs/utils/api-response";

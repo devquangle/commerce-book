@@ -1,6 +1,6 @@
 import { useState } from "react";
 import AddressHeader from "../components/AddressHeader";
-import AddressCard, { type AddressData } from "../components/AddressCard";
+import AddressCard from "../components/AddressCard";
 import AddressSkeleton from "../components/AddressSkeleton";
 import { useNavigate } from "react-router-dom";
 import { useAddresses } from "../hooks/useAddress";
@@ -9,21 +9,14 @@ import AddressDeleteModal from "../components/AddressDeleteModal";
 import AddressDefaultModal from "../components/AddressDefaultModal";
 
 const AddressPage = () => {
-  const { data: addressesResponse = [], isLoading } = useAddresses();
+  const { data: addressesResponse = [], isPending } = useAddresses();
   
   // States cho Modals
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [defaultModalOpen, setDefaultModalOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState<AddressResponse | null>(null);
 
-  // Map từ AddressResponse sang AddressData cho component AddressCard
-  const addresses: AddressData[] = addressesResponse.map((addr) => ({
-    id: addr.id,
-    fullName: addr.fullName,
-    phoneNumber: addr.phone,
-    fullAddress: addr.streetFull || addr.street,
-    isDefault: addr.defaultAddress,
-  }));
+
 
   const navigate = useNavigate();
   const handleAddClick = () => {
@@ -31,8 +24,7 @@ const AddressPage = () => {
   };
 
   const handleEdit = (id: number) => {
-    console.log("Điều hướng sang trang sửa địa chỉ", id);
-    // navigate(`/profile/address/${id}/edit`)
+    navigate(`/address/edit/${id}`);
   };
 
   const handleDelete = (item: AddressResponse) => {
@@ -54,7 +46,7 @@ const AddressPage = () => {
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-        {isLoading ? (
+        {isPending ? (
           <>
             <AddressSkeleton />
             <AddressSkeleton />
@@ -63,14 +55,14 @@ const AddressPage = () => {
           addressesResponse.map((address) => (
             <AddressCard
               key={address.id}
-              address={address as unknown as AddressData}
+              address={address}
               onEdit={handleEdit}
               onDelete={() => handleDelete(address)}
               onSetDefault={() => handleSetDefault(address)}
             />
           ))
         ) : (
-          <div className="col-span-1 md:col-span-2 flex items-center justify-center min-h-[200px] text-center bg-gray-50 dark:bg-zinc-800/20 rounded-xl border border-dashed border-gray-200 dark:border-zinc-800 h-full">
+          <div className="col-span-1 md:col-span-2 flex items-center justify-center min-h-50 text-center bg-gray-50 dark:bg-zinc-800/20 rounded-xl border border-dashed border-gray-200 dark:border-zinc-800 h-full">
             <p className="text-gray-500 dark:text-zinc-400">
               Bạn chưa có địa chỉ nào được lưu.
             </p>

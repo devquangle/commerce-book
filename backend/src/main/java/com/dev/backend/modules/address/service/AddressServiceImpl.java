@@ -55,13 +55,19 @@ public class AddressServiceImpl implements AddressService {
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng"));
 
         address.setUser(user);
+
         address.setStreetFull(ghnService.getStreetFull(address.getProvinceId(), address.getDistrictId(),
                 address.getWardCode(), address.getStreet()));
         // Nếu là địa chỉ đầu tiên -> mặc định
         if (count == 0) {
             address.setDefault(true);
         }
-
+        if (request.defaultAddress()) {
+            addressRepository.resetDefaultAddress(userId);
+            address.setDefault(true);
+        } else {
+            address.setDefault(false);
+        }
         Address saved = addressRepository.save(address);
 
         return addressMapper.toDTO(saved);
@@ -105,6 +111,12 @@ public class AddressServiceImpl implements AddressService {
     public AddressResponse update(Long id, AddressRequest request, Long userId) {
         Address address = getByIdAndUserId(id, userId);
         addressMapper.toEntity(address, request);
+      if (request.defaultAddress()) {
+            addressRepository.resetDefaultAddress(userId);
+            address.setDefault(true);
+        } else {
+            address.setDefault(false);
+        }
         address.setStreetFull(ghnService.getStreetFull(address.getProvinceId(), address.getDistrictId(),
                 address.getWardCode(), address.getStreet()));
         Address saved = addressRepository.save(address);
