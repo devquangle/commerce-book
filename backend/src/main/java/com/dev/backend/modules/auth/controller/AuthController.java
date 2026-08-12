@@ -8,6 +8,7 @@ import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
 import com.dev.backend.modules.auth.dto.LoginRequest;
 import com.dev.backend.modules.auth.dto.RegisterRequest;
 import com.dev.backend.modules.auth.dto.RegisterUserRequest;
+import com.dev.backend.modules.auth.dto.VerifyTokenRequest;
 import com.dev.backend.modules.auth.service.AuthService;
 import com.dev.backend.modules.user.dto.UserRequest;
 import com.dev.backend.modules.user.dto.UserResponse;
@@ -40,8 +41,6 @@ public class AuthController {
         LoginResponse data = authService.login(request, response);
         return ResponseUtil.success("Login thành công", data);
     }
-
-
 
     @PostMapping("/refresh")
     public ResponseEntity<ResponseData<RefreshResponse>> refreshToken(HttpServletRequest request) {
@@ -87,6 +86,19 @@ public class AuthController {
     public ResponseEntity<ResponseData<Void>> register(
             @Valid @RequestBody RegisterUserRequest request) {
         authService.register(request);
-        return ResponseUtil.successMessage("Đăng ký thành công vui lòng kiểm tra email để kích hoạt tài khoản");
+        return ResponseUtil.successMessage("Đăng ký thành công vui lòng kiểm tra email để kích hoạt tài khoản.");
     }
+
+    @PostMapping("/resend-verify-register")
+    public ResponseEntity<ResponseData<Object>> sendMailRegister(@RequestBody @Valid VerifyTokenRequest request) {
+        authService.resendVerificationEmail(request.token());
+        return ResponseUtil.successMessage("Đã gửi lại email xác thực");
+    }
+
+    @PostMapping("/verify-register")
+    public ResponseEntity<ResponseData<Object>> verifyRegister(@RequestBody @Valid VerifyTokenRequest request) {
+        authService.verifyRegister(request.token());
+        return ResponseUtil.successMessage("Xác thực thành công");
+    }
+
 }

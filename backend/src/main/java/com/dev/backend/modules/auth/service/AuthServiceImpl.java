@@ -1,8 +1,10 @@
 package com.dev.backend.modules.auth.service;
 
 import com.dev.backend.common.constant.JwtType;
+import com.dev.backend.common.exception.AppException;
 import com.dev.backend.common.exception.BadRequestException;
 import com.dev.backend.common.exception.DuplicateFieldException;
+import com.dev.backend.common.exception.NotFoundException;
 import com.dev.backend.common.exception.UnauthorizedException;
 import com.dev.backend.common.utils.CookieUtil;
 import com.dev.backend.common.utils.UsernameUtils;
@@ -28,6 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -254,9 +257,56 @@ public class AuthServiceImpl implements AuthService {
 
         User saved = authRepository.save(user);
         String verifyToken = jwtUtil.generateVerifyToken(saved.getId(), saved.getTokenVersion());
-        sendEmailService.sendEmailRegister(user.getEmail(),
+        sendEmailService.sendEmailRegister(saved.getEmail(),
                 "Cảm ơn bạn đã đăng ký tài khoản, vui lòng kích hoạt tài khoản", verifyToken);
 
     }
 
+    @Override
+    public void verifyRegister(String token) {
+        User user = getUserFromVerifyToken(token);
+
+        if (user.isEnabled()) {
+            throw new UnauthorizedException("Tài khoản đã được kích hoạt");
+        }
+
+        user.setEnabled(true);
+        authRepository.save(user);
+    }
+
+    @Override
+    public void resendVerificationEmail(String token) {
+        User user = getUserFromVerifyToken(token);
+
+        if (user.isEnabled()) {
+            throw new UnauthorizedException("Tài khoản đã được kích hoạt");
+        }
+
+        user.setTokenVersion(user.getTokenVersion() + 1);
+
+        User saved = authRepository.save(user);
+
+        String verifyToken = jwtUtil.generateVerifyToken(
+                saved.getId(),
+                saved.getTokenVersion());
+
+        sendEmailService.sendEmailRegister(
+                saved.getEmail(),
+                "Cảm ơn bạn đã đăng ký tài khoản, vui lòng kích hoạt tài khoản",
+                verifyToken);
+    }
+
+    private User getUserFromVerifyToken(String token) {
+        if (!jwtUtil.isValid(token, JwtType.VERIFY_EMAIL)) {
+            throw new AppException(
+                    HttpStatus.BAD_REQUEST.value(),
+                    "Token không hợp lệ hoặc đã hết hạn",
+                    "JWT_INVALID");
+        }
+
+        Long userId = jwtUtil.extractUserId(token);
+
+        return authRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng"));
+    }
 }

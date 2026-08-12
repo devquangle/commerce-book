@@ -5,12 +5,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.dev.backend.common.utils.LogUtil;
-
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SendEmailServiceImpl implements SendEmailService {
     private final JavaMailSender mailSender;
 
@@ -23,22 +24,21 @@ public class SendEmailServiceImpl implements SendEmailService {
             MimeMessage message = mailSender.createMimeMessage();
 
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
+            log.error("to send email to {}", fromEmail);
             helper.setTo(toEmail);
             helper.setSubject(subject);
-            helper.setFrom(fromEmail);
             helper.setText(content(token), true);
+            helper.setFrom(fromEmail);
 
             mailSender.send(message);
-
+            System.out.println("✅ HTML email sent to " + toEmail);
         } catch (Exception e) {
-           LogUtil.error("Failed to send email to {}", toEmail, e);
-            e.printStackTrace();
+            log.error("Failed to send email to {}", toEmail, e);
         }
     }
 
     public String content(String token) {
-        String verifyLink = "http://localhost:5173/verify_email?verifyToken=" + token;
+        String verifyLink = "http://localhost:5173/verify-email?verifyToken=" + token;
         return """
                     <!DOCTYPE html>
                     <html>

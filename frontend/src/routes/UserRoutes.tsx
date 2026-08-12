@@ -4,6 +4,7 @@ import UserLayout from "@/layouts/UserLayout";
 import ProfileLayout from "@/layouts/ProfileLayout";
 import Spinner from "@/components/common/Spinner";
 import RegisterPage from "@/modules/user/register/pages/RegisterPage";
+import ConfirmEmailPage from "@/modules/user/register/pages/ConfirmEmailPage";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("@/modules/user/pages/Home"));
@@ -18,7 +19,9 @@ const Search = lazy(() => import("@/modules/user/pages/Search"));
 const NotFound = lazy(() => import("@/modules/user/pages/NotFound"));
 const LoginPage = lazy(() => import("@/modules/user/login/LoginPage"));
 const ProfilePage = lazy(() => import("@/modules/auth/components/ProfilePage"));
-const RegisterShopPage=lazy(() => import("@/modules/user/register-shop/pages/RegisterShopPage"));
+const RegisterShopPage = lazy(
+  () => import("@/modules/user/register-shop/pages/RegisterShopPage"),
+);
 export const UserRoutes: React.FC = () => {
   return (
     <UserLayout>
@@ -26,7 +29,8 @@ export const UserRoutes: React.FC = () => {
         <Routes>
           <Route index element={<Home />} />
           <Route path="login" element={<LoginPage />} />
-           <Route path="register" element={<RegisterPage />} />
+          <Route path="register" element={<RegisterPage />} />
+          <Route path="verify-email" element={<ConfirmEmailPage />} />
           <Route path="register-shop" element={<RegisterShopPage />} />
           <Route path="books" element={<BookList />} />
           <Route path="books/:id" element={<BookDetail />} />

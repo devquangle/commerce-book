@@ -38,6 +38,9 @@ public interface AuthService {
 
     void register(RegisterUserRequest request);
 
-    
+    void verifyRegister(String token);
+
+    void resendVerificationEmail(String token);
+
     void validate(String email);
 }
