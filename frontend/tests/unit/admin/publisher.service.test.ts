@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import PublisherService from '@/modules/admin/publishers/services/publisher.service';
 import { authAxios } from '@/libs/config/axios.config';
+import type { PublisherRequest, PublisherFilterRequest } from '@/modules/admin/publishers/types/publisher.type';
 
 vi.mock('@/libs/config/axios.config', () => ({
   authAxios: {
@@ -21,10 +22,10 @@ describe('PublisherService', () => {
       const mockData = {
         data: {
           success: true,
-          data: { items: [{ id: 1, name: 'Publisher A' }], total: 1 },
+          data: { items: [{ id: 1, name: 'Publisher A', slug: 'pub-a', status: 'ACTIVE' }], total: 1 },
         },
       };
-      (authAxios.get as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.get).mockResolvedValue(mockData);
 
       const result = await PublisherService.search();
 
@@ -36,11 +37,11 @@ describe('PublisherService', () => {
       const mockData = {
         data: {
           success: true,
-          data: { items: [{ id: 1, name: 'Publisher A' }], total: 1 },
+          data: { items: [{ id: 1, name: 'Publisher A', slug: 'pub-a', status: 'ACTIVE' }], total: 1 },
         },
       };
-      const options = { q: 'Pub', page: 1 };
-      (authAxios.get as any).mockResolvedValue(mockData);
+      const options: PublisherFilterRequest = { keyword: 'Pub', page: 1 };
+      vi.mocked(authAxios.get).mockResolvedValue(mockData);
 
       const result = await PublisherService.search(options);
 
@@ -55,7 +56,7 @@ describe('PublisherService', () => {
           message: 'Error fetching',
         },
       };
-      (authAxios.get as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.get).mockResolvedValue(mockData);
 
       await expect(PublisherService.search()).rejects.toThrow('Error fetching');
     });
@@ -66,7 +67,7 @@ describe('PublisherService', () => {
           success: false,
         },
       };
-      (authAxios.get as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.get).mockResolvedValue(mockData);
 
       await expect(PublisherService.search()).rejects.toThrow('Failed to fetch publisher data');
     });
@@ -74,62 +75,62 @@ describe('PublisherService', () => {
 
   describe('create', () => {
     it('should create publisher successfully', async () => {
-      const mockRequest = { name: 'New Publisher' };
-      const mockResponse = { id: 2, ...mockRequest };
+      const mockRequest: PublisherRequest = { name: 'New Publisher', status: 'ACTIVE' };
+      const mockResponse = { id: 2, slug: 'new-publisher', ...mockRequest };
       const mockData = {
         data: {
           success: true,
           data: mockResponse,
         },
       };
-      (authAxios.post as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.post).mockResolvedValue(mockData);
 
-      const result = await PublisherService.create(mockRequest as any);
+      const result = await PublisherService.create(mockRequest);
 
       expect(authAxios.post).toHaveBeenCalledWith('/api/v1/admin/publishers', mockRequest);
       expect(result).toEqual(mockResponse);
     });
 
     it('should throw error on create failure', async () => {
-      const mockRequest = { name: 'New Publisher' };
+      const mockRequest: PublisherRequest = { name: 'New Publisher', status: 'ACTIVE' };
       const mockData = {
         data: {
           success: false,
           message: 'Creation failed',
         },
       };
-      (authAxios.post as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.post).mockResolvedValue(mockData);
 
-      await expect(PublisherService.create(mockRequest as any)).rejects.toThrow('Creation failed');
+      await expect(PublisherService.create(mockRequest)).rejects.toThrow('Creation failed');
     });
 
     it('should throw default error on create failure without message', async () => {
-      const mockRequest = { name: 'New Publisher' };
+      const mockRequest: PublisherRequest = { name: 'New Publisher', status: 'ACTIVE' };
       const mockData = {
         data: {
           success: false,
         },
       };
-      (authAxios.post as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.post).mockResolvedValue(mockData);
 
-      await expect(PublisherService.create(mockRequest as any)).rejects.toThrow('Failed to add publisher');
+      await expect(PublisherService.create(mockRequest)).rejects.toThrow('Failed to add publisher');
     });
   });
 
   describe('update', () => {
     it('should update publisher successfully', async () => {
       const id = 1;
-      const mockRequest = { name: 'Updated Publisher' };
-      const mockResponse = { id, ...mockRequest };
+      const mockRequest: PublisherRequest = { name: 'Updated Publisher', status: 'INACTIVE' };
+      const mockResponse = { id, slug: 'updated-publisher', ...mockRequest };
       const mockData = {
         data: {
           success: true,
           data: mockResponse,
         },
       };
-      (authAxios.put as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.put).mockResolvedValue(mockData);
 
-      const result = await PublisherService.update(id, mockRequest as any);
+      const result = await PublisherService.update(id, mockRequest);
 
       expect(authAxios.put).toHaveBeenCalledWith(`/api/v1/admin/publishers/${id}`, mockRequest);
       expect(result).toEqual(mockResponse);
@@ -137,29 +138,29 @@ describe('PublisherService', () => {
 
     it('should throw error on update failure', async () => {
       const id = 1;
-      const mockRequest = { name: 'Updated Publisher' };
+      const mockRequest: PublisherRequest = { name: 'Updated Publisher', status: 'ACTIVE' };
       const mockData = {
         data: {
           success: false,
           message: 'Update failed',
         },
       };
-      (authAxios.put as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.put).mockResolvedValue(mockData);
 
-      await expect(PublisherService.update(id, mockRequest as any)).rejects.toThrow('Update failed');
+      await expect(PublisherService.update(id, mockRequest)).rejects.toThrow('Update failed');
     });
 
     it('should throw default error on update failure without message', async () => {
       const id = 1;
-      const mockRequest = { name: 'Updated Publisher' };
+      const mockRequest: PublisherRequest = { name: 'Updated Publisher', status: 'ACTIVE' };
       const mockData = {
         data: {
           success: false,
         },
       };
-      (authAxios.put as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.put).mockResolvedValue(mockData);
 
-      await expect(PublisherService.update(id, mockRequest as any)).rejects.toThrow('Failed to update publisher');
+      await expect(PublisherService.update(id, mockRequest)).rejects.toThrow('Failed to update publisher');
     });
   });
 
@@ -171,7 +172,7 @@ describe('PublisherService', () => {
           success: true,
         },
       };
-      (authAxios.delete as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.delete).mockResolvedValue(mockData);
 
       await PublisherService.delete(id);
 
@@ -186,7 +187,7 @@ describe('PublisherService', () => {
           message: 'Delete failed',
         },
       };
-      (authAxios.delete as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.delete).mockResolvedValue(mockData);
 
       await expect(PublisherService.delete(id)).rejects.toThrow('Delete failed');
     });
@@ -198,7 +199,7 @@ describe('PublisherService', () => {
           success: false,
         },
       };
-      (authAxios.delete as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.delete).mockResolvedValue(mockData);
 
       await expect(PublisherService.delete(id)).rejects.toThrow('Failed to delete publisher');
     });

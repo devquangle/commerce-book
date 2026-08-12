@@ -21,10 +21,10 @@ import com.dev.backend.common.response.GHNCalculateFeeResponse;
 import com.dev.backend.common.response.GHNResponse;
 import com.dev.backend.config.ghn.GHNConfig;
 import com.dev.backend.modules.others.ghn.dto.CalculateFeeRequest;
-import com.dev.backend.modules.others.ghn.dto.DistrictDTO;
-import com.dev.backend.modules.others.ghn.dto.ProvinceDTO;
+import com.dev.backend.modules.others.ghn.dto.DistrictResponse;
+import com.dev.backend.modules.others.ghn.dto.ProvinceResponse;
 import com.dev.backend.modules.others.ghn.dto.TotalFeeResponse;
-import com.dev.backend.modules.others.ghn.dto.WardDTO;
+import com.dev.backend.modules.others.ghn.dto.WardResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,14 +47,14 @@ public class GHNServiceImpl implements GHNService {
     }
 
     @Override
-    public List<ProvinceDTO> getProvinces() {
+    public List<ProvinceResponse> getProvinces() {
         HttpEntity<?> entity = new HttpEntity<>(headers());
 
-        ResponseEntity<GHNResponse<ProvinceDTO>> response = restTemplate.exchange(
+        ResponseEntity<GHNResponse<ProvinceResponse>> response = restTemplate.exchange(
                 ghnConfig.getMasterDataUrl() + "/province",
                 HttpMethod.GET,
                 entity,
-                new ParameterizedTypeReference<GHNResponse<ProvinceDTO>>() {
+                new ParameterizedTypeReference<GHNResponse<ProvinceResponse>>() {
                 });
 
         if (response.getStatusCode() == HttpStatus.OK
@@ -62,10 +62,10 @@ public class GHNServiceImpl implements GHNService {
                 && response.getBody().getCode() == 200) {
 
             Set<Integer> excludedIds = Set.of(2002, 298);
-            List<ProvinceDTO> provinceDTOs = response.getBody().getData();
+            List<ProvinceResponse> provinceDTOs = response.getBody().getData();
 
-            List<ProvinceDTO> filtered = provinceDTOs.stream()
-                    .filter(p -> !excludedIds.contains(p.getProvinceID()))
+            List<ProvinceResponse> filtered = provinceDTOs.stream()
+                    .filter(p -> !excludedIds.contains(p.provinceId()))
                     .collect(Collectors.toList());
 
             return filtered;
@@ -75,17 +75,17 @@ public class GHNServiceImpl implements GHNService {
     }
 
     @Override
-    public List<DistrictDTO> getDistricts(Integer provinceId) {
+    public List<DistrictResponse> getDistricts(Integer provinceId) {
         Map<String, Object> body = new HashMap<>();
         body.put("province_id", provinceId);
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers());
 
-        ResponseEntity<GHNResponse<DistrictDTO>> response = restTemplate.exchange(
+        ResponseEntity<GHNResponse<DistrictResponse>> response = restTemplate.exchange(
                 ghnConfig.getMasterDataUrl() + "/district",
                 HttpMethod.POST,
                 entity,
-                new ParameterizedTypeReference<GHNResponse<DistrictDTO>>() {
+                new ParameterizedTypeReference<GHNResponse<DistrictResponse>>() {
                 });
         if (response.getStatusCode() == HttpStatus.OK
                 && response.getBody() != null
@@ -99,18 +99,18 @@ public class GHNServiceImpl implements GHNService {
     }
 
     @Override
-    public List<WardDTO> getWards(Integer districtId) {
+    public List<WardResponse> getWards(Integer districtId) {
 
         Map<String, Object> body = new HashMap<>();
         body.put("district_id", districtId);
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers());
 
-        ResponseEntity<GHNResponse<WardDTO>> response = restTemplate.exchange(
+        ResponseEntity<GHNResponse<WardResponse>> response = restTemplate.exchange(
                 ghnConfig.getMasterDataUrl() + "/ward",
                 HttpMethod.POST,
                 entity,
-                new ParameterizedTypeReference<GHNResponse<WardDTO>>() {
+                new ParameterizedTypeReference<GHNResponse<WardResponse>>() {
                 });
 
         if (response.getStatusCode() == HttpStatus.OK
@@ -125,9 +125,9 @@ public class GHNServiceImpl implements GHNService {
 
     @Override
     public String getStreetFull(Integer provinceId, Integer districtId, String wardCode, String street) {
-        List<ProvinceDTO> provinceDTOs = getProvinces();
-        ProvinceDTO provinceDTO = provinceDTOs.stream()
-                .filter(p -> p.getProvinceID().equals(provinceId))
+        List<ProvinceResponse> provinceDTOs = getProvinces();
+        ProvinceResponse provinceDTO = provinceDTOs.stream()
+                .filter(p -> p.provinceId().equals(provinceId))
                 .findFirst()
                 .orElse(null);
 
@@ -136,9 +136,9 @@ public class GHNServiceImpl implements GHNService {
 
         }
 
-        List<DistrictDTO> districtDTOs = getDistricts(provinceId);
-        DistrictDTO districtDTO = districtDTOs.stream()
-                .filter(d -> d.getDistrictID().equals(districtId))
+        List<DistrictResponse> districtDTOs = getDistricts(provinceId);
+        DistrictResponse districtDTO = districtDTOs.stream()
+                .filter(d -> d.districtId().equals(districtId))
                 .findFirst()
                 .orElse(null);
 
@@ -146,17 +146,17 @@ public class GHNServiceImpl implements GHNService {
             return null;
         }
 
-        List<WardDTO> wardDTOs = getWards(districtId);
-        WardDTO wardDTO = wardDTOs.stream()
-                .filter(w -> w.getWardCode().equals(wardCode))
+        List<WardResponse> wardDTOs = getWards(districtId);
+        WardResponse wardDTO = wardDTOs.stream()
+                .filter(w -> w.wardCode().equals(wardCode))
                 .findFirst()
                 .orElse(null);
 
         if (wardDTO == null) {
             return null;
         }
-        String streetFull = street + ", " + provinceDTO.getProvinceName() + ", " + districtDTO.getDistrictName() + ", "
-                + wardDTO.getWardName();
+        String streetFull = street + ", " + provinceDTO.provinceName() + ", " + districtDTO.districtName() + ", "
+                + wardDTO.wardName();
 
         return streetFull;
     }

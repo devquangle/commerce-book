@@ -3,18 +3,18 @@ package com.dev.backend.modules.others.ghn.service;
 import java.util.List;
 
 import com.dev.backend.modules.others.ghn.dto.CalculateFeeRequest;
-import com.dev.backend.modules.others.ghn.dto.DistrictDTO;
-import com.dev.backend.modules.others.ghn.dto.ProvinceDTO;
-import com.dev.backend.modules.others.ghn.dto.WardDTO;
+import com.dev.backend.modules.others.ghn.dto.DistrictResponse;
+import com.dev.backend.modules.others.ghn.dto.ProvinceResponse;
+import com.dev.backend.modules.others.ghn.dto.WardResponse;
 
 
 public interface GHNService {
 
-        List<ProvinceDTO> getProvinces();
+        List<ProvinceResponse> getProvinces();
 
-        List<DistrictDTO> getDistricts(Integer provinceId);
+        List<DistrictResponse> getDistricts(Integer provinceId);
 
-        List<WardDTO> getWards(Integer districtId);
+        List<WardResponse> getWards(Integer districtId);
 
         String getStreetFull(
                         Integer provinceId,

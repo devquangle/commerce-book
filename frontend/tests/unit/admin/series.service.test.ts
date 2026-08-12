@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import SeriesService from '@/modules/admin/series/services/series.service';
 import { authAxios } from '@/libs/config/axios.config';
+import type { SeriesRequest, SeriesFilterRequest } from '@/modules/admin/series/types/series.type';
 
 vi.mock('@/libs/config/axios.config', () => ({
   authAxios: {
@@ -21,10 +22,10 @@ describe('SeriesService', () => {
       const mockData = {
         data: {
           success: true,
-          data: { items: [{ id: 1, name: 'Series A' }], total: 1 },
+          data: { items: [{ id: 1, name: 'Series A', slug: 'series-a', status: 'ACTIVE' }], total: 1 },
         },
       };
-      (authAxios.get as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.get).mockResolvedValue(mockData);
 
       const result = await SeriesService.search();
 
@@ -36,11 +37,11 @@ describe('SeriesService', () => {
       const mockData = {
         data: {
           success: true,
-          data: { items: [{ id: 1, name: 'Series A' }], total: 1 },
+          data: { items: [{ id: 1, name: 'Series A', slug: 'series-a', status: 'ACTIVE' }], total: 1 },
         },
       };
-      const options = { q: 'Ser', page: 1 };
-      (authAxios.get as any).mockResolvedValue(mockData);
+      const options: SeriesFilterRequest = { keyword: 'Ser', page: 1 };
+      vi.mocked(authAxios.get).mockResolvedValue(mockData);
 
       const result = await SeriesService.search(options);
 
@@ -55,7 +56,7 @@ describe('SeriesService', () => {
           message: 'Error fetching',
         },
       };
-      (authAxios.get as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.get).mockResolvedValue(mockData);
 
       await expect(SeriesService.search()).rejects.toThrow('Error fetching');
     });
@@ -66,7 +67,7 @@ describe('SeriesService', () => {
           success: false,
         },
       };
-      (authAxios.get as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.get).mockResolvedValue(mockData);
 
       await expect(SeriesService.search()).rejects.toThrow('Failed to fetch series data');
     });
@@ -74,62 +75,62 @@ describe('SeriesService', () => {
 
   describe('create', () => {
     it('should create series successfully', async () => {
-      const mockRequest = { name: 'New Series' };
-      const mockResponse = { id: 2, ...mockRequest };
+      const mockRequest: SeriesRequest = { name: 'New Series', status: 'ACTIVE' };
+      const mockResponse = { id: 2, slug: 'new-series', ...mockRequest };
       const mockData = {
         data: {
           success: true,
           data: mockResponse,
         },
       };
-      (authAxios.post as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.post).mockResolvedValue(mockData);
 
-      const result = await SeriesService.create(mockRequest as any);
+      const result = await SeriesService.create(mockRequest);
 
       expect(authAxios.post).toHaveBeenCalledWith('/api/v1/admin/series', mockRequest);
       expect(result).toEqual(mockResponse);
     });
 
     it('should throw error on create failure', async () => {
-      const mockRequest = { name: 'New Series' };
+      const mockRequest: SeriesRequest = { name: 'New Series', status: 'ACTIVE' };
       const mockData = {
         data: {
           success: false,
           message: 'Creation failed',
         },
       };
-      (authAxios.post as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.post).mockResolvedValue(mockData);
 
-      await expect(SeriesService.create(mockRequest as any)).rejects.toThrow('Creation failed');
+      await expect(SeriesService.create(mockRequest)).rejects.toThrow('Creation failed');
     });
 
     it('should throw default error on create failure without message', async () => {
-      const mockRequest = { name: 'New Series' };
+      const mockRequest: SeriesRequest = { name: 'New Series', status: 'ACTIVE' };
       const mockData = {
         data: {
           success: false,
         },
       };
-      (authAxios.post as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.post).mockResolvedValue(mockData);
 
-      await expect(SeriesService.create(mockRequest as any)).rejects.toThrow('Failed to add series');
+      await expect(SeriesService.create(mockRequest)).rejects.toThrow('Failed to add series');
     });
   });
 
   describe('update', () => {
     it('should update series successfully', async () => {
       const id = 1;
-      const mockRequest = { name: 'Updated Series' };
-      const mockResponse = { id, ...mockRequest };
+      const mockRequest: SeriesRequest = { name: 'Updated Series', status: 'INACTIVE' };
+      const mockResponse = { id, slug: 'updated-series', ...mockRequest };
       const mockData = {
         data: {
           success: true,
           data: mockResponse,
         },
       };
-      (authAxios.put as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.put).mockResolvedValue(mockData);
 
-      const result = await SeriesService.update(id, mockRequest as any);
+      const result = await SeriesService.update(id, mockRequest);
 
       expect(authAxios.put).toHaveBeenCalledWith(`/api/v1/admin/series/${id}`, mockRequest);
       expect(result).toEqual(mockResponse);
@@ -137,29 +138,29 @@ describe('SeriesService', () => {
 
     it('should throw error on update failure', async () => {
       const id = 1;
-      const mockRequest = { name: 'Updated Series' };
+      const mockRequest: SeriesRequest = { name: 'Updated Series', status: 'ACTIVE' };
       const mockData = {
         data: {
           success: false,
           message: 'Update failed',
         },
       };
-      (authAxios.put as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.put).mockResolvedValue(mockData);
 
-      await expect(SeriesService.update(id, mockRequest as any)).rejects.toThrow('Update failed');
+      await expect(SeriesService.update(id, mockRequest)).rejects.toThrow('Update failed');
     });
 
     it('should throw default error on update failure without message', async () => {
       const id = 1;
-      const mockRequest = { name: 'Updated Series' };
+      const mockRequest: SeriesRequest = { name: 'Updated Series', status: 'ACTIVE' };
       const mockData = {
         data: {
           success: false,
         },
       };
-      (authAxios.put as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.put).mockResolvedValue(mockData);
 
-      await expect(SeriesService.update(id, mockRequest as any)).rejects.toThrow('Failed to update series');
+      await expect(SeriesService.update(id, mockRequest)).rejects.toThrow('Failed to update series');
     });
   });
 
@@ -171,7 +172,7 @@ describe('SeriesService', () => {
           success: true,
         },
       };
-      (authAxios.delete as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.delete).mockResolvedValue(mockData);
 
       await SeriesService.delete(id);
 
@@ -186,7 +187,7 @@ describe('SeriesService', () => {
           message: 'Delete failed',
         },
       };
-      (authAxios.delete as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.delete).mockResolvedValue(mockData);
 
       await expect(SeriesService.delete(id)).rejects.toThrow('Delete failed');
     });
@@ -198,7 +199,7 @@ describe('SeriesService', () => {
           success: false,
         },
       };
-      (authAxios.delete as any).mockResolvedValue(mockData);
+      vi.mocked(authAxios.delete).mockResolvedValue(mockData);
 
       await expect(SeriesService.delete(id)).rejects.toThrow('Failed to delete series');
     });
