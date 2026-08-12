@@ -9,7 +9,7 @@ export const useProvinces = () => {
   });
 };
 
-export const useDistricts = (provinceId?: number) => {
+export const useDistricts = (provinceId?: number | null) => {
   return useQuery({
     queryKey: ["ghn", "districts", provinceId],
     queryFn: () => {
@@ -20,7 +20,7 @@ export const useDistricts = (provinceId?: number) => {
   });
 };
 
-export const useWards = (districtId?: number) => {
+export const useWards = (districtId?: number | null) => {
   return useQuery({
     queryKey: ["ghn", "wards", districtId],
     queryFn: () => {

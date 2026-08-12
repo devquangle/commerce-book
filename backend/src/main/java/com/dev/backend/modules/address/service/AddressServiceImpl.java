@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +25,14 @@ public class AddressServiceImpl implements AddressService {
     private final AddressMapper addressMapper;
 
     private final UserRepository userRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public Address getByIdAndUserId(Long id, Long userId) {
+        return addressRepository.findByIdAndUserId(id, userId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy địa chỉ"));
+
+    }
 
     @Override
     public AddressResponse create(AddressRequest request, Long userId) {
@@ -51,10 +58,7 @@ public class AddressServiceImpl implements AddressService {
         // Nếu là địa chỉ đầu tiên -> mặc định
         if (count == 0) {
             address.setDefault(true);
-        } else {
-            address.setDefault(request.defaultAddress());
         }
-        address.setShop(false);
 
         Address saved = addressRepository.save(address);
 
@@ -62,21 +66,27 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
+    @Transactional
     public void defaultAddress(Long id, Long userId) {
-        // TODO Auto-generated method stub
-
+        addressRepository.resetDefaultAddress(userId);
+        Address address = getByIdAndUserId(id, userId);
+        address.setDefault(true);
+        addressRepository.save(address);
     }
 
     @Override
+    @Transactional
     public void delete(Long id, Long userId) {
-        // TODO Auto-generated method stub
+        Address address = getByIdAndUserId(id, userId);
+        addressRepository.delete(address);
 
     }
 
     @Override
-    public AddressResponse detail(AddressRequest request, Long userId) {
-        // TODO Auto-generated method stub
-        return null;
+    @Transactional(readOnly = true)
+    public AddressResponse detail(Long id, Long userId) {
+        Address address = getByIdAndUserId(id, userId);
+        return addressMapper.toDTO(address);
     }
 
     @Override
@@ -89,12 +99,16 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressResponse update(AddressRequest request, Long userId) {
-        // TODO Auto-generated method stub
-        return null;
+    @Transactional
+    public AddressResponse update(Long id, AddressRequest request, Long userId) {
+        Address address = getByIdAndUserId(id, userId);
+        addressMapper.toEntity(address, request);
+        Address saved = addressRepository.save(address);
+        return addressMapper.toDTO(saved);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void validate() {
         // TODO Auto-generated method stub
 

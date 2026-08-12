@@ -25,6 +25,7 @@ import com.dev.backend.modules.others.ghn.dto.DistrictResponse;
 import com.dev.backend.modules.others.ghn.dto.ProvinceResponse;
 import com.dev.backend.modules.others.ghn.dto.TotalFeeResponse;
 import com.dev.backend.modules.others.ghn.dto.WardResponse;
+import com.dev.backend.modules.others.ghn.mapper.GHNMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GHNServiceImpl implements GHNService {
     private final RestTemplate restTemplate;
     private final GHNConfig ghnConfig;
-
+    private final GHNMapper ghnMapper;
     private HttpHeaders headers() {
         HttpHeaders headers = new HttpHeaders();
 
@@ -66,7 +67,8 @@ public class GHNServiceImpl implements GHNService {
 
             List<ProvinceResponse> filtered = provinceDTOs.stream()
                     .filter(p -> !excludedIds.contains(p.provinceId()))
-                    .collect(Collectors.toList());
+                    .map(ghnMapper::toProvinceResponse)
+                    .toList();
 
             return filtered;
         }

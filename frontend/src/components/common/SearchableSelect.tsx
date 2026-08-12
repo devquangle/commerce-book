@@ -105,17 +105,10 @@ export const SearchableSelect = React.forwardRef<
 
     // Filter options for search
     const filteredOptions = options.filter((opt) =>
-      opt.label.toLowerCase().includes(searchTerm.toLowerCase()),
+      String(opt.label || "").toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
-    const otherOptionInOptions = options.find(
-      (opt) => String(opt.value) === "-1" || opt.label.toLowerCase() === "khác"
-    );
-
-    const displayOptions =
-      filteredOptions.length > 0
-        ? filteredOptions
-        : [otherOptionInOptions || { label: "Khác", value: -1 }];
+    const displayOptions = filteredOptions;
 
     const selectedOption = options.find(
       (opt) => String(opt.value) === String(selectedValue),
@@ -211,7 +204,7 @@ export const SearchableSelect = React.forwardRef<
           {/* Dropdown Menu */}
           {isOpen && (
             <div
-              className={`absolute z-50 w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-lg max-h-60 overflow-hidden flex flex-col animate-in fade-in duration-100 ${
+              className={`absolute z-50 w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-lg max-h-80 overflow-hidden flex flex-col animate-in fade-in duration-100 ${
                 openDirection === "up" ? "bottom-full mb-1" : "top-full mt-1"
               }`}
             >
@@ -238,9 +231,9 @@ export const SearchableSelect = React.forwardRef<
               </div>
 
               {/* Options List */}
-              <div className="overflow-y-auto p-1 max-h-48 space-y-0.5">
+              <div className="overflow-y-auto p-2 max-h-[236px] space-y-1">
                 {displayOptions.length === 0 ? (
-                  <p className="p-3 caption-text text-center text-zinc-400 font-medium">
+                  <p className="p-4 caption-text text-center text-zinc-400 font-medium">
                     Không tìm thấy kết quả
                   </p>
                 ) : (
@@ -253,7 +246,7 @@ export const SearchableSelect = React.forwardRef<
                         type="button"
                         disabled={opt.disabled}
                         onClick={() => handleSelectOption(opt)}
-                        className={`w-full flex items-center justify-between px-3 py-2 caption-text font-medium rounded-lg text-left transition-colors ${
+                        className={`w-full flex items-center justify-between px-4 py-2.5 caption-text font-medium rounded-lg text-left transition-colors ${
                           opt.disabled
                             ? "opacity-40 cursor-not-allowed"
                             : isSelected
@@ -263,7 +256,7 @@ export const SearchableSelect = React.forwardRef<
                       >
                         <span>{opt.label}</span>
                         {isSelected && (
-                          <Check className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+                          <Check className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
                         )}
                       </button>
                     );

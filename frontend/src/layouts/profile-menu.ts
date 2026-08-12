@@ -1,10 +1,15 @@
-import type { LucideIcon } from "lucide-react";
-
-export interface ProfileMenuItem {
-  label: string;
-  href?: string;
-  icon: LucideIcon;
-}
-export const ProfileMenuItems: ProfileMenuItem[] = [
-    
+export const PROFILE_MENU = [
+  {
+    path: '/profile',
+    label: 'Hồ sơ cá nhân',
+    end: true
+  },
+  {
+    path: '/orders',
+    label: 'Đơn hàng của tôi'
+  },
+  {
+    path: '/address',
+    label: 'Sổ địa chỉ'
+  }
 ];

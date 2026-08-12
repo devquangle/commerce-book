@@ -15,6 +15,7 @@ const GHNService = {
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message || "Failed to fetch provinces");
     }
+    console.log(response.data.data)
     return response.data.data;
   },
 

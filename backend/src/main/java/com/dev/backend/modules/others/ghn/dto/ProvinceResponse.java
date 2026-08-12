@@ -1,12 +1,12 @@
 package com.dev.backend.modules.others.ghn.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 
 public record ProvinceResponse(
-        @JsonProperty("ProvinceID")
+        @JsonAlias("ProvinceID")
         Integer provinceId,
 
-        @JsonProperty("ProvinceName")
+        @JsonAlias("ProvinceName")
         String provinceName
 ) {
 }

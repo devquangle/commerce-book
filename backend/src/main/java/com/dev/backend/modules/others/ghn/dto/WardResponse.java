@@ -1,11 +1,11 @@
 package com.dev.backend.modules.others.ghn.dto;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 
 public record WardResponse(
-        @JsonProperty("WardCode")
+        @JsonAlias("WardCode")
         String wardCode,
 
-        @JsonProperty("WardName")
+        @JsonAlias("WardName")
         String wardName
 ) {
 }
