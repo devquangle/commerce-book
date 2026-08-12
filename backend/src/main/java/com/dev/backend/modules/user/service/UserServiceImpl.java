@@ -2,9 +2,9 @@ package com.dev.backend.modules.user.service;
 
 import com.dev.backend.common.constant.ModuleConstants;
 import com.dev.backend.common.enums.UserStatus;
+import com.dev.backend.modules.auth.dto.RegisterUserRequest;
 import com.dev.backend.modules.role.entity.Role;
 import com.dev.backend.modules.role.repository.RoleRepository;
-import com.dev.backend.modules.user.dto.RegisterUserRequest;
 import com.dev.backend.modules.user.dto.UserResponse;
 import com.dev.backend.modules.user.entity.User;
 import com.dev.backend.modules.user.mapper.UserMapper;

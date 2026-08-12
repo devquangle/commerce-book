@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.dev.backend.common.constant.ModuleConstants;
+import com.dev.backend.common.exception.NotFoundException;
 import com.dev.backend.modules.role.entity.Role;
 import com.dev.backend.modules.role.repository.RoleRepository;
 
@@ -45,5 +46,12 @@ public class RoleServiceImpl implements RoleService {
         if (!roles.isEmpty()) {
             repository.saveAll(roles);
         }
+    }
+
+    @Override
+    public Role getRoleUser() {
+
+        return repository.findByName(ModuleConstants.USER)
+                .orElseThrow(() -> new NotFoundException("ROLE not found ROLE_USER"));
     }
 }

@@ -10,9 +10,10 @@ import com.dev.backend.modules.auth.dto.RefreshResponse;
 import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
 import com.dev.backend.modules.auth.dto.LoginRequest;
 import com.dev.backend.modules.auth.dto.RegisterRequest;
+import com.dev.backend.modules.auth.dto.RegisterUserRequest;
 import com.dev.backend.modules.auth.repository.AuthRepository;
-import com.dev.backend.modules.role.entity.Role;
-import com.dev.backend.modules.role.repository.RoleRepository;
+import com.dev.backend.modules.others.email.service.SendEmailService;
+import com.dev.backend.modules.role.service.RoleService;
 import com.dev.backend.modules.user.dto.UserRequest;
 import com.dev.backend.modules.user.dto.UserResponse;
 import com.dev.backend.modules.user.entity.User;
@@ -36,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -44,11 +44,12 @@ import java.util.Optional;
 public class AuthServiceImpl implements AuthService {
 
     private final AuthRepository authRepository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final UserMapper userMapper;
+    private final SendEmailService sendEmailService;
 
     @Override
     @Transactional(readOnly = true)
@@ -130,7 +131,7 @@ public class AuthServiceImpl implements AuthService {
 
         CustomUserDetails customUserDetails = CustomUserDetails.build(user);
 
-        int currentTokenVersion = user.getTokenVersion() == null ? 0 : user.getTokenVersion();
+        int currentTokenVersion = user.getTokenVersion();
         if (!jwtUtil.isTokenVersionValid(refreshToken, currentTokenVersion)) {
             throw new RuntimeException("RefreshToken đã bị vô hiệu hóa");
         }
@@ -202,7 +203,7 @@ public class AuthServiceImpl implements AuthService {
         }
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
-        int currentVersion = user.getTokenVersion() == null ? 0 : user.getTokenVersion();
+        int currentVersion = user.getTokenVersion();
         user.setTokenVersion(currentVersion + 1);
 
         authRepository.save(user);
@@ -214,9 +215,39 @@ public class AuthServiceImpl implements AuthService {
         User user = authRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
 
-        int currentVersion = user.getTokenVersion() == null ? 0 : user.getTokenVersion();
+        int currentVersion = user.getTokenVersion();
         user.setTokenVersion(currentVersion + 1);
 
         authRepository.save(user);
+    }
+
+    @Override
+    public void validate(String email) {
+        DuplicateFieldException errors = new DuplicateFieldException(new HashMap<>());
+
+        if (existsByEmail(email)) {
+            errors.addError("email", "Email đã được sử dụng.");
+        }
+
+        if (!errors.getErrors().isEmpty()) {
+            throw errors;
+        }
+    }
+
+    @Override
+    public void register(RegisterUserRequest request) {
+        User user = new User();
+        validate(request.email());
+        if (!Objects.equals(request.password(), request.password())) {
+            throw new BadRequestException("Mật khẩu xác nhận không khớp.");
+        }
+        user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setRole(roleService.getRoleUser());
+        User saved = authRepository.save(user);
+        String verifyToken = jwtUtil.generateVerifyToken(saved.getId(), saved.getTokenVersion());
+        sendEmailService.sendEmailRegister(user.getEmail(),
+                "Cảm ơn bạn đã đăng ký tài khoản, vui lòng kích hoạt tài khoản", verifyToken);
+
     }
 }

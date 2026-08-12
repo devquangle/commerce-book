@@ -5,6 +5,7 @@ import com.dev.backend.modules.auth.dto.RefreshResponse;
 import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
 import com.dev.backend.modules.auth.dto.LoginRequest;
 import com.dev.backend.modules.auth.dto.RegisterRequest;
+import com.dev.backend.modules.auth.dto.RegisterUserRequest;
 import com.dev.backend.modules.user.dto.UserRequest;
 import com.dev.backend.modules.user.dto.UserResponse;
 
@@ -34,4 +35,9 @@ public interface AuthService {
     boolean existsByUsername(String username);
 
     boolean existsByPhone(String phone);
+
+    void register(RegisterUserRequest request);
+
+    
+    void validate(String email);
 }

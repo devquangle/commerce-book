@@ -63,10 +63,10 @@ public class User extends BaseEntity {
     private boolean accountNonLocked = true;
 
     @Column(name = "failed_attempt")
-    private int failedAttempt = 0;
+    private int failedAttempt;
 
     @Column(name = "token_version")
-    private Integer tokenVersion = 0;
+    private int tokenVersion;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();

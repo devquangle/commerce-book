@@ -1,4 +1,4 @@
-package com.dev.backend.modules.user.dto;
+package com.dev.backend.modules.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
