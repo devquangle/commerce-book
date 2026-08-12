@@ -66,7 +66,7 @@ const AddressCard = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => onSetDefault?.(address)}
-                className="!text-purple-600 hover:!text-purple-700 dark:!text-purple-400 px-2"
+                className="text-purple-600! hover:text-purple-700! dark:text-purple-400! px-2"
               >
                 Thiết lập mặc định
               </Button>
@@ -88,7 +88,7 @@ const AddressCard = ({
                 onClick={() => onDelete?.(address)}
                 icon={<Trash2 className="w-4 h-4" />}
                 title="Xóa"
-                className="px-2 !text-red-500 hover:!text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                className="px-2 text-red-500! hover:text-red-600! hover:bg-red-50 dark:hover:bg-red-900/20"
               />
             )}
           </div>

@@ -65,7 +65,6 @@ public class AddressController {
     @PutMapping("/address/{id}/default")
     public ResponseEntity<ResponseData<Void>> defaultAddress(
             @PathVariable Long id,
-            @Valid @RequestBody AddressRequest request,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         addressService.defaultAddress(id, userDetails.getUserId());
         return ResponseUtil.successMessage("Cập nhật địa chỉ thành công");
