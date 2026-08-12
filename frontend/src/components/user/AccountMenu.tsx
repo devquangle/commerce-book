@@ -1,12 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import  { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User, LogOut, ChevronDown } from "lucide-react";
-
+import { accountMenu } from "./account-menu";
 import { LogoutModal } from "../common/LogoutModal";
 import { useAuth } from "@/context/useAuth";
-import { shopAccountMenu } from "./shop-account-menu";
 
-export const AccountMenu: React.FC = () => {
+export const AccountMenu= () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -46,9 +45,9 @@ export const AccountMenu: React.FC = () => {
     }
   };
 
-  const displayName = userInfo?.name || userInfo?.username || "Chủ cửa hàng";
-  const displayEmail = userInfo?.email || "shop@commercebook.com";
-  const displayUserName = userInfo?.username || userInfo?.name || "shop";
+  const displayName = userInfo?.name || userInfo?.username || "Người dùng";
+  const displayEmail = userInfo?.email || "user@commercebook.com";
+  const displayUserName = userInfo?.username || userInfo?.name || "user";
 
   return (
     <>
@@ -90,7 +89,7 @@ export const AccountMenu: React.FC = () => {
 
             {/* Menu Items */}
             <ul className="py-1.5 body-text text-zinc-700 dark:text-zinc-200 font-medium">
-              {shopAccountMenu.map((item) => {
+              {accountMenu.map((item) => {
                 const Icon = item.icon;
                 return (
                   <li key={item.label}>

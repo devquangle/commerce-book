@@ -45,13 +45,9 @@ export const AccountMenu: React.FC = () => {
     }
   };
 
-  const displayName = userInfo?.name || "Super Admin";
+  const displayName = userInfo?.name || userInfo?.username || "Quản trị viên";
   const displayEmail = userInfo?.email || "admin@commercebook.com";
-  const displayUserName = userInfo?.username || "superadmin";
-
-  const rawName = userInfo?.name?.trim();
-  const displayHeaderName =
-    rawName && rawName.length > 15 ? displayUserName : displayName;
+  const displayUserName = userInfo?.username || userInfo?.name || "admin";
 
   return (
     <>
@@ -68,7 +64,7 @@ export const AccountMenu: React.FC = () => {
 
           <span className="body-text font-medium text-zinc-700 dark:text-zinc-200 max-w-32.5 truncate">
             <span className="sm:hidden">Tài khoản</span>
-            <span className="hidden sm:inline">{displayHeaderName}</span>
+            <span className="hidden sm:inline">{displayUserName}</span>
           </span>
 
           <ChevronDown

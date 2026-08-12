@@ -16,7 +16,7 @@ const ProfileMenu = () => {
         <div className="overflow-hidden">
           <p className="text-xs text-gray-500 dark:text-zinc-400">Tài khoản của</p>
           <h3 className="font-bold text-gray-800 dark:text-white truncate" title={userInfo?.name}>
-            {userInfo?.name || 'Khách'}
+            {userInfo?.username || 'Khách'}
           </h3>
         </div>
       </div>
