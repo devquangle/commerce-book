@@ -8,64 +8,34 @@ import org.springframework.stereotype.Component;
 @Component
 public class AddressMapper {
 
-    public Address toEntity(AddressRequest request) {
+    public Address toEntity(Address address, AddressRequest request) {
         if (request == null) {
             return null;
         }
-        return Address.builder()
-                .provinceId(request.getProvinceId())
-                .districtId(request.getDistrictId())
-                .wardCode(request.getWardCode())
-                .street(request.getStreet())
-                .streetFull(request.getStreetFull())
-                .isDefault(Boolean.TRUE.equals(request.getIsDefault()))
-                .isShop(Boolean.TRUE.equals(request.getIsShop()))
-                .build();
+        address.setFullName(request.fullName());
+        address.setPhone(request.phone());
+        address.setProvinceId(request.provinceId());
+        address.setDistrictId(request.districtId());
+        address.setWardCode(request.wardCode());
+        address.setStreet(request.street());
+        return address;
     }
 
-    public AddressResponse toResponse(Address entity) {
-        if (entity == null) {
+    public AddressResponse toDTO(Address address) {
+        if (address == null) {
             return null;
         }
-        return AddressResponse.builder()
-                .id(entity.getId())
-                .userId(entity.getUser() != null ? entity.getUser().getId() : null)
-                .provinceId(entity.getProvinceId())
-                .districtId(entity.getDistrictId())
-                .wardCode(entity.getWardCode())
-                .street(entity.getStreet())
-                .streetFull(entity.getStreetFull())
-                .isDefault(entity.isDefault())
-                .isShop(entity.isShop())
-                .createdAt(entity.getCreatedAt())
-                .updatedAt(entity.getUpdatedAt())
-                .build();
-    }
 
-    public void updateEntityFromRequest(AddressRequest request, Address entity) {
-        if (request == null || entity == null) {
-            return;
-        }
-        if (request.getProvinceId() != null) {
-            entity.setProvinceId(request.getProvinceId());
-        }
-        if (request.getDistrictId() != null) {
-            entity.setDistrictId(request.getDistrictId());
-        }
-        if (request.getWardCode() != null) {
-            entity.setWardCode(request.getWardCode());
-        }
-        if (request.getStreet() != null) {
-            entity.setStreet(request.getStreet());
-        }
-        if (request.getStreetFull() != null) {
-            entity.setStreetFull(request.getStreetFull());
-        }
-        if (request.getIsDefault() != null) {
-            entity.setDefault(request.getIsDefault());
-        }
-        if (request.getIsShop() != null) {
-            entity.setShop(request.getIsShop());
-        }
+        return new AddressResponse(
+                address.getId(),
+                address.getFullName(),
+                address.getPhone(),
+                address.getProvinceId(),
+                address.getDistrictId(),
+                address.getWardCode(),
+                address.getStreet(),
+                address.getStreetFull(),
+                address.isDefault(),
+                address.isShop());
     }
 }

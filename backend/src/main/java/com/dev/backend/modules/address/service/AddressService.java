@@ -6,10 +6,17 @@ import com.dev.backend.modules.address.dto.AddressResponse;
 import java.util.List;
 
 public interface AddressService {
-    List<AddressResponse> getAllAddresses();
-    AddressResponse getAddressById(Long id);
-    List<AddressResponse> getAddressesByUserId(Long userId);
-    AddressResponse createAddress(AddressRequest request);
-    AddressResponse updateAddress(Long id, AddressRequest request);
-    void deleteAddress(Long id);
+    void validate();
+
+    List<AddressResponse> getByUserId(Long userId);
+
+    AddressResponse create(AddressRequest request, Long userId);
+
+    AddressResponse update(AddressRequest request, Long userId);
+
+    AddressResponse detail(AddressRequest request, Long userId);
+
+    void delete(Long id, Long userId);
+
+    void defaultAddress(Long id, Long userId);
 }
