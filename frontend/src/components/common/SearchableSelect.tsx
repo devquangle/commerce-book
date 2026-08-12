@@ -21,8 +21,8 @@ export interface SelectSearchBoxProps extends Omit<
   required?: boolean;
   searchPlaceholder?: string;
   containerClassName?: string;
-  value?: string | number;
-  defaultValue?: string | number;
+  value?: string | number | null;
+  defaultValue?: string | number | null;
   openDirection?: "up" | "down";
 }
 
@@ -72,9 +72,9 @@ export const SearchableSelect = React.forwardRef<
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedValue, setSelectedValue] = useState<string | number>(
-      value !== undefined
+      value !== undefined && value !== null
         ? value
-        : defaultValue !== undefined
+        : defaultValue !== undefined && defaultValue !== null
           ? defaultValue
           : "",
     );
@@ -83,7 +83,7 @@ export const SearchableSelect = React.forwardRef<
     // Keep state in sync with controlled value prop
     useEffect(() => {
       if (value !== undefined) {
-        setSelectedValue(value);
+        setSelectedValue(value !== null ? value : "");
       }
     }, [value]);
 
@@ -231,7 +231,7 @@ export const SearchableSelect = React.forwardRef<
               </div>
 
               {/* Options List */}
-              <div className="overflow-y-auto p-2 max-h-[236px] space-y-1">
+              <div className="overflow-y-auto p-2 max-h-59 space-y-1">
                 {displayOptions.length === 0 ? (
                   <p className="p-4 caption-text text-center text-zinc-400 font-medium">
                     Không tìm thấy kết quả

@@ -25,7 +25,7 @@ const AddressHeader = ({
   };
 
   return (
-    <div className="flex items-center justify-between pb-4 mb-4 border-b border-gray-100 dark:border-zinc-800">
+    <div className="flex items-center justify-between py-2 mb-4 border-b border-gray-100 dark:border-zinc-800">
       <div className="flex items-center gap-3">
         {(mode === "add" || mode === "edit") && (
           <button

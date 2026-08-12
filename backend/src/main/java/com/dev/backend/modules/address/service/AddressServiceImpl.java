@@ -7,6 +7,7 @@ import com.dev.backend.modules.address.dto.AddressResponse;
 import com.dev.backend.modules.address.entity.Address;
 import com.dev.backend.modules.address.mapper.AddressMapper;
 import com.dev.backend.modules.address.repository.AddressRepository;
+import com.dev.backend.modules.others.ghn.service.GHNService;
 import com.dev.backend.modules.user.entity.User;
 import com.dev.backend.modules.user.repository.UserRepository;
 
@@ -23,7 +24,7 @@ public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
     private final AddressMapper addressMapper;
-
+    private final GHNService ghnService;
     private final UserRepository userRepository;
 
     @Override
@@ -54,7 +55,8 @@ public class AddressServiceImpl implements AddressService {
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng"));
 
         address.setUser(user);
-
+        address.setStreetFull(ghnService.getStreetFull(address.getProvinceId(), address.getDistrictId(),
+                address.getWardCode(), address.getStreet()));
         // Nếu là địa chỉ đầu tiên -> mặc định
         if (count == 0) {
             address.setDefault(true);
@@ -103,6 +105,8 @@ public class AddressServiceImpl implements AddressService {
     public AddressResponse update(Long id, AddressRequest request, Long userId) {
         Address address = getByIdAndUserId(id, userId);
         addressMapper.toEntity(address, request);
+        address.setStreetFull(ghnService.getStreetFull(address.getProvinceId(), address.getDistrictId(),
+                address.getWardCode(), address.getStreet()));
         Address saved = addressRepository.save(address);
         return addressMapper.toDTO(saved);
     }

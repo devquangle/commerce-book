@@ -1,21 +1,14 @@
 import { Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/common/Button";
-
-export interface AddressData {
-  id: number;
-  fullName: string;
-  phoneNumber: string;
-  fullAddress: string;
-  isDefault: boolean;
-}
+import type { AddressResponse } from "../types/address.type";
 
 interface AddressCardProps {
-  address: AddressData;
+  address: AddressResponse;
   onEdit?: (id: number) => void;
-  onDelete?: (item: AddressData) => void;
-  onSetDefault?: (id: AddressData) => void;
+  onDelete?: (item: AddressResponse) => void;
+  onSetDefault?: (id: AddressResponse) => void;
   isPayment?: boolean;
-  onSelect?: (item: AddressData) => void;
+  onSelect?: (item: AddressResponse) => void;
 }
 
 const AddressCard = ({
@@ -32,7 +25,7 @@ const AddressCard = ({
         isPayment
           ? "p-4 transition-all"
           : `card-custom p-4 transition-all ${
-              address.isDefault
+              address.defaultAddress
                 ? "border-purple-200 bg-purple-50/50 dark:border-purple-900/30 dark:bg-purple-900/10"
                 : "hover:border-gray-300 dark:hover:border-zinc-700"
             }`
@@ -45,10 +38,10 @@ const AddressCard = ({
           </h3>
           <span className="text-gray-400 dark:text-gray-500">|</span>
           <span className="text-gray-600 dark:text-gray-400">
-            {address.phoneNumber}
+            {address.phone}
           </span>
         </div>
-        {address.isDefault && (
+        {address.defaultAddress && (
           <span className="px-2.5 py-1 text-xs font-medium text-purple-700 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-400 rounded-full">
             Mặc định
           </span>
@@ -56,7 +49,7 @@ const AddressCard = ({
       </div>
 
       <div className="text-gray-600 dark:text-gray-400 mb-4">
-        <p className="text-sm leading-relaxed">{address.fullAddress}</p>
+        <p className="text-sm leading-relaxed">{address.streetFull}</p>
       </div>
 
       {isPayment ? (
@@ -68,7 +61,7 @@ const AddressCard = ({
       ) : (
         <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-zinc-800/50">
           <div>
-            {!address.isDefault && (
+            {!address.defaultAddress && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -88,7 +81,7 @@ const AddressCard = ({
               title="Chỉnh sửa"
               className="px-2"
             />
-            {!address.isDefault && (
+            {!address.defaultAddress && (
               <Button
                 variant="ghost"
                 size="sm"

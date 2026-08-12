@@ -1,4 +1,4 @@
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { InputField } from "@/components/common/InputField";
 import { SearchableSelect } from "@/components/common/SearchableSelect";
 import { TextAreaField } from "@/components/common/TextAreaField";
@@ -8,20 +8,20 @@ import {
   useDistricts,
   useWards,
 } from "@/modules/others/ghn/hooks/useGhn";
-import type { ProvinceResponse, DistrictResponse, WardResponse } from "@/modules/others/ghn/types/ghn.type";
+import { useCreateAddress } from "../hooks/useAddress";
+import { useNavigate } from "react-router-dom";
+import type {
+  ProvinceResponse,
+  DistrictResponse,
+  WardResponse,
+} from "@/modules/others/ghn/types/ghn.type";
+import type { AddressRequest } from "../types/address.type";
+import { showErrorToast } from "@/libs/utils/toastUtil";
+import type { AxiosError } from "axios";
+import type { ApiResponse } from "@/libs/utils/api-response";
 
 type AddressFormAddProps = {
   isPayment?: boolean;
-};
-
-type AddressFormData = {
-  fullName: string;
-  phoneNumber: string;
-  provinceId: number | "";
-  districtId: number | "";
-  wardCode: string;
-  fullAddress: string;
-  isDefault: boolean;
 };
 
 const AddressFormAdd = ({ isPayment }: AddressFormAddProps) => {
@@ -29,47 +29,68 @@ const AddressFormAdd = ({ isPayment }: AddressFormAddProps) => {
     register,
     handleSubmit,
     control,
-    watch,
     setValue,
     formState: { errors },
-  } = useForm<AddressFormData>({
+  } = useForm<AddressRequest>({
     defaultValues: {
       fullName: "",
-      phoneNumber: "",
-      provinceId: "",
-      districtId: "",
-      wardCode: "",
-      fullAddress: "",
-      isDefault: false,
+      phone: "",
+      provinceId: null,
+      districtId: null,
+      wardCode: null,
+      street: "",
+      defaultAddress: false,
     },
   });
 
-  const provinceId = watch("provinceId");
-  const districtId = watch("districtId");
+  const provinceId = useWatch({ control, name: "provinceId" });
+  const districtId = useWatch({ control, name: "districtId" });
 
   const { data: provinces = [] } = useProvinces();
-  const { data: districts = [] } = useDistricts(provinceId ? Number(provinceId) : null);
+  const { data: districts = [] } = useDistricts(
+    provinceId ? Number(provinceId) : null,
+  );
   const { data: wards = [] } = useWards(districtId ? Number(districtId) : null);
 
   // Map sang format của SearchableSelect
-  const provinceOptions = Array.isArray(provinces) ? provinces.map((p: ProvinceResponse) => ({
-    label: p.provinceName,
-    value: p.provinceId,
-  })) : [];
-  
-  const districtOptions = Array.isArray(districts) ? districts.map((d: DistrictResponse) => ({
-    label: d.districtName,
-    value: d.districtId,
-  })) : [];
-  
-  const wardOptions = Array.isArray(wards) ? wards.map((w: WardResponse) => ({
-    label: w.wardName,
-    value: w.wardCode,
-  })) : [];
+  const provinceOptions = Array.isArray(provinces)
+    ? provinces.map((p: ProvinceResponse) => ({
+        label: p.provinceName,
+        value: p.provinceId,
+      }))
+    : [];
 
-  const onSubmit = (data: AddressFormData) => {
-    console.log("Form Submitted:", data);
-    // TODO: Handle submit logic
+  const districtOptions = Array.isArray(districts)
+    ? districts.map((d: DistrictResponse) => ({
+        label: d.districtName,
+        value: d.districtId,
+      }))
+    : [];
+
+  const wardOptions = Array.isArray(wards)
+    ? wards.map((w: WardResponse) => ({
+        label: w.wardName,
+        value: w.wardCode,
+      }))
+    : [];
+
+  const navigate = useNavigate();
+  const createMutation = useCreateAddress();
+
+  const onSubmit = (data: AddressRequest) => {
+    createMutation.mutate(data, {
+      onSuccess: () => {
+        if (!isPayment) {
+          navigate(-1); // Quay lại trang trước đó (danh sách địa chỉ)
+        }
+      },
+      onError: (error) => {
+        const axiosError = error as AxiosError<ApiResponse<unknown>>;
+        const errorMessage =
+          axiosError.response?.data?.message || (error as Error).message;
+        showErrorToast(errorMessage || "Có lỗi xảy ra khi thêm.");
+      },
+    });
   };
 
   return (
@@ -93,14 +114,14 @@ const AddressFormAdd = ({ isPayment }: AddressFormAddProps) => {
             label="Số điện thoại"
             placeholder="Nhập số điện thoại"
             required
-            {...register("phoneNumber", {
+            {...register("phone", {
               required: "Vui lòng nhập số điện thoại.",
               pattern: {
                 value: /(84|0[3|5|7|8|9])+([0-9]{8})\b/,
                 message: "Số điện thoại không hợp lệ.",
               },
             })}
-            error={errors.phoneNumber?.message}
+            error={errors.phone?.message}
           />
         </div>
 
@@ -117,10 +138,12 @@ const AddressFormAdd = ({ isPayment }: AddressFormAddProps) => {
                 options={provinceOptions}
                 required
                 {...field}
+                value={field.value ?? ""}
                 onChange={(e) => {
-                  field.onChange(e);
-                  setValue("districtId", "");
-                  setValue("wardCode", "");
+                  const val = e.target.value;
+                  field.onChange(val ? Number(val) : null);
+                  setValue("districtId", null);
+                  setValue("wardCode", null);
                 }}
                 error={error?.message}
               />
@@ -140,9 +163,11 @@ const AddressFormAdd = ({ isPayment }: AddressFormAddProps) => {
                 disabled={!provinceId}
                 required
                 {...field}
+                value={field.value ?? ""}
                 onChange={(e) => {
-                  field.onChange(e);
-                  setValue("wardCode", "");
+                  const val = e.target.value;
+                  field.onChange(val ? Number(val) : null);
+                  setValue("wardCode", null);
                 }}
                 error={error?.message}
               />
@@ -162,6 +187,10 @@ const AddressFormAdd = ({ isPayment }: AddressFormAddProps) => {
                 disabled={!districtId}
                 required
                 {...field}
+                value={field.value ?? ""}
+                onChange={(e) => {
+                  field.onChange(e.target.value || null);
+                }}
                 error={error?.message}
               />
             )}
@@ -175,8 +204,10 @@ const AddressFormAdd = ({ isPayment }: AddressFormAddProps) => {
             placeholder="Nhập số nhà, tên đường..."
             rows={3}
             required
-            {...register("fullAddress", { required: "Vui lòng nhập địa chỉ cụ thể." })}
-            error={errors.fullAddress?.message}
+            {...register("street", {
+              required: "Vui lòng nhập địa chỉ cụ thể.",
+            })}
+            error={errors.street?.message}
           />
         </div>
 
@@ -186,7 +217,7 @@ const AddressFormAdd = ({ isPayment }: AddressFormAddProps) => {
             type="checkbox"
             id="isDefault"
             className="w-4 h-4 text-purple-600 rounded border-gray-300 focus:ring-purple-500 cursor-pointer"
-            {...register("isDefault")}
+            {...register("defaultAddress")}
           />
           <label
             htmlFor="isDefault"
@@ -197,10 +228,12 @@ const AddressFormAdd = ({ isPayment }: AddressFormAddProps) => {
         </div>
 
         <div className="col-span-1 md:col-span-12 flex justify-end mt-2 gap-3">
-          <Button variant="outline" type="button">
+          <Button variant="outline" type="button" onClick={() => navigate(-1)}>
             Hủy
           </Button>
-          <Button type="submit">Lưu địa chỉ</Button>
+          <Button type="submit" disabled={createMutation.isPending}>
+            {createMutation.isPending ? "Đang lưu..." : "Lưu địa chỉ"}
+          </Button>
         </div>
       </form>
     </div>
@@ -208,4 +241,3 @@ const AddressFormAdd = ({ isPayment }: AddressFormAddProps) => {
 };
 
 export default AddressFormAdd;
-
