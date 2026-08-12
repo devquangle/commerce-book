@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import UserLayout from "@/layouts/UserLayout";
 import ProfileLayout from "@/layouts/ProfileLayout";
 import Spinner from "@/components/common/Spinner";
+import RegisterPage from "@/modules/user/register/pages/RegisterPage";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("@/modules/user/pages/Home"));
@@ -25,6 +26,7 @@ export const UserRoutes: React.FC = () => {
         <Routes>
           <Route index element={<Home />} />
           <Route path="login" element={<LoginPage />} />
+           <Route path="register" element={<RegisterPage />} />
           <Route path="register-shop" element={<RegisterShopPage />} />
           <Route path="books" element={<BookList />} />
           <Route path="books/:id" element={<BookDetail />} />

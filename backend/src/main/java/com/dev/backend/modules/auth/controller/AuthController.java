@@ -7,6 +7,7 @@ import com.dev.backend.common.response.ResponseUtil;
 import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
 import com.dev.backend.modules.auth.dto.LoginRequest;
 import com.dev.backend.modules.auth.dto.RegisterRequest;
+import com.dev.backend.modules.auth.dto.RegisterUserRequest;
 import com.dev.backend.modules.auth.service.AuthService;
 import com.dev.backend.modules.user.dto.UserRequest;
 import com.dev.backend.modules.user.dto.UserResponse;
@@ -34,16 +35,13 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseData<LoginResponse>> login(@Valid @RequestBody LoginRequest request,HttpServletResponse response) {
-        LoginResponse data = authService.login(request,response);
+    public ResponseEntity<ResponseData<LoginResponse>> login(@Valid @RequestBody LoginRequest request,
+            HttpServletResponse response) {
+        LoginResponse data = authService.login(request, response);
         return ResponseUtil.success("Login thành công", data);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterRequest request) {
-        UserResponse response = authService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+
 
     @PostMapping("/refresh")
     public ResponseEntity<ResponseData<RefreshResponse>> refreshToken(HttpServletRequest request) {
@@ -83,5 +81,12 @@ public class AuthController {
             authService.logout(userDetails.getUserId());
         }
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<ResponseData<Void>> register(
+            @Valid @RequestBody RegisterUserRequest request) {
+        authService.register(request);
+        return ResponseUtil.successMessage("Đăng ký thành công vui lòng kiểm tra email để kích hoạt tài khoản");
     }
 }

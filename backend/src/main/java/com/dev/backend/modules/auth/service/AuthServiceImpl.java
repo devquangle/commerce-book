@@ -5,6 +5,7 @@ import com.dev.backend.common.exception.BadRequestException;
 import com.dev.backend.common.exception.DuplicateFieldException;
 import com.dev.backend.common.exception.UnauthorizedException;
 import com.dev.backend.common.utils.CookieUtil;
+import com.dev.backend.common.utils.UsernameUtils;
 import com.dev.backend.modules.auth.dto.LoginResponse;
 import com.dev.backend.modules.auth.dto.RefreshResponse;
 import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
@@ -244,10 +245,18 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole(roleService.getRoleUser());
+        String username;
+        do {
+            username = UsernameUtils.generateRandomUsername();
+        } while (existsByUsername(username));
+
+        user.setUsername(username);
+
         User saved = authRepository.save(user);
         String verifyToken = jwtUtil.generateVerifyToken(saved.getId(), saved.getTokenVersion());
         sendEmailService.sendEmailRegister(user.getEmail(),
                 "Cảm ơn bạn đã đăng ký tài khoản, vui lòng kích hoạt tài khoản", verifyToken);
 
     }
+
 }

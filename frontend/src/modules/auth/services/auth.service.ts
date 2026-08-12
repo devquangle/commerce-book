@@ -1,8 +1,17 @@
 import { authAxios, publicAxios } from "@/libs/config/axios.config";
-import type { LoginRequest, LoginResponse, RefreshTokenResponse } from "../types/login.type";
+import type {
+  LoginRequest,
+  LoginResponse,
+  RefreshTokenResponse,
+} from "../types/login.type";
 
 import type { ApiResponse } from "@/libs/utils/api-response";
-import type { UserRequest, UserResponse, ChangePasswordRequest } from "../types/user.type";
+import type {
+  UserRequest,
+  UserResponse,
+  ChangePasswordRequest,
+} from "../types/user.type";
+import type { RegisterUserRequest } from "../types/register-user";
 
 export const AuthService = {
   login: async (request: LoginRequest): Promise<LoginResponse> => {
@@ -26,10 +35,12 @@ export const AuthService = {
     return response.data.data;
   },
   updateUser: async (request: UserRequest): Promise<UserResponse | null> => {
-    const response =
-      await authAxios.put<ApiResponse<UserResponse>>("/api/v1/auth/me", request);
-      console.log("updateUser request:", request); // Log the request data for debugging
-      console.log("updateUser response:", response.data); // Log the entire response for debugging
+    const response = await authAxios.put<ApiResponse<UserResponse>>(
+      "/api/v1/auth/me",
+      request,
+    );
+    console.log("updateUser request:", request); // Log the request data for debugging
+    console.log("updateUser response:", response.data); // Log the entire response for debugging
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message || "Failed to update user data");
     }
@@ -38,7 +49,7 @@ export const AuthService = {
   changePassword: async (request: ChangePasswordRequest): Promise<void> => {
     const response = await authAxios.put<ApiResponse<void>>(
       "/api/v1/auth/change-password",
-      request
+      request,
     );
     if (!response.data.success) {
       throw new Error(response.data.message || "Failed to change password");
@@ -46,11 +57,21 @@ export const AuthService = {
   },
   refreshToken: async (): Promise<RefreshTokenResponse> => {
     const response = await publicAxios.post<ApiResponse<RefreshTokenResponse>>(
-      "/api/v1/auth/refresh"
+      "/api/v1/auth/refresh",
     );
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message || "Failed to refresh token");
     }
     return response.data.data;
-  }
+  },
+  register: async (request: RegisterUserRequest): Promise<string> => {
+    const response = await publicAxios.post<ApiResponse<void>>(
+      "/api/v1/auth/register",
+      request,
+    );
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Failed register");
+    }
+    return response.data.message;
+  },
 };
