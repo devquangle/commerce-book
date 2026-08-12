@@ -119,20 +119,20 @@ const RegisterShopPage = () => {
 
   return (
     <FormProvider {...methods}>
-      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 py-8 px-4 sm:px-6 transition-colors">
+      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 py-5 px-4 sm:px-6 transition-colors">
         <Container className="max-w-4xl mx-auto">
           {/* Header Title Section */}
-          <div className="mb-6 text-center space-y-2">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
+          <div className="mb-4 text-center space-y-1">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
               Đăng Ký Mở Gian Hàng Kênh Người Bán
             </h1>
-            <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto">
               Hoàn tất 4 bước đơn giản để tiếp cận hàng triệu khách hàng và bắt đầu bán hàng trên hệ thống CommerceBook.
             </p>
           </div>
 
           {/* Stepper Header & Card */}
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 sm:p-6 shadow-sm mb-6">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 sm:p-5 shadow-sm mb-6">
             <RegisterShopStepper
               currentStep={currentStep}
               onStepClick={(stepId) => {

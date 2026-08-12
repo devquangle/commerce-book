@@ -19,25 +19,25 @@ const DEFAULT_STEPS: StepItem[] = [
     id: 1,
     title: "Tài khoản",
     subtitle: "Thông tin đăng nhập",
-    icon: <UserCheck className="w-5 h-5" />,
+    icon: <UserCheck className="w-4 h-4" />,
   },
   {
     id: 2,
     title: "Định danh",
     subtitle: "Thông tin chủ shop",
-    icon: <ShieldCheck className="w-5 h-5" />,
+    icon: <ShieldCheck className="w-4 h-4" />,
   },
   {
     id: 3,
     title: "Thông tin Shop",
     subtitle: "Tên shop & Ngân hàng",
-    icon: <Store className="w-5 h-5" />,
+    icon: <Store className="w-4 h-4" />,
   },
   {
     id: 4,
     title: "Địa chỉ Shop",
     subtitle: "Kho & Địa chỉ nhận hàng",
-    icon: <MapPin className="w-5 h-5" />,
+    icon: <MapPin className="w-4 h-4" />,
   },
 ];
 
@@ -47,10 +47,10 @@ export const RegisterShopStepper: React.FC<RegisterShopStepperProps> = ({
   onStepClick,
 }) => {
   return (
-    <div className="w-full py-2 mb-6">
+    <div className="w-full py-1 mb-4">
       <div className="flex items-start justify-between relative max-w-4xl mx-auto">
         {/* Connecting progress bar line aligned strictly to circle centers */}
-        <div className="absolute top-[22px] left-[12%] right-[12%] h-[3px] bg-zinc-200 dark:bg-zinc-800 -translate-y-1/2 z-0 hidden sm:block">
+        <div className="absolute top-[18px] left-[12%] right-[12%] h-[2px] bg-zinc-200 dark:bg-zinc-800 -translate-y-1/2 z-0 hidden sm:block">
           <div
             className="h-full bg-blue-600 transition-all duration-500 ease-in-out"
             style={{
@@ -78,25 +78,25 @@ export const RegisterShopStepper: React.FC<RegisterShopStepperProps> = ({
             >
               {/* Step Circle Icon */}
               <div
-                className={`w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-md ${
+                className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs transition-all duration-300 shadow-xs ${
                   isCompleted
-                    ? "bg-blue-600 text-white ring-4 ring-blue-100 dark:ring-blue-950/50"
+                    ? "bg-blue-600 text-white ring-2 ring-blue-100 dark:ring-blue-950/50"
                     : isActive
-                    ? "bg-blue-600 text-white ring-4 ring-blue-500/20 scale-110"
+                    ? "bg-blue-600 text-white ring-2 ring-blue-500/30 scale-105"
                     : "bg-white dark:bg-zinc-800 text-zinc-400 border border-zinc-200 dark:border-zinc-700"
                 }`}
               >
                 {isCompleted ? (
-                  <Check className="w-5 h-5 stroke-[2.5]" />
+                  <Check className="w-4 h-4 stroke-[2.5]" />
                 ) : (
                   step.icon
                 )}
               </div>
 
               {/* Step Title & Subtitle */}
-              <div className="mt-3 text-center">
+              <div className="mt-1.5 text-center">
                 <p
-                  className={`text-xs sm:text-sm font-semibold transition-colors ${
+                  className={`text-[11px] sm:text-xs font-semibold transition-colors ${
                     isActive
                       ? "text-blue-600 dark:text-blue-400"
                       : isCompleted
@@ -107,7 +107,7 @@ export const RegisterShopStepper: React.FC<RegisterShopStepperProps> = ({
                   <span className="hidden sm:inline">Bước {step.id}: </span>
                   {step.title}
                 </p>
-                <p className="text-[11px] text-zinc-400 dark:text-zinc-500 hidden md:block mt-1">
+                <p className="text-[10px] text-zinc-400 dark:text-zinc-500 hidden md:block mt-0.5">
                   {step.subtitle}
                 </p>
               </div>
