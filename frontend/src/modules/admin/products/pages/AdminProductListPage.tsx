@@ -7,10 +7,6 @@ import {
   ProductMobileSkeleton,
 } from "@/modules/shop/products/components/ProductSkeleton";
 import { ProductMobileCard } from "../components/ProductMobileCard";
-import type {
-  ProductResponse,
-  SuperAdminProductResponse,
-} from "@/modules/shop/products/types/product.type";
 import { useNavigate } from "react-router-dom";
 
 import { useSuperAdminFilter } from "@/modules/shop/products/hooks/useSuperAdminFilter";
@@ -33,15 +29,12 @@ const AdminProductListPage = () => {
     handleShopIdChange,
   } = useSuperAdminFilter();
 
-  const { data, isLoading } = useSearchProductsForAdmin({...filterParams,});
+  const { data, isLoading } = useSearchProductsForAdmin({ ...filterParams });
 
   const products = data?.items || [];
   const totalElements = data?.totalItems || 0;
 
-  const handleView = (product: SuperAdminProductResponse | ProductResponse) => {
-    const slug =
-      (product as SuperAdminProductResponse).productSlug ||
-      (product as ProductResponse).slug;
+  const handleView = (slug: string) => {
     navigate(`/admin/products/detail?slug=${slug}`);
   };
 

@@ -133,6 +133,26 @@ public class ProductServiceImpl implements ProductService {
         }
 
         @Override
+        public Product getBySlug(String slug) {
+                return productRepository.findBySlug(slug)
+                                .orElseThrow(() -> new NotFoundException("Product not found slug " + slug));
+        }
+
+        @Override
+        public ProductDetailResponse detail(String slug) {
+                Product product = getBySlug(slug);
+                Long productId = product.getId();
+                ProductDetailResponse response = productMapper.toDetailDTO(product);
+                List<Long> authorIds = authorProductService.getAuthorIdsByProductId(productId);
+                List<Long> genreIds = genreProductService.getGenreIdsByProductId(productId);
+                List<ImageProductResponse> images = imageProductService.getImageResponsesByProductId(productId);
+                response.setAuthorIds(authorIds);
+                response.setGenreIds(genreIds);
+                response.setCoverImages(images);
+                return response;
+        }
+
+        @Override
         @Transactional
         public ProductResponse create(ProductRequest request, Shop shop) {
                 Product product = new Product();
@@ -177,13 +197,12 @@ public class ProductServiceImpl implements ProductService {
                                 request.getShopId(),
                                 pageable);
 
-
                 List<Long> productIds = page.stream()
                                 .map(SuperAdminProductProjection::getProductId)
                                 .toList();
 
                 Map<Long, String> imageMap = imageProductService.findThumbnailMap(productIds);
-                
+
                 List<SuperAdminProductResponse> responses = page.getContent()
                                 .stream()
                                 .map(product -> {

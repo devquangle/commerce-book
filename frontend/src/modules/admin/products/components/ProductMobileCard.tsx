@@ -1,38 +1,16 @@
-import { useState } from "react";
-import {
-  BookOpen,
-  Building2,
-  Layers,
-  Calendar,
-  FileText,
-  Weight,
-  Languages,
-  ChevronDown,
-  ChevronUp,
-  PenTool,
-  Tag,
-  Store,
-} from "lucide-react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { BookOpen, Store, AlertCircle } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { ProductActionMenu } from "./ProductActionMenu";
 import { formatMoney } from "@/libs/utils/formatMoney.utils";
 import { Badge } from "@/components/common/Badge";
-import { registerLocale, getNames } from "@cospired/i18n-iso-languages";
-import viLocale from "@cospired/i18n-iso-languages/langs/vi.json";
-import { getProductStatusInfo, type ProductStatus } from "@/modules/shop/products/types/product-status.type";
-import type {
-  ProductResponse,
-  SuperAdminProductResponse,
-} from "@/modules/shop/products/types/product.type";
-
-registerLocale(viLocale);
-
-const getLanguageName = (code: string) => {
-  if (!code) return "";
-  const names = getNames("vi");
-  const name = names[code.toLowerCase()];
-  return name ? name.charAt(0).toUpperCase() + name.slice(1) : code;
-};
+import {
+  getProductStatusInfo,
+  type ProductStatus,
+} from "@/modules/shop/products/types/product-status.type";
+import type { SuperAdminProductResponse } from "@/modules/shop/products/types/product.type";
+import { ProductApproveModal } from "./ProductApproveModal";
+import { ProductRejectModal } from "./ProductRejectModal";
 
 const ProductStatusBadge = ({ status }: { status: ProductStatus }) => {
   const { label, color } = getProductStatusInfo(status);
@@ -40,46 +18,51 @@ const ProductStatusBadge = ({ status }: { status: ProductStatus }) => {
 };
 
 interface ProductMobileCardProps {
-  product: SuperAdminProductResponse | ProductResponse;
-  onView?: (product: SuperAdminProductResponse | ProductResponse) => void;
-  onApprove?: (product: SuperAdminProductResponse | ProductResponse) => void;
-  onReject?: (product: SuperAdminProductResponse | ProductResponse) => void;
+  product: SuperAdminProductResponse;
+  onView?: (slug: string) => void;
+  onApprove?: (product: SuperAdminProductResponse) => void;
+  onReject?: (product: SuperAdminProductResponse) => void;
 }
 
-export const ProductMobileCard= ({
+export const ProductMobileCard: React.FC<ProductMobileCardProps> = ({
   product,
   onView,
   onApprove,
   onReject,
-}:ProductMobileCardProps) => {
-  const [showDetails, setShowDetails] = useState(false);
+}) => {
+  const navigate = useNavigate();
 
-  const productSlug = (product as SuperAdminProductResponse).productSlug || (product as ProductResponse).slug;
-  const shopName = (product as SuperAdminProductResponse).shopName || (product as ProductResponse).shop?.shopName;
-  const shopSlug = (product as SuperAdminProductResponse).shopSlug || (product as ProductResponse).shop?.shopSlug;
+  // Modal state
+  const [isApproveOpen, setIsApproveOpen] = useState(false);
+  const [isRejectOpen, setIsRejectOpen] = useState(false);
 
-  const authorsName = (product as ProductResponse).authorsName;
-  const genresName = (product as ProductResponse).genresName;
-  const publisherName = (product as ProductResponse).publisherName;
-  const seriesName = (product as ProductResponse).seriesName;
-  const publishYear = (product as ProductResponse).publishYear;
-  const pages = (product as ProductResponse).pages;
-  const weight = (product as ProductResponse).weight;
-  const language = (product as ProductResponse).language;
+  const handleView = (slug: string) => {
+    if (onView) {
+      onView(slug);
+    } else {
+      navigate(`/admin/products/detail?slug=${slug}`);
+    }
+  };
 
-  const hasDetails =
-    (authorsName && authorsName.length > 0) ||
-    (genresName && genresName.length > 0) ||
-    publisherName ||
-    seriesName ||
-    publishYear ||
-    (pages && pages > 0) ||
-    (weight && weight > 0) ||
-    language;
+  const handleApprove = () => {
+    if (onApprove) {
+      onApprove(product);
+    } else {
+      setIsApproveOpen(true);
+    }
+  };
+
+  const handleReject = () => {
+    if (onReject) {
+      onReject(product);
+    } else {
+      setIsRejectOpen(true);
+    }
+  };
 
   return (
     <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 shadow-xs flex flex-col gap-3">
-      {/* Khúc trên: Ảnh + Tên + Slug + Kho + Giá */}
+      {/* Khúc trên: Ảnh + Tên + Shop + Reason + Kho + Giá */}
       <div className="flex items-start gap-3">
         <div className="w-16 h-24 rounded-xl bg-zinc-100 dark:bg-zinc-800 overflow-hidden shrink-0 border border-slate-200/80 dark:border-zinc-700">
           {product.urlImageDefault ? (
@@ -98,7 +81,7 @@ export const ProductMobileCard= ({
         <div className="flex-1 min-w-0 flex flex-col gap-1">
           {/* Dòng 1: Tên sách → link đến detail */}
           <Link
-            to={`/admin/products/detail?slug=${productSlug}`}
+            to={`/admin/products/detail?slug=${product.productSlug}`}
             className="font-semibold text-zinc-900 dark:text-white body-text leading-snug line-clamp-2 wrap-break-word hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
             title={product.name}
           >
@@ -106,14 +89,25 @@ export const ProductMobileCard= ({
           </Link>
 
           {/* Dòng 2: Shop → link đến shop detail */}
-          {shopName && (
+          {product.shopName && (
             <Link
-              to={`/admin/shops/detail?slug=${shopSlug}`}
+              to={`/admin/shops/detail?slug=${product.shopSlug}`}
               className="body-text text-zinc-500 dark:text-zinc-400 flex items-center gap-1 font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors w-fit mt-0.5"
             >
               <Store size={11} className="shrink-0 text-indigo-500" />
-              {shopName}
+              {product.shopName}
             </Link>
+          )}
+
+          {/* Lý do (nếu có) */}
+          {product.reason && (
+            <div className="flex items-start gap-1.5 text-xs text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/30 border border-rose-200/60 dark:border-rose-900/40 px-2 py-1 rounded-lg mt-0.5 w-fit">
+              <AlertCircle size={12} className="shrink-0 mt-0.5 text-rose-500" />
+              <span className="leading-snug line-clamp-2">
+                <span className="font-semibold">Lý do: </span>
+                {product.reason}
+              </span>
+            </div>
           )}
 
           {/* Giá nhập, Giá bán, Tồn kho */}
@@ -126,8 +120,12 @@ export const ProductMobileCard= ({
             ) : null}
 
             <div className="flex items-center justify-between font-semibold text-zinc-900 dark:text-zinc-100">
-              <span className="text-[11px] font-normal text-zinc-500 dark:text-zinc-400">Giá bán:</span>
-              <span className="text-indigo-600 dark:text-indigo-400 font-bold">{formatMoney(product.price)}</span>
+              <span className="text-[11px] font-normal text-zinc-500 dark:text-zinc-400">
+                Giá bán:
+              </span>
+              <span className="text-indigo-600 dark:text-indigo-400 font-bold">
+                {formatMoney(product.price)}
+              </span>
             </div>
 
             <div className="flex items-center justify-between text-zinc-500 dark:text-zinc-400">
@@ -146,97 +144,31 @@ export const ProductMobileCard= ({
         </div>
       </div>
 
-      {/* Khúc mở rộng (Xem thêm / Thu gọn) */}
-      {hasDetails && showDetails && (
-        <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800/80 flex flex-col gap-2 animate-in fade-in duration-150">
-          {/* Tác giả & Thể loại */}
-          <div className="flex flex-wrap gap-1">
-            {product.authorsName && product.authorsName.length > 0 && (
-              <span className="inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-100 dark:border-amber-500/20 px-1.5 py-0.5 rounded text-muted font-medium">
-                <PenTool size={10} />
-                <span>{product.authorsName.join(", ")}</span>
-              </span>
-            )}
-            {product.genresName && product.genresName.length > 0 && (
-              <span className="inline-flex items-center gap-1 bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-100 dark:border-sky-500/20 px-1.5 py-0.5 rounded text-muted font-medium">
-                <Tag size={10} />
-                <span>{product.genresName.join(", ")}</span>
-              </span>
-            )}
-          </div>
-
-          {/* NXB & Series */}
-          {(product.publisherName || product.seriesName) && (
-            <div className="flex flex-wrap gap-1">
-              {product.publisherName && (
-                <span className="inline-flex items-center gap-1 bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-500/20 px-1.5 py-0.5 rounded text-muted font-medium">
-                  <Building2 size={10} />
-                  <span>{product.publisherName}</span>
-                </span>
-              )}
-              {product.seriesName && (
-                <span className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-400 border border-violet-100 dark:border-violet-500/20 px-1.5 py-0.5 rounded text-muted font-medium">
-                  <Layers size={10} />
-                  <span>{product.seriesName}</span>
-                </span>
-              )}
-            </div>
-          )}
-
-          {/* Chi tiết phụ */}
-          <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-zinc-400 dark:text-zinc-500">
-            {product.publishYear && (
-              <span className="flex items-center gap-1">
-                <Calendar size={10} />
-                {product.publishYear}
-              </span>
-            )}
-            {product.pages > 0 && (
-              <span className="flex items-center gap-1">
-                <FileText size={10} />
-                {product.pages} trang
-              </span>
-            )}
-            {product.weight > 0 && (
-              <span className="flex items-center gap-1">
-                <Weight size={10} />
-                {product.weight}g
-              </span>
-            )}
-            {product.language && (
-              <span className="flex items-center gap-1">
-                <Languages size={10} />
-                {getLanguageName(product.language)}
-              </span>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Dòng dưới: Trạng thái + Nút xem thêm + Menu thao tác */}
+      {/* Dòng dưới: Trạng thái + Menu thao tác */}
       <div className="flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800/50 pt-2.5 mt-0.5">
-        <div className="flex items-center gap-2">
-          <ProductStatusBadge status={product.status} />
-
-          {hasDetails && (
-            <button
-              type="button"
-              onClick={() => setShowDetails((prev) => !prev)}
-              className="inline-flex items-center gap-1 text-[11px] font-medium text-zinc-500 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
-            >
-              <span>{showDetails ? "Thu gọn" : "Xem thêm"}</span>
-              {showDetails ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-            </button>
-          )}
-        </div>
+        <ProductStatusBadge status={product.status} />
 
         <ProductActionMenu
           item={product}
-          onView={onView}
-          onApprove={onApprove}
-          onReject={onReject}
+          onView={handleView}
+          onApprove={handleApprove}
+          onReject={handleReject}
         />
       </div>
+
+      {/* Approve Modal */}
+      <ProductApproveModal
+        isOpen={isApproveOpen}
+        item={product}
+        onClose={() => setIsApproveOpen(false)}
+      />
+
+      {/* Reject Modal */}
+      <ProductRejectModal
+        isOpen={isRejectOpen}
+        item={product}
+        onClose={() => setIsRejectOpen(false)}
+      />
     </div>
   );
 };

@@ -16,47 +16,39 @@ import com.dev.backend.modules.shop.dto.ShopSimpleResponse;
 import com.dev.backend.modules.shop.entity.Shop;
 
 public interface ProductService {
-    // List<ProductResponse> getAllProducts();
+        List<ProductShopResponse> findByIdIn(List<Long> productIds);
 
-    // ProductResponse getProductById(Long id);
+        Product getProductBySlugAndShopId(String slug, Long shopId);
 
-    // List<ProductResponse> getProductsByShopId(Long shopId);
+        Product getProductByIdAndShopId(Long id, Long shopId);
 
-    // ProductResponse createProduct(ProductRequest request);
+        Product getById(Long id);
 
-    // ProductResponse updateProduct(Long id, ProductRequest request);
+        Product getBySlug(String slug);
 
-    // void deleteProduct(Long id);
+        ProductResponse mapToDTO(Product product);
 
-    List<ProductShopResponse> findByIdIn(List<Long> productIds);
+        ProductResponse create(ProductRequest request, Shop shop);
 
-    Product getProductBySlugAndShopId(String slug, Long shopId);
+        ProductResponse update(Long id, ProductRequest request, Long shopId);
 
-    Product getProductByIdAndShopId(Long id, Long shopId);
+        ProductDetailResponse detail(String slug, Long shopId);
 
-    Product getById(Long id);
+        ProductDetailResponse detail(String slug);
 
-    ProductResponse mapToDTO(Product product);
+        void delete(Long id, Long shopId);
 
-    ProductResponse create(ProductRequest request, Shop shop);
+        void validate(ProductRequest request);
 
-    ProductResponse update(Long id, ProductRequest request, Long shopId);
+        PageResponse<ProductResponse> searchProductsForShop(
+                        ProductFilterRequest request, Long shopId);
 
-    ProductDetailResponse detail(String slug, Long shopId);
+        PageResponse<SuperAdminProductResponse> searchProductsForAdmin(
+                        SuperAdminFilterRequest request);
 
-    void delete(Long id, Long shopId);
+        void approve(Long id);
 
-    void validate(ProductRequest request);
+        void reject(Long id, String reasons);
 
-    PageResponse<ProductResponse> searchProductsForShop(
-            ProductFilterRequest request,Long shopId);
-
-    PageResponse<SuperAdminProductResponse> searchProductsForAdmin(
-            SuperAdminFilterRequest request);
-
-    void approve(Long id);
-
-    void reject(Long id, String reasons);
-
-    Map<Long, ShopSimpleResponse> findShopMap(List<Long> productIds);
+        Map<Long, ShopSimpleResponse> findShopMap(List<Long> productIds);
 }

@@ -8,21 +8,21 @@ import type {
   SuperAdminFilterRequest,
   SuperAdminProductResponse,
 } from "../types/product.type";
-import ProductShopService from "../services/product.service";
 import { showErrorToast, showSuccessToast } from "@/libs/utils/toastUtil";
 import axios from "axios";
+import ProductService from "../services/product.service";
 
 export const useProductShop = (options?: ProductFilterRequest) => {
   return useQuery<Pagination<ProductResponse>>({
     queryKey: ["shop-products-filter", options],
-    queryFn: () => ProductShopService.fetchProductShop(options),
+    queryFn: () => ProductService.fetchProductShop(options),
   });
 };
 
 export const useSearchProductsForAdmin = (options?: SuperAdminFilterRequest) => {
   return useQuery<Pagination<SuperAdminProductResponse>>({
     queryKey: ["admin-products-filter", options],
-    queryFn: () => ProductShopService.searchProductsForAdmin(options),
+    queryFn: () => ProductService.searchProductsForAdmin(options),
   });
 };
 
@@ -30,17 +30,24 @@ export const useSearchProductsForAdmin = (options?: SuperAdminFilterRequest) => 
 export const useProductShopDetail = (slug: string) => {
   return useQuery<ProductDetailResponse>({
     queryKey: ["shop-product-detail", slug],
-    queryFn: () => ProductShopService.detail(slug),
+    queryFn: () => ProductService.detail(slug),
     enabled: Boolean(slug),
     staleTime: 2 * 60 * 1000,
   });
 };
-
+export const useProductDetailForAdmin = (slug: string) => {
+  return useQuery<ProductDetailResponse>({
+    queryKey: ["admin-product-detail", slug],
+    queryFn: () => ProductService.detailForAdmin(slug),
+    enabled: Boolean(slug),
+    staleTime: 2 * 60 * 1000,
+  });
+};
 export const useCreateProductShop = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: ProductRequest) => ProductShopService.create(data),
+    mutationFn: (data: ProductRequest) => ProductService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shop-products-filter"] });
       queryClient.invalidateQueries({ queryKey: ["admin-products-filter"] });
@@ -66,7 +73,7 @@ export const useUpdateProductShop = (id?: number) => {
       if (!id) {
         throw new Error("Mã sản phẩm không hợp lệ");
       }
-      return ProductShopService.update(id, req);
+      return ProductService.update(id, req);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shop-products-filter"] });
@@ -90,7 +97,7 @@ export const useDeleteProductShop = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: number) => ProductShopService.delete(id),
+    mutationFn: (id: number) => ProductService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shop-products-filter"] });
       queryClient.invalidateQueries({ queryKey: ["admin-products-filter"] });
@@ -113,7 +120,7 @@ export const useApproveProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: number) => ProductShopService.approve(id),
+    mutationFn: (id: number) => ProductService.approve(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shop-products-filter"] });
       queryClient.invalidateQueries({ queryKey: ["admin-products-filter"] });
@@ -137,7 +144,7 @@ export const useRejectProduct = () => {
 
   return useMutation({
     mutationFn: ({ id, reason }: { id: number; reason: string }) =>
-      ProductShopService.reject(id, reason),
+      ProductService.reject(id, reason),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shop-products-filter"] });
       queryClient.invalidateQueries({ queryKey: ["admin-products-filter"] });

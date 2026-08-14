@@ -1,80 +1,37 @@
 import { useState } from "react";
 import {
   BookOpen,
-  Building2,
-  Layers,
-  Calendar,
-  FileText,
-  Weight,
-  Languages,
-  ChevronUp,
-  ChevronDown,
-  PenTool,
-  Tag,
   BadgeDollarSign,
   Receipt,
   Package,
   Store,
+  AlertCircle,
 } from "lucide-react";
 import { Pagination } from "@/components/common/Pagination";
 import { Tooltip } from "@/components/common/Tooltip";
 import { Badge } from "@/components/common/Badge";
 import { EmptyState } from "@/components/common/EmptyState";
 import { formatMoney } from "@/libs/utils/formatMoney.utils";
-import { registerLocale, getNames } from "@cospired/i18n-iso-languages";
-import viLocale from "@cospired/i18n-iso-languages/langs/vi.json";
 import { Link, useNavigate } from "react-router-dom";
 import {
   getProductStatusInfo,
   type ProductStatus,
 } from "@/modules/shop/products/types/product-status.type";
-import type {
-  ProductResponse,
-  SuperAdminProductResponse,
-} from "@/modules/shop/products/types/product.type";
+import type { SuperAdminProductResponse } from "@/modules/shop/products/types/product.type";
 import { ProductActionMenu } from "./ProductActionMenu";
 import { ProductApproveModal } from "./ProductApproveModal";
 import { ProductRejectModal } from "./ProductRejectModal";
-registerLocale(viLocale);
 
 export interface ProductTableProps {
-  products: (SuperAdminProductResponse | ProductResponse)[];
+  products: SuperAdminProductResponse[];
   page?: number;
-  currentPage?: number;
   pageSize?: number;
   totalElements?: number;
   totalPages?: number;
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (size: number) => void;
-  onView?: (product: SuperAdminProductResponse | ProductResponse) => void;
+  onView?: (slug: string) => void;
 }
-
-const getLanguageName = (code: string) => {
-  if (!code) return "";
-  const names = getNames("vi");
-  const name = names[code.toLowerCase()];
-  return name ? name.charAt(0).toUpperCase() + name.slice(1) : code;
-};
-
-const ExpandableAuthors = ({ authors }: { authors?: string[] }) => {
-  if (!authors || authors.length === 0) return null;
-  return (
-    <span className="inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-100 dark:border-amber-500/20 px-1.5 py-0.5 rounded text-muted font-medium mr-1">
-      <PenTool size={10} />
-      <span>{authors.join(", ")}</span>
-    </span>
-  );
-};
-
-const ExpandableGenres = ({ genres }: { genres?: string[] }) => {
-  if (!genres || genres.length === 0) return null;
-  return (
-    <span className="inline-flex items-center gap-1 bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 border border-sky-100 dark:border-sky-500/20 px-1.5 py-0.5 rounded text-muted font-medium">
-      <Tag size={10} />
-      <span>{genres.join(", ")}</span>
-    </span>
-  );
-};
 
 const ProductStatusBadge = ({ status }: { status: ProductStatus }) => {
   const { label, color } = getProductStatusInfo(status);
@@ -83,52 +40,39 @@ const ProductStatusBadge = ({ status }: { status: ProductStatus }) => {
 
 export const ProductTable = ({
   products,
-  page,
-  currentPage,
-  pageSize: initialPageSize = 10,
+  page = 1,
+  pageSize = 10,
   totalElements = 0,
   totalPages,
   onPageChange,
   onPageSizeChange,
   onView,
 }: ProductTableProps) => {
-  const [pageSize, setPageSize] = useState(initialPageSize);
-  const [showDetailsMap, setShowDetailsMap] = useState<Record<number, boolean>>({});
   const navigate = useNavigate();
 
   // Modal state
-  const [selectedProduct, setSelectedProduct] = useState<SuperAdminProductResponse | ProductResponse | null>(null);
+  const [selectedProduct, setSelectedProduct] =
+    useState<SuperAdminProductResponse | null>(null);
   const [isApproveOpen, setIsApproveOpen] = useState(false);
   const [isRejectOpen, setIsRejectOpen] = useState(false);
 
-  const activePage = page ?? currentPage ?? 1;
   const computedTotalPages =
     totalPages ?? (Math.ceil(totalElements / pageSize) || 1);
 
-  const handlePageSizeChange = (size: number) => {
-    setPageSize(size);
-    if (onPageSizeChange) {
-      onPageSizeChange(size);
-    } else if (onPageChange) {
-      onPageChange(1);
-    }
-  };
-
-  const handleView = (product: SuperAdminProductResponse | ProductResponse) => {
+  const handleView = (slug: string) => {
     if (onView) {
-      onView(product);
+      onView(slug);
     } else {
-      const slug = (product as SuperAdminProductResponse).productSlug || (product as ProductResponse).slug;
       navigate(`/admin/products/detail?slug=${slug}`);
     }
   };
 
-  const handleApproveClick = (product: SuperAdminProductResponse | ProductResponse) => {
+  const handleApproveClick = (product: SuperAdminProductResponse) => {
     setSelectedProduct(product);
     setIsApproveOpen(true);
   };
 
-  const handleRejectClick = (product: SuperAdminProductResponse | ProductResponse) => {
+  const handleRejectClick = (product: SuperAdminProductResponse) => {
     setSelectedProduct(product);
     setIsRejectOpen(true);
   };
@@ -158,21 +102,7 @@ export const ProductTable = ({
           </thead>
           <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
             {products.map((product, index) => {
-              const stt = (activePage - 1) * pageSize + index + 1;
-              const isDetailsOpen = !!showDetailsMap[product.productId];
-
-              const productSlug = (product as SuperAdminProductResponse).productSlug || (product as ProductResponse).slug;
-              const shopName = (product as SuperAdminProductResponse).shopName || (product as ProductResponse).shop?.shopName;
-              const shopSlug = (product as SuperAdminProductResponse).shopSlug || (product as ProductResponse).shop?.shopSlug;
-
-              const authorsName = (product as ProductResponse).authorsName;
-              const genresName = (product as ProductResponse).genresName;
-              const publisherName = (product as ProductResponse).publisherName;
-              const seriesName = (product as ProductResponse).seriesName;
-              const publishYear = (product as ProductResponse).publishYear;
-              const pages = (product as ProductResponse).pages;
-              const weight = (product as ProductResponse).weight;
-              const language = (product as ProductResponse).language;
+              const stt = (page - 1) * pageSize + index + 1;
 
               return (
                 <tr
@@ -211,141 +141,42 @@ export const ProductTable = ({
                         )}
                       </div>
 
-                      {/* Nội dung 3 nhóm */}
-                      <div className="flex-1 min-w-0 flex flex-col gap-1.5">
-                        {/* ➊ Tên + Shop */}
-                        <div className="flex flex-col gap-0.5">
+                      {/* Nội dung Tên + Shop + Reason */}
+                      <div className="flex-1 min-w-0 flex flex-col gap-1">
+                        {/* Tên */}
+                        <Link
+                          to={`/admin/products/detail?slug=${product.productSlug}`}
+                          className="font-semibold text-zinc-900 dark:text-zinc-100 body-text leading-snug line-clamp-2 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                          title={product.name}
+                        >
+                          {product.name}
+                        </Link>
+
+                        {/* Shop info */}
+                        {product.shopName && (
                           <Link
-                            to={`/admin/products/detail?slug=${productSlug}`}
-                            className="font-semibold text-zinc-900 dark:text-zinc-100 body-text leading-snug line-clamp-2 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-                            title={product.name}
+                            to={`/admin/shops/detail?slug=${product.shopSlug}`}
+                            className="body-text text-zinc-500 dark:text-zinc-400 flex items-center gap-1 font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors w-fit"
                           >
-                            {product.name}
+                            <Store
+                              size={11}
+                              className="shrink-0 text-indigo-500"
+                            />
+                            {product.shopName}
                           </Link>
-                          {/* Shop info */}
-                          {shopName && (
-                            <Link
-                              to={`/admin/shops/detail?slug=${shopSlug}`}
-                              className="body-text text-zinc-500 dark:text-zinc-400 flex items-center gap-1 font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors w-fit"
-                            >
-                              <Store
-                                size={11}
-                                className="shrink-0 text-indigo-500"
-                              />
-                              {shopName}
-                            </Link>
-                          )}
-                        </div>
+                        )}
 
-                        {/* ➋ Tác giả / Thể loại / NXB / Series / Chi tiết → Ẩn/Hiện */}
-                        {(authorsName?.length ||
-                          genresName?.length ||
-                          publisherName ||
-                          seriesName ||
-                          publishYear ||
-                          (pages && pages > 0) ||
-                          (weight && weight > 0) ||
-                          language) && (
-                          <div className="flex flex-col gap-1 mt-0.5">
-                            <div
-                              className={`grid transition-all duration-300 ease-in-out ${
-                                isDetailsOpen
-                                  ? "grid-rows-[1fr] opacity-100 mt-1"
-                                  : "grid-rows-[0fr] opacity-0"
-                              }`}
-                            >
-                              <div className="overflow-hidden">
-                                <div className="flex flex-col gap-1.5 pb-1">
-                                  {/* Tác giả + Thể loại */}
-                                  {(authorsName?.length ||
-                                    genresName?.length) && (
-                                    <div className="flex flex-wrap items-center gap-1 text-muted">
-                                      <ExpandableAuthors
-                                        authors={authorsName}
-                                      />
-                                      <ExpandableGenres
-                                        genres={genresName}
-                                      />
-                                    </div>
-                                  )}
-
-                                  {/* NXB + Series */}
-                                  {(publisherName ||
-                                    seriesName) && (
-                                    <div className="flex flex-wrap gap-1 text-muted">
-                                      {publisherName && (
-                                        <span className="inline-flex items-center gap-1 bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-500/20 px-1.5 py-0.5 rounded font-medium">
-                                          <Building2 size={10} />
-                                          <span>{publisherName}</span>
-                                        </span>
-                                      )}
-                                      {seriesName && (
-                                        <span className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-400 border border-violet-100 dark:border-violet-500/20 px-1.5 py-0.5 rounded font-medium">
-                                          <Layers size={10} />
-                                          <span>{seriesName}</span>
-                                        </span>
-                                      )}
-                                    </div>
-                                  )}
-
-                                  {/* Năm / Trang / Cân nặng / Ngôn ngữ */}
-                                  {(publishYear ||
-                                    (pages && pages > 0) ||
-                                    (weight && weight > 0) ||
-                                    language) && (
-                                    <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-muted">
-                                      {publishYear && (
-                                        <span className="flex items-center gap-1">
-                                          <Calendar size={10} />
-                                          {publishYear}
-                                        </span>
-                                      )}
-                                      {pages && pages > 0 ? (
-                                        <span className="flex items-center gap-1">
-                                          <FileText size={10} />
-                                          {pages} trang
-                                        </span>
-                                      ) : null}
-                                      {weight && weight > 0 ? (
-                                        <span className="flex items-center gap-1">
-                                          <Weight size={10} />
-                                          {weight}g
-                                        </span>
-                                      ) : null}
-                                      {language && (
-                                        <span className="flex items-center gap-1">
-                                          <Languages size={10} />
-                                          {getLanguageName(language)}
-                                        </span>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-
-
-                            <div className="flex items-center">
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  const idKey = product.productId;
-                                  setShowDetailsMap((prev) => ({
-                                    ...prev,
-                                    [idKey]: !prev[idKey],
-                                  }));
-                                }}
-                                className="inline-flex items-center gap-1 text-muted font-medium hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
-                              >
-                                {isDetailsOpen ? "Thu gọn" : "Xem thêm"}
-                                {isDetailsOpen ? (
-                                  <ChevronUp size={12} />
-                                ) : (
-                                  <ChevronDown size={12} />
-                                )}
-                              </button>
-                            </div>
+                        {/* Lý do (Reason) */}
+                        {product.reason && (
+                          <div className="flex items-start gap-1.5 text-xs text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/30 border border-rose-200/60 dark:border-rose-900/40 px-2 py-1 rounded-lg mt-0.5 w-fit max-w-md">
+                            <AlertCircle
+                              size={13}
+                              className="shrink-0 mt-0.5 text-rose-500"
+                            />
+                            <span className="leading-snug">
+                              <span className="font-semibold">Lý do: </span>
+                              {product.reason}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -464,7 +295,7 @@ export const ProductTable = ({
                   <td className="py-3 px-6 text-right align-middle">
                     <ProductActionMenu
                       item={product}
-                      onView={() => handleView(product)}
+                      onView={() => handleView(product.productSlug)}
                       onApprove={() => handleApproveClick(product)}
                       onReject={() => handleRejectClick(product)}
                     />
@@ -487,12 +318,12 @@ export const ProductTable = ({
       {products.length > 0 && onPageChange && (
         <div className="px-4 bg-zinc-50/50 dark:bg-zinc-800/50 border-t border-zinc-200 dark:border-zinc-800">
           <Pagination
-            currentPage={activePage}
+            currentPage={page}
             totalPages={computedTotalPages}
             totalElements={totalElements}
             pageSize={pageSize}
             onPageChange={onPageChange}
-            onPageSizeChange={handlePageSizeChange}
+            onPageSizeChange={onPageSizeChange}
           />
         </div>
       )}

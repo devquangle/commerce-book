@@ -1,15 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Eye, CheckCircle, XCircle, MoreVertical } from "lucide-react";
 import type {
-  ProductResponse,
   SuperAdminProductResponse,
 } from "@/modules/shop/products/types/product.type";
 
 interface ProductActionMenuProps {
-  item: SuperAdminProductResponse | ProductResponse;
-  onView?: (product: SuperAdminProductResponse | ProductResponse) => void;
-  onApprove?: (product: SuperAdminProductResponse | ProductResponse) => void;
-  onReject?: (product: SuperAdminProductResponse | ProductResponse) => void;
+  item: SuperAdminProductResponse ;
+  onView?: (slug: string) => void;
+  onApprove?: (product: SuperAdminProductResponse ) => void;
+  onReject?: (product: SuperAdminProductResponse ) => void;
 }
 
 export const ProductActionMenu: React.FC<ProductActionMenuProps> = ({
@@ -82,7 +81,7 @@ export const ProductActionMenu: React.FC<ProductActionMenuProps> = ({
             <button
               onClick={() => {
                 setIsOpen(false);
-                onView(item);
+                onView(item.productSlug);
               }}
               className="flex items-center gap-2 w-full px-3 py-2 body-text text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-blue-600 transition-colors cursor-pointer"
             >

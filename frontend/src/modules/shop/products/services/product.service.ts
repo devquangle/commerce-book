@@ -90,7 +90,16 @@ const ProductService = {
     }
     return response.data.data;
   },
-
+  detailForAdmin: async (slug: string): Promise<ProductDetailResponse> => {
+    const res = await authAxios.get<ApiResponse<ProductDetailResponse>>(
+      "/api/v1/admin/products",
+      { params: { slug } },
+    );
+    if (!res.data.success || !res.data.data) {
+      throw new Error(res.data.message || "Get product failed");
+    }
+    return res.data.data;
+  },
   approve: async (id: number): Promise<void> => {
     const response = await authAxios.put<ApiResponse<void>>(
       `/api/v1/admin/products/approve/${id}`,

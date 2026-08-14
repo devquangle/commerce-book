@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { AlertCircle, Check, Loader2, X } from "lucide-react";
 import type {
   ProductDetailResponse,
-  ProductResponse,
   SuperAdminProductResponse,
 } from "@/modules/shop/products/types/product.type";
 import { Button } from "@/components/common/Button";
 import { useRejectProduct } from "@/modules/shop/products/hooks/useProduct";
 interface ProductRejectModalProps {
   isOpen: boolean;
-  item: ProductResponse | ProductDetailResponse | SuperAdminProductResponse | null;
+  item:  ProductDetailResponse | SuperAdminProductResponse | null;
   onClose: () => void;
   onSuccess?: () => void;
 }

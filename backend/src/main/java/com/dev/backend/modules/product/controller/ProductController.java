@@ -85,14 +85,18 @@ public class ProductController {
                 productService.findByIdIn(productIds));
     }
 
-
-     @GetMapping("/admin/products/filter")
+    @GetMapping("/admin/products/filter")
     public ResponseEntity<ResponseData<PageResponse<SuperAdminProductResponse>>> searchProductsForAdmin(
             @ModelAttribute SuperAdminFilterRequest request) {
         PageResponse<SuperAdminProductResponse> response = productService.searchProductsForAdmin(request);
         return ResponseUtil.success("Lấy danh sách sản phẩm thành công", response);
     }
 
+    @GetMapping("/admin/products")
+    public ResponseEntity<ResponseData<ProductDetailResponse>> detail(@Param("slug") String slug) {
+        ProductDetailResponse response = productService.detail(slug);
+        return ResponseUtil.success("Lấy thông tin sản phẩm thành công", response);
+    }
 
     @PutMapping("/admin/products/approve/{id}")
     public ResponseEntity<ResponseData<Void>> approve(@PathVariable("id") Long id) {
