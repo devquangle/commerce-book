@@ -15,6 +15,8 @@ import com.dev.backend.modules.product.dto.ProductFilterRequest;
 import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.dto.ProductShopResponse;
+import com.dev.backend.modules.product.dto.request.SuperAdminFilterRequest;
+import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.entity.Product;
 import com.dev.backend.modules.product.mapper.ProductMapper;
 import com.dev.backend.modules.product.repository.ProductRepository;
@@ -133,7 +135,7 @@ public class ProductServiceImpl implements ProductService {
         @Transactional
         public ProductResponse create(ProductRequest request, Shop shop) {
                 Product product = new Product();
-                Long shopId=shop.getId();
+                Long shopId = shop.getId();
                 validate(request);
                 product.setSlug(generateUniqueSlug(shopId, TextUtils.toSlug(request.getName())));
                 product.setShop(shop);
@@ -162,9 +164,49 @@ public class ProductServiceImpl implements ProductService {
         }
 
         @Override
-        @Transactional(readOnly = true)
-        public PageResponse<ProductResponse> searchProductsByShopId(ProductFilterRequest request, Long shopId) {
+        public PageResponse<SuperAdminProductResponse> searchProductsForAdmin(SuperAdminFilterRequest request) {
+                Pageable pageable = PageRequest.of(
+                                Math.max(0, Optional.ofNullable(request.getPage()).orElse(1) - 1),
+                                Optional.ofNullable(request.getSize()).filter(s -> s > 0).orElse(10),
+                                Sort.by(Sort.Direction.DESC, "id"));
 
+                Page<Product> page = productRepository.searchProductsByShopId(
+                                StringUtils.trimToNull(request.getKeyword()),
+                                request.getStatus(),
+                                request.getShopId(),
+                                pageable);
+
+                List<Product> products = page.getContent();
+
+                List<Long> productIds = products.stream()
+                                .map(Product::getId)
+                                .toList();
+
+                Map<Long, String> imageMap = imageProductService.findThumbnailMap(productIds);
+                
+                List<SuperAdminProductResponse> responses = products.stream()
+                                .map(product -> {
+                                        SuperAdminProductResponse response = productMapper.toSuperAdmin(product);
+                                        Long productId = product.getId();
+                                        Shop shop=product.getShop();
+                                        response.setUrlImageDefault(imageMap.get(productId));
+                                        response.setShopId(shop.getId());
+                                        response.setShopName(shop.getName());
+                                        response.setShopSlug(shop.getSlug());
+                                        return response;
+                                })
+                                .toList();
+
+                return new PageResponse<>(
+                                responses,
+                                page.getNumber(),
+                                page.getSize(),
+                                page.getTotalElements(),
+                                page.getTotalPages());
+        }
+
+        @Override
+        public PageResponse<ProductResponse> searchProductsForShop(ProductFilterRequest request, Long shopId) {
                 Pageable pageable = PageRequest.of(
                                 Math.max(0, Optional.ofNullable(request.getPage()).orElse(1) - 1),
                                 Optional.ofNullable(request.getSize()).filter(s -> s > 0).orElse(10),
@@ -206,12 +248,6 @@ public class ProductServiceImpl implements ProductService {
                                 page.getSize(),
                                 page.getTotalElements(),
                                 page.getTotalPages());
-        }
-
-        @Override
-        public PageResponse<ProductResponse> searchProducts(ProductFilterRequest request) {
-                // TODO Auto-generated method stub
-                return null;
         }
 
         @Override

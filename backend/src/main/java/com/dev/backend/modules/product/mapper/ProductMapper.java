@@ -4,6 +4,7 @@ import com.dev.backend.common.utils.TextUtils;
 import com.dev.backend.modules.product.dto.ProductDetailResponse;
 import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
+import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.entity.Product;
 import org.springframework.stereotype.Component;
 
@@ -115,6 +116,21 @@ public class ProductMapper {
                         : null);
       response.setStatus(entity.getStatus());
          response.setReason(entity.getReason());
+        return response;
+    }
+
+    public SuperAdminProductResponse toSuperAdmin(Product entity){
+        if (entity == null) {
+            return null; 
+        }
+        SuperAdminProductResponse response= new SuperAdminProductResponse();
+        response.setProductId(entity.getId());
+        response.setName(entity.getName());
+        response.setSlug(entity.getSlug());
+        response.setOriginalPrice(entity.getOriginalPrice());
+        response.setPrice(entity.getPrice());
+        response.setQuantity(entity.getQuantity());
+        response.setStatus(entity.getStatus());
         return response;
     }
 }
