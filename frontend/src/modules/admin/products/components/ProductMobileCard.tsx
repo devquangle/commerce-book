@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { BookOpen, Store, AlertCircle } from "lucide-react";
+import {
+  BookOpen,
+  Store,
+  AlertCircle,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { ProductActionMenu } from "./ProductActionMenu";
 import { formatMoney } from "@/libs/utils/formatMoney.utils";
@@ -15,6 +21,46 @@ import { ProductRejectModal } from "./ProductRejectModal";
 const ProductStatusBadge = ({ status }: { status: ProductStatus }) => {
   const { label, color } = getProductStatusInfo(status);
   return <Badge title={label} variant={color} />;
+};
+
+const ProductReasonCollapse = ({ reason }: { reason: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="flex flex-col gap-1 mt-1 w-full">
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          setIsOpen((prev) => !prev);
+        }}
+        className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-600 dark:text-rose-400 bg-rose-50 hover:bg-rose-100/80 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 border border-rose-200/80 dark:border-rose-900/50 px-2 py-0.5 rounded-lg transition-all duration-200 cursor-pointer w-fit select-none active:scale-95"
+      >
+        <AlertCircle size={12} className="shrink-0 text-rose-500" />
+        <span>{isOpen ? "Thu gọn lý do" : "Xem lý do từ chối"}</span>
+        <ChevronDown
+          size={12}
+          className={`transition-transform duration-300 ease-in-out ${
+            isOpen ? "rotate-180" : "rotate-0"
+          }`}
+        />
+      </button>
+
+      <div
+        className={`grid transition-all duration-300 ease-in-out ${
+          isOpen
+            ? "grid-rows-[1fr] opacity-100 mt-0.5"
+            : "grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="text-xs text-rose-700 dark:text-rose-300 bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200/60 dark:border-rose-900/40 px-2.5 py-1.5 rounded-lg leading-relaxed whitespace-pre-line">
+            {reason}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 interface ProductMobileCardProps {
@@ -101,13 +147,7 @@ export const ProductMobileCard: React.FC<ProductMobileCardProps> = ({
 
           {/* Lý do (nếu có) */}
           {product.reason && (
-            <div className="flex items-start gap-1.5 text-xs text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/30 border border-rose-200/60 dark:border-rose-900/40 px-2 py-1 rounded-lg mt-0.5 w-fit">
-              <AlertCircle size={12} className="shrink-0 mt-0.5 text-rose-500" />
-              <span className="leading-snug line-clamp-2">
-                <span className="font-semibold">Lý do: </span>
-                {product.reason}
-              </span>
-            </div>
+            <ProductReasonCollapse reason={product.reason} />
           )}
 
           {/* Giá nhập, Giá bán, Tồn kho */}
