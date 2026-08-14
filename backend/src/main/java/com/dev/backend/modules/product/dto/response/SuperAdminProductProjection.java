@@ -3,24 +3,27 @@ package com.dev.backend.modules.product.dto.response;
 import com.dev.backend.common.enums.ProductStatus;
 
 public interface SuperAdminProductProjection {
-    Long productId();
 
-    String name();
+    Long getProductId();
 
-    String productSlug();
+    String getName();
 
-    Integer originalPrice();
+    String getProductSlug();
 
-    Integer price();
+    Integer getOriginalPrice();
 
-    Integer quantity();
+    Integer getPrice();
 
-    ProductStatus status();
+    Integer getQuantity();
 
-    Long shopId();
+    String getReason();
+    
+    ProductStatus getStatus();
 
-    String shopName();
+    Long getShopId();
 
-    String shopSlug();
+    String getShopName();
+
+    String getShopSlug();
 
 }

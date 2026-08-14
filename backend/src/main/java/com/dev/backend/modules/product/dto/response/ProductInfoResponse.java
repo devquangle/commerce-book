@@ -14,6 +14,7 @@ public class ProductInfoResponse {
     private Integer originalPrice;
     private Integer price;
     private Integer quantity;
+    private String reason;
     private String urlImageDefault;
     private ProductStatus status;
 }

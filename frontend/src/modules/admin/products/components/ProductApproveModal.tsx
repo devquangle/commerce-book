@@ -2,6 +2,7 @@ import { CheckCircle2, X } from "lucide-react";
 import type {
   ProductDetailResponse,
   ProductResponse,
+  SuperAdminProductResponse,
 } from "@/modules/shop/products/types/product.type";
 import { Button } from "@/components/common/Button";
 import { useApproveProduct } from "@/modules/shop/products/hooks/useProduct";
@@ -9,7 +10,7 @@ import { Loader2 } from "lucide-react";
 
 interface ProductApproveModalProps {
   isOpen: boolean;
-  item: ProductResponse | ProductDetailResponse | null;
+  item: ProductResponse | ProductDetailResponse | SuperAdminProductResponse | null;
   onClose: () => void;
   onSuccess?: () => void;
 }
@@ -77,11 +78,11 @@ export const ProductApproveModal = ({
                 )}{" "}
                 để hiển thị bán trên hệ thống không?
               </p>
-              {item?.shop?.shopName && (
+              {(item?.shop?.shopName || (item as any)?.shopName) && (
                 <p className="text-xs text-zinc-400 dark:text-zinc-500">
                   Cửa hàng:{" "}
                   <span className="font-medium text-zinc-600 dark:text-zinc-300">
-                    {item.shop.shopName}
+                    {item?.shop?.shopName || (item as any)?.shopName}
                   </span>
                 </p>
               )}

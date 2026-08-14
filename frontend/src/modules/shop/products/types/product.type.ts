@@ -69,7 +69,31 @@ export interface ProductDetailResponse {
   seriesId: number | null;
   coverImages: ImageResponse[];
   description: string;
-  reason:string;
+  reason: string;
   status: ProductStatus;
   shop: ShopSimpleResponse;
+}
+
+export interface SuperAdminFilterRequest {
+  keyword?: string;
+  status?: ProductStatus;
+  page?: number;
+  size?: number;
+  shopId?:number;
+}
+
+
+export interface SuperAdminProductResponse {
+  productId: number;
+  name: string;
+  productSlug: string;
+  originalPrice: number;
+  price: number;
+  quantity: number;
+  urlImageDefault: string;
+  reason?: string;
+  status: ProductStatus;
+  shopId:number;
+  shopName:string;
+  shopSlug:string;
 }

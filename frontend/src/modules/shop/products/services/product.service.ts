@@ -4,6 +4,8 @@ import type {
   ProductFilterRequest,
   ProductRequest,
   ProductResponse,
+  SuperAdminFilterRequest,
+  SuperAdminProductResponse,
 } from "../types/product.type";
 import type { ApiResponse } from "@/libs/utils/api-response";
 import type { Pagination } from "@/libs/utils/pagination";
@@ -43,7 +45,10 @@ const ProductService = {
     return res.data.data;
   },
 
-  update: async (id: number, data: ProductRequest): Promise<ProductResponse> => {
+  update: async (
+    id: number,
+    data: ProductRequest,
+  ): Promise<ProductResponse> => {
     const res = await authAxios.put<ApiResponse<ProductResponse>>(
       `/api/v1/shop/products/${id}`,
       data,
@@ -73,6 +78,18 @@ const ProductService = {
   //   }
   //   return res.data.data;
   // },
+
+  searchProductsForAdmin: async (
+    options?: SuperAdminFilterRequest,
+  ): Promise<Pagination<SuperAdminProductResponse>> => {
+    const response = await authAxios.get<
+      ApiResponse<Pagination<SuperAdminProductResponse>>
+    >(`/api/v1/admin/products/filter`, { params: options });
+    if (!response.data.success || !response.data.data) {
+      throw new Error(response.data.message || "Failed to fetch product data");
+    }
+    return response.data.data;
+  },
 
   approve: async (id: number): Promise<void> => {
     const response = await authAxios.put<ApiResponse<void>>(

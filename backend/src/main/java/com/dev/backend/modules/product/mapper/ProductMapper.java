@@ -125,17 +125,17 @@ public class ProductMapper {
             return null;
         }
         SuperAdminProductResponse response = new SuperAdminProductResponse();
-        response.setProductId(item.productId());
-        response.setName(item.name());
-        response.setProductSlug(item.productSlug());
-        response.setOriginalPrice(item.originalPrice());
-        response.setPrice(item.price());
-        response.setQuantity(item.quantity());
-        response.setStatus(item.status());
-
-        response.setShopId(item.shopId());
-        response.setShopName(item.shopName());
-        response.setShopSlug(item.shopSlug());
+        response.setProductId(item.getProductId());
+        response.setName(item.getName());
+        response.setProductSlug(item.getProductSlug());
+        response.setOriginalPrice(item.getOriginalPrice());
+        response.setPrice(item.getPrice());
+        response.setQuantity(item.getQuantity());
+        response.setReason(item.getReason());
+        response.setStatus(item.getStatus());
+        response.setShopId(item.getShopId());
+        response.setShopName(item.getShopName());
+        response.setShopSlug(item.getShopSlug());
         return response;
     }
 }

@@ -80,6 +80,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                 item.originalPrice AS originalPrice,
                 item.price AS price,
                 item.quantity AS quantity,
+                item.reason AS reason,
                 item.status AS status,
                 s.id AS shopId,
                 s.name AS shopName,

@@ -9,17 +9,18 @@ import { SelectBox } from "@/components/common/SelectBox";
 
 interface ShopOption {
   label: string;
-  value: string;
+  value: string | number;
 }
 
 interface ProductFilterProps {
   keyword: string;
   status: ProductStatus | null;
+  shopId?: number | null;
   shopSlug?: string;
   shopOptions?: ShopOption[];
   onKeywordChange: (keyword: string) => void;
   onStatusChange: (status: ProductStatus | null) => void;
-  onShopChange?: (shopSlug: string) => void;
+  onShopChange?: (shopId: number | null) => void;
   onReset: () => void;
 }
 
@@ -34,6 +35,7 @@ const statusOptions = [
 export const ProductFilter: React.FC<ProductFilterProps> = ({
   keyword,
   status,
+  shopId,
   shopSlug = "",
   shopOptions = [],
   onKeywordChange,
@@ -43,8 +45,16 @@ export const ProductFilter: React.FC<ProductFilterProps> = ({
 }) => {
   const formattedShopOptions = [
     { label: "Tất cả cửa hàng", value: "" },
-    ...shopOptions,
+    ...shopOptions.map((opt) => ({
+      label: opt.label,
+      value: String(opt.value),
+    })),
   ];
+
+  const currentShopValue =
+    shopId !== undefined && shopId !== null
+      ? String(shopId)
+      : shopSlug || "";
 
   return (
     <div className="card-custom flex flex-col sm:flex-row gap-4">
@@ -63,13 +73,15 @@ export const ProductFilter: React.FC<ProductFilterProps> = ({
       </div>
 
       {/* Selectbox Cửa hàng */}
-      {onShopChange && (
+      {onShopChange && shopOptions.length > 0 && (
         <div className="min-w-48 sm:w-56">
           <SelectBox
             options={formattedShopOptions}
-            value={shopSlug}
+            value={currentShopValue}
             placeholder="Tất cả cửa hàng"
-            onChange={(e) => onShopChange(e.target.value)}
+            onChange={(e) =>
+              onShopChange(e.target.value ? Number(e.target.value) : null)
+            }
             containerClassName="w-full"
           />
         </div>

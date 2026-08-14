@@ -28,14 +28,17 @@ import {
   getProductStatusInfo,
   type ProductStatus,
 } from "@/modules/shop/products/types/product-status.type";
-import type { ProductResponse } from "@/modules/shop/products/types/product.type";
+import type {
+  ProductResponse,
+  SuperAdminProductResponse,
+} from "@/modules/shop/products/types/product.type";
 import { ProductActionMenu } from "./ProductActionMenu";
 import { ProductApproveModal } from "./ProductApproveModal";
 import { ProductRejectModal } from "./ProductRejectModal";
 registerLocale(viLocale);
 
 export interface ProductTableProps {
-  products: ProductResponse[];
+  products: (SuperAdminProductResponse | ProductResponse)[];
   page?: number;
   currentPage?: number;
   pageSize?: number;
@@ -43,7 +46,7 @@ export interface ProductTableProps {
   totalPages?: number;
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (size: number) => void;
-  onView?: (product: ProductResponse) => void;
+  onView?: (product: SuperAdminProductResponse | ProductResponse) => void;
 }
 
 const getLanguageName = (code: string) => {
@@ -94,7 +97,7 @@ export const ProductTable = ({
   const navigate = useNavigate();
 
   // Modal state
-  const [selectedProduct, setSelectedProduct] = useState<ProductResponse | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<SuperAdminProductResponse | ProductResponse | null>(null);
   const [isApproveOpen, setIsApproveOpen] = useState(false);
   const [isRejectOpen, setIsRejectOpen] = useState(false);
 
@@ -111,20 +114,21 @@ export const ProductTable = ({
     }
   };
 
-  const handleView = (product: ProductResponse) => {
+  const handleView = (product: SuperAdminProductResponse | ProductResponse) => {
     if (onView) {
       onView(product);
     } else {
-      navigate(`/admin/products/detail?slug=${product.slug}`);
+      const slug = (product as SuperAdminProductResponse).productSlug || (product as ProductResponse).slug;
+      navigate(`/admin/products/detail?slug=${slug}`);
     }
   };
 
-  const handleApproveClick = (product: ProductResponse) => {
+  const handleApproveClick = (product: SuperAdminProductResponse | ProductResponse) => {
     setSelectedProduct(product);
     setIsApproveOpen(true);
   };
 
-  const handleRejectClick = (product: ProductResponse) => {
+  const handleRejectClick = (product: SuperAdminProductResponse | ProductResponse) => {
     setSelectedProduct(product);
     setIsRejectOpen(true);
   };
@@ -156,6 +160,19 @@ export const ProductTable = ({
             {products.map((product, index) => {
               const stt = (activePage - 1) * pageSize + index + 1;
               const isDetailsOpen = !!showDetailsMap[product.productId];
+
+              const productSlug = (product as SuperAdminProductResponse).productSlug || (product as ProductResponse).slug;
+              const shopName = (product as SuperAdminProductResponse).shopName || (product as ProductResponse).shop?.shopName;
+              const shopSlug = (product as SuperAdminProductResponse).shopSlug || (product as ProductResponse).shop?.shopSlug;
+
+              const authorsName = (product as ProductResponse).authorsName;
+              const genresName = (product as ProductResponse).genresName;
+              const publisherName = (product as ProductResponse).publisherName;
+              const seriesName = (product as ProductResponse).seriesName;
+              const publishYear = (product as ProductResponse).publishYear;
+              const pages = (product as ProductResponse).pages;
+              const weight = (product as ProductResponse).weight;
+              const language = (product as ProductResponse).language;
 
               return (
                 <tr
@@ -199,36 +216,36 @@ export const ProductTable = ({
                         {/* ➊ Tên + Shop */}
                         <div className="flex flex-col gap-0.5">
                           <Link
-                            to={`/admin/products/detail?slug=${product.slug}`}
+                            to={`/admin/products/detail?slug=${productSlug}`}
                             className="font-semibold text-zinc-900 dark:text-zinc-100 body-text leading-snug line-clamp-2 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                             title={product.name}
                           >
                             {product.name}
                           </Link>
                           {/* Shop info */}
-                          {product.shop && (
+                          {shopName && (
                             <Link
-                              to={`/admin/shops/detail?slug=${product.shop.shopSlug}`}
+                              to={`/admin/shops/detail?slug=${shopSlug}`}
                               className="body-text text-zinc-500 dark:text-zinc-400 flex items-center gap-1 font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors w-fit"
                             >
                               <Store
                                 size={11}
                                 className="shrink-0 text-indigo-500"
                               />
-                              {product.shop.shopName}
+                              {shopName}
                             </Link>
                           )}
                         </div>
 
                         {/* ➋ Tác giả / Thể loại / NXB / Series / Chi tiết → Ẩn/Hiện */}
-                        {(product.authorsName?.length ||
-                          product.genresName?.length ||
-                          product.publisherName ||
-                          product.seriesName ||
-                          product.publishYear ||
-                          product.pages > 0 ||
-                          product.weight > 0 ||
-                          product.language) && (
+                        {(authorsName?.length ||
+                          genresName?.length ||
+                          publisherName ||
+                          seriesName ||
+                          publishYear ||
+                          (pages && pages > 0) ||
+                          (weight && weight > 0) ||
+                          language) && (
                           <div className="flex flex-col gap-1 mt-0.5">
                             <div
                               className={`grid transition-all duration-300 ease-in-out ${
@@ -240,65 +257,65 @@ export const ProductTable = ({
                               <div className="overflow-hidden">
                                 <div className="flex flex-col gap-1.5 pb-1">
                                   {/* Tác giả + Thể loại */}
-                                  {(product.authorsName?.length ||
-                                    product.genresName?.length) && (
+                                  {(authorsName?.length ||
+                                    genresName?.length) && (
                                     <div className="flex flex-wrap items-center gap-1 text-muted">
                                       <ExpandableAuthors
-                                        authors={product.authorsName}
+                                        authors={authorsName}
                                       />
                                       <ExpandableGenres
-                                        genres={product.genresName}
+                                        genres={genresName}
                                       />
                                     </div>
                                   )}
 
                                   {/* NXB + Series */}
-                                  {(product.publisherName ||
-                                    product.seriesName) && (
+                                  {(publisherName ||
+                                    seriesName) && (
                                     <div className="flex flex-wrap gap-1 text-muted">
-                                      {product.publisherName && (
+                                      {publisherName && (
                                         <span className="inline-flex items-center gap-1 bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-500/20 px-1.5 py-0.5 rounded font-medium">
                                           <Building2 size={10} />
-                                          <span>{product.publisherName}</span>
+                                          <span>{publisherName}</span>
                                         </span>
                                       )}
-                                      {product.seriesName && (
+                                      {seriesName && (
                                         <span className="inline-flex items-center gap-1 bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-400 border border-violet-100 dark:border-violet-500/20 px-1.5 py-0.5 rounded font-medium">
                                           <Layers size={10} />
-                                          <span>{product.seriesName}</span>
+                                          <span>{seriesName}</span>
                                         </span>
                                       )}
                                     </div>
                                   )}
 
                                   {/* Năm / Trang / Cân nặng / Ngôn ngữ */}
-                                  {(product.publishYear ||
-                                    product.pages > 0 ||
-                                    product.weight > 0 ||
-                                    product.language) && (
+                                  {(publishYear ||
+                                    (pages && pages > 0) ||
+                                    (weight && weight > 0) ||
+                                    language) && (
                                     <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-muted">
-                                      {product.publishYear && (
+                                      {publishYear && (
                                         <span className="flex items-center gap-1">
                                           <Calendar size={10} />
-                                          {product.publishYear}
+                                          {publishYear}
                                         </span>
                                       )}
-                                      {product.pages > 0 && (
+                                      {pages && pages > 0 ? (
                                         <span className="flex items-center gap-1">
                                           <FileText size={10} />
-                                          {product.pages} trang
+                                          {pages} trang
                                         </span>
-                                      )}
-                                      {product.weight > 0 && (
+                                      ) : null}
+                                      {weight && weight > 0 ? (
                                         <span className="flex items-center gap-1">
                                           <Weight size={10} />
-                                          {product.weight}g
+                                          {weight}g
                                         </span>
-                                      )}
-                                      {product.language && (
+                                      ) : null}
+                                      {language && (
                                         <span className="flex items-center gap-1">
                                           <Languages size={10} />
-                                          {getLanguageName(product.language)}
+                                          {getLanguageName(language)}
                                         </span>
                                       )}
                                     </div>
@@ -306,6 +323,7 @@ export const ProductTable = ({
                                 </div>
                               </div>
                             </div>
+
 
                             <div className="flex items-center">
                               <button

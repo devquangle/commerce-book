@@ -1,5 +1,4 @@
 import { Pagination } from "@/components/common/Pagination";
-import { useState } from "react";
 import { ProductHeader } from "../components/ProductHeader";
 import { ProductFilter } from "../components/ProductFilter";
 import { ProductTable } from "../components/ProductTable";
@@ -8,10 +7,14 @@ import {
   ProductMobileSkeleton,
 } from "@/modules/shop/products/components/ProductSkeleton";
 import { ProductMobileCard } from "../components/ProductMobileCard";
-import { useProductShopFilter } from "@/modules/shop/products/hooks/useProductShopFilter";
-import type { ProductResponse } from "@/modules/shop/products/types/product.type";
+import type {
+  ProductResponse,
+  SuperAdminProductResponse,
+} from "@/modules/shop/products/types/product.type";
 import { useNavigate } from "react-router-dom";
-import { useProductShop } from "@/modules/shop/products/hooks/useProduct";
+
+import { useSuperAdminFilter } from "@/modules/shop/products/hooks/useSuperAdminFilter";
+import { useSearchProductsForAdmin } from "@/modules/shop/products/hooks/useProduct";
 
 const AdminProductListPage = () => {
   const navigate = useNavigate();
@@ -20,25 +23,26 @@ const AdminProductListPage = () => {
     status,
     page,
     size,
+    shopId,
     filterParams,
     handleKeywordChange,
     handleStatusChange,
     handlePageChange,
     handlePageSizeChange,
     handleResetFilter,
-  } = useProductShopFilter();
+    handleShopIdChange,
+  } = useSuperAdminFilter();
 
-  const [shopSlug, setShopSlug] = useState<string>("");
-
-  const { data, isLoading } = useProductShop({
-    ...filterParams,
-  });
+  const { data, isLoading } = useSearchProductsForAdmin({...filterParams,});
 
   const products = data?.items || [];
   const totalElements = data?.totalItems || 0;
 
-  const handleView = (product: ProductResponse) => {
-    navigate(`/admin/products/detail?slug=${product.slug}`);
+  const handleView = (product: SuperAdminProductResponse | ProductResponse) => {
+    const slug =
+      (product as SuperAdminProductResponse).productSlug ||
+      (product as ProductResponse).slug;
+    navigate(`/admin/products/detail?slug=${slug}`);
   };
 
   return (
@@ -50,14 +54,11 @@ const AdminProductListPage = () => {
       <ProductFilter
         keyword={keyword}
         status={status}
-        shopSlug={shopSlug}
+        shopId={shopId}
         onKeywordChange={handleKeywordChange}
         onStatusChange={handleStatusChange}
-        onShopChange={(slug) => setShopSlug(slug)}
-        onReset={() => {
-          handleResetFilter();
-          setShopSlug("");
-        }}
+        onShopChange={handleShopIdChange}
+        onReset={handleResetFilter}
       />
 
       {isLoading ? (

@@ -20,7 +20,10 @@ import { Badge } from "@/components/common/Badge";
 import { registerLocale, getNames } from "@cospired/i18n-iso-languages";
 import viLocale from "@cospired/i18n-iso-languages/langs/vi.json";
 import { getProductStatusInfo, type ProductStatus } from "@/modules/shop/products/types/product-status.type";
-import type { ProductResponse } from "@/modules/shop/products/types/product.type";
+import type {
+  ProductResponse,
+  SuperAdminProductResponse,
+} from "@/modules/shop/products/types/product.type";
 
 registerLocale(viLocale);
 
@@ -37,10 +40,10 @@ const ProductStatusBadge = ({ status }: { status: ProductStatus }) => {
 };
 
 interface ProductMobileCardProps {
-  product: ProductResponse;
-  onView?: (product: ProductResponse) => void;
-  onApprove?: (product: ProductResponse) => void;
-  onReject?: (product: ProductResponse) => void;
+  product: SuperAdminProductResponse | ProductResponse;
+  onView?: (product: SuperAdminProductResponse | ProductResponse) => void;
+  onApprove?: (product: SuperAdminProductResponse | ProductResponse) => void;
+  onReject?: (product: SuperAdminProductResponse | ProductResponse) => void;
 }
 
 export const ProductMobileCard= ({
@@ -51,15 +54,28 @@ export const ProductMobileCard= ({
 }:ProductMobileCardProps) => {
   const [showDetails, setShowDetails] = useState(false);
 
+  const productSlug = (product as SuperAdminProductResponse).productSlug || (product as ProductResponse).slug;
+  const shopName = (product as SuperAdminProductResponse).shopName || (product as ProductResponse).shop?.shopName;
+  const shopSlug = (product as SuperAdminProductResponse).shopSlug || (product as ProductResponse).shop?.shopSlug;
+
+  const authorsName = (product as ProductResponse).authorsName;
+  const genresName = (product as ProductResponse).genresName;
+  const publisherName = (product as ProductResponse).publisherName;
+  const seriesName = (product as ProductResponse).seriesName;
+  const publishYear = (product as ProductResponse).publishYear;
+  const pages = (product as ProductResponse).pages;
+  const weight = (product as ProductResponse).weight;
+  const language = (product as ProductResponse).language;
+
   const hasDetails =
-    (product.authorsName && product.authorsName.length > 0) ||
-    (product.genresName && product.genresName.length > 0) ||
-    product.publisherName ||
-    product.seriesName ||
-    product.publishYear ||
-    product.pages > 0 ||
-    product.weight > 0 ||
-    product.language;
+    (authorsName && authorsName.length > 0) ||
+    (genresName && genresName.length > 0) ||
+    publisherName ||
+    seriesName ||
+    publishYear ||
+    (pages && pages > 0) ||
+    (weight && weight > 0) ||
+    language;
 
   return (
     <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 shadow-xs flex flex-col gap-3">
@@ -82,7 +98,7 @@ export const ProductMobileCard= ({
         <div className="flex-1 min-w-0 flex flex-col gap-1">
           {/* Dòng 1: Tên sách → link đến detail */}
           <Link
-            to={`/admin/products/detail?slug=${product.slug}`}
+            to={`/admin/products/detail?slug=${productSlug}`}
             className="font-semibold text-zinc-900 dark:text-white body-text leading-snug line-clamp-2 wrap-break-word hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
             title={product.name}
           >
@@ -90,13 +106,13 @@ export const ProductMobileCard= ({
           </Link>
 
           {/* Dòng 2: Shop → link đến shop detail */}
-          {product.shop && (
+          {shopName && (
             <Link
-              to={`/admin/shops/detail?slug=${product.shop.shopSlug}`}
+              to={`/admin/shops/detail?slug=${shopSlug}`}
               className="body-text text-zinc-500 dark:text-zinc-400 flex items-center gap-1 font-medium hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors w-fit mt-0.5"
             >
               <Store size={11} className="shrink-0 text-indigo-500" />
-              {product.shop.shopName}
+              {shopName}
             </Link>
           )}
 

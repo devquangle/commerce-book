@@ -5,6 +5,8 @@ import type {
   ProductFilterRequest,
   ProductRequest,
   ProductResponse,
+  SuperAdminFilterRequest,
+  SuperAdminProductResponse,
 } from "../types/product.type";
 import ProductShopService from "../services/product.service";
 import { showErrorToast, showSuccessToast } from "@/libs/utils/toastUtil";
@@ -16,6 +18,14 @@ export const useProductShop = (options?: ProductFilterRequest) => {
     queryFn: () => ProductShopService.fetchProductShop(options),
   });
 };
+
+export const useSearchProductsForAdmin = (options?: SuperAdminFilterRequest) => {
+  return useQuery<Pagination<SuperAdminProductResponse>>({
+    queryKey: ["admin-products-filter", options],
+    queryFn: () => ProductShopService.searchProductsForAdmin(options),
+  });
+};
+
 
 export const useProductShopDetail = (slug: string) => {
   return useQuery<ProductDetailResponse>({
@@ -33,6 +43,7 @@ export const useCreateProductShop = () => {
     mutationFn: (data: ProductRequest) => ProductShopService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shop-products-filter"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-products-filter"] });
       showSuccessToast("Thêm mới sản phẩm thành công!");
     },
     onError: (error: unknown) => {
@@ -59,6 +70,7 @@ export const useUpdateProductShop = (id?: number) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shop-products-filter"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-products-filter"] });
       queryClient.invalidateQueries({ queryKey: ["shop-product-detail"] });
       showSuccessToast("Cập nhật sản phẩm thành công!");
     },
@@ -81,6 +93,7 @@ export const useDeleteProductShop = () => {
     mutationFn: (id: number) => ProductShopService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shop-products-filter"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-products-filter"] });
       showSuccessToast("Xóa sản phẩm thành công!");
     },
     onError: (error: unknown) => {
@@ -103,6 +116,8 @@ export const useApproveProduct = () => {
     mutationFn: (id: number) => ProductShopService.approve(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shop-products-filter"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-products-filter"] });
+      queryClient.invalidateQueries({ queryKey: ["shop-product-detail"] });
       showSuccessToast("Phê duyệt sản phẩm thành công!");
     },
     onError: (error: unknown) => {
@@ -125,6 +140,8 @@ export const useRejectProduct = () => {
       ProductShopService.reject(id, reason),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shop-products-filter"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-products-filter"] });
+      queryClient.invalidateQueries({ queryKey: ["shop-product-detail"] });
       showSuccessToast("Từ chối sản phẩm thành công!");
     },
     onError: (error: unknown) => {
@@ -138,3 +155,4 @@ export const useRejectProduct = () => {
     },
   });
 };
+

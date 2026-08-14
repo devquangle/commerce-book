@@ -1,12 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Eye, CheckCircle, XCircle, MoreVertical } from "lucide-react";
-import { type ProductResponse } from "@/modules/shop/products/types/product.type";
+import type {
+  ProductResponse,
+  SuperAdminProductResponse,
+} from "@/modules/shop/products/types/product.type";
 
 interface ProductActionMenuProps {
-  item: ProductResponse;
-  onView?: (product: ProductResponse) => void;
-  onApprove?: (product: ProductResponse) => void;
-  onReject?: (product: ProductResponse) => void;
+  item: SuperAdminProductResponse | ProductResponse;
+  onView?: (product: SuperAdminProductResponse | ProductResponse) => void;
+  onApprove?: (product: SuperAdminProductResponse | ProductResponse) => void;
+  onReject?: (product: SuperAdminProductResponse | ProductResponse) => void;
 }
 
 export const ProductActionMenu: React.FC<ProductActionMenuProps> = ({

@@ -179,7 +179,7 @@ public class ProductServiceImpl implements ProductService {
 
 
                 List<Long> productIds = page.stream()
-                                .map(SuperAdminProductProjection::productId)
+                                .map(SuperAdminProductProjection::getProductId)
                                 .toList();
 
                 Map<Long, String> imageMap = imageProductService.findThumbnailMap(productIds);
@@ -188,7 +188,7 @@ public class ProductServiceImpl implements ProductService {
                                 .stream()
                                 .map(product -> {
                                         SuperAdminProductResponse response = productMapper.toSuperAdmin(product);
-                                        response.setUrlImageDefault(imageMap.get(product.productId()));
+                                        response.setUrlImageDefault(imageMap.get(product.getProductId()));
                                         return response;
                                 })
                                 .toList();
