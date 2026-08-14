@@ -17,6 +17,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,6 +31,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User extends BaseEntity {
 
     @Column(name = "username", nullable = false, unique = true, length = 100)
@@ -56,9 +58,11 @@ public class User extends BaseEntity {
     @Column(name = "status")
     private String status;
 
+    @Builder.Default
     @Column(name = "enabled")
     private boolean enabled = false;
 
+    @Builder.Default
     @Column(name = "account_non_locked")
     private boolean accountNonLocked = true;
 
@@ -68,6 +72,7 @@ public class User extends BaseEntity {
     @Column(name = "token_version")
     private int tokenVersion;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
 
@@ -75,15 +80,19 @@ public class User extends BaseEntity {
     @JoinColumn(name = "shop_id")
     private Shop shop;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> cartItems = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Favorite> favorites = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<Review> reviews = new ArrayList<>();
 

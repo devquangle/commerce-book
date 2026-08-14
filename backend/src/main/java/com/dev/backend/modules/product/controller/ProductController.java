@@ -24,6 +24,8 @@ import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.dto.ProductShopResponse;
 import com.dev.backend.modules.product.dto.RejectProductRequest;
+import com.dev.backend.modules.product.dto.request.SuperAdminFilterRequest;
+import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.service.ProductService;
 import com.dev.backend.security.custom.CustomUserDetails;
 
@@ -37,10 +39,10 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/shop/products/filter")
-    public ResponseEntity<ResponseData<PageResponse<ProductResponse>>> searchProductsByShopId(
+    public ResponseEntity<ResponseData<PageResponse<ProductResponse>>> searchProductsForShop(
             @ModelAttribute ProductFilterRequest request,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-        PageResponse<ProductResponse> response = productService.searchProductsByShopId(request,
+        PageResponse<ProductResponse> response = productService.searchProductsForShop(request,
                 userDetails.getShop().getId());
         return ResponseUtil.success("Lấy danh sách sản phẩm thành công", response);
     }
@@ -82,6 +84,15 @@ public class ProductController {
                 "Lấy danh sách shop thành công",
                 productService.findByIdIn(productIds));
     }
+
+
+     @GetMapping("/admin/products/filter")
+    public ResponseEntity<ResponseData<PageResponse<SuperAdminProductResponse>>> searchProductsForAdmin(
+            @ModelAttribute SuperAdminFilterRequest request) {
+        PageResponse<SuperAdminProductResponse> response = productService.searchProductsForAdmin(request);
+        return ResponseUtil.success("Lấy danh sách sản phẩm thành công", response);
+    }
+
 
     @PutMapping("/admin/products/approve/{id}")
     public ResponseEntity<ResponseData<Void>> approve(@PathVariable("id") Long id) {

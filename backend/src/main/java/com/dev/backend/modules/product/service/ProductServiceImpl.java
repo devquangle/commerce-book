@@ -16,6 +16,7 @@ import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.dto.ProductShopResponse;
 import com.dev.backend.modules.product.dto.request.SuperAdminFilterRequest;
+import com.dev.backend.modules.product.dto.response.SuperAdminProductProjection;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.entity.Product;
 import com.dev.backend.modules.product.mapper.ProductMapper;
@@ -170,29 +171,24 @@ public class ProductServiceImpl implements ProductService {
                                 Optional.ofNullable(request.getSize()).filter(s -> s > 0).orElse(10),
                                 Sort.by(Sort.Direction.DESC, "id"));
 
-                Page<Product> page = productRepository.searchProductsByShopId(
+                Page<SuperAdminProductProjection> page = productRepository.searchProductsForAdmin(
                                 StringUtils.trimToNull(request.getKeyword()),
                                 request.getStatus(),
                                 request.getShopId(),
                                 pageable);
 
-                List<Product> products = page.getContent();
 
-                List<Long> productIds = products.stream()
-                                .map(Product::getId)
+                List<Long> productIds = page.stream()
+                                .map(SuperAdminProductProjection::productId)
                                 .toList();
 
                 Map<Long, String> imageMap = imageProductService.findThumbnailMap(productIds);
                 
-                List<SuperAdminProductResponse> responses = products.stream()
+                List<SuperAdminProductResponse> responses = page.getContent()
+                                .stream()
                                 .map(product -> {
                                         SuperAdminProductResponse response = productMapper.toSuperAdmin(product);
-                                        Long productId = product.getId();
-                                        Shop shop=product.getShop();
-                                        response.setUrlImageDefault(imageMap.get(productId));
-                                        response.setShopId(shop.getId());
-                                        response.setShopName(shop.getName());
-                                        response.setShopSlug(shop.getSlug());
+                                        response.setUrlImageDefault(imageMap.get(product.productId()));
                                         return response;
                                 })
                                 .toList();

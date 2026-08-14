@@ -4,6 +4,7 @@ import com.dev.backend.common.utils.TextUtils;
 import com.dev.backend.modules.product.dto.ProductDetailResponse;
 import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
+import com.dev.backend.modules.product.dto.response.SuperAdminProductProjection;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.entity.Product;
 import org.springframework.stereotype.Component;
@@ -114,23 +115,27 @@ public class ProductMapper {
                 entity.getSeries() != null
                         ? entity.getSeries().getId()
                         : null);
-      response.setStatus(entity.getStatus());
-         response.setReason(entity.getReason());
+        response.setStatus(entity.getStatus());
+        response.setReason(entity.getReason());
         return response;
     }
 
-    public SuperAdminProductResponse toSuperAdmin(Product entity){
-        if (entity == null) {
-            return null; 
+    public SuperAdminProductResponse toSuperAdmin(SuperAdminProductProjection item) {
+        if (item == null) {
+            return null;
         }
-        SuperAdminProductResponse response= new SuperAdminProductResponse();
-        response.setProductId(entity.getId());
-        response.setName(entity.getName());
-        response.setSlug(entity.getSlug());
-        response.setOriginalPrice(entity.getOriginalPrice());
-        response.setPrice(entity.getPrice());
-        response.setQuantity(entity.getQuantity());
-        response.setStatus(entity.getStatus());
+        SuperAdminProductResponse response = new SuperAdminProductResponse();
+        response.setProductId(item.productId());
+        response.setName(item.name());
+        response.setProductSlug(item.productSlug());
+        response.setOriginalPrice(item.originalPrice());
+        response.setPrice(item.price());
+        response.setQuantity(item.quantity());
+        response.setStatus(item.status());
+
+        response.setShopId(item.shopId());
+        response.setShopName(item.shopName());
+        response.setShopSlug(item.shopSlug());
         return response;
     }
 }

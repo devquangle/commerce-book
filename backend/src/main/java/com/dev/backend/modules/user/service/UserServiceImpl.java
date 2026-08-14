@@ -131,10 +131,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(RegisterUserRequest request) {
-        User user = new User();
-        user.setEmail(request.email());
-        user.setPassword(request.password());
-        roleRepository.findByName(ModuleConstants.USER);
-        user.setRole( roleRepository.findByName(ModuleConstants.USER));
+        Role userRole = roleRepository.findByName(ModuleConstants.USER)
+                .orElseThrow(() -> new RuntimeException("Role " + ModuleConstants.USER + " not found"));
+
+        User user = User.builder()
+                .email(request.email())
+                .username(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .role(userRole)
+                .status(UserStatus.ACTIVE.name())
+                .enabled(true)
+                .accountNonLocked(true)
+                .failedAttempt(0)
+                .tokenVersion(0)
+                .build();
+
+        userRepository.save(user);
     }
 }

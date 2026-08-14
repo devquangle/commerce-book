@@ -23,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class LoadData implements CommandLineRunner {
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
 
-    private final PasswordEncoder passwordEncoder;
     private final AuthorService authorService;
     private final GenreService genreService;
     private final PublisherService publisherService;
