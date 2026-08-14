@@ -6,7 +6,6 @@ import com.dev.backend.common.response.ResponseData;
 import com.dev.backend.common.response.ResponseUtil;
 import com.dev.backend.modules.auth.dto.ChangePasswordRequest;
 import com.dev.backend.modules.auth.dto.LoginRequest;
-import com.dev.backend.modules.auth.dto.RegisterRequest;
 import com.dev.backend.modules.auth.dto.RegisterUserRequest;
 import com.dev.backend.modules.auth.dto.VerifyTokenRequest;
 import com.dev.backend.modules.auth.service.AuthService;

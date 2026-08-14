@@ -41,7 +41,6 @@ export const StepAccountInfo: React.FC = () => {
             },
           })}
           error={errors.email?.message}
-          helperText="Dùng để đăng nhập và nhận thông báo từ hệ thống"
           className="body-text"
         />
 
@@ -60,7 +59,6 @@ export const StepAccountInfo: React.FC = () => {
             },
           })}
           error={errors.phone?.message}
-          helperText="Số điện thoại nhận OTP xác thực chính chủ"
           className="body-text"
         />
       </div>

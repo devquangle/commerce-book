@@ -27,7 +27,7 @@ import SingleImageUploadNoUrl from "@/components/common/SingleImageUploadNoUrl";
 import { CameraModal } from "./CameraModal";
 import type { RegisterShopRequest } from "../types/register-shop.type";
 
-const EKYC_API_URL = "http://localhost:8000/verify";
+const EKYC_API_URL = "http://localhost:8000/api/v1/ekyc/verify-video";
 
 // ---- helpers ---------------------------------------------------------------
 
@@ -49,7 +49,8 @@ const normalizeSex = (raw: string): string => {
   if (!raw) return "";
   const lower = raw.trim().toLowerCase();
   if (lower === "nam" || lower === "male" || lower === "m") return "Nam";
-  if (lower === "nữ" || lower === "nu" || lower === "female" || lower === "f") return "Nữ";
+  if (lower === "nữ" || lower === "nu" || lower === "female" || lower === "f")
+    return "Nữ";
   if (lower.includes("nam")) return "Nam";
   if (lower.includes("nữ") || lower.includes("nu")) return "Nữ";
   return "";
@@ -70,52 +71,35 @@ const base64ToFile = (base64: string, filename: string): File => {
 type EkycStatus = "idle" | "loading" | "success" | "error";
 
 interface EkycResult {
-  success: boolean;
-  data: {
+  face?: {
+    matched?: boolean;
+    bestSimilarity?: number;
+  };
+  liveness?: {
+    isLive?: boolean;
+    score?: number;
+  };
+  ocr?: {
     identityNumber?: string;
     fullName?: string;
-    dateOfBirth?: string;         // yyyy-MM-dd
-    gender?: string;          // Nam hoặc Nữ
+    dateOfBirth?: string;
+    gender?: string;
     nationality?: string;
     placeOfOrigin?: string;
     placeOfResidence?: string;
-    issueDate?: string;           // yyyy-MM-dd
-    expiryDate?: string;          // yyyy-MM-dd
+    issueDate?: string;
+    expiryDate?: string;
     personalIdentification?: string;
     issuePlace?: string;
   };
-  verification: {
-    front: {
-      detected: boolean;
-      portraitDetected: boolean;
-      qrDetected: boolean;
-      chipDetected: boolean;
-      nationalEmblemDetected: boolean;
-      valid: boolean;
-    };
-    back: {
-      detected: boolean;
-      mrzDetected: boolean;
-      issuePlaceDetected: boolean;
-      issueDateDetected: boolean;
-      valid: boolean;
-    };
-    face: {
-      matched: boolean;
-      similarity: number;
-      livenessPassed: boolean;
-    };
-    overallVerified: boolean;
+  qr?: {
+    detected?: boolean;
+    parsed?: boolean;
   };
-  validation: {
-    identityNumberValid: boolean;
-    expired: boolean;
-    missingFields: string[];
-    confidence: number;
-  };
-  metadata: {
-    processingTime: number;
-    timestamp: string;
+  validation?: {
+    valid?: boolean;
+    faceMatch?: boolean;
+    livenessPass?: boolean;
   };
 }
 
@@ -141,12 +125,14 @@ export const StepOwnerIdentity: React.FC = () => {
 
   // Xác thực khuôn mặt - chế độ chụp camera
   const [isCameraOpen, setIsCameraOpen] = useState<boolean>(false);
-  const [faceImageBase64, setFaceImageBase64] = useState<string | null>(null);
+  const [faceVideoBlob, setFaceVideoBlob] = useState<Blob | null>(null);
 
   // Xác thực khuôn mặt - chế độ upload file ảnh/video
   const [faceMediaFile, setFaceMediaFile] = useState<File | null>(null);
   const [faceMediaPreview, setFaceMediaPreview] = useState<string | null>(null);
-  const [faceMediaType, setFaceMediaType] = useState<"image" | "video" | null>(null);
+  const [faceMediaType, setFaceMediaType] = useState<"image" | "video" | null>(
+    null,
+  );
   const faceUploadRef = useRef<HTMLInputElement>(null);
 
   // Chế độ nhập khuôn mặt
@@ -158,24 +144,29 @@ export const StepOwnerIdentity: React.FC = () => {
   const [ekycError, setEkycError] = useState<string>("");
 
   // ---------- handle face upload file ----------------------------------------
-  const handleFaceFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleFaceFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
 
-    const isImage = file.type.startsWith("image/");
-    const isVideo = file.type.startsWith("video/");
+      const isImage = file.type.startsWith("image/");
+      const isVideo = file.type.startsWith("video/");
 
-    if (!isImage && !isVideo) {
-      alert("Chỉ chấp nhận file ảnh (jpg, png, webp) hoặc video (mp4, mov, webm).");
-      return;
-    }
+      if (!isImage && !isVideo) {
+        alert(
+          "Chỉ chấp nhận file ảnh (jpg, png, webp) hoặc video (mp4, mov, webm).",
+        );
+        return;
+      }
 
-    setFaceMediaFile(file);
-    setFaceMediaType(isImage ? "image" : "video");
+      setFaceMediaFile(file);
+      setFaceMediaType(isImage ? "image" : "video");
 
-    const url = URL.createObjectURL(file);
-    setFaceMediaPreview(url);
-  }, []);
+      const url = URL.createObjectURL(file);
+      setFaceMediaPreview(url);
+    },
+    [],
+  );
 
   const clearFaceMedia = useCallback(() => {
     setFaceMediaFile(null);
@@ -186,7 +177,7 @@ export const StepOwnerIdentity: React.FC = () => {
 
   // ---------- derived: đã có dữ liệu khuôn mặt? ----------------------------
   const hasFaceData =
-    faceInputMode === "camera" ? !!faceImageBase64 : !!faceMediaFile;
+    faceInputMode === "camera" ? !!faceVideoBlob : !!faceMediaFile;
 
   // ---------- main eKYC handler ----------------------------------------------
   const handleVerifyEkyc = useCallback(async () => {
@@ -201,7 +192,6 @@ export const StepOwnerIdentity: React.FC = () => {
       return;
     }
 
-
     setEkycStatus("loading");
     setEkycError("");
     setEkycResult(null);
@@ -210,38 +200,44 @@ export const StepOwnerIdentity: React.FC = () => {
       const formData = new FormData();
 
       // CCCD mặt trước — dùng để OCR
-      formData.append("idCard", frontCccdFile, frontCccdFile.name);
+      formData.append("frontImage", frontCccdFile, frontCccdFile.name);
 
       // CCCD mặt sau — gửi kèm để backend kiểm tra tính toàn vẹn
-      formData.append("idCardBack", backCccdFile, backCccdFile.name);
+      formData.append("backImage", backCccdFile, backCccdFile.name);
 
       // Khuôn mặt: ảnh camera hoặc file upload
-      if (faceInputMode === "camera" && faceImageBase64) {
-        const selfieFile = base64ToFile(faceImageBase64, "selfie.jpg");
-        formData.append("selfie", selfieFile, "selfie.jpg");
+      if (faceInputMode === "camera" && faceVideoBlob) {
+        formData.append("selfieVideo", faceVideoBlob, "liveness.webm");
       } else if (faceInputMode === "upload" && faceMediaFile) {
-        formData.append("selfie", faceMediaFile, faceMediaFile.name);
+        formData.append("selfieVideo", faceMediaFile, faceMediaFile.name);
       }
 
-      const response = await axios.post<EkycResult & { success: boolean }>(
-        EKYC_API_URL,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" }, timeout: 120_000 }
-      );
+      const response = await axios.post<any>(EKYC_API_URL, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 120_000,
+      });
 
-      const data = response.data as EkycResult;
+      const rootData = response.data;
+      const data = rootData.data || rootData;
       setEkycResult(data);
       setEkycStatus("success");
 
-      // ---- Điền dữ liệu OCR vào form (từ schema mới: data.data) ------------------
-      const ocr = data.data;
-      console.log(ocr)
+      // ---- Điền dữ liệu OCR vào form ------------------
+      const ocr = data.ocr;
+      console.log("OCR Data:", data);
       if (ocr) {
-        if (ocr.fullName) setValue("fullName", ocr.fullName, { shouldValidate: true });
-        if (ocr.identityNumber) setValue("identityNumber", ocr.identityNumber, { shouldValidate: true });
+        if (ocr.fullName)
+          setValue("fullName", ocr.fullName, { shouldValidate: true });
+        if (ocr.identityNumber)
+          setValue("identityNumber", ocr.identityNumber, {
+            shouldValidate: true,
+          });
 
-        // Ngày sinh — backend trả yyyy-MM-dd, input type=date dùng đúng format này
-        if (ocr.dateOfBirth) setValue("dateOfBirth", ocr.dateOfBirth, { shouldValidate: true });
+        // Ngày sinh — cần chuyển đổi về định dạng yyyy-MM-dd cho thẻ input type="date"
+        if (ocr.dateOfBirth)
+          setValue("dateOfBirth", toInputDate(ocr.dateOfBirth), {
+            shouldValidate: true,
+          });
 
         // Giới tính: Chuẩn hoá về "Nam" hoặc "Nữ" để khớp giá trị radio input
         if (ocr.gender) {
@@ -250,36 +246,60 @@ export const StepOwnerIdentity: React.FC = () => {
         }
 
         // Quốc tịch
-        if (ocr.nationality) setValue("nationality", ocr.nationality, { shouldValidate: true });
+        if (ocr.nationality)
+          setValue("nationality", ocr.nationality, { shouldValidate: true });
 
         // Quê quán
-        if (ocr.placeOfOrigin) setValue("placeOfOrigin", ocr.placeOfOrigin, { shouldValidate: true });
+        if (ocr.placeOfOrigin)
+          setValue("placeOfOrigin", ocr.placeOfOrigin, {
+            shouldValidate: true,
+          });
 
         // Nơi thường trú
-        if (ocr.placeOfResidence) setValue("placeOfResidence", ocr.placeOfResidence, { shouldValidate: true });
+        if (ocr.placeOfResidence)
+          setValue("placeOfResidence", ocr.placeOfResidence, {
+            shouldValidate: true,
+          });
 
-        // Ngày cấp CCCD — yyyy-MM-dd
-        if (ocr.issueDate) setValue("issueDate", ocr.issueDate, { shouldValidate: true });
+        // Ngày cấp CCCD
+        if (ocr.issueDate)
+          setValue("issueDate", toInputDate(ocr.issueDate), {
+            shouldValidate: true,
+          });
 
-        // Ngày hết hạn CCCD — yyyy-MM-dd
-        if (ocr.expiryDate) setValue("expiryDate", ocr.expiryDate, { shouldValidate: true });
+        // Ngày hết hạn CCCD
+        if (ocr.expiryDate)
+          setValue("expiryDate", toInputDate(ocr.expiryDate), {
+            shouldValidate: true,
+          });
 
         // Đặc điểm nhận dạng
         if (ocr.personalIdentification)
-          setValue("personalIdentification", ocr.personalIdentification, { shouldValidate: true });
+          setValue("personalIdentification", ocr.personalIdentification, {
+            shouldValidate: true,
+          });
 
         // Nơi cấp
-        if (ocr.issuePlace) setValue("issuePlace", ocr.issuePlace, { shouldValidate: true });
+        if (ocr.issuePlace)
+          setValue("issuePlace", ocr.issuePlace, { shouldValidate: true });
       }
     } catch (err: unknown) {
-      const msg =
-        axios.isAxiosError(err)
-          ? err.response?.data?.message ?? "Không thể kết nối tới eKYC service. Hãy đảm bảo service đang chạy tại http://localhost:8000"
-          : "Đã xảy ra lỗi không xác định.";
+      const msg = axios.isAxiosError(err)
+        ? (err.response?.data?.message ??
+          "Không thể kết nối tới eKYC service. Hãy đảm bảo service đang chạy tại http://localhost:8000")
+        : "Đã xảy ra lỗi không xác định.";
       setEkycError(msg);
       setEkycStatus("error");
     }
-  }, [frontCccdFile, backCccdFile, faceInputMode, faceImageBase64, faceMediaFile, hasFaceData, setValue]);
+  }, [
+    frontCccdFile,
+    backCccdFile,
+    faceInputMode,
+    faceVideoBlob,
+    faceMediaFile,
+    hasFaceData,
+    setValue,
+  ]);
 
   // ---------- render ----------------------------------------------------------
   return (
@@ -291,7 +311,8 @@ export const StepOwnerIdentity: React.FC = () => {
           Bước 2: Thông tin định danh chủ sở hữu
         </h3>
         <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-          Upload ảnh CCCD (2 mặt) và xác thực khuôn mặt rồi nhấn <strong>Xác thực</strong> — hệ thống sẽ tự động đọc và điền thông tin.
+          Upload ảnh CCCD (2 mặt) và xác thực khuôn mặt rồi nhấn{" "}
+          <strong>Xác thực</strong> — hệ thống sẽ tự động đọc và điền thông tin.
         </p>
       </div>
 
@@ -356,35 +377,50 @@ export const StepOwnerIdentity: React.FC = () => {
 
       {/* ===== 2. Xác thực khuôn mặt ===== */}
       <div className="space-y-3">
-
-
         {/* === Chế độ CAMERA === */}
         {faceInputMode === "camera" && (
           <div
             className={`rounded-xl border p-4 transition-colors ${
-              faceImageBase64
+              faceVideoBlob
                 ? "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700"
                 : "bg-zinc-50 dark:bg-zinc-800/40 border-zinc-200 dark:border-zinc-700/60"
             }`}
           >
-            {faceImageBase64 ? (
+            {faceVideoBlob ? (
               <div className="py-2 w-full">
+                <div className="flex gap-2 justify-center mb-4">
+                  <div className="text-sm font-semibold text-emerald-700 flex items-center gap-1">
+                    <CheckCircle className="w-4 h-4" /> Đã lưu video Liveness (
+                    {((faceVideoBlob.size || 0) / 1024 / 1024).toFixed(2)} MB)
+                  </div>
+                </div>
                 <div className="grid grid-cols-2 gap-3 mt-4 w-full">
                   <button
                     type="button"
                     className="w-full py-2.5 px-4 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
-                    onClick={(e) => { e.preventDefault(); handleVerifyEkyc(); }}
-                    disabled={!frontCccdFile || !backCccdFile || ekycStatus === "loading"}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleVerifyEkyc();
+                    }}
+                    disabled={
+                      !frontCccdFile ||
+                      !backCccdFile ||
+                      ekycStatus === "loading"
+                    }
                   >
-                    {ekycStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                   Nhận diện giấy  tờ 
+                    {ekycStatus === "loading" ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : null}
+                    Nhận diện giấy tờ
                   </button>
                   <button
                     type="button"
                     className="w-full py-2.5 px-4 bg-[#8e94a4] hover:bg-[#7b8191] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2"
-                    onClick={() => setFaceImageBase64(null)}
+                    onClick={() => {
+                      setFaceVideoBlob(null);
+                    }}
                   >
-                    <RefreshCw className="w-4 h-4" /> Chụp lại ảnh
+                    <RefreshCw className="w-4 h-4" /> Quay lại video
                   </button>
                 </div>
               </div>
@@ -394,11 +430,20 @@ export const StepOwnerIdentity: React.FC = () => {
                   <button
                     type="button"
                     className="w-full py-2.5 px-4 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
-                    onClick={(e) => { e.preventDefault(); handleVerifyEkyc(); }}
-                    disabled={!frontCccdFile || !backCccdFile || ekycStatus === "loading"}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleVerifyEkyc();
+                    }}
+                    disabled={
+                      !frontCccdFile ||
+                      !backCccdFile ||
+                      ekycStatus === "loading"
+                    }
                   >
-                    {ekycStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                    Nhận diện giấy  tờ
+                    {ekycStatus === "loading" ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : null}
+                    Nhận diện giấy tờ
                   </button>
                   <button
                     type="button"
@@ -446,7 +491,9 @@ export const StepOwnerIdentity: React.FC = () => {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
                       <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-                      {faceMediaType === "image" ? "Đã upload ảnh khuôn mặt" : "Đã upload video khuôn mặt"}
+                      {faceMediaType === "image"
+                        ? "Đã upload ảnh khuôn mặt"
+                        : "Đã upload video khuôn mặt"}
                     </p>
                     <p
                       className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-0.5 truncate"
@@ -472,11 +519,20 @@ export const StepOwnerIdentity: React.FC = () => {
                     <button
                       type="button"
                       className="w-full py-2.5 px-4 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
-                      onClick={(e) => { e.preventDefault(); handleVerifyEkyc(); }}
-                      disabled={!frontCccdFile || !backCccdFile || ekycStatus === "loading"}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleVerifyEkyc();
+                      }}
+                      disabled={
+                        !frontCccdFile ||
+                        !backCccdFile ||
+                        ekycStatus === "loading"
+                      }
                     >
-                      {ekycStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                      Nhận diện giấy  tờ
+                      {ekycStatus === "loading" ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : null}
+                      Nhận diện giấy tờ
                     </button>
                     <button
                       type="button"
@@ -515,16 +571,24 @@ export const StepOwnerIdentity: React.FC = () => {
                     </div>
                   </div>
                 </label>
-                
                 <div className="flex flex-col items-center gap-3 pb-4 w-full">
                   <button
                     type="button"
                     className="w-full max-w-[280px] py-2.5 px-4 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
-                    onClick={(e) => { e.preventDefault(); handleVerifyEkyc(); }}
-                    disabled={!frontCccdFile || !backCccdFile || ekycStatus === "loading"}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleVerifyEkyc();
+                    }}
+                    disabled={
+                      !frontCccdFile ||
+                      !backCccdFile ||
+                      ekycStatus === "loading"
+                    }
                   >
-                    {ekycStatus === "loading" ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                    Nhận diện giấy  tờ
+                    {ekycStatus === "loading" ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : null}
+                    Nhận diện giấy tờ
                   </button>
                 </div>
               </>
@@ -543,8 +607,6 @@ export const StepOwnerIdentity: React.FC = () => {
         )}
       </div>
 
-
-
       {/* ===== 4. Nút xác thực (Đã được chuyển lên trên cạnh nút chụp) ===== */}
 
       {/* ===== 5. eKYC Result: Success ===== */}
@@ -555,18 +617,18 @@ export const StepOwnerIdentity: React.FC = () => {
             eKYC thành công — Thông tin đã được điền tự động
           </p>
           <div className="flex flex-wrap gap-3 text-xs text-emerald-700 dark:text-emerald-400">
-            {ekycResult.verification?.face?.matched && (
+            {ekycResult.face?.matched && (
               <span className="flex items-center gap-1">
                 <CheckCircle className="w-3.5 h-3.5" />
                 Khuôn mặt khớp
-                {ekycResult.verification.face.similarity != null && (
+                {ekycResult.face.bestSimilarity != null && (
                   <span className="font-semibold ml-0.5">
-                    ({(ekycResult.verification.face.similarity * 100).toFixed(1)}%)
+                    ({(ekycResult.face.bestSimilarity * 100).toFixed(1)}%)
                   </span>
                 )}
               </span>
             )}
-            {!ekycResult.verification?.face?.matched && hasFaceData && (
+            {!ekycResult.face?.matched && hasFaceData && (
               <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
                 <AlertTriangle className="w-3.5 h-3.5" />
                 Khuôn mặt chưa khớp — vui lòng thử lại với ảnh/video rõ hơn
@@ -582,8 +644,12 @@ export const StepOwnerIdentity: React.FC = () => {
         <div className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/40 p-4 flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
           <div>
-            <p className="text-sm font-semibold text-red-700 dark:text-red-300">Xác thực eKYC thất bại</p>
-            <p className="text-xs text-red-600 dark:text-red-400 mt-0.5">{ekycError}</p>
+            <p className="text-sm font-semibold text-red-700 dark:text-red-300">
+              Xác thực eKYC thất bại
+            </p>
+            <p className="text-xs text-red-600 dark:text-red-400 mt-0.5">
+              {ekycError}
+            </p>
           </div>
         </div>
       )}
@@ -595,7 +661,7 @@ export const StepOwnerIdentity: React.FC = () => {
             Thông tin giấy tờ
           </h4>
         </div>
-        
+
         {/* 1. Full Name */}
         <InputField
           label="Họ và tên chủ sở hữu"
@@ -671,7 +737,9 @@ export const StepOwnerIdentity: React.FC = () => {
             </label>
           </div>
           {errors.gender?.message && (
-            <p className="text-xs text-red-500 font-medium">{errors.gender.message}</p>
+            <p className="text-xs text-red-500 font-medium">
+              {errors.gender.message}
+            </p>
           )}
         </div>
 
@@ -688,17 +756,12 @@ export const StepOwnerIdentity: React.FC = () => {
           className="body-text"
         />
 
-
-
         {/* 7. Issue Date */}
         <InputField
           label="Ngày cấp CCCD"
           type="date"
-          required
           icon={<Calendar className="w-4 h-4 text-zinc-400" />}
-          {...register("issueDate", {
-            required: "Vui lòng chọn ngày cấp CCCD",
-          })}
+          {...register("issueDate")}
           error={errors.issueDate?.message}
           className="body-text"
         />
@@ -716,8 +779,6 @@ export const StepOwnerIdentity: React.FC = () => {
           className="body-text"
         />
 
-
-
         {/* 10. Place of Origin */}
         <InputField
           label="Quê quán"
@@ -730,19 +791,16 @@ export const StepOwnerIdentity: React.FC = () => {
           error={errors.placeOfOrigin?.message}
           className="body-text"
         />
-
-
       </div>
 
       {/* Camera Modal */}
       <CameraModal
         isOpen={isCameraOpen}
         onClose={() => setIsCameraOpen(false)}
-        onCaptureSuccess={(imgSrc) => {
-          setFaceImageBase64(imgSrc);
+        onCaptureSuccess={(result) => {
+          setFaceVideoBlob(result.videoBlob);
         }}
       />
     </div>
   );
 };
-
