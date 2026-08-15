@@ -45,7 +45,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         discountSubquery.select(cb.max(ppRoot.get("discountPercent")));
         discountSubquery.where(
             cb.equal(ppRoot.get("product"), product),
-            cb.greaterThan(availableQty, 0),
+            cb.greaterThan(availableQty.as(Integer.class), 0),
             cb.equal(promJoin.get("status"), com.dev.backend.common.enums.PromotionStatus.ACTIVE),
             cb.lessThanOrEqualTo(promJoin.get("startDate"), java.time.LocalDateTime.now()),
             cb.greaterThanOrEqualTo(promJoin.get("endDate"), java.time.LocalDateTime.now())
