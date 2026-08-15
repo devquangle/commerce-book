@@ -103,13 +103,16 @@ public class AuthServiceImpl implements AuthService {
                 + remaining
                 + " lần thử";
     }
+
     @Override
+    @Transactional
     public void resetFailedAttempts(User user) {
         user.setFailedAttempts(0);
         authRepository.save(user);
     }
 
     @Override
+    @Transactional
     public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -144,12 +147,10 @@ public class AuthServiceImpl implements AuthService {
                     .build();
 
         } catch (BadCredentialsException ex) {
-            String message =
-                processLoginFail(
-                        loginRequest.getEmail()
-                );
+            String message = processLoginFail(
+                    loginRequest.getEmail());
 
-        throw new UnauthorizedException(message);
+            throw new UnauthorizedException(message);
         }
     }
 
