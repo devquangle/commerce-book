@@ -1,49 +1,41 @@
 import React from "react";
 import { AuthContext } from "../context/useAuth";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 import type { UserResponse } from "@/modules/auth/types/user.type";
 import type { LoginRequest } from "@/modules/auth/types/login.type";
 import type { RoleType } from "@/libs/constant/role.type";
+
 import { AuthService } from "@/modules/auth/services/auth.service";
-import { getToken, setToken, removeToken } from "@/libs/utils/cookie";
+import { setToken, removeToken } from "@/libs/utils/cookie";
 import { TokenType } from "@/libs/constant/token.type";
+
+import {
+  useGetUserQuery,
+  useLoginMutation,
+  authKeys,
+} from "@/modules/auth/hooks/useAuth";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const queryClient = useQueryClient();
-  const { data: user, isLoading, isError } = useQuery({
-    queryKey: ["auth", "me"],
-    queryFn: async () => {
-      if (
-        !getToken(TokenType.ACCESS_TOKEN)
-      ) {
-        return null;
-      }
-      return await AuthService.getUser();
-    },
-    retry: false,
-    refetchOnWindowFocus: false,
-    staleTime: 5 * 60 * 1000,
-  });
+  const { data: user, isLoading, isError } = useGetUserQuery();
 
-  // Thay vì dùng useState + useEffect (gây lỗi render nhiều lần), chúng ta lấy trực tiếp từ cache của React Query
-  const userInfo = user || null;
+  const { mutateAsync: loginMutation } = useLoginMutation();
+  const userInfo = user ?? null;
   const isAuthenticated = !!user && !isError;
   const isInitialized = !isLoading;
-
-  // Giữ lại hàm setUserInfo để tương thích với AuthContext, nhưng dùng QueryCache làm nguồn sự thật
   const setUserInfo = (newUser: UserResponse | null) => {
-    queryClient.setQueryData(["auth", "me"], newUser);
+    queryClient.setQueryData(authKeys.user(), newUser);
   };
-
   const login = async (request: LoginRequest): Promise<UserResponse | null> => {
-    const res = await AuthService.login(request);
-    setToken(TokenType.ACCESS_TOKEN, res.accessToken);
-    console.log(res);
+    const data = await loginMutation(request);
+
+    setToken(TokenType.ACCESS_TOKEN, data.accessToken);
+
     const fetchedUser = await queryClient.fetchQuery({
-      queryKey: ["auth", "me"],
+      queryKey: authKeys.user(),
       queryFn: () => AuthService.getUser(),
     });
 
@@ -53,7 +45,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = async (): Promise<void> => {
     removeToken(TokenType.ACCESS_TOKEN);
     removeToken(TokenType.REFRESH_TOKEN);
-    setUserInfo(null);
+    queryClient.setQueryData(authKeys.user(), null);
     window.location.href = "/login";
   };
 
@@ -67,7 +59,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         userInfo,
         setUserInfo,
         isAuthenticated,
-
         isInitialized,
         login,
         logout,

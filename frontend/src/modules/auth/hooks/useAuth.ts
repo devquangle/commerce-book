@@ -3,6 +3,8 @@ import { AuthService } from "../services/auth.service";
 import type { LoginRequest } from "../types/login.type";
 import type { UserRequest, ChangePasswordRequest } from "../types/user.type";
 import type { RegisterUserRequest, VerifyTokenRequest } from "../types/register-user";
+import { getToken } from "@/libs/utils/cookie";
+import { TokenType } from "@/libs/constant/token.type";
 
 export const authKeys = {
   all: ["auth"] as const,
@@ -18,8 +20,15 @@ export const useLoginMutation = () => {
 export const useGetUserQuery = () => {
   return useQuery({
     queryKey: authKeys.user(),
-    queryFn: () => AuthService.getUser(),
+    queryFn: async () => {
+      if (!getToken(TokenType.ACCESS_TOKEN)) {
+        return null;
+      }
+      return await AuthService.getUser();
+    },
     retry: false,
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
   });
 };
 
