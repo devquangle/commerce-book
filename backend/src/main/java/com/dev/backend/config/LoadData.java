@@ -3,14 +3,11 @@ package com.dev.backend.config;
 import com.dev.backend.modules.author.service.AuthorService;
 import com.dev.backend.modules.genre.service.GenreService;
 import com.dev.backend.modules.publisher.service.PublisherService;
-import com.dev.backend.modules.role.repository.RoleRepository;
-import com.dev.backend.modules.series.service.SeriesService;
-import com.dev.backend.modules.user.repository.UserRepository;
 
+import com.dev.backend.modules.series.service.SeriesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

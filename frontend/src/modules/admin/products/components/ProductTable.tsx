@@ -6,8 +6,7 @@ import {
   Package,
   Store,
   AlertCircle,
-  ChevronDown,
-  ChevronUp,
+  ChevronDown
 } from "lucide-react";
 import { Pagination } from "@/components/common/Pagination";
 import { Tooltip } from "@/components/common/Tooltip";
