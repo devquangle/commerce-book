@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
                         .status(UserStatus.ACTIVE.name())
                         .enabled(true)
                         .accountNonLocked(true)
-                        .failedAttempt(0)
+                        .failedAttempts(0)
                         .tokenVersion(0)
                         .build();
 
@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService {
                 .status(UserStatus.ACTIVE.name())
                 .enabled(true)
                 .accountNonLocked(true)
-                .failedAttempt(0)
+                .failedAttempts(0)
                 .tokenVersion(0)
                 .build();
 

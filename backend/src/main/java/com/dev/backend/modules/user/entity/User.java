@@ -66,8 +66,8 @@ public class User extends BaseEntity {
     @Column(name = "account_non_locked")
     private boolean accountNonLocked = true;
 
-    @Column(name = "failed_attempt")
-    private int failedAttempt;
+    @Column(name = "failed_attempts")
+    private int failedAttempts;
 
     @Column(name = "token_version")
     private int tokenVersion;

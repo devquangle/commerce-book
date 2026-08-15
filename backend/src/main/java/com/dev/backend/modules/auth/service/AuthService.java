@@ -16,6 +16,8 @@ public interface AuthService {
 
     LoginResponse login(LoginRequest request, HttpServletResponse response);
 
+    String processLoginFail(String email);
+
     RefreshResponse refreshToken(HttpServletRequest request);
 
     void validate(UserRequest request);

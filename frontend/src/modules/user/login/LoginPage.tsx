@@ -8,8 +8,10 @@ import type { LoginRequest } from "@/modules/auth/types/login.type";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
-import { showSuccessToast } from "./../../../libs/utils/toastUtil";
+import { showErrorToast, showSuccessToast } from "./../../../libs/utils/toastUtil";
 import Spinner from "@/components/common/Spinner";
+import type { AxiosError } from "axios";
+import type { ApiResponse } from "@/libs/utils/api-response";
 
 const LoginPage = () => {
   const {
@@ -25,20 +27,26 @@ const LoginPage = () => {
     setIsLoading(true);
     try {
       const user = await auth.login(requestData);
-      showSuccessToast("Đăng nhập thành công!");
-      if (user && user.role === "USER") {
-        navigate("/home")
-      } else {
-        navigate("/admin");
+      if (user) {
+        showSuccessToast("Đăng nhập thành công!");
+        if (user && user.role === "USER") {
+          navigate("/home");
+        } else {
+          navigate("/admin");
+        }
       }
     } catch (error: unknown) {
+        const axiosError = error as AxiosError<ApiResponse<unknown>>;
+             const errorMessage =
+               axiosError.response?.data?.message || (error as Error).message;
+      showErrorToast(errorMessage);
       mapServerErrors(error, setError);
     } finally {
       setIsLoading(false);
     }
   };
   if (isLoading) {
-    return <Spinner />; 
+    return <Spinner />;
   }
   return (
     <Container className="px-4 md:px-8">
@@ -91,11 +99,7 @@ const LoginPage = () => {
             />
 
             {/* Login button */}
-            <Button
-              type="submit"
-              className="mt-2 py-3"
-              fullWidth
-            >
+            <Button type="submit" className="mt-2 py-3" fullWidth>
               Đăng nhập
             </Button>
 

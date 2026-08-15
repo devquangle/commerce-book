@@ -75,6 +75,36 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
+    public String processLoginFail(String email) {
+
+        User user = authRepository.findByEmail(email)
+                .orElseThrow(() -> new UnauthorizedException(
+                        "Email hoặc mật khẩu không chính xác"));
+
+        int failedAttempts = user.getFailedAttempts() + 1;
+
+        user.setFailedAttempts(failedAttempts);
+
+        if (failedAttempts >= 5) {
+
+            user.setAccountNonLocked(false);
+
+            authRepository.save(user);
+
+            return "Tài khoản đã bị khóa do nhập sai mật khẩu 5 lần";
+        }
+
+        authRepository.save(user);
+
+        int remaining = 5 - failedAttempts;
+
+        return "Mật khẩu không chính xác. Bạn còn "
+                + remaining
+                + " lần thử";
+    }
+
+    @Override
     public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -109,8 +139,12 @@ public class AuthServiceImpl implements AuthService {
                     .build();
 
         } catch (BadCredentialsException ex) {
-            // userService.processLoginFail(loginRequest.getEmail());
-            throw ex;
+            String message =
+                processLoginFail(
+                        loginRequest.getEmail()
+                );
+
+        throw new UnauthorizedException(message);
         }
     }
 

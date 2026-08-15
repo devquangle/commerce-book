@@ -4,7 +4,6 @@ import {
   Store,
   AlertCircle,
   ChevronDown,
-  ChevronUp,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { ProductActionMenu } from "./ProductActionMenu";
