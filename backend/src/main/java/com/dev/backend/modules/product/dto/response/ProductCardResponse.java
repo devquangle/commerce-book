@@ -1,0 +1,42 @@
+package com.dev.backend.modules.product.dto.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class ProductCardResponse {
+    private Long productId;
+    private String productName;
+    private Integer price; // giá sản phẩm product.price
+    private Integer discountPercent;// phần %
+    private Integer salePrice; // giá bán price × (100 - discountPercent) / 100
+    private Double averageRating;// đánh giá trung bình 1-5
+    private Integer soldCount;
+
+    private Long shopId;
+    private String shopSlug;
+    private String shopName;
+
+    private boolean isFavorite;
+
+    public ProductCardResponse(Long productId, String productName, Integer price,
+                               Integer discountPercent, Integer salePrice,
+                               Long shopId, String shopSlug, String shopName) {
+        this.productId = productId;
+        this.productName = productName;
+        this.price = price;
+        this.discountPercent = discountPercent != null ? discountPercent : 0;
+        this.salePrice = salePrice != null ? salePrice : price;
+        this.shopId = shopId;
+        this.shopSlug = shopSlug;
+        this.shopName = shopName;
+        this.averageRating = 0.0;
+        this.soldCount = 0;
+        this.isFavorite = false;
+    }
+}
