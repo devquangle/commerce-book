@@ -103,6 +103,11 @@ public class AuthServiceImpl implements AuthService {
                 + remaining
                 + " lần thử";
     }
+    @Override
+    public void resetFailedAttempts(User user) {
+        user.setFailedAttempts(0);
+        authRepository.save(user);
+    }
 
     @Override
     public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
@@ -131,7 +136,7 @@ public class AuthServiceImpl implements AuthService {
                     user.getId(),
                     user.getTokenVersion());
             CookieUtil.addCookie(response, "refreshToken", refreshToken);
-            // userService.resetFailedAttempts(user);
+            resetFailedAttempts(user);
 
             log.debug("Login success. Access token: {}", accessToken);
             return LoginResponse.builder()

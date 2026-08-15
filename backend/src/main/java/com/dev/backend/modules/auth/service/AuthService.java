@@ -8,7 +8,7 @@ import com.dev.backend.modules.auth.dto.RegisterRequest;
 import com.dev.backend.modules.auth.dto.RegisterUserRequest;
 import com.dev.backend.modules.user.dto.UserRequest;
 import com.dev.backend.modules.user.dto.UserResponse;
-
+import com.dev.backend.modules.user.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -17,6 +17,8 @@ public interface AuthService {
     LoginResponse login(LoginRequest request, HttpServletResponse response);
 
     String processLoginFail(String email);
+
+    void resetFailedAttempts(User user);
 
     RefreshResponse refreshToken(HttpServletRequest request);
 
