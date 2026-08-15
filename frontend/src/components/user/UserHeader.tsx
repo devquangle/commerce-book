@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Search, Mic, Image as ImageIcon } from "lucide-react";
+import { Search, Mic, Image as ImageIcon, ShoppingCart } from "lucide-react";
 
 import { Logo } from "../common/Logo";
 import { SidebarToggle } from "./SidebarToggle";
@@ -48,6 +48,12 @@ export const UserHeader: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
+          <Link to="/cart" className="relative p-2 text-zinc-600 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors">
+            <ShoppingCart className="w-5 h-5" />
+            <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-500 rounded-full border border-white dark:border-zinc-900 transform translate-x-1 -translate-y-1">
+              3
+            </span>
+          </Link>
           <AccountMenu />
         </div>
       </Container>

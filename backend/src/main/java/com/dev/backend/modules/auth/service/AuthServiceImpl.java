@@ -139,7 +139,10 @@ public class AuthServiceImpl implements AuthService {
                     user.getId(),
                     user.getTokenVersion());
             CookieUtil.addCookie(response, "refreshToken", refreshToken);
-            resetFailedAttempts(user);
+
+            if (user != null) {
+                resetFailedAttempts(user);
+            }
 
             log.debug("Login success. Access token: {}", accessToken);
             return LoginResponse.builder()
