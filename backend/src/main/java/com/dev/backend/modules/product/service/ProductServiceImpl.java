@@ -16,11 +16,14 @@ import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.dto.ProductShopResponse;
 import com.dev.backend.modules.product.dto.request.SuperAdminFilterRequest;
+import com.dev.backend.modules.product.dto.request.UserFilterRequest;
+import com.dev.backend.modules.product.dto.response.ProductCardResponse;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductProjection;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.entity.Product;
 import com.dev.backend.modules.product.mapper.ProductMapper;
 import com.dev.backend.modules.product.repository.ProductRepository;
+import com.dev.backend.modules.product.repository.ProductRepositoryImpl;
 import com.dev.backend.modules.publisher.service.PublisherService;
 import com.dev.backend.modules.series.service.SeriesService;
 import com.dev.backend.modules.shop.dto.ShopSimpleResponse;
@@ -49,6 +52,7 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
         private final ProductRepository productRepository;
+        private final ProductRepositoryImpl productRepositoryImpl;
         private final ProductMapper productMapper;
 
         private final PublisherService publisherService;
@@ -333,4 +337,22 @@ public class ProductServiceImpl implements ProductService {
 
                 return savedProduct;
         }
+
+        @Override
+        public PageResponse<ProductCardResponse> filterProductsForUser(UserFilterRequest request, Long userId) {
+                Pageable pageable = PageRequest.of(
+                                Math.max(0, Optional.ofNullable(request.getPage()).orElse(1) - 1),
+                                Optional.ofNullable(request.getSize()).filter(s -> s > 0).orElse(10),
+                                Sort.by(Sort.Direction.DESC, "id"));
+
+                Page<ProductCardResponse> page = productRepositoryImpl.searchProductsForUser(request, userId, pageable);
+
+                return new PageResponse<>(
+                                page.getContent(),
+                                page.getNumber(),
+                                page.getSize(),
+                                page.getTotalElements(),
+                                page.getTotalPages());
+        }
+
 }

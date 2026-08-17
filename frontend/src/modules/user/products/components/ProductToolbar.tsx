@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Flame, Star, BookOpen, ArrowDown, Gift, Filter, Search, ChevronDown } from 'lucide-react';
+import React, { useState } from 'react';
+import { Flame, Star, ArrowDown, Gift, Filter, Search } from 'lucide-react';
 import { useSearchProductsFilter } from '../hooks/useSearchProductsFilter';
-import { SORT_OPTIONS } from '../types/search-product';
+import { SORT_OPTIONS, type SortType } from '../types/search-product';
 import { SelectBox } from '../../../../components/common/SelectBox';
 
 const ProductToolbar = ({ onOpenFilter }: { onOpenFilter: () => void }) => {
   const { filterOptions, handleUpdateField } = useSearchProductsFilter();
   const [keywordStr, setKeywordStr] = useState(filterOptions.keyword || '');
+  const [prevKeyword, setPrevKeyword] = useState(filterOptions.keyword);
 
-  // Sync state if URL changes externally
-  useEffect(() => {
+  // Sync state if URL changes externally (without useEffect to avoid cascading renders)
+  if (filterOptions.keyword !== prevKeyword) {
+    setPrevKeyword(filterOptions.keyword);
     setKeywordStr(filterOptions.keyword || '');
-  }, [filterOptions.keyword]);
+  }
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,15 +101,15 @@ const ProductToolbar = ({ onOpenFilter }: { onOpenFilter: () => void }) => {
           <span className="font-semibold text-slate-800">24</span> sản phẩm
         </div>
         
-        <div className="w-[180px]">
+        <div className="w-45">
           <SelectBox 
             value={filterOptions.sort || ''}
-            onChange={(e) => handleUpdateField('sort', e.target.value as any)}
+            onChange={(e) => handleUpdateField('sort', e.target.value as SortType)}
             options={SORT_OPTIONS.map(opt => ({
               value: opt.value,
               label: opt.label === "Tất cả" ? "Phổ biến nhất" : opt.label
             }))}
-            className="bg-white border-slate-200 text-slate-700 font-medium !h-[42px] shadow-sm hover:bg-slate-50/50"
+            className="bg-white border-slate-200 text-slate-700 font-medium h-10.5! shadow-sm hover:bg-slate-50/50"
           />
         </div>
       </div>

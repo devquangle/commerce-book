@@ -25,6 +25,8 @@ import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.dto.ProductShopResponse;
 import com.dev.backend.modules.product.dto.RejectProductRequest;
 import com.dev.backend.modules.product.dto.request.SuperAdminFilterRequest;
+import com.dev.backend.modules.product.dto.request.UserFilterRequest;
+import com.dev.backend.modules.product.dto.response.ProductCardResponse;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.service.ProductService;
 import com.dev.backend.security.custom.CustomUserDetails;
@@ -109,5 +111,14 @@ public class ProductController {
             @Valid @RequestBody RejectProductRequest request) {
         productService.reject(id, request.getReason());
         return ResponseUtil.successMessage("Từ chối sản phẩm thành công.");
+    }
+
+    @GetMapping("/products/filter")
+    public ResponseEntity<ResponseData<PageResponse<ProductCardResponse>>> searchProductsForUser(
+            @ModelAttribute UserFilterRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = userDetails != null ? userDetails.getUserId() : null;
+        PageResponse<ProductCardResponse> response = productService.searchProductsForUser(request, userId);
+        return ResponseUtil.success("Lấy danh sách sản phẩm thành công", response);
     }
 }

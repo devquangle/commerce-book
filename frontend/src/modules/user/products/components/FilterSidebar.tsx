@@ -43,7 +43,8 @@ const FilterSection = ({
   );
 };
 
-const FilterListSection = ({
+const FilterListSection = <T extends { name: string }>({
+
   title,
   isOpen,
   onToggle,
@@ -54,14 +55,15 @@ const FilterListSection = ({
   emptyText = "Không có dữ liệu",
   hideDivider,
   children
+
 }: {
   title: string;
   isOpen: boolean;
   onToggle: () => void;
-  data: any[];
+  data: T[];
   searchable?: boolean;
   limit?: number;
-  renderItem: (item: any) => React.ReactNode;
+  renderItem: (item: T) => React.ReactNode;
   emptyText?: string;
   hideDivider?: boolean;
   children?: React.ReactNode;
@@ -82,7 +84,7 @@ const FilterListSection = ({
 
   return (
     <FilterSection title={title} isOpen={isOpen} onToggle={onToggle} hideDivider={hideDivider}>
-      {searchable && data && data.length > limit && (
+      {searchable && data && data.length > 0 && (
         <div className="relative mb-2">
           <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
             <Search size={14} className="text-slate-400" />
@@ -135,7 +137,7 @@ const RadioOption = ({
   return (
     <label className="flex items-center gap-3 cursor-pointer group">
       <input type="radio" className="hidden" checked={checked} onChange={onChange} />
-      <div className={`w-[18px] h-[18px] shrink-0 rounded-full border flex items-center justify-center transition-colors ${checked ? 'border-blue-500 bg-blue-500' : 'border-slate-300'}`}>
+      <div className={`w-4.5 h-4.5 shrink-0 rounded-full border flex items-center justify-center transition-colors ${checked ? 'border-blue-500 bg-blue-500' : 'border-slate-300'}`}>
         {checked && <div className="w-2 h-2 rounded-full bg-white" />}
       </div>
       {icon && (
@@ -169,7 +171,7 @@ const CheckboxOption = ({
   return (
     <label className="flex items-center gap-3 cursor-pointer group">
       <input type="checkbox" className="hidden" checked={checked} onChange={onChange} />
-      <div className={`w-[18px] h-[18px] shrink-0 rounded flex items-center justify-center transition-colors ${checked ? 'bg-blue-500 border-blue-500' : 'border border-slate-300'}`}>
+      <div className={`w-4.5 h-4.5 shrink-0 rounded flex items-center justify-center transition-colors ${checked ? 'bg-blue-500 border-blue-500' : 'border border-slate-300'}`}>
         {checked && (
           <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -238,10 +240,10 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
       )}
       
       <div className={`
-        fixed inset-y-0 left-0 z-50 w-[300px] bg-white flex flex-col shrink-0 h-full
+        fixed inset-y-0 left-0 z-50 w-75 bg-white flex flex-col shrink-0 h-full
         transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:relative lg:translate-x-0 lg:z-0 lg:w-[280px] lg:rounded-xl lg:shadow-sm lg:border lg:border-slate-100 lg:h-auto
+        lg:relative lg:translate-x-0 lg:z-0 lg:w-70 lg:rounded-xl lg:shadow-sm lg:border lg:border-slate-100 lg:h-auto
       `}>
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-slate-100 bg-white z-10 lg:rounded-t-xl shrink-0">

@@ -10,6 +10,8 @@ import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.dto.ProductShopResponse;
 import com.dev.backend.modules.product.dto.request.SuperAdminFilterRequest;
+import com.dev.backend.modules.product.dto.request.UserFilterRequest;
+import com.dev.backend.modules.product.dto.response.ProductCardResponse;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.entity.Product;
 import com.dev.backend.modules.shop.dto.ShopSimpleResponse;
@@ -51,4 +53,7 @@ public interface ProductService {
         void reject(Long id, String reasons);
 
         Map<Long, ShopSimpleResponse> findShopMap(List<Long> productIds);
+
+        PageResponse<ProductCardResponse> filterProductsForUser(
+                        UserFilterRequest request, Long userId);
 }

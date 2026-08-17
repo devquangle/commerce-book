@@ -24,9 +24,16 @@ public class ProductCardResponse {
 
     private boolean isFavorite;
 
+
     public ProductCardResponse(Long productId, String productName, Integer price,
                                Integer discountPercent, Integer salePrice,
                                Long shopId, String shopSlug, String shopName) {
+        this(productId, productName, price, discountPercent, salePrice, shopId, shopSlug, shopName, false);
+    }
+
+    public ProductCardResponse(Long productId, String productName, Integer price,
+                               Integer discountPercent, Integer salePrice,
+                               Long shopId, String shopSlug, String shopName, Boolean isFavorite) {
         this.productId = productId;
         this.productName = productName;
         this.price = price;
@@ -37,6 +44,6 @@ public class ProductCardResponse {
         this.shopName = shopName;
         this.averageRating = 0.0;
         this.soldCount = 0;
-        this.isFavorite = false;
+        this.isFavorite = isFavorite != null ? isFavorite : false;
     }
 }

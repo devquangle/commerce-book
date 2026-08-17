@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import FilterSidebar from '../components/FilterSidebar';
 import ProductToolbar from '../components/ProductToolbar';
 import { useSearchProductsFilter } from '../hooks/useSearchProductsFilter';
+import Container from '@/components/common/Container';
 
 const SearchProductsPage = () => {
   const { filterOptions, handleUpdateField, resetFilters } = useSearchProductsFilter();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] py-4 px-4 md:py-8 md:px-6 flex justify-center font-sans">
-      <div className="max-w-[1300px] w-full flex flex-col lg:flex-row gap-6 lg:gap-8">
+    <div className="min-h-screen mx-auto w-full space-y-16 py-6">
+      <Container className="flex flex-col lg:flex-row gap-6">
         {/* Left Sidebar */}
         <FilterSidebar 
           filterOptions={filterOptions} 
@@ -28,7 +29,7 @@ const SearchProductsPage = () => {
             Network Error. Hiển thị dữ liệu mẫu.
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 };

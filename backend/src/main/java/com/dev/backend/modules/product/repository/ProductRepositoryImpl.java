@@ -24,7 +24,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public Page<ProductCardResponse> searchProductsForUser(UserFilterRequest request, Pageable pageable) {
+    public Page<ProductCardResponse> searchProductsForUser(UserFilterRequest request,Long userId, Pageable pageable) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<ProductCardResponse> query = cb.createQuery(ProductCardResponse.class);
         Root<Product> product = query.from(Product.class);
@@ -57,6 +57,20 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             100
         );
 
+        Expression<Boolean> isFavoriteExpr;
+        if (userId != null) {
+            Subquery<Long> favSubquery = query.subquery(Long.class);
+            Root<com.dev.backend.modules.favorite.entity.Favorite> favRoot = favSubquery.from(com.dev.backend.modules.favorite.entity.Favorite.class);
+            favSubquery.select(cb.literal(1L));
+            favSubquery.where(
+                cb.equal(favRoot.get("product"), product),
+                cb.equal(favRoot.get("user").get("id"), userId)
+            );
+            isFavoriteExpr = cb.exists(favSubquery);
+        } else {
+            isFavoriteExpr = cb.literal(false);
+        }
+
         query.select(cb.construct(ProductCardResponse.class,
                 product.get("id"),
                 product.get("name"),
@@ -65,7 +79,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 salePriceExpr.as(Integer.class),
                 shop.get("id"),
                 shop.get("slug"),
-                shop.get("name")
+                shop.get("name"),
+                isFavoriteExpr
         ));
 
         query.distinct(true);

@@ -34,7 +34,7 @@ export const useSearchProductsFilter = (initialState?: Partial<SearchProductsFil
       rating: searchParams.get('rating') ? Number(searchParams.get('rating')) : initialState?.rating || initialFilterOptions.rating,
       page: searchParams.get('page') ? Number(searchParams.get('page')) : initialState?.page || initialFilterOptions.page,
       size: searchParams.get('size') ? Number(searchParams.get('size')) : initialState?.size || initialFilterOptions.size,
-      sort: (searchParams.get('sort') as any) || initialState?.sort || initialFilterOptions.sort,
+      sort: (searchParams.get('sort') as SearchProductsFilter['sort']) || initialState?.sort || initialFilterOptions.sort,
       hasPromotion: searchParams.get('hasPromotion') || initialState?.hasPromotion || initialFilterOptions.hasPromotion,
     };
   }, [searchParams, initialState]);
@@ -62,7 +62,7 @@ export const useSearchProductsFilter = (initialState?: Partial<SearchProductsFil
   }, [filterOptions, navigate, location.pathname]);
 
   const handleUpdateField = useCallback(<K extends keyof SearchProductsFilter>(key: K, value: SearchProductsFilter[K]) => {
-    updateFilter({ [key]: value } as any);
+    updateFilter({ [key]: value } as Partial<SearchProductsFilter>);
   }, [updateFilter]);
 
   const resetFilters = useCallback(() => {
