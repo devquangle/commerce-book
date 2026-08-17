@@ -31,3 +31,10 @@ export interface SeriesFilterRequest {
   page?: number;
   size?: number;
 }
+
+export interface SeriesProductResponse {
+  id: number;
+  name: string;
+  slug: string;
+  bookCount: number;
+}

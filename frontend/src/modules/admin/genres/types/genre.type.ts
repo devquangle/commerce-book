@@ -31,3 +31,10 @@ export interface GenreFilterRequest {
   page?: number;
   size?: number;
 }
+
+export interface GenreProductResponse {
+  id: number;
+  name: string;
+  slug: string;
+  bookCount: number;
+}

@@ -1,5 +1,5 @@
 import { authAxios } from "@/libs/config/axios.config";
-import type { GenreFilterRequest, GenreRequest, GenreResponse } from "../types/genre.type";
+import type { GenreFilterRequest, GenreProductResponse, GenreRequest, GenreResponse } from "../types/genre.type";
 import type { Pagination } from "@/libs/utils/pagination";
 import type { ApiResponse } from "@/libs/utils/api-response";
 
@@ -43,5 +43,19 @@ const GenreService = {
       throw new Error(response.data.message || "Failed to delete genre");
     }
   },
+  getGenresWithBookCount: async (): Promise<GenreProductResponse[]> => {
+  const response = await authAxios.get<ApiResponse<GenreProductResponse[]>>(
+    "/api/v1/genres"
+  );
+
+  if (!response.data.success || !response.data.data) {
+    throw new Error(
+      response.data.message || "Failed to get genres with book count"
+    );
+  }
+
+  return response.data.data;
+},
+
 };
 export default GenreService;

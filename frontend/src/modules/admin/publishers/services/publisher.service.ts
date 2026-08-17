@@ -1,5 +1,10 @@
 import { authAxios } from "@/libs/config/axios.config";
-import type { PublisherFilterRequest, PublisherRequest, PublisherResponse } from "../types/publisher.type";
+import type {
+  PublisherFilterRequest,
+  PublisherProductResponse,
+  PublisherRequest,
+  PublisherResponse,
+} from "../types/publisher.type";
 import type { Pagination } from "@/libs/utils/pagination";
 import type { ApiResponse } from "@/libs/utils/api-response";
 
@@ -11,7 +16,9 @@ const PublisherService = {
       ApiResponse<Pagination<PublisherResponse>>
     >(`/api/v1/admin/publishers/filter`, { params: option });
     if (!response.data.success || !response.data.data) {
-      throw new Error(response.data.message || "Failed to fetch publisher data");
+      throw new Error(
+        response.data.message || "Failed to fetch publisher data",
+      );
     }
     return response.data.data;
   },
@@ -25,7 +32,10 @@ const PublisherService = {
     }
     return response.data.data;
   },
-  update: async (id: number, request: PublisherRequest): Promise<PublisherResponse> => {
+  update: async (
+    id: number,
+    request: PublisherRequest,
+  ): Promise<PublisherResponse> => {
     const response = await authAxios.put<ApiResponse<PublisherResponse>>(
       `/api/v1/admin/publishers/${id}`,
       request,
@@ -42,6 +52,20 @@ const PublisherService = {
     if (!response.data.success) {
       throw new Error(response.data.message || "Failed to delete publisher");
     }
+  },
+  getPublishersWithBookCount: async (): Promise<PublisherProductResponse[]> => {
+    const response =
+      await authAxios.get<ApiResponse<PublisherProductResponse[]>>(
+        "/api/v1/publishers",
+      );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error(
+        response.data.message || "Failed to get publishers with book count",
+      );
+    }
+
+    return response.data.data;
   },
 };
 export default PublisherService;

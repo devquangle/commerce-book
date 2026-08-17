@@ -31,3 +31,10 @@ export interface PublisherFilterRequest {
   page?: number;
   size?: number;
 }
+
+export interface PublisherProductResponse {
+  id: number;
+  name: string;
+  slug: string;
+  bookCount: number;
+}

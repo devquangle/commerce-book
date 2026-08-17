@@ -1,5 +1,5 @@
 import { authAxios } from "@/libs/config/axios.config";
-import type { SeriesFilterRequest, SeriesRequest, SeriesResponse } from "../types/series.type";
+import type { SeriesFilterRequest, SeriesProductResponse, SeriesRequest, SeriesResponse } from "../types/series.type";
 import type { Pagination } from "@/libs/utils/pagination";
 import type { ApiResponse } from "@/libs/utils/api-response";
 
@@ -43,5 +43,18 @@ const SeriesService = {
       throw new Error(response.data.message || "Failed to delete series");
     }
   },
+  getSeriesWithBookCount: async (): Promise<SeriesProductResponse[]> => {
+  const response = await authAxios.get<ApiResponse<SeriesProductResponse[]>>(
+    "/api/v1/series"
+  );
+
+  if (!response.data.success || !response.data.data) {
+    throw new Error(
+      response.data.message || "Failed to get series with book count"
+    );
+  }
+
+  return response.data.data;
+},
 };
 export default SeriesService;
