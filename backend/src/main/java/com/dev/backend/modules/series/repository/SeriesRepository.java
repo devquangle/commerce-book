@@ -39,7 +39,7 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
             Pageable pageable);
 
     @Query("""
-            SELECT new com.dev.backend.modules.series.dto.response.SeriesProductResponse(
+            SELECT new com.dev.backend.modules.series.dto.SeriesProductResponse(
                 s.id,
                 s.name,
                 s.slug,

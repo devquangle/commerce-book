@@ -39,7 +39,7 @@ public interface PublisherRepository extends JpaRepository<Publisher, Long> {
             Pageable pageable);
 
     @Query("""
-            SELECT new com.dev.backend.modules.publisher.dto.response.PublisherProductResponse(
+            SELECT new com.dev.backend.modules.publisher.dto.PublisherProductResponse(
                 p.id,
                 p.name,
                 p.slug,

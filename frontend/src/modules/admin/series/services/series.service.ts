@@ -1,5 +1,10 @@
 import { authAxios } from "@/libs/config/axios.config";
-import type { SeriesFilterRequest, SeriesProductResponse, SeriesRequest, SeriesResponse } from "../types/series.type";
+import type {
+  SeriesFilterRequest,
+  SeriesProductResponse,
+  SeriesRequest,
+  SeriesResponse,
+} from "../types/series.type";
 import type { Pagination } from "@/libs/utils/pagination";
 import type { ApiResponse } from "@/libs/utils/api-response";
 
@@ -25,7 +30,10 @@ const SeriesService = {
     }
     return response.data.data;
   },
-  update: async (id: number, request: SeriesRequest): Promise<SeriesResponse> => {
+  update: async (
+    id: number,
+    request: SeriesRequest,
+  ): Promise<SeriesResponse> => {
     const response = await authAxios.put<ApiResponse<SeriesResponse>>(
       `/api/v1/admin/series/${id}`,
       request,
@@ -44,17 +52,18 @@ const SeriesService = {
     }
   },
   getSeriesWithBookCount: async (): Promise<SeriesProductResponse[]> => {
-  const response = await authAxios.get<ApiResponse<SeriesProductResponse[]>>(
-    "/api/v1/series"
-  );
+    const response =
+      await authAxios.get<ApiResponse<SeriesProductResponse[]>>(
+        "/api/v1/series",
+      );
 
-  if (!response.data.success || !response.data.data) {
-    throw new Error(
-      response.data.message || "Failed to get series with book count"
-    );
-  }
+    if (!response.data.success || !response.data.data) {
+      throw new Error(
+        response.data.message || "Failed to get series with book count",
+      );
+    }
 
-  return response.data.data;
-},
+    return response.data.data;
+  },
 };
 export default SeriesService;

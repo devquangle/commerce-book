@@ -1,7 +1,7 @@
 package com.dev.backend.modules.publisher.dto;
 
 public record PublisherProductResponse(
-        Integer id,
+        Long id,
         String name,
         String slug,
         Long bookCount) {
