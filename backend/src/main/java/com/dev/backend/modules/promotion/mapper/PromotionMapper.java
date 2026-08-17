@@ -23,6 +23,5 @@ public class PromotionMapper {
     }
 
     public void updateEntityFromRequest(PromotionRequest request, Promotion entity) {
-        
     }
 }
