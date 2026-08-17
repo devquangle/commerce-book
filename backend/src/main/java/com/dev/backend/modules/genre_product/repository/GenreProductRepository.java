@@ -38,7 +38,7 @@ public interface GenreProductRepository extends JpaRepository<GenreProduct, Long
     List<Long> findGenreIdsByProductId(@Param("productId") Long productId);
 
   @Query("""
-    SELECT new com.dev.backend.modules.genre.dto.response.GenreProductResponse(
+    SELECT new com.dev.backend.modules.genre.dto.GenreProductResponse(
         g.id,
         g.name,
         g.slug,
