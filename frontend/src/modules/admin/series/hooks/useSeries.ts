@@ -3,6 +3,7 @@ import type {
   SeriesFilterRequest,
   SeriesRequest,
   SeriesResponse,
+  SeriesProductResponse,
 } from "../types/series.type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import SeriesService from "../services/series.service";
@@ -79,5 +80,11 @@ export const useDeleteSeries = () => {
       }
       showErrorToast(errorMsg);
     },
+  });
+};
+export const useSeriesWithBookCount = () => {
+  return useQuery<SeriesProductResponse[]>({
+    queryKey: ["series-with-book-count"],
+    queryFn: () => SeriesService.getSeriesWithBookCount(),
   });
 };

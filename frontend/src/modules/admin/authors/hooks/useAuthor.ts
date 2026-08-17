@@ -3,6 +3,7 @@ import type {
   AuthorFilterRequest,
   AuthorRequest,
   AuthorResponse,
+  AuthorProductResponse,
 } from "../types/author.type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AuthorService from "../services/author.service";
@@ -79,5 +80,11 @@ export const useDeleteAuthor = () => {
       }
       showErrorToast(errorMsg);
     },
+  });
+};
+export const useAuthorsWithBookCount = () => {
+  return useQuery<AuthorProductResponse[]>({
+    queryKey: ["authors-with-book-count"],
+    queryFn: () => AuthorService.getAuthorsWithBookCount(),
   });
 };

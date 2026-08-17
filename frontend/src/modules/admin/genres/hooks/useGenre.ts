@@ -3,6 +3,7 @@ import type {
   GenreFilterRequest,
   GenreRequest,
   GenreResponse,
+  GenreProductResponse,
 } from "../types/genre.type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import GenreService from "../services/genre.service";
@@ -79,5 +80,11 @@ export const useDeleteGenre = () => {
       }
       showErrorToast(errorMsg);
     },
+  });
+};
+export const useGenresWithBookCount = () => {
+  return useQuery<GenreProductResponse[]>({
+    queryKey: ["genres-with-book-count"],
+    queryFn: () => GenreService.getGenresWithBookCount(),
   });
 };

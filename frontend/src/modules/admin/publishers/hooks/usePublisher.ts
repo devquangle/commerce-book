@@ -3,6 +3,7 @@ import type {
   PublisherFilterRequest,
   PublisherRequest,
   PublisherResponse,
+  PublisherProductResponse,
 } from "../types/publisher.type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import PublisherService from "../services/publisher.service";
@@ -79,5 +80,11 @@ export const useDeletePublisher = () => {
       }
       showErrorToast(errorMsg);
     },
+  });
+};
+export const usePublishersWithBookCount = () => {
+  return useQuery<PublisherProductResponse[]>({
+    queryKey: ["publishers-with-book-count"],
+    queryFn: () => PublisherService.getPublishersWithBookCount(),
   });
 };
