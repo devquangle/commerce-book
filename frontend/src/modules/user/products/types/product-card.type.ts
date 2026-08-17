@@ -3,6 +3,7 @@ export interface ProductCardResponse{
     productName:string;
     productSlug:string;
     discountPercent:number;
+    price:number;
     salePrice:number;
     averageRating:number;
     soldCount:number;

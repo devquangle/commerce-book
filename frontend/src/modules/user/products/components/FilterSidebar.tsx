@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Filter, RotateCcw, ChevronRight, ChevronDown, Building, Layers, Star, X, Search } from 'lucide-react';
-import { useSearchProduct } from '../hooks/useSearchProduct';
+import { useData } from '../hooks/useData';
 import type { SearchProductsFilter } from '../types/search-product';
 
 interface FilterSidebarProps {
@@ -204,7 +204,7 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
     setOpenSections(prev => ({ ...prev, [title]: !prev[title] }));
   };
 
-  const { genres, authors, publishers, series } = useSearchProduct();
+  const { genres, authors, publishers, series } = useData();
 
   const handleToggleArray = (key: 'genres' | 'authors', value: string) => {
     const current = filterOptions[key] || [];
@@ -414,7 +414,7 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
           </FilterSection>
 
           {/* Desktop Clear Filters Button */}
-          <div className="hidden lg:block px-3 py-4 mt-2 border-t border-slate-100">
+          <div className="hidden lg:block px-3 py-4 mt-auto border-t border-slate-100">
             <button 
               onClick={resetFilters}
               className="w-full py-2.5 px-4 text-slate-600 font-semibold bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors text-sm"

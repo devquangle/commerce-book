@@ -3,7 +3,7 @@ import { useAuthorsWithBookCount } from '@/modules/admin/authors/hooks/useAuthor
 import { usePublishersWithBookCount } from '@/modules/admin/publishers/hooks/usePublisher';
 import { useSeriesWithBookCount } from '@/modules/admin/series/hooks/useSeries';
 
-export const useSearchProduct = () => {
+export const useData = () => {
   const { data: genres, isLoading: isLoadingGenres } = useGenresWithBookCount();
   const { data: authors, isLoading: isLoadingAuthors } = useAuthorsWithBookCount();
   const { data: publishers, isLoading: isLoadingPublishers } = usePublishersWithBookCount();

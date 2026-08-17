@@ -1,19 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Star, ShoppingCart } from 'lucide-react';
-import { ProductCardResponse } from '../types/product-card.type';
+import type { ProductCardResponse } from '../types/product-card.type';
+import { formatMoney } from '@/libs/utils/formatMoney.utils';
 
 interface ProductCardProps {
   product: ProductCardResponse;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const originalPrice = product.discountPercent > 0 
-    ? product.salePrice / (1 - product.discountPercent / 100) 
-    : undefined;
-
   return (
-    <div className="group flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
+    <div className="card-custom p-0! group flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300">
       <div className="relative aspect-3/4 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
         {/* Placeholder image since ProductCardResponse currently doesn't have an image field */}
         <img
@@ -34,7 +31,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </div>
       
       <div className="p-4 flex flex-col flex-1">
-        <h3 className="font-bold text-zinc-900 dark:text-white line-clamp-1 mb-1">
+        <h3 className="font-bold text-zinc-900 dark:text-white line-clamp-2 mb-1">
           <Link to={`/products/${product.productSlug}`} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
             {product.productName}
           </Link>
@@ -48,7 +45,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="flex items-center gap-2 mb-4 mt-auto">
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{product.averageRating.toFixed(1)}</span>
+            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{product.averageRating?.toFixed(1)}</span>
           </div>
           <span className="text-sm text-zinc-400 dark:text-zinc-500">
             • Đã bán {product.soldCount}
@@ -58,11 +55,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="flex items-center justify-between">
           <div>
             <span className="font-bold text-lg text-blue-600 dark:text-blue-400">
-              {product.salePrice.toLocaleString("vi-VN")}đ
+              {formatMoney(product.salePrice)}
             </span>
-            {originalPrice && (
+            {product.price > product.salePrice && (
               <span className="text-xs text-zinc-400 line-through ml-2">
-                {originalPrice.toLocaleString("vi-VN")}đ
+                {formatMoney(product.price)}
               </span>
             )}
           </div>

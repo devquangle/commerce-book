@@ -95,7 +95,7 @@ const Home = () => {
             alt="Library" 
             className="w-full h-full object-cover opacity-40 mix-blend-overlay"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-zinc-900 via-zinc-900/80 to-transparent"></div>
+          <div className="absolute inset-0 bg-linear-to-r from-zinc-900 via-zinc-900/80 to-transparent"></div>
         </div>
         
         <div className="relative px-6 py-20 sm:px-12 sm:py-28 lg:px-20 max-w-3xl">
@@ -155,7 +155,7 @@ const Home = () => {
       </section>
       
       {/* Promo Banner */}
-      <section className="rounded-3xl bg-gradient-to-r from-blue-600 to-purple-600 p-8 sm:p-12 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-8 shadow-xl">
+      <section className="rounded-3xl bg-linear-to-r from-blue-600 to-purple-600 p-8 sm:p-12 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-8 shadow-xl">
         <div className="max-w-xl">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">Mở Khóa Tương Lai Qua Từng Trang Sách</h2>
           <p className="text-blue-100 text-lg mb-6">Đăng ký thành viên BookShop ngay hôm nay để nhận mã giảm giá 50.000đ cho đơn hàng đầu tiên.</p>

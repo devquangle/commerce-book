@@ -12,7 +12,7 @@ export const initialFilterOptions: SearchProductsFilter = {
   maxPrice: undefined,
   rating: undefined,
   page: 1,
-  size: 12,
+  size: 20,
   sort: "",
   hasPromotion: undefined,
 };

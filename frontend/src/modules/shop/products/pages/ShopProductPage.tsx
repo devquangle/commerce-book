@@ -43,7 +43,7 @@ const ShopProducts = () => {
   };
 
   const handleConfirmDelete = () => {
-    const id = productToDelete?.productId || productToDelete?.id;
+    const id = productToDelete?.productId ;
     if (!id) return;
 
     deleteProductMutation.mutate(id, {
@@ -97,8 +97,8 @@ const ShopProducts = () => {
               {products.map((product, index) => (
                 <ProductMobileCard
                   key={
-                    product.id
-                      ? `product-mobile-${product.id}-${index}`
+                    product.productId
+                      ? `product-mobile-${product.productId}-${index}`
                       : index
                   }
                   product={product}

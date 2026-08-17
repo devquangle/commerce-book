@@ -21,7 +21,7 @@ const ProductToolbar = ({ onOpenFilter }: { onOpenFilter: () => void }) => {
   };
 
   return (
-    <div className="card-custom p-4 md:p-5 flex flex-col gap-4">
+    <div className="card-custom flex flex-col gap-4">
       {/* 1. Quick Filters */}
       <div className="flex items-center gap-3">
         <span className="font-bold text-slate-700 text-sm shrink-0 hidden md:block">Bộ lọc nhanh:</span>
