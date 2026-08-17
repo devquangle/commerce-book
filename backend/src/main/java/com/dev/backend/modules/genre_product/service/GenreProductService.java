@@ -3,6 +3,7 @@ package com.dev.backend.modules.genre_product.service;
 import java.util.List;
 import java.util.Map;
 
+import com.dev.backend.modules.genre_product.dto.GenreProductResponse;
 import com.dev.backend.modules.product.entity.Product;
 
 public interface GenreProductService {
@@ -13,4 +14,6 @@ public interface GenreProductService {
     List<Long> getGenreIdsByProductId(Long productId);
 
     void setGenresProduct(Product product, List<Long> genreIds);
+
+    List<GenreProductResponse> getGenresWithBookCount();
 }

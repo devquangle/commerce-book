@@ -1,5 +1,6 @@
 package com.dev.backend.modules.genre_product.repository;
 
+import com.dev.backend.modules.genre_product.dto.GenreProductResponse;
 import com.dev.backend.modules.genre_product.entity.GenreProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -35,4 +36,18 @@ public interface GenreProductRepository extends JpaRepository<GenreProduct, Long
                 ORDER BY item.genre.id
             """)
     List<Long> findGenreIdsByProductId(@Param("productId") Long productId);
+
+  @Query("""
+    SELECT new com.dev.backend.modules.genre.dto.response.GenreProductResponse(
+        g.id,
+        g.name,
+        g.slug,
+        COUNT(gp.product)
+    )
+    FROM GenreProduct gp
+    JOIN gp.genre g
+    GROUP BY g.id, g.name, g.slug
+    ORDER BY COUNT(gp.product) DESC
+    """)
+List<GenreProductResponse> findGenresWithBookCount();
 }

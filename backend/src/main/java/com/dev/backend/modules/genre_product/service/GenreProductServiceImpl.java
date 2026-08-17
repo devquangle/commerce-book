@@ -1,6 +1,7 @@
 package com.dev.backend.modules.genre_product.service;
 
 import com.dev.backend.modules.genre.entity.Genre;
+import com.dev.backend.modules.genre_product.dto.GenreProductResponse;
 import com.dev.backend.modules.genre_product.entity.GenreProduct;
 import com.dev.backend.modules.genre_product.repository.GenreProductRepository;
 import com.dev.backend.modules.product.entity.Product;
@@ -20,7 +21,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class GenreProductServiceImpl implements GenreProductService {
+    
     private final GenreProductRepository genreProductRepository;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -39,15 +42,13 @@ public class GenreProductServiceImpl implements GenreProductService {
 
     @Override
     public Map<Long, List<String>> findGenreMap(List<Long> productIds) {
-       return genreProductRepository.findByProductIdIn(productIds)
-            .stream()
-            .collect(Collectors.groupingBy(
-                    item -> item.getProduct().getId(),
-                    Collectors.mapping(
-                            item -> item.getGenre().getName(),
-                            Collectors.toList()
-                    )
-            ));
+        return genreProductRepository.findByProductIdIn(productIds)
+                .stream()
+                .collect(Collectors.groupingBy(
+                        item -> item.getProduct().getId(),
+                        Collectors.mapping(
+                                item -> item.getGenre().getName(),
+                                Collectors.toList())));
     }
 
     @Override
@@ -71,5 +72,11 @@ public class GenreProductServiceImpl implements GenreProductService {
         }
         genreProductRepository.saveAll(items);
 
+    }
+
+    @Override
+    public List<GenreProductResponse> getGenresWithBookCount() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
