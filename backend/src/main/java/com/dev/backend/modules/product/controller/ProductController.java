@@ -118,7 +118,7 @@ public class ProductController {
             @ModelAttribute UserFilterRequest request,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails != null ? userDetails.getUserId() : null;
-        PageResponse<ProductCardResponse> response = productService.searchProductsForUser(request, userId);
+        PageResponse<ProductCardResponse> response = productService.filterProductsForUser(request, userId);
         return ResponseUtil.success("Lấy danh sách sản phẩm thành công", response);
     }
 }
