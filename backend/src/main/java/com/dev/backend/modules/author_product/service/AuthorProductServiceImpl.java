@@ -75,7 +75,6 @@ public class AuthorProductServiceImpl implements AuthorProductService {
 
     @Override
     public List<AuthorProductResponse> getAuthorsWithBookCount() {
-        // TODO Auto-generated method stub
-        return null;
+        return authorProductRepository.findAuthorsWithBookCount();
     }
 }

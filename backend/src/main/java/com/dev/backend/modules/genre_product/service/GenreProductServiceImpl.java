@@ -76,7 +76,6 @@ public class GenreProductServiceImpl implements GenreProductService {
 
     @Override
     public List<GenreProductResponse> getGenresWithBookCount() {
-        // TODO Auto-generated method stub
-        return null;
+        return genreProductRepository.findGenresWithBookCount();
     }
 }

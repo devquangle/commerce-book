@@ -199,7 +199,6 @@ public class PublisherServiceImpl implements PublisherService {
     }
     @Override
     public List<PublisherProductResponse> getPublishersWithBookCount() {
-        // TODO Auto-generated method stub
-        return null;
+        return publisherRepository.findPublishersWithBookCount();
     }
 }
