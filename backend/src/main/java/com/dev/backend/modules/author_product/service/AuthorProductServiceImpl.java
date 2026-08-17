@@ -1,6 +1,7 @@
 package com.dev.backend.modules.author_product.service;
 
 import com.dev.backend.modules.author.entity.Author;
+import com.dev.backend.modules.author_product.dto.AuthorProductResponse;
 import com.dev.backend.modules.author_product.entity.AuthorProduct;
 import com.dev.backend.modules.author_product.repository.AuthorProductRepository;
 import com.dev.backend.modules.product.entity.Product;
@@ -69,5 +70,12 @@ public class AuthorProductServiceImpl implements AuthorProductService {
         }
         authorProductRepository.saveAll(items);
 
+    }
+
+
+    @Override
+    public List<AuthorProductResponse> getAuthorsWithBookCount() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package com.dev.backend.modules.author_product.repository;
 
+import com.dev.backend.modules.author_product.dto.AuthorProductResponse;
 import com.dev.backend.modules.author_product.entity.AuthorProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -34,4 +35,17 @@ public interface AuthorProductRepository extends JpaRepository<AuthorProduct, Lo
             """)
     List<Long> findAuthorIdsByProductId(@Param("productId") Long productId);
 
+    @Query("""
+            SELECT new com.dev.backend.modules.author.dto.response.AuthorProductResponse(
+                a.id,
+                a.name,
+                a.slug,
+                COUNT(ap.product)
+            )
+            FROM AuthorProduct ap
+            JOIN ap.author a
+            GROUP BY a.id, a.name, a.slug
+            ORDER BY COUNT(ap.product) DESC
+            """)
+    List<AuthorProductResponse> findAuthorsWithBookCount();
 }
