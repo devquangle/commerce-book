@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dev.backend.common.response.ResponseData;
 import com.dev.backend.common.response.ResponseUtil;
-import com.dev.backend.modules.author_product.dto.AuthorProductResponse;
-import com.dev.backend.modules.author_product.service.AuthorProductService;
 import com.dev.backend.modules.genre_product.dto.GenreProductResponse;
 import com.dev.backend.modules.genre_product.service.GenreProductService;
 

@@ -2,6 +2,7 @@ package com.dev.backend.modules.publisher.service;
 
 import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.modules.publisher.dto.PublisherFilterRequest;
+import com.dev.backend.modules.publisher.dto.PublisherProductResponse;
 import com.dev.backend.modules.publisher.dto.PublisherRequest;
 import com.dev.backend.modules.publisher.dto.PublisherResponse;
 import com.dev.backend.modules.publisher.entity.Publisher;
@@ -28,4 +29,6 @@ public interface PublisherService {
     void insertData();
 
     PageResponse<PublisherResponse> search(PublisherFilterRequest request);
+
+    List<PublisherProductResponse> getPublishersWithBookCount();
 }

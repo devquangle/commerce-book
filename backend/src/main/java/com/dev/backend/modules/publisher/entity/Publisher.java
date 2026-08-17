@@ -24,7 +24,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Publisher extends BaseEntity {
 
     @Column(name = "name", nullable = false, length = 150)
@@ -38,6 +37,5 @@ public class Publisher extends BaseEntity {
     private PublisherStatus status;
     
     @OneToMany(mappedBy = "publisher")
-    @Builder.Default
     private List<Product> products = new ArrayList<>();
 }

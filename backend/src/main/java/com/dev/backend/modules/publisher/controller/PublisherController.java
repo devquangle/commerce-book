@@ -1,5 +1,7 @@
 package com.dev.backend.modules.publisher.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.common.response.ResponseData;
 import com.dev.backend.common.response.ResponseUtil;
 import com.dev.backend.modules.publisher.dto.PublisherFilterRequest;
+import com.dev.backend.modules.publisher.dto.PublisherProductResponse;
 import com.dev.backend.modules.publisher.dto.PublisherRequest;
 import com.dev.backend.modules.publisher.dto.PublisherResponse;
 import com.dev.backend.modules.publisher.service.PublisherService;
@@ -51,5 +54,11 @@ public class PublisherController {
     public ResponseEntity<ResponseData<Void>> delete(@PathVariable("id") Long id) {
         publisherService.delete(id);
         return ResponseUtil.success("Xoá nhà xuất bản thành công.", null);
+    }
+
+    @GetMapping("/publishers")
+    public ResponseEntity<ResponseData<List<PublisherProductResponse>>> getPublisherProducts() {
+        List<PublisherProductResponse> data = publisherService.getPublishersWithBookCount();
+        return ResponseUtil.success("Lấy danh sách thành công.", data);
     }
 }

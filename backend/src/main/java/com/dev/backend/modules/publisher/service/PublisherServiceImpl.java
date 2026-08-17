@@ -7,6 +7,7 @@ import com.dev.backend.common.exception.NotFoundException;
 import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.common.utils.TextUtils;
 import com.dev.backend.modules.publisher.dto.PublisherFilterRequest;
+import com.dev.backend.modules.publisher.dto.PublisherProductResponse;
 import com.dev.backend.modules.publisher.dto.PublisherRequest;
 import com.dev.backend.modules.publisher.dto.PublisherResponse;
 import com.dev.backend.modules.publisher.entity.Publisher;
@@ -195,5 +196,10 @@ public class PublisherServiceImpl implements PublisherService {
         publisher.setSlug(TextUtils.toSlug(name));
         publisher.setStatus(PublisherStatus.ACTIVE);
         return publisher;
+    }
+    @Override
+    public List<PublisherProductResponse> getPublishersWithBookCount() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
