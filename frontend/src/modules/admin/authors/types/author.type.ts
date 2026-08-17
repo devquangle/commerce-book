@@ -37,3 +37,10 @@ export interface AuthorFilterRequest {
   page?: number;
   size?: number;
 }
+
+export interface AuthorProductResponse{
+  id:number;
+  name:string;
+  slug:string;
+  bookCount:number;
+}

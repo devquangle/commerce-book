@@ -1,5 +1,10 @@
 import { authAxios } from "@/libs/config/axios.config";
-import type { AuthorFilterRequest, AuthorRequest, AuthorResponse } from "../types/author.type";
+import type {
+  AuthorFilterRequest,
+  AuthorProductResponse,
+  AuthorRequest,
+  AuthorResponse,
+} from "../types/author.type";
 import type { Pagination } from "@/libs/utils/pagination";
 import type { ApiResponse } from "@/libs/utils/api-response";
 
@@ -25,7 +30,10 @@ const AuthorService = {
     }
     return response.data.data;
   },
-  update: async (id: number, request: AuthorRequest): Promise<AuthorResponse> => {
+  update: async (
+    id: number,
+    request: AuthorRequest,
+  ): Promise<AuthorResponse> => {
     const response = await authAxios.put<ApiResponse<AuthorResponse>>(
       `/api/v1/admin/authors/${id}`,
       request,
@@ -42,6 +50,20 @@ const AuthorService = {
     if (!response.data.success) {
       throw new Error(response.data.message || "Failed to delete author");
     }
+  },
+  getAuthorsWithBookCount: async (): Promise<AuthorProductResponse[]> => {
+    const response =
+      await authAxios.get<ApiResponse<AuthorProductResponse[]>>(
+        "/api/v1/authors",
+      );
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error(
+        response.data.message || "Failed to get authors with book count",
+      );
+    }
+
+    return response.data.data;
   },
 };
 export default AuthorService;
