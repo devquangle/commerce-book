@@ -2,6 +2,7 @@ package com.dev.backend.modules.series.service;
 
 import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.modules.series.dto.SeriesFilterRequest;
+import com.dev.backend.modules.series.dto.SeriesProductResponse;
 import com.dev.backend.modules.series.dto.SeriesRequest;
 import com.dev.backend.modules.series.dto.SeriesResponse;
 import com.dev.backend.modules.series.entity.Series;
@@ -26,4 +27,6 @@ public interface SeriesService {
     void insertData();
 
     PageResponse<SeriesResponse> search(SeriesFilterRequest request);
+
+    List<SeriesProductResponse> getSeriesWithBookCount();
 }

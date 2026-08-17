@@ -1,6 +1,7 @@
 package com.dev.backend.modules.series.repository;
 
 import com.dev.backend.common.enums.SeriesStatus;
+import com.dev.backend.modules.series.dto.SeriesProductResponse;
 import com.dev.backend.modules.series.entity.Series;
 
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -35,4 +37,18 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
             @Param("keyword") String keyword,
             @Param("status") SeriesStatus status,
             Pageable pageable);
+
+    @Query("""
+            SELECT new com.dev.backend.modules.series.dto.response.SeriesProductResponse(
+                s.id,
+                s.name,
+                s.slug,
+                COUNT(p.id)
+            )
+            FROM Series s
+            JOIN Product p ON p.series = s
+            GROUP BY s.id, s.name, s.slug
+            ORDER BY COUNT(p.id) DESC
+            """)
+    List<SeriesProductResponse> findSeriesWithBookCount();
 }

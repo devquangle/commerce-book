@@ -1,8 +1,8 @@
 package com.dev.backend.modules.series.dto;
 
 public record SeriesProductResponse(
-        Integer Id,
-        String name,
-        String slug,
-        Long bookCount) {
+                Integer id,
+                String name,
+                String slug,
+                Long bookCount) {
 }

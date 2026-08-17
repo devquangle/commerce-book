@@ -6,6 +6,7 @@ import com.dev.backend.common.exception.DuplicateFieldException;
 import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.common.utils.TextUtils;
 import com.dev.backend.modules.series.dto.SeriesFilterRequest;
+import com.dev.backend.modules.series.dto.SeriesProductResponse;
 import com.dev.backend.modules.series.dto.SeriesRequest;
 import com.dev.backend.modules.series.dto.SeriesResponse;
 import com.dev.backend.modules.series.entity.Series;
@@ -165,5 +166,10 @@ public class SeriesServiceImpl implements SeriesService {
                 page.getSize(),
                 page.getTotalElements(),
                 page.getTotalPages());
+    }
+
+    @Override
+    public List<SeriesProductResponse> getSeriesWithBookCount() {
+        return seriesRepository.findSeriesWithBookCount();
     }
 }

@@ -1,5 +1,7 @@
 package com.dev.backend.modules.series.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.common.response.ResponseData;
 import com.dev.backend.common.response.ResponseUtil;
 import com.dev.backend.modules.series.dto.SeriesFilterRequest;
+import com.dev.backend.modules.series.dto.SeriesProductResponse;
 import com.dev.backend.modules.series.dto.SeriesRequest;
 import com.dev.backend.modules.series.dto.SeriesResponse;
 import com.dev.backend.modules.series.service.SeriesService;
@@ -52,5 +55,11 @@ public class SeriesController {
     public ResponseEntity<ResponseData<Void>> delete(@PathVariable("id") Long id) {
         seriesService.delete(id);
         return ResponseUtil.success("Xoá series thành công.", null);
+    }
+
+    @GetMapping("/series")
+    public ResponseEntity<ResponseData<List<SeriesProductResponse>>> getPublisherProducts() {
+        List<SeriesProductResponse> data = seriesService.getSeriesWithBookCount();
+        return ResponseUtil.success("Lấy danh sách thành công.", data);
     }
 }
