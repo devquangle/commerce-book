@@ -124,16 +124,16 @@ const ProductToolbar = ({ onOpenFilter, totalElements, resetFilters }: ProductTo
             <Check size={14} className={`transition-opacity ${filterOptions.sort === 'newest' ? 'opacity-100 text-blue-500' : 'opacity-0'}`} />
           </button>
           <button 
-            onClick={() => handleUpdateField('hasPromotion', filterOptions.hasPromotion === 'true' ? undefined : 'true')}
+            onClick={() => handleUpdateField('sort', filterOptions.sort === 'hasPromotion' ? '' : 'hasPromotion')}
             className={`flex items-center gap-1.5 px-3.5 py-1.5 border rounded-full transition-colors text-sm font-medium shadow-sm whitespace-nowrap ${
-              filterOptions.hasPromotion === 'true' 
+              filterOptions.sort === 'hasPromotion' 
                 ? 'bg-red-50 border-red-200 text-red-700' 
                 : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-700'
             }`}
           >
             <Gift size={16} className="text-red-500" />
             <span>Khuyến mãi</span>
-            <Check size={14} className={`transition-opacity ${filterOptions.hasPromotion === 'true' ? 'opacity-100 text-red-500' : 'opacity-0'}`} />
+            <Check size={14} className={`transition-opacity ${filterOptions.sort === 'hasPromotion' ? 'opacity-100 text-red-500' : 'opacity-0'}`} />
           </button>
         </div>
       </div>
@@ -179,7 +179,7 @@ const ProductToolbar = ({ onOpenFilter, totalElements, resetFilters }: ProductTo
       {/* 3. Results count and Sort Dropdown */}
       <div className="flex items-center justify-between border-t border-slate-100 pt-4 mt-1">
         <div className="text-slate-500 text-sm">
-          Tìm thấy <span className="font-bold text-slate-800">{totalElements}</span> sản phẩm
+          Hiển thị <span className="font-bold text-slate-800">{totalElements > 0 ? (filterOptions.page! - 1) * filterOptions.size! + 1 : 0}</span>–<span className="font-bold text-slate-800">{Math.min(filterOptions.page! * filterOptions.size!, totalElements)}</span> trong <span className="font-bold text-slate-800">{totalElements}</span> kết quả
         </div>
         
         <div className="w-45">

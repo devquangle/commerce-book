@@ -7,7 +7,7 @@ export interface ProductCardResponse{
     salePrice:number;
     averageRating:number;
     soldCount:number;
-    
+    urlImageDefault:string;
     shopId:number;
     shopName:string;
     shopSlug:string;

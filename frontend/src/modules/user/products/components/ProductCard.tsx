@@ -14,9 +14,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="relative aspect-3/4 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
         {/* Placeholder image since ProductCardResponse currently doesn't have an image field */}
         <img
-          src={`https://placehold.co/400x600?text=${encodeURIComponent(product.productName)}`}
+          src={product.urlImageDefault}
           alt={product.productName}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-cover"
         />
         {product.discountPercent > 0 && (
           <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md">

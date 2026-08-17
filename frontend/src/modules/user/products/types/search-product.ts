@@ -10,15 +10,16 @@ export interface SearchProductsFilter {
   page?: number;
   size?: number;
   sort?: SortType;
-  hasPromotion?: string;
-};
+}
 
 export type SortType =
   | "priceAsc"
   | "priceDesc"
   | "soldCount"
   | "rating"
-  | "newest"| "";
+  | "newest"
+  | "hasPromotion"
+  | "";
 
 export const SORT_OPTIONS: {
   value: SortType;
@@ -45,6 +46,10 @@ export const SORT_OPTIONS: {
     label: "Mới Nhất",
   },
     {
+    value: "hasPromotion",
+    label: "Khuyến mãi",
+  },
+  {
     value: "",
     label: "Tất cả",
   },

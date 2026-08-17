@@ -18,27 +18,29 @@ public class ProductCardResponse {
     private Double averageRating;// đánh giá trung bình 1-5
     private Integer soldCount;
 
+    private String urlImageDefault;
+
     private Long shopId;
     private String shopSlug;
     private String shopName;
 
     private boolean isFavorite;
 
-
     public ProductCardResponse(Long productId, String productName, Integer price,
-                               Integer discountPercent, Integer salePrice,
-                               Long shopId, String shopSlug, String shopName) {
-        this(productId, productName, price, discountPercent, salePrice, shopId, shopSlug, shopName, false);
+            Integer discountPercent, Integer salePrice, String urlImageDefault,
+            Long shopId, String shopSlug, String shopName) {
+        this(productId, productName, price, discountPercent, salePrice,urlImageDefault, shopId, shopSlug, shopName, false);
     }
 
     public ProductCardResponse(Long productId, String productName, Integer price,
-                               Integer discountPercent, Integer salePrice,
-                               Long shopId, String shopSlug, String shopName, Boolean isFavorite) {
+            Integer discountPercent, Integer salePrice, String urlImageDefault,
+            Long shopId, String shopSlug, String shopName, Boolean isFavorite) {
         this.productId = productId;
         this.productName = productName;
         this.price = price;
         this.discountPercent = discountPercent != null ? discountPercent : 0;
         this.salePrice = salePrice != null ? salePrice : price;
+        this.urlImageDefault = urlImageDefault != null ? urlImageDefault : "https://res.cloudinary.com/dox0mkwaz/image/upload/v1785952807/ofgunxcey5hbk9kauv7m.webp";
         this.shopId = shopId;
         this.shopSlug = shopSlug;
         this.shopName = shopName;

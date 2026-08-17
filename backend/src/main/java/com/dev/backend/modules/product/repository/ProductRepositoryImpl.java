@@ -33,6 +33,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         query.where(predicates.toArray(new Predicate[0]));
 
         Join<Product, Shop> shop = product.join("shop", JoinType.LEFT);
+        Join<Product, com.dev.backend.modules.image_product.entity.ImageProduct> image = product.join("images", JoinType.LEFT);
+        image.on(cb.equal(image.get("isThumbnail"), true));
 
         Subquery<Integer> discountSubquery = query.subquery(Integer.class);
         Root<com.dev.backend.modules.promotion_product.entity.PromotionProduct> ppRoot = discountSubquery.from(com.dev.backend.modules.promotion_product.entity.PromotionProduct.class);
@@ -77,6 +79,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 product.get("price"),
                 discountPercentExpr,
                 salePriceExpr.as(Integer.class),
+                image.get("urlImage"),
                 shop.get("id"),
                 shop.get("slug"),
                 shop.get("name"),
@@ -85,7 +88,42 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         query.distinct(true);
 
-        if (pageable.getSort().isSorted()) {
+        String sortOption = request.getSort();
+        if (sortOption != null && !sortOption.isEmpty()) {
+            List<Order> orders = new ArrayList<>();
+            switch (sortOption) {
+                case "priceAsc":
+                    orders.add(cb.asc(salePriceExpr));
+                    break;
+                case "priceDesc":
+                    orders.add(cb.desc(salePriceExpr));
+                    break;
+                case "newest":
+                    orders.add(cb.desc(product.get("createdAt")));
+                    break;
+                case "hasPromotion":
+                    orders.add(cb.desc(discountPercentExpr));
+                    break;
+                case "rating":
+                    Subquery<Double> avgRatingSortSubquery = query.subquery(Double.class);
+                    Root<Review> reviewSortRoot = avgRatingSortSubquery.from(Review.class);
+                    avgRatingSortSubquery.select(cb.avg(reviewSortRoot.get("rating").as(Double.class)));
+                    avgRatingSortSubquery.where(cb.equal(reviewSortRoot.get("product"), product));
+                    orders.add(cb.desc(cb.coalesce(avgRatingSortSubquery, 0.0)));
+                    break;
+                case "soldCount":
+                    Subquery<Integer> soldCountSubquery = query.subquery(Integer.class);
+                    Root<com.dev.backend.modules.order.entity.OrderItem> orderItemRoot = soldCountSubquery.from(com.dev.backend.modules.order.entity.OrderItem.class);
+                    soldCountSubquery.select(cb.sum(orderItemRoot.get("quantity")));
+                    soldCountSubquery.where(cb.equal(orderItemRoot.get("product"), product));
+                    orders.add(cb.desc(cb.coalesce(soldCountSubquery, 0)));
+                    break;
+                default:
+                    orders.add(cb.desc(product.get("createdAt")));
+                    break;
+            }
+            query.orderBy(orders);
+        } else if (pageable.getSort().isSorted()) {
             List<Order> orders = new ArrayList<>();
             for (Sort.Order sortOrder : pageable.getSort()) {
                 if (sortOrder.isAscending()) {
@@ -97,6 +135,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             query.orderBy(orders);
         }
 
+        if ("hasPromotion".equals(sortOption)) {
+            predicates.add(cb.greaterThan(discountPercentExpr, 0));
+            query.where(predicates.toArray(new Predicate[0]));
+        }
+
         TypedQuery<ProductCardResponse> typedQuery = entityManager.createQuery(query);
         typedQuery.setFirstResult((int) pageable.getOffset());
         typedQuery.setMaxResults(pageable.getPageSize());
@@ -106,6 +149,28 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         Root<Product> countRoot = countQuery.from(Product.class);
         List<Predicate> countPredicates = buildPredicates(cb, countRoot, request, countQuery);
+
+        if ("hasPromotion".equals(sortOption)) {
+            Subquery<Integer> countDiscountSubquery = countQuery.subquery(Integer.class);
+            Root<com.dev.backend.modules.promotion_product.entity.PromotionProduct> countPpRoot = countDiscountSubquery.from(com.dev.backend.modules.promotion_product.entity.PromotionProduct.class);
+            Join<com.dev.backend.modules.promotion_product.entity.PromotionProduct, com.dev.backend.modules.promotion.entity.Promotion> countPromJoin = countPpRoot.join("promotion");
+
+            Expression<Number> countSoldQty = cb.coalesce(countPpRoot.get("soldQuantity"), 0);
+            Expression<Number> countReservedQty = cb.coalesce(countPpRoot.get("reservedQuantity"), 0);
+            Expression<Number> countAvailableQty = cb.diff(countPpRoot.get("maxQuantity"), cb.sum(countSoldQty, countReservedQty));
+
+            countDiscountSubquery.select(cb.max(countPpRoot.get("discountPercent")));
+            countDiscountSubquery.where(
+                cb.equal(countPpRoot.get("product"), countRoot),
+                cb.greaterThan(countAvailableQty.as(Integer.class), 0),
+                cb.equal(countPromJoin.get("status"), com.dev.backend.common.enums.PromotionStatus.ACTIVE),
+                cb.lessThanOrEqualTo(countPromJoin.get("startDate"), java.time.LocalDateTime.now()),
+                cb.greaterThanOrEqualTo(countPromJoin.get("endDate"), java.time.LocalDateTime.now())
+            );
+
+            countPredicates.add(cb.greaterThan(cb.coalesce(countDiscountSubquery, 0), 0));
+        }
+
         countQuery.select(cb.countDistinct(countRoot));
         countQuery.where(countPredicates.toArray(new Predicate[0]));
         Long total = entityManager.createQuery(countQuery).getSingleResult();

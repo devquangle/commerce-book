@@ -14,7 +14,6 @@ export const initialFilterOptions: SearchProductsFilter = {
   page: 1,
   size: 20,
   sort: "",
-  hasPromotion: undefined,
 };
 
 export const useSearchProductsFilter = (initialState?: Partial<SearchProductsFilter>) => {
@@ -35,7 +34,6 @@ export const useSearchProductsFilter = (initialState?: Partial<SearchProductsFil
       page: searchParams.get('page') ? Number(searchParams.get('page')) : initialState?.page || initialFilterOptions.page,
       size: searchParams.get('size') ? Number(searchParams.get('size')) : initialState?.size || initialFilterOptions.size,
       sort: (searchParams.get('sort') as SearchProductsFilter['sort']) || initialState?.sort || initialFilterOptions.sort,
-      hasPromotion: searchParams.get('hasPromotion') || initialState?.hasPromotion || initialFilterOptions.hasPromotion,
     };
   }, [searchParams, initialState]);
 
