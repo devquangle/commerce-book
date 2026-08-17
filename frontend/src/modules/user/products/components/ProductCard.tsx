@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Star, ShoppingCart } from 'lucide-react';
+import { Heart, Star, ShoppingCart, Store } from 'lucide-react';
 import type { ProductCardResponse } from '../types/product-card.type';
 import { formatMoney } from '@/libs/utils/formatMoney.utils';
 
@@ -36,11 +36,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             {product.productName}
           </Link>
         </h3>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-2">
-          <Link to={`/shops/${product.shopSlug}`} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            {product.shopName}
+        <div className="text-sm text-zinc-500 dark:text-zinc-400 mb-2">
+          <Link to={`/shops/${product.shopSlug}`} className="inline-flex items-center gap-1.5 hover:text-blue-600 dark:hover:text-blue-400 transition-colors max-w-full">
+            <Store className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">{product.shopName}</span>
           </Link>
-        </p>
+        </div>
         
         <div className="flex items-center gap-2 mb-4 mt-auto">
           <div className="flex items-center gap-1">

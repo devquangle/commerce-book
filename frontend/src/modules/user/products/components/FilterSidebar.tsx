@@ -413,19 +413,10 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
             </div>
           </FilterSection>
 
-          {/* Desktop Clear Filters Button */}
-          <div className="hidden lg:block px-3 py-4 mt-auto border-t border-slate-100">
-            <button 
-              onClick={resetFilters}
-              className="w-full py-2.5 px-4 text-slate-600 font-semibold bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors text-sm"
-            >
-              Xóa bộ lọc
-            </button>
-          </div>
         </div>
 
-        {/* Sticky Footer for Mobile */}
-        <div className="lg:hidden p-4 border-t border-slate-100 bg-white shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        {/* Sticky Footer */}
+        <div className="sticky bottom-0 p-4 border-t border-slate-100 bg-white z-10 rounded-b-xl lg:shadow-none shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
           <div className="flex items-center gap-3">
             <button 
               onClick={resetFilters}
@@ -435,7 +426,7 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
             </button>
             <button 
               onClick={onClose}
-              className="flex-1 py-2.5 px-4 text-white font-semibold bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-sm shadow-sm"
+              className="lg:hidden flex-1 py-2.5 px-4 text-white font-semibold bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-sm shadow-sm"
             >
               Áp dụng
             </button>

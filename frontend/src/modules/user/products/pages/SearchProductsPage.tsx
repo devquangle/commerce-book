@@ -28,7 +28,7 @@ const SearchProductsPage = () => {
 
         {/* Right Content */}
         <div className="flex-1 flex flex-col gap-6">
-          <ProductToolbar onOpenFilter={() => setIsFilterOpen(true)} />
+          <ProductToolbar onOpenFilter={() => setIsFilterOpen(true)} totalElements={totalElements} resetFilters={resetFilters} />
 
           {/* Data Rendering */}
           {isError ? (
