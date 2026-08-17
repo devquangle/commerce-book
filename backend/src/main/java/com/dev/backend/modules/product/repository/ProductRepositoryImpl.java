@@ -86,7 +86,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 isFavoriteExpr
         ));
 
-        query.distinct(true);
+        query.groupBy(
+            product.get("id"),
+            shop.get("id"),
+            image.get("urlImage")
+        );
 
         String sortOption = request.getSort();
         if (sortOption != null && !sortOption.isEmpty()) {
@@ -99,7 +103,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                     orders.add(cb.desc(salePriceExpr));
                     break;
                 case "newest":
-                    orders.add(cb.desc(product.get("createdAt")));
+                    orders.add(cb.desc(product.get("approvedAt")));
                     break;
                 case "hasPromotion":
                     orders.add(cb.desc(discountPercentExpr));
@@ -119,7 +123,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                     orders.add(cb.desc(cb.coalesce(soldCountSubquery, 0)));
                     break;
                 default:
-                    orders.add(cb.desc(product.get("createdAt")));
+                    orders.add(cb.desc(product.get("productId")));
                     break;
             }
             query.orderBy(orders);
@@ -137,6 +141,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         if ("hasPromotion".equals(sortOption)) {
             predicates.add(cb.greaterThan(discountPercentExpr, 0));
+            query.where(predicates.toArray(new Predicate[0]));
+        } else if ("newest".equals(sortOption)) {
+            java.time.LocalDateTime thirtyDaysAgo = java.time.LocalDateTime.now().minusDays(30);
+            predicates.add(cb.greaterThanOrEqualTo(product.get("approvedAt"), thirtyDaysAgo));
             query.where(predicates.toArray(new Predicate[0]));
         }
 
@@ -169,6 +177,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             );
 
             countPredicates.add(cb.greaterThan(cb.coalesce(countDiscountSubquery, 0), 0));
+        } else if ("newest".equals(sortOption)) {
+            java.time.LocalDateTime thirtyDaysAgo = java.time.LocalDateTime.now().minusDays(30);
+            countPredicates.add(cb.greaterThanOrEqualTo(countRoot.get("approvedAt"), thirtyDaysAgo));
         }
 
         countQuery.select(cb.countDistinct(countRoot));
@@ -223,6 +234,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             
             predicates.add(cb.greaterThanOrEqualTo(avgRatingSubquery, request.getRating()));
         }
+
+        predicates.add(cb.equal(product.get("status"), com.dev.backend.common.enums.ProductStatus.ACTIVE));
 
         return predicates;
     }

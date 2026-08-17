@@ -20,12 +20,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +35,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Product extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -90,18 +89,20 @@ public class Product extends BaseEntity {
     private ProductStatus status;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<ImageProduct> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<AuthorProduct> authorProducts = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
+
     private List<GenreProduct> genreProducts = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-    @Builder.Default
+
     private List<Review> reviews = new ArrayList<>();
+
+    private LocalDateTime approvedAt;
+
+    
 }

@@ -1,5 +1,9 @@
 package com.dev.backend.modules.product.dto.response;
 
+import java.time.LocalDateTime;
+
+import com.dev.backend.common.enums.ProductStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +29,10 @@ public class ProductCardResponse {
     private String shopName;
 
     private boolean isFavorite;
+
+    private LocalDateTime approvedAt;
+
+    private ProductStatus status;
 
     public ProductCardResponse(Long productId, String productName, Integer price,
             Integer discountPercent, Integer salePrice, String urlImageDefault,
