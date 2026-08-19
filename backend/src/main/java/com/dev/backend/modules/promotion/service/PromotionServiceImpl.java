@@ -1,11 +1,10 @@
-package com.dev.backend.modules.promotion.service.impl;
+package com.dev.backend.modules.promotion.service;
 
 import com.dev.backend.modules.promotion.dto.PromotionRequest;
 import com.dev.backend.modules.promotion.dto.PromotionResponse;
 import com.dev.backend.modules.promotion.entity.Promotion;
 import com.dev.backend.modules.promotion.mapper.PromotionMapper;
 import com.dev.backend.modules.promotion.repository.PromotionRepository;
-import com.dev.backend.modules.promotion.service.PromotionService;
 import com.dev.backend.modules.shop.entity.Shop;
 import com.dev.backend.modules.shop.repository.ShopRepository;
 import lombok.RequiredArgsConstructor;

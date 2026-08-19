@@ -26,6 +26,10 @@ const ShopInventory = lazy(() => import("@/modules/shop/pages/ShopInventory"));
 const StorePage = lazy(() => import("@/modules/shop/stores/pages/StorePage"));
 const ProfilePage = lazy(() => import("@/modules/auth/components/ProfilePage"));
 
+const ShopPromotionListPage = lazy(() => import('@/modules/shop/promotions/pages/ShopPromotionListPage'));
+const ShopPromotionAddPage = lazy(() => import('@/modules/shop/promotions/pages/ShopPromotionAddPage'));
+const ShopPromotionUpdatePage = lazy(() => import('@/modules/shop/promotions/pages/ShopPromotionUpdatePage'));
+
 const ShopVoucherListPage = lazy(() => import("@/modules/shop/vouchers/pages/ShopVoucherListPage"));
 const ShopVoucherAddPage = lazy(() => import("@/modules/shop/vouchers/pages/ShopVoucherAddPage"));
 const ShopVoucherUpdatePage = lazy(() => import("@/modules/shop/vouchers/pages/ShopVoucherUpdatePage"));
@@ -52,6 +56,10 @@ export const ShopRoutes = () => {
           <Route path={SHOP_PATH.SETTINGS} element={<ShopSettings />} />
           <Route path={SHOP_PATH.MY_ACCOUNT} element={<ProfilePage />} />
           
+          <Route path={SHOP_PATH.PROMOTIONS} element={<ShopPromotionListPage />} />
+          <Route path={SHOP_PATH.PROMOTION_CREATE} element={<ShopPromotionAddPage />} />
+          <Route path={SHOP_PATH.PROMOTION_UPDATE} element={<ShopPromotionUpdatePage />} />
+
           <Route path={SHOP_PATH.VOUCHERS} element={<ShopVoucherListPage />} />
           <Route path={SHOP_PATH.VOUCHER_CREATE} element={<ShopVoucherAddPage />} />
           <Route path={SHOP_PATH.VOUCHER_UPDATE} element={<ShopVoucherUpdatePage />} />

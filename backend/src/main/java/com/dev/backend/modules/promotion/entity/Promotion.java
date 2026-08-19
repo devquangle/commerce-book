@@ -1,6 +1,7 @@
 package com.dev.backend.modules.promotion.entity;
 
 import com.dev.backend.common.entity.BaseEntity;
+import com.dev.backend.common.enums.PromotionCampaignType;
 import com.dev.backend.common.enums.PromotionStatus;
 import com.dev.backend.modules.promotion_product.entity.PromotionProduct;
 import com.dev.backend.modules.shop.entity.Shop;
@@ -35,14 +36,17 @@ public class Promotion extends BaseEntity {
     @JoinColumn(name = "shop_id")
     private Shop shop;
 
-    @Column(name = "title", nullable = false)
-    private String title;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "start_date")
     private LocalDateTime startDate;
 
     @Column(name = "end_date")
     private LocalDateTime endDate;
+
+    @Enumerated(EnumType.STRING)
+    private PromotionCampaignType promotionCampaignType;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

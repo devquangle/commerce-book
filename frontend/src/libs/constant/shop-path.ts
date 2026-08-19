@@ -34,6 +34,9 @@ export const SHOP_PATH = {
 
   REVIEWS_FULL: "/shop/reviews",
   CHATS_FULL: "/shop/chats",
+  PROMOTIONS: "/promotions",
+  PROMOTION_CREATE: "/shop/promotions/add",
+  PROMOTION_UPDATE: "/shop/promotions/edit/:id",
   PROMOTIONS_FULL: "/shop/promotions",
   VOUCHERS: "vouchers",
   VOUCHERS_FULL: "/shop/vouchers",
