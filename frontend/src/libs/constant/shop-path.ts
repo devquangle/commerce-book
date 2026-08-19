@@ -35,7 +35,14 @@ export const SHOP_PATH = {
   REVIEWS_FULL: "/shop/reviews",
   CHATS_FULL: "/shop/chats",
   PROMOTIONS_FULL: "/shop/promotions",
+  VOUCHERS: "vouchers",
   VOUCHERS_FULL: "/shop/vouchers",
+  
+  VOUCHER_CREATE: "vouchers/add",
+  VOUCHER_CREATE_FULL: "/shop/vouchers/add",
+
+  VOUCHER_UPDATE: "vouchers/edit",
+  VOUCHER_UPDATE_FULL: "/shop/vouchers/edit",
   REPORTS_FULL: "/shop/reports",
   ANALYTICS_FULL: "/shop/analytics",
 } as const;

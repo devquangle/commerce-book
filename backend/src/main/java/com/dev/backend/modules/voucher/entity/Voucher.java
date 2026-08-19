@@ -4,17 +4,18 @@ import com.dev.backend.common.entity.BaseEntity;
 import com.dev.backend.modules.shop.entity.Shop;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import com.dev.backend.common.enums.VoucherStatus;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,7 +24,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Voucher extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -61,5 +61,6 @@ public class Voucher extends BaseEntity {
     private Integer usedCount;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private VoucherStatus status;
 }

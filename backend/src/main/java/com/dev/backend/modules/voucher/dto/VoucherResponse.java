@@ -1,13 +1,11 @@
 package com.dev.backend.modules.voucher.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -26,7 +24,7 @@ public class VoucherResponse {
 
     private Integer usageLimit;
     private Integer usedCount;
-    
+
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String status;
