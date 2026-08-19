@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +47,15 @@ public class PromotionController {
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         PromotionResponse data = promotionService.create(request, userDetails.getShop().getId());
         return ResponseUtil.success("Create promotion success", data);
+    }
+
+    @PutMapping("/shop/promotions/{id}")
+    public ResponseEntity<ResponseData<PromotionResponse>> update(
+            @PathVariable("id") Long id,
+            @RequestBody @Valid PromotionRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        PromotionResponse data = promotionService.update(id,request, userDetails.getShop().getId());
+        return ResponseUtil.success("Detail promotion success", data);
     }
 
     @GetMapping("/shop/promotions/{id}")

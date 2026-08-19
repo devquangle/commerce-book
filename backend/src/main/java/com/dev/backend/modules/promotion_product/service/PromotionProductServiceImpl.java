@@ -30,9 +30,14 @@ public class PromotionProductServiceImpl implements PromotionProductService {
         private final ProductRepository productRepository;
 
         @Override
+        @Transactional
         public void setPromotionProducts(
                         Promotion promotion,
                         List<ProductPromotion> productPromotions) {
+                promotionProductRepository.deleteByPromotionId(promotion.getId());
+                if (productPromotions == null || productPromotions.isEmpty()) {
+                        return;
+                }
                 List<PromotionProduct> promotionProducts = productPromotions.stream()
                                 .map(item -> {
                                         PromotionProduct promotionProduct = new PromotionProduct();

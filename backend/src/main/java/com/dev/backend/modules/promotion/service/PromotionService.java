@@ -13,5 +13,8 @@ public interface PromotionService {
   void delete(Long id, Long shopId);
 
   PromotionResponse create(PromotionRequest request, Long shopId);
+
+  PromotionResponse update(Long id, PromotionRequest request, Long shopId);
+
   PromotionResponse detail(Long id, Long shopId);
 }

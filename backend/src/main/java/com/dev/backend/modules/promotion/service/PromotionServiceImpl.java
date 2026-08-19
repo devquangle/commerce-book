@@ -65,6 +65,17 @@ public class PromotionServiceImpl implements PromotionService {
         }
 
         @Override
+        public PromotionResponse update(Long id, PromotionRequest request, Long shopId) {
+                Promotion promotion = promotionRepository.findByIdAndShopId(id, shopId)
+                                .orElseThrow(() -> new NotFoundException("Không tìm thấy"));
+                promotionMapper.toEntity(promotion, request);
+                promotion.setStatus(request.getStatus());
+                Promotion saved = promotionRepository.save(promotion);
+                promotionProductService.setPromotionProducts(promotion, request.getProducts());
+                return promotionMapper.toDTO(saved);
+        }
+
+        @Override
         public void insertData() {
 
                 if (promotionRepository.count() > 0) {

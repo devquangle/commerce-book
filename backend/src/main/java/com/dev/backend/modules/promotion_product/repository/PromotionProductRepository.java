@@ -3,6 +3,7 @@ package com.dev.backend.modules.promotion_product.repository;
 import com.dev.backend.modules.promotion_product.dto.ProductPromotionProjection;
 import com.dev.backend.modules.promotion_product.entity.PromotionProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -32,4 +33,8 @@ public interface PromotionProductRepository extends JpaRepository<PromotionProdu
             """)
     List<ProductPromotionProjection> findByProductIds(
             @Param("productIds") List<Long> productIds);
+
+    @Modifying
+    @Query("DELETE FROM PromotionProduct item WHERE item.promotion.id = :promotionId")
+    void deleteByPromotionId(@Param("promotionId") Long promotionId);
 }

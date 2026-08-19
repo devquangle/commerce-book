@@ -10,6 +10,7 @@ import { Tooltip } from "@/components/common/Tooltip";
 import { EmptyState } from "@/components/common/EmptyState";
 import { type ProductResponse } from "@/modules/shop/products/types/product.type";
 import { formatMoney } from "@/libs/utils/formatMoney.utils";
+import { formatToDDMMYYYY } from "@/libs/utils/formatDate.utils";
 import { useGetProductPromotions } from "../hooks/usePromotion";
 import { PromotionTypeBadge } from "./PromotionTypeBadge";
 
@@ -47,6 +48,7 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
   promotionId,
 }) => {
   const [pageSize, setPageSize] = useState(initialPageSize);
+  const [expandedHistoryIds, setExpandedHistoryIds] = useState<number[]>([]);
   
   const productIds = products.map((p) => p.productId);
   const { data: promotionsData, isLoading: isLoadingPromotions } = useGetProductPromotions(productIds);
@@ -293,18 +295,31 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
                       const prodPromo = promotionsData?.find(p => p.productId === product.productId);
                       const activePromo = prodPromo?.activePromotion;
                       const history = prodPromo?.promotionHistory || [];
+                      const isExpanded = expandedHistoryIds.includes(product.productId);
+                      
+                      const toggleExpand = () => {
+                        setExpandedHistoryIds(prev => 
+                          prev.includes(product.productId) 
+                            ? prev.filter(id => id !== product.productId) 
+                            : [...prev, product.productId]
+                        );
+                      };
                       
                       return (
                         <div className="flex flex-col gap-2 items-end">
                           {activePromo ? (
-                            <div className="flex flex-col gap-1 items-end bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg border border-blue-100 dark:border-blue-800">
-                              <span className="font-semibold text-blue-700 dark:text-blue-300 text-sm line-clamp-1" title={activePromo.name}>
-                                {activePromo.name}
+                            <div className="flex flex-col gap-1 items-end bg-blue-50/80 dark:bg-blue-900/10 p-2 rounded-md border border-blue-100 dark:border-blue-800/50 w-full">
+                              <div className="flex items-center justify-between w-full gap-2">
+                                <span className="font-medium text-blue-700 dark:text-blue-300 text-sm line-clamp-1" title={activePromo.name}>
+                                  {activePromo.name}
+                                </span>
+                              </div>
+                              <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                                {formatToDDMMYYYY(activePromo.startDate)} - {formatToDDMMYYYY(activePromo.endDate)}
                               </span>
-                              <PromotionTypeBadge type={activePromo.promotionCampaignType} />
-                              <div className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 flex flex-col items-end">
+                              <div className="text-[11px] text-zinc-600 dark:text-zinc-300 flex justify-between w-full">
                                 <span>Giảm: <strong className="text-blue-600 dark:text-blue-400">{activePromo.discountPercent}%</strong></span>
-                                <span>SL Max: <strong>{activePromo.maxQuantity}</strong> | Đã bán: <strong>{activePromo.soldQuantity}</strong></span>
+                                <span>Còn: <strong>{activePromo.maxQuantity - activePromo.soldQuantity}</strong>/{activePromo.maxQuantity}</span>
                               </div>
                             </div>
                           ) : (
@@ -312,9 +327,36 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
                           )}
 
                           {history.length > 0 && (
-                            <button className="text-xs font-medium text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors mt-1 underline">
-                              Xem lịch sử ({history.length})
-                            </button>
+                            <div className="w-full mt-1 flex flex-col items-end">
+                              <button 
+                                type="button"
+                                onClick={toggleExpand}
+                                className="text-xs font-medium text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors underline mb-1"
+                              >
+                                {isExpanded ? "Thu gọn" : `Xem lịch sử (${history.length})`}
+                              </button>
+
+                              {isExpanded && (
+                                <div className="flex flex-col gap-2 w-full mt-1">
+                                  {history.map((h, idx) => (
+                                    <div key={idx} className="flex flex-col gap-1 items-end bg-zinc-50 dark:bg-zinc-800/50 p-2 rounded-md border border-zinc-200 dark:border-zinc-700 w-full">
+                                      <div className="flex items-center justify-between w-full gap-2">
+                                        <span className="font-medium text-zinc-600 dark:text-zinc-300 text-[13px] line-clamp-1" title={h.name}>
+                                          {h.name}
+                                        </span>
+                                      </div>
+                                      <span className="text-[10px] text-zinc-400 dark:text-zinc-500">
+                                        {formatToDDMMYYYY(h.startDate)} - {formatToDDMMYYYY(h.endDate)}
+                                      </span>
+                                      <div className="text-[11px] text-zinc-500 flex justify-between w-full">
+                                        <span>Giảm: <strong>{h.discountPercent}%</strong></span>
+                                        <span>Đã bán: <strong>{h.soldQuantity}</strong>/{h.maxQuantity}</span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
                           )}
                         </div>
                       );
