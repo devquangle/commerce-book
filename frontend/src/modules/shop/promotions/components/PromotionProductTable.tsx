@@ -23,12 +23,14 @@ export interface PromotionProductTableProps {
   totalPages?: number;
   selectedProductIds?: number[];
   onSelectProduct?: (productId: number, checked: boolean) => void;
-  onSelectAll?: (checked: boolean) => void;
+  onSelectAll?: (checked: boolean, validProductIds: number[]) => void;
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (size: number) => void;
   productConfigs?: Record<number, { discountPercent?: number | string; maxQuantity?: number | string }>;
   onUpdateProductConfig?: (productId: number, field: 'discountPercent' | 'maxQuantity', value: number | string) => void;
   promotionId?: number;
+  formStartDate?: string;
+  formEndDate?: string;
 }
 
 export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
@@ -46,6 +48,8 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
   productConfigs = {},
   onUpdateProductConfig,
   promotionId,
+  formStartDate,
+  formEndDate,
 }) => {
   const [pageSize, setPageSize] = useState(initialPageSize);
   const [expandedHistoryIds, setExpandedHistoryIds] = useState<number[]>([]);
@@ -81,6 +85,41 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
     }
   }, [promotionsData, promotionId, selectedProductIds, onSelectProduct, onUpdateProductConfig]);
 
+  // Effect: Auto uncheck products if dates change and cause overlaps
+  useEffect(() => {
+    if (formStartDate && formEndDate && promotionsData && onSelectProduct) {
+      const newStart = new Date(formStartDate).getTime();
+      const newEnd = new Date(formEndDate).getTime();
+
+      if (!isNaN(newStart) && !isNaN(newEnd)) {
+        selectedProductIds.forEach((selectedId) => {
+          const prodPromo = promotionsData.find((p) => p.productId === selectedId);
+          if (prodPromo) {
+            let hasOverlap = false;
+            const allPromos = [
+              ...(prodPromo.activePromotion ? [prodPromo.activePromotion] : []),
+              ...(prodPromo.promotionHistory || []),
+            ];
+
+            for (const p of allPromos) {
+              if (promotionId && p.promotionId === promotionId) continue;
+              const pStart = new Date(p.startDate).getTime();
+              const pEnd = new Date(p.endDate).getTime();
+              if (newStart < pEnd && pStart < newEnd) {
+                hasOverlap = true;
+                break;
+              }
+            }
+
+            if (hasOverlap) {
+              onSelectProduct(selectedId, false);
+            }
+          }
+        });
+      }
+    }
+  }, [formStartDate, formEndDate, promotionsData, onSelectProduct, promotionId]); // Do NOT include selectedProductIds to avoid deep loop on uncheck
+
   const activePage = page ?? currentPage ?? 1;
   const computedTotalPages =
     totalPages ?? (Math.ceil(totalElements / pageSize) || 1);
@@ -115,7 +154,35 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
                   }}
                   onChange={() => {
                     if (onSelectAll) {
-                      onSelectAll(!isAllSelected);
+                      // Compute non-overlapping products
+                      const validProductIds = products.filter(product => {
+                        let hasOverlap = false;
+                        if (formStartDate && formEndDate && promotionsData) {
+                          const newStart = new Date(formStartDate).getTime();
+                          const newEnd = new Date(formEndDate).getTime();
+                          if (!isNaN(newStart) && !isNaN(newEnd)) {
+                            const prodPromo = promotionsData.find(p => p.productId === product.productId);
+                            if (prodPromo) {
+                              const allPromos = [
+                                ...(prodPromo.activePromotion ? [prodPromo.activePromotion] : []),
+                                ...(prodPromo.promotionHistory || [])
+                              ];
+                              for (const p of allPromos) {
+                                if (promotionId && p.promotionId === promotionId) continue;
+                                const pStart = new Date(p.startDate).getTime();
+                                const pEnd = new Date(p.endDate).getTime();
+                                if (newStart < pEnd && pStart < newEnd) {
+                                  hasOverlap = true;
+                                  break;
+                                }
+                              }
+                            }
+                          }
+                        }
+                        return !hasOverlap;
+                      }).map(p => p.productId);
+
+                      onSelectAll(!isAllSelected, validProductIds);
                     }
                   }}
                   className="w-4 h-4 rounded border-zinc-300 text-blue-600 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-900 cursor-pointer"
@@ -131,6 +198,31 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
             {products.map((product, index) => {
               const isSelected = selectedProductIds.includes(product.productId);
 
+              // Validate overlap
+              let hasOverlap = false;
+              if (formStartDate && formEndDate && promotionsData) {
+                const newStart = new Date(formStartDate).getTime();
+                const newEnd = new Date(formEndDate).getTime();
+                if (!isNaN(newStart) && !isNaN(newEnd)) {
+                  const prodPromo = promotionsData.find(p => p.productId === product.productId);
+                  if (prodPromo) {
+                    const allPromos = [
+                      ...(prodPromo.activePromotion ? [prodPromo.activePromotion] : []),
+                      ...(prodPromo.promotionHistory || [])
+                    ];
+                    for (const p of allPromos) {
+                      if (promotionId && p.promotionId === promotionId) continue;
+                      const pStart = new Date(p.startDate).getTime();
+                      const pEnd = new Date(p.endDate).getTime();
+                      if (newStart < pEnd && pStart < newEnd) {
+                        hasOverlap = true;
+                        break;
+                      }
+                    }
+                  }
+                }
+              }
+
               return (
                 <tr
                   key={
@@ -138,16 +230,26 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
                       ? `product-${product.productId}-${index}`
                       : index
                   }
-                  className={`transition-colors ${isSelected ? "bg-blue-50/50 dark:bg-blue-500/10" : "hover:bg-zinc-50/70 dark:hover:bg-zinc-800/30"}`}
+                  className={`transition-colors ${isSelected ? "bg-blue-50/50 dark:bg-blue-500/10" : "hover:bg-zinc-50/70 dark:hover:bg-zinc-800/30"} ${hasOverlap ? "opacity-60 grayscale-[50%]" : ""}`}
                 >
                   {/* ── CHECKBOX ── */}
-                  <td className="px-4 py-4 text-center align-middle">
+                  <td className="px-4 py-4 text-center align-middle relative group">
                     <input
                       type="checkbox"
+                      disabled={hasOverlap}
                       checked={isSelected}
-                      onChange={(e) => onSelectProduct?.(product.productId, e.target.checked)}
-                      className="w-4 h-4 rounded border-zinc-300 text-blue-600 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-900 cursor-pointer"
+                      onChange={(e) => {
+                        if (!hasOverlap) {
+                          onSelectProduct?.(product.productId, e.target.checked);
+                        }
+                      }}
+                      className={`w-4 h-4 rounded border-zinc-300 text-blue-600 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-900 ${hasOverlap ? "cursor-not-allowed bg-zinc-200" : "cursor-pointer"}`}
                     />
+                    {hasOverlap && (
+                      <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 hidden group-hover:block w-max max-w-xs bg-zinc-800 text-white text-xs p-2 rounded shadow-lg z-10 pointer-events-none">
+                        Sản phẩm này đã có lịch khuyến mãi trùng với thời gian bạn chọn!
+                      </div>
+                    )}
                   </td>
 
                   {/* ── THÔNG TIN SẢN PHẨM CHUNG ── */}

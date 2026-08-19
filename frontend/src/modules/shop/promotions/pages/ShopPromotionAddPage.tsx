@@ -16,6 +16,8 @@ import { PromotionProductFilter } from "../components/PromotionProductFilter";
 import type { ProductResponse } from "@/modules/shop/products/types/product.type";
 
 import { useProductShopFilter } from "@/modules/shop/products/hooks/useProductShopFilter";
+import PromotionService from "../services/promotion.service";
+import { showWarningToast } from "@/libs/utils/toastUtil";
 
 const INITIAL_FORM: PromotionRequest = {
   name: "",
@@ -62,11 +64,15 @@ const ShopPromotionAddPage = () => {
     handleSubmit,
     reset,
     control,
+    watch,
     formState: { errors },
   } = useForm<PromotionRequest>({
     defaultValues: INITIAL_FORM,
     mode: "onChange",
   });
+
+  const watchStartDate = watch("startDate");
+  const watchEndDate = watch("endDate");
 
   const onFormSubmit = async (data: PromotionRequest) => {
     // Construct the products array from selectedProductIds and productConfigs
@@ -224,17 +230,18 @@ const ShopPromotionAddPage = () => {
                   : prev.filter((id) => id !== productId)
               );
             }}
-            onSelectAll={(checked) => {
-              const currentIds = (productsData?.items || []).map((p) => p.productId);
+            onSelectAll={(checked, validProductIds) => {
               if (checked) {
-                setSelectedProductIds((prev) => Array.from(new Set([...prev, ...currentIds])));
+                setSelectedProductIds((prev) => Array.from(new Set([...prev, ...validProductIds])));
               } else {
-                setSelectedProductIds((prev) => prev.filter((id) => !currentIds.includes(id)));
+                setSelectedProductIds((prev) => prev.filter((id) => !validProductIds.includes(id)));
               }
             }}
             onPageChange={handlePageChange}
             onPageSizeChange={handlePageSizeChange}
             productConfigs={productConfigs}
+            formStartDate={watchStartDate}
+            formEndDate={watchEndDate}
             onUpdateProductConfig={(productId, field, value) => {
               setProductConfigs((prev) => ({
                 ...prev,

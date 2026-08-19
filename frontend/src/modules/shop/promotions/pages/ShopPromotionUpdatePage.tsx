@@ -16,6 +16,8 @@ import { PromotionProductFilter } from "../components/PromotionProductFilter";
 import type { ProductResponse } from "@/modules/shop/products/types/product.type";
 
 import { useProductShopFilter } from "@/modules/shop/products/hooks/useProductShopFilter";
+import PromotionService from "../services/promotion.service";
+import { showWarningToast } from "@/libs/utils/toastUtil";
 
 const formatToDateTimeLocal = (dateString?: string) => {
   if (!dateString) return "";
@@ -64,10 +66,14 @@ const ShopPromotionUpdatePage = () => {
     handleSubmit,
     reset,
     control,
+    watch,
     formState: { errors },
   } = useForm<PromotionRequest>({
     mode: "onChange",
   });
+
+  const watchStartDate = watch("startDate");
+  const watchEndDate = watch("endDate");
 
   useEffect(() => {
     if (promotionDetail) {
@@ -76,15 +82,24 @@ const ShopPromotionUpdatePage = () => {
         startDate: formatToDateTimeLocal(promotionDetail.startDate),
         endDate: formatToDateTimeLocal(promotionDetail.endDate),
       });
+      if (promotionDetail.products) {
+        const ids = promotionDetail.products.map(p => p.productId);
+        setSelectedProductIds(ids);
+        const configs: Record<number, any> = {};
+        promotionDetail.products.forEach(p => {
+          configs[p.productId] = { discountPercent: p.discountPercent, maxQuantity: p.maxQuantity };
+        });
+        setProductConfigs(configs);
+      }
     }
   }, [promotionDetail, reset]);
 
   const onFormSubmit = async (data: PromotionRequest) => {
     // Construct the products array from selectedProductIds and productConfigs
-    const productsPayload = selectedProductIds.map((id) => ({
-      productId: id,
-      discountPercent: Number(productConfigs[id]?.discountPercent ?? 10),
-      maxQuantity: Number(productConfigs[id]?.maxQuantity ?? 10),
+    const productsPayload = selectedProductIds.map((pid) => ({
+      productId: pid,
+      discountPercent: Number(productConfigs[pid]?.discountPercent ?? 10),
+      maxQuantity: Number(productConfigs[pid]?.maxQuantity ?? 10),
     }));
 
     const finalPayload: PromotionRequest = {
@@ -261,18 +276,19 @@ const ShopPromotionUpdatePage = () => {
                   : prev.filter((id) => id !== productId)
               );
             }}
-            onSelectAll={(checked) => {
-              const currentIds = (productsData?.items || []).map((p) => p.productId);
+            onSelectAll={(checked, validProductIds) => {
               if (checked) {
-                setSelectedProductIds((prev) => Array.from(new Set([...prev, ...currentIds])));
+                setSelectedProductIds((prev) => Array.from(new Set([...prev, ...validProductIds])));
               } else {
-                setSelectedProductIds((prev) => prev.filter((id) => !currentIds.includes(id)));
+                setSelectedProductIds((prev) => prev.filter((id) => !validProductIds.includes(id)));
               }
             }}
             onPageChange={handlePageChange}
             onPageSizeChange={handlePageSizeChange}
             productConfigs={productConfigs}
             promotionId={Number(id)}
+            formStartDate={watchStartDate}
+            formEndDate={watchEndDate}
             onUpdateProductConfig={(productId, field, value) => {
               setProductConfigs((prev) => ({
                 ...prev,

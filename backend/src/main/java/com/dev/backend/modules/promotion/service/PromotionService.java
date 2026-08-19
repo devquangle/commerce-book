@@ -8,6 +8,8 @@ import com.dev.backend.modules.promotion.dto.PromotionResponse;
 public interface PromotionService {
   void insertData();
 
+  void validateOverlap(Long promotionId,PromotionRequest request);
+
   PageResponse<PromotionResponse> filterPromotions(PromotionFilterRequest request, Long shopId);
 
   void delete(Long id, Long shopId);

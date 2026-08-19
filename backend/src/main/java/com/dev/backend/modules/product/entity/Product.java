@@ -5,6 +5,7 @@ import com.dev.backend.common.enums.ProductStatus;
 import com.dev.backend.modules.author_product.entity.AuthorProduct;
 import com.dev.backend.modules.genre_product.entity.GenreProduct;
 import com.dev.backend.modules.image_product.entity.ImageProduct;
+import com.dev.backend.modules.promotion_product.entity.PromotionProduct;
 import com.dev.backend.modules.publisher.entity.Publisher;
 import com.dev.backend.modules.review.entity.Review;
 import com.dev.backend.modules.series.entity.Series;
@@ -95,12 +96,14 @@ public class Product extends BaseEntity {
     private List<AuthorProduct> authorProducts = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-
     private List<GenreProduct> genreProducts = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-
     private List<Review> reviews = new ArrayList<>();
+
+      @OneToMany(mappedBy = "product")
+    private List<PromotionProduct> promotionProducts = new ArrayList<>();
+
 
     private LocalDateTime approvedAt;
 

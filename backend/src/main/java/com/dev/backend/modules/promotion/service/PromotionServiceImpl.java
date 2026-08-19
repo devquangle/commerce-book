@@ -2,14 +2,19 @@ package com.dev.backend.modules.promotion.service;
 
 import com.dev.backend.common.enums.PromotionCampaignType;
 import com.dev.backend.common.enums.PromotionStatus;
+import com.dev.backend.common.exception.BadRequestException;
 import com.dev.backend.common.exception.NotFoundException;
 import com.dev.backend.common.response.PageResponse;
+import com.dev.backend.modules.product.entity.Product;
+import com.dev.backend.modules.product.repository.ProductRepository;
+import com.dev.backend.modules.promotion.dto.ProductPromotion;
 import com.dev.backend.modules.promotion.dto.PromotionFilterRequest;
 import com.dev.backend.modules.promotion.dto.PromotionRequest;
 import com.dev.backend.modules.promotion.dto.PromotionResponse;
 import com.dev.backend.modules.promotion.entity.Promotion;
 import com.dev.backend.modules.promotion.mapper.PromotionMapper;
 import com.dev.backend.modules.promotion.repository.PromotionRepository;
+import com.dev.backend.modules.promotion_product.entity.PromotionProduct;
 import com.dev.backend.modules.promotion_product.service.PromotionProductService;
 import com.dev.backend.modules.shop.service.ShopService;
 
@@ -23,6 +28,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +43,66 @@ public class PromotionServiceImpl implements PromotionService {
         private final ShopService shopService;
         private final PromotionMapper promotionMapper;
         private final PromotionProductService promotionProductService;
+        private final ProductRepository productRepository;
+
+        @Override
+        public void validateOverlap(
+                        Long promotionId,
+                        PromotionRequest request) {
+
+                if (request.getProducts() == null || request.getProducts().isEmpty()) {
+                        return;
+                }
+
+                LocalDateTime reqStart = request.getStartDate();
+                LocalDateTime reqEnd = request.getEndDate();
+
+                for (ProductPromotion item : request.getProducts()) {
+
+                        Product product = productRepository.findById(item.getProductId())
+                                        .orElseThrow(() -> new NotFoundException("Không tìm thấy product"));
+
+                        List<PromotionProduct> promotionProducts = product.getPromotionProducts();
+
+                        if (promotionProducts == null || promotionProducts.isEmpty()) {
+                                continue;
+                        }
+
+                        for (PromotionProduct pp : promotionProducts) {
+
+                                Promotion otherPromo = pp.getPromotion();
+
+                                if (otherPromo == null
+                                                || otherPromo.getStatus() == PromotionStatus.DELETED) {
+                                        continue;
+                                }
+
+                                // Không kiểm tra chính promotion đang update
+                                if (promotionId != null
+                                                && otherPromo.getId().equals(promotionId)) {
+                                        continue;
+                                }
+
+                                LocalDateTime otherStart = otherPromo.getStartDate();
+                                LocalDateTime otherEnd = otherPromo.getEndDate();
+
+                                boolean overlap = !reqEnd.isBefore(otherStart)
+                                                && !reqStart.isAfter(otherEnd);
+
+                                if (overlap) {
+                                        throw new BadRequestException(
+                                                        String.format(
+                                                                        "Sản phẩm '%s' đang tham gia chương trình '%s' (%s đến %s). "
+                                                                                        +
+                                                                                        "Thời gian chương trình mới không được trùng lặp!",
+                                                                        product.getName(),
+                                                                        otherPromo.getName(),
+                                                                        otherStart,
+                                                                        otherEnd));
+                                }
+                        }
+                }
+        }
 
         @Override
         public void delete(Long id, Long shopId) {
@@ -56,6 +122,7 @@ public class PromotionServiceImpl implements PromotionService {
         @Override
         public PromotionResponse create(PromotionRequest request, Long shopId) {
                 Promotion promotion = new Promotion();
+                validateOverlap(null, request);
                 promotionMapper.toEntity(promotion, request);
                 promotion.setShop(shopService.getById(shopId));
                 promotion.setStatus(PromotionStatus.ACTIVE);
@@ -68,6 +135,7 @@ public class PromotionServiceImpl implements PromotionService {
         public PromotionResponse update(Long id, PromotionRequest request, Long shopId) {
                 Promotion promotion = promotionRepository.findByIdAndShopId(id, shopId)
                                 .orElseThrow(() -> new NotFoundException("Không tìm thấy"));
+                validateOverlap(id, request);
                 promotionMapper.toEntity(promotion, request);
                 promotion.setStatus(request.getStatus());
                 Promotion saved = promotionRepository.save(promotion);
