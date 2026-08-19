@@ -28,6 +28,9 @@ const RegisterShopPage = lazy(
 const SearchProductsPage = lazy(
   () => import("@/modules/user/products/pages/SearchProductsPage")
 );
+const ProductDetailPage = lazy(
+  () => import("@/modules/user/product-detail/pages/ProductDetailPage")
+);
 export const UserRoutes: React.FC = () => {
   return (
     <UserLayout>
@@ -42,6 +45,7 @@ export const UserRoutes: React.FC = () => {
           <Route path="books" element={<BookList />} />
           <Route path="books/:id" element={<BookDetail />} />
           <Route path="products" element={<SearchProductsPage />} />
+          <Route path="product-detail" element={<ProductDetailPage />} />
           <Route path="search" element={<Search />} />
           <Route path="cart" element={<Cart />} />
           <Route path="checkout" element={<Checkout />} />
