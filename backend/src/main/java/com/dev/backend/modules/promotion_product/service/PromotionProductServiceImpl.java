@@ -1,5 +1,6 @@
 package com.dev.backend.modules.promotion_product.service;
 
+import com.dev.backend.common.enums.PromotionStatus;
 import com.dev.backend.modules.promotion_product.dto.ProductPromotionProjection;
 import com.dev.backend.modules.promotion_product.dto.ProductPromotionResponse;
 import com.dev.backend.modules.promotion_product.dto.PromotionProductResponse;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,39 +21,60 @@ import java.util.stream.Collectors;
 @Transactional
 public class PromotionProductServiceImpl implements PromotionProductService {
 
-    private final PromotionProductRepository promotionProductRepository;
+        private final PromotionProductRepository promotionProductRepository;
 
-    @Override
-    public List<ProductPromotionResponse> getByProductIds(
-            List<Long> productIds) {
-        return promotionProductRepository.findByProductIds(productIds)
-                .stream()
-                .collect(Collectors.groupingBy(
-                        productPromotion -> productPromotion.productId(),
-                        LinkedHashMap::new,
-                        Collectors.toList()))
-                .entrySet()
-                .stream()
-                .map(entry -> new ProductPromotionResponse(
-                        entry.getKey(),
-                        entry.getValue().stream()
-                                .map(this::toPromotionResponse)
-                                .toList()))
-                .toList();
-    }
+        @Override
+        public List<ProductPromotionResponse> getByProductIds(List<Long> productIds) {
 
-    private PromotionProductResponse toPromotionResponse(
-            ProductPromotionProjection projection) {
-        return new PromotionProductResponse(
-                projection.promotionId(),
-                projection.name(),
-                projection.startDate(),
-                projection.endDate(),
-                projection.promotionCampaignType(),
-                projection.status(),
-                projection.discountPercent(),
-                projection.maxQuantity(),
-                projection.soldQuantity(),
-                projection.reservedQuantity());
-    }
+                LocalDateTime now = LocalDateTime.now();
+
+                return promotionProductRepository.findByProductIds(productIds)
+                                .stream()
+                                .collect(Collectors.groupingBy(
+                                                ProductPromotionProjection::productId,
+                                                LinkedHashMap::new,
+                                                Collectors.toList()))
+                                .entrySet()
+                                .stream()
+                                .map(entry -> {
+
+                                        List<PromotionProductResponse> promotions = entry.getValue()
+                                                        .stream()
+                                                        .map(this::toPromotionResponse)
+                                                        .toList();
+
+                                        PromotionProductResponse activePromotion = promotions.stream()
+                                                        .filter(promotion -> promotion
+                                                                        .status() == PromotionStatus.ACTIVE
+                                                                        && !promotion.startDate().isAfter(now)
+                                                                        && !promotion.endDate().isBefore(now))
+                                                        .max(Comparator.comparing(
+                                                                        (PromotionProductResponse promotion) -> promotion
+                                                                                        .discountPercent(),
+                                                                        Comparator.nullsFirst(
+                                                                                        Comparator.naturalOrder())))
+                                                        .orElse(null);
+
+                                        return new ProductPromotionResponse(
+                                                        entry.getKey(),
+                                                        activePromotion,
+                                                        promotions);
+                                })
+                                .toList();
+        }
+
+        private PromotionProductResponse toPromotionResponse(
+                        ProductPromotionProjection projection) {
+                return new PromotionProductResponse(
+                                projection.promotionId(),
+                                projection.name(),
+                                projection.startDate(),
+                                projection.endDate(),
+                                projection.promotionCampaignType(),
+                                projection.status(),
+                                projection.discountPercent(),
+                                projection.maxQuantity(),
+                                projection.soldQuantity(),
+                                projection.reservedQuantity());
+        }
 }
