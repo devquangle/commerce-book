@@ -33,20 +33,20 @@ public class Voucher extends BaseEntity {
     @Column(name = "code", nullable = false, unique = true, length = 100)
     private String code;
 
-    @Column(name = "title", nullable = false)
-    private String title;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description", length = 100)
     private String description;
 
     @Column(name = "discount_percent")
-    private Double discountPercent;
+    private Integer discountPercent;
 
-    @Column(name = "min_order_value", precision = 15, scale = 2)
-    private BigDecimal minOrderValue;
+    @Column(name = "min_order_value")
+    private Integer minOrderValue;
 
-    @Column(name = "max_discount", precision = 15, scale = 2)
-    private BigDecimal maxDiscount;
+    @Column(name = "max_discount")
+    private Integer maxDiscount;
 
     @Column(name = "start_date")
     private LocalDateTime startDate;

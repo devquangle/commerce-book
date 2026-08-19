@@ -1,8 +1,8 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Heart, Star, ShoppingCart, Store } from 'lucide-react';
-import type { ProductCardResponse } from '../types/product-card.type';
-import { formatMoney } from '@/libs/utils/formatMoney.utils';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Heart, Star, ShoppingCart, Store } from "lucide-react";
+import type { ProductCardResponse } from "../types/product-card.type";
+import { formatMoney } from "@/libs/utils/formatMoney.utils";
 
 interface ProductCardProps {
   product: ProductCardResponse;
@@ -24,35 +24,47 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
         )}
         <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button className={`p-2 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-full ${product.isFavorite ? 'text-red-500 dark:text-red-400' : 'text-zinc-600 dark:text-zinc-300 hover:text-red-500 dark:hover:text-red-400'} shadow-sm transition-colors`}>
-            <Heart className={`w-4 h-4 ${product.isFavorite ? 'fill-current' : ''}`} />
+          <button
+            className={`p-2 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-full ${product.isFavorite ? "text-red-500 dark:text-red-400" : "text-zinc-600 dark:text-zinc-300 hover:text-red-500 dark:hover:text-red-400"} shadow-sm transition-colors`}
+          >
+            <Heart
+              className={`w-4 h-4 ${product.isFavorite ? "fill-current" : ""}`}
+            />
           </button>
         </div>
       </div>
-      
+
       <div className="p-4 flex flex-col flex-1">
         <h3 className="font-bold text-zinc-900 dark:text-white line-clamp-2 mb-1">
-          <Link to={`/products/${product.productSlug}`} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+          <Link
+            to={`/products/${product.productSlug}`}
+            className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
             {product.productName}
           </Link>
         </h3>
         <div className="text-sm text-zinc-500 dark:text-zinc-400 mb-2">
-          <Link to={`/shops/${product.shopSlug}`} className="inline-flex items-center gap-1.5 hover:text-blue-600 dark:hover:text-blue-400 transition-colors max-w-full">
+          <Link
+            to={`/shops/${product.shopSlug}`}
+            className="inline-flex items-center gap-1.5 hover:text-blue-600 dark:hover:text-blue-400 transition-colors max-w-full"
+          >
             <Store className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">{product.shopName}</span>
           </Link>
         </div>
-        
+
         <div className="flex items-center gap-2 mb-4 mt-auto">
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{product.averageRating?.toFixed(1)}</span>
+            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              {product.averageRating?.toFixed(1)}
+            </span>
           </div>
           <span className="text-sm text-zinc-400 dark:text-zinc-500">
             • Đã bán {product.soldCount}
           </span>
         </div>
-        
+
         <div className="flex items-center justify-between">
           <div>
             <span className="font-bold text-lg text-blue-600 dark:text-blue-400">
