@@ -1,5 +1,7 @@
 package com.dev.backend.modules.promotion.service;
 
+import com.dev.backend.common.enums.PromotionCampaignType;
+import com.dev.backend.common.enums.PromotionStatus;
 import com.dev.backend.modules.promotion.dto.PromotionRequest;
 import com.dev.backend.modules.promotion.dto.PromotionResponse;
 import com.dev.backend.modules.promotion.entity.Promotion;
@@ -7,10 +9,15 @@ import com.dev.backend.modules.promotion.mapper.PromotionMapper;
 import com.dev.backend.modules.promotion.repository.PromotionRepository;
 import com.dev.backend.modules.shop.entity.Shop;
 import com.dev.backend.modules.shop.repository.ShopRepository;
+import com.dev.backend.modules.shop.service.ShopService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,64 +27,32 @@ import java.util.stream.Collectors;
 public class PromotionServiceImpl implements PromotionService {
 
     private final PromotionRepository promotionRepository;
-    private final ShopRepository shopRepository;
+    private final ShopService shopService;
     private final PromotionMapper promotionMapper;
 
     @Override
-    @Transactional(readOnly = true)
-    public List<PromotionResponse> getAllPromotions() {
-        return promotionRepository.findAll().stream()
-                .map(promotionMapper::toResponse)
-                .collect(Collectors.toList());
-    }
+    public void insertData() {
 
-    @Override
-    @Transactional(readOnly = true)
-    public PromotionResponse getPromotionById(Long id) {
-        Promotion promotion = promotionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Promotion not found with id: " + id));
-        return promotionMapper.toResponse(promotion);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<PromotionResponse> getPromotionsByShopId(Long shopId) {
-        return promotionRepository.findByShopId(shopId).stream()
-                .map(promotionMapper::toResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public PromotionResponse createPromotion(PromotionRequest request) {
-        Promotion promotion = promotionMapper.toEntity(request);
-        if (request.getShopId() != null) {
-            Shop shop = shopRepository.findById(request.getShopId())
-                    .orElseThrow(() -> new RuntimeException("Shop not found with id: " + request.getShopId()));
-            promotion.setShop(shop);
+        if (promotionRepository.count() > 0) {
+            return;
         }
-        Promotion savedPromotion = promotionRepository.save(promotion);
-        return promotionMapper.toResponse(savedPromotion);
-    }
-
-    @Override
-    public PromotionResponse updatePromotion(Long id, PromotionRequest request) {
-        Promotion promotion = promotionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Promotion not found with id: " + id));
-        promotionMapper.updateEntityFromRequest(request, promotion);
-        if (request.getShopId() != null) {
-            Shop shop = shopRepository.findById(request.getShopId())
-                    .orElseThrow(() -> new RuntimeException("Shop not found with id: " + request.getShopId()));
-            promotion.setShop(shop);
+        List<Promotion> promotions = new ArrayList<>();
+        for (int i = 1; i <= 20; i++) {
+            Promotion promotion = new Promotion();
+            promotion.setName("Chương trình khuyến mãi " + i);
+            promotion.setStartDate(LocalDateTime.now());
+            promotion.setEndDate(LocalDateTime.now().plusDays(i + 10));
+            promotion.setPromotionCampaignType(
+                    i % 2 == 0
+                            ? PromotionCampaignType.FLASH_SALE
+                            : PromotionCampaignType.PRODUCT_DISCOUNT);
+            promotion.setStatus(
+                    i % 3 == 0
+                            ? PromotionStatus.INACTIVE
+                            : PromotionStatus.ACTIVE);
+            promotion.setShop(shopService.getById(2L));
+            promotions.add(promotion);
         }
-        Promotion updatedPromotion = promotionRepository.save(promotion);
-        return promotionMapper.toResponse(updatedPromotion);
-    }
-
-    @Override
-    public void deletePromotion(Long id) {
-        if (!promotionRepository.existsById(id)) {
-            throw new RuntimeException("Promotion not found with id: " + id);
-        }
-        promotionRepository.deleteById(id);
+        promotionRepository.saveAll(promotions);
     }
 }

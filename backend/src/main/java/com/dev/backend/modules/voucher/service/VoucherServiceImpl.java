@@ -105,7 +105,7 @@ public class VoucherServiceImpl implements VoucherService {
     public VoucherResponse update(Long id, VoucherRequest request, Long shopId) {
         Voucher voucher = voucherRepository.findByIdAndShopId(id, shopId)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy."));
-        if (voucher.getStatus() == VoucherStatus.DELETE) {
+        if (voucher.getStatus() == VoucherStatus.DELETED) {
             throw new BadRequestException(
                     "Voucher đã bị xóa, không thể cập nhật.");
         }
@@ -127,7 +127,7 @@ public class VoucherServiceImpl implements VoucherService {
     public void delete(Long id, Long shopId) {
         Voucher voucher = voucherRepository.findByIdAndShopId(id, shopId)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy."));
-        voucher.setStatus(VoucherStatus.DELETE);
+        voucher.setStatus(VoucherStatus.DELETED);
         voucherRepository.save(voucher);
 
     }

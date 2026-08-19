@@ -12,16 +12,21 @@ public class PromotionMapper {
         if (request == null) {
             return null;
         }
-         return null;
-    }
-
-    public PromotionResponse toResponse(Promotion entity) {
-        if (entity == null) {
-            return null;
-        }
         return null;
     }
 
-    public void updateEntityFromRequest(PromotionRequest request, Promotion entity) {
+    public PromotionResponse toDTO(Promotion entity) {
+        if (entity == null) {
+            return null;
+        }
+        PromotionResponse response = new PromotionResponse();
+        response.setId(entity.getId());
+        response.setName(entity.getName());
+        response.setStartDate(entity.getStartDate());
+        response.setEndDate(entity.getEndDate());
+        response.setPromotionCampaignType(entity.getPromotionCampaignType());
+        response.setStatus(entity.getStatus());
+        return response;
     }
+
 }

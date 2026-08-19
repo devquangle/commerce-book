@@ -2,6 +2,7 @@ package com.dev.backend.config;
 
 import com.dev.backend.modules.author.service.AuthorService;
 import com.dev.backend.modules.genre.service.GenreService;
+import com.dev.backend.modules.promotion.service.PromotionService;
 import com.dev.backend.modules.publisher.service.PublisherService;
 
 import com.dev.backend.modules.series.service.SeriesService;
@@ -29,6 +30,7 @@ public class LoadData implements CommandLineRunner {
     private final SeriesService seriesService;
 
     private final VoucherService voucherService;
+    private final PromotionService promotionService;
     @Override
     public void run(String... args) throws Exception {
         insertData();
@@ -44,6 +46,7 @@ public class LoadData implements CommandLineRunner {
         publisherService.insertData();
         seriesService.insertData();
         voucherService.insertData();
+        promotionService.insertData();
         log.info("Khởi tạo dữ liệu mẫu hoàn tất.");
     }
 }

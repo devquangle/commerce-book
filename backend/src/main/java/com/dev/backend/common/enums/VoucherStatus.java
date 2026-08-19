@@ -6,5 +6,5 @@ package com.dev.backend.common.enums;
 public enum VoucherStatus {
     ACTIVE,   // Đang có hiệu lực
     INACTIVE, // Tạm dừng sử dụng
-    DELETE    // Đã xóa mã giảm giá
+    DELETED    // Đã xóa mã giảm giá
 }

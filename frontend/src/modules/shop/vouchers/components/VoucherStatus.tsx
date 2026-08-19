@@ -12,7 +12,7 @@ export const VoucherStatusBadge: React.FC<VoucherStatusProps> = ({ status }) => 
       return <Badge variant="success" title="Hoạt động" />;
     case "INACTIVE":
       return <Badge variant="warning" title="Tạm ngưng" />;
-    case "DELETE":
+    case "DELETED":
       return <Badge variant="danger" title="Đã xóa" />;
     default:
       return <Badge variant="secondary" title="Không xác định" />;

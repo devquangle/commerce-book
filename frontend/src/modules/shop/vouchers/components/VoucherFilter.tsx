@@ -22,14 +22,14 @@ const getVoucherStatusValue = (status: VoucherStatus) => {
       return "Hoạt động";
     case "INACTIVE":
       return "Tạm ngưng";
-    case "DELETE":
+    case "DELETED":
       return "Đã xóa";
     default:
       return status;
   }
 };
 
-const VOUCHER_STATUS_LIST: VoucherStatus[] = ["ACTIVE", "INACTIVE", "DELETE"];
+const VOUCHER_STATUS_LIST: VoucherStatus[] = ["ACTIVE", "INACTIVE", "DELETED"];
 
 const statusOptions = [
   { label: "Tất cả", value: "" },

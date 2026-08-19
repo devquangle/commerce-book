@@ -1,4 +1,4 @@
-export type VoucherStatus = "ACTIVE" | "INACTIVE" | "DELETE";
+export type VoucherStatus = "ACTIVE" | "INACTIVE" | "DELETED";
 
 export interface VoucherResponse {
   id: number;
