@@ -1,6 +1,11 @@
 package com.dev.backend.modules.promotion.service;
 
+import com.dev.backend.common.response.PageResponse;
+import com.dev.backend.modules.promotion.dto.PromotionFilterRequest;
+import com.dev.backend.modules.promotion.dto.PromotionResponse;
 
 public interface PromotionService {
   void insertData();
+
+  PageResponse<PromotionResponse> filterPromotions(PromotionFilterRequest request, Long shopId);
 }

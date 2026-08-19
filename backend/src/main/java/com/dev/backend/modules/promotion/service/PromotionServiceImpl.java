@@ -2,24 +2,28 @@ package com.dev.backend.modules.promotion.service;
 
 import com.dev.backend.common.enums.PromotionCampaignType;
 import com.dev.backend.common.enums.PromotionStatus;
-import com.dev.backend.modules.promotion.dto.PromotionRequest;
+import com.dev.backend.common.response.PageResponse;
+import com.dev.backend.modules.promotion.dto.PromotionFilterRequest;
 import com.dev.backend.modules.promotion.dto.PromotionResponse;
 import com.dev.backend.modules.promotion.entity.Promotion;
 import com.dev.backend.modules.promotion.mapper.PromotionMapper;
 import com.dev.backend.modules.promotion.repository.PromotionRepository;
-import com.dev.backend.modules.shop.entity.Shop;
-import com.dev.backend.modules.shop.repository.ShopRepository;
 import com.dev.backend.modules.shop.service.ShopService;
 
 import lombok.RequiredArgsConstructor;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -54,5 +58,38 @@ public class PromotionServiceImpl implements PromotionService {
             promotions.add(promotion);
         }
         promotionRepository.saveAll(promotions);
+    }
+
+    @Override
+    public PageResponse<PromotionResponse> filterPromotions(PromotionFilterRequest request, Long shopId) {
+        Pageable pageable = PageRequest.of(
+                Math.max(0, Optional.ofNullable(request.getPage()).orElse(1) - 1),
+                Optional.ofNullable(request.getSize()).filter(s -> s > 0).orElse(10),
+                Sort.by(Sort.Direction.DESC, "id"));
+
+        LocalDateTime startDate = request.getStartDate() != null
+                ? request.getStartDate().atStartOfDay()
+                : null;
+
+        LocalDateTime endDate = request.getEndDate() != null
+                ? request.getEndDate()
+                        .plusDays(1)
+                        .atStartOfDay()
+                : null;
+
+        Page<PromotionResponse> page = promotionRepository.searchPromotionsByShopId(
+                StringUtils.trimToNull(request.getKeyword()),
+                startDate,
+                endDate,
+                request.getStatus(),
+                shopId,
+                pageable).map(promotionMapper::toDTO);
+
+        return new PageResponse<>(
+                page.getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages());
     }
 }
