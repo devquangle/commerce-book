@@ -10,6 +10,8 @@ import { Tooltip } from "@/components/common/Tooltip";
 import { EmptyState } from "@/components/common/EmptyState";
 import { type ProductResponse } from "@/modules/shop/products/types/product.type";
 import { formatMoney } from "@/libs/utils/formatMoney.utils";
+import { useGetProductPromotions } from "../hooks/usePromotion";
+import { PromotionTypeBadge } from "./PromotionTypeBadge";
 
 export interface PromotionProductTableProps {
   products: ProductResponse[];
@@ -43,6 +45,9 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
   onUpdateProductConfig,
 }) => {
   const [pageSize, setPageSize] = useState(initialPageSize);
+  
+  const productIds = products.map((p) => p.productId);
+  const { data: promotionsData, isLoading: isLoadingPromotions } = useGetProductPromotions(productIds);
 
   const activePage = page ?? currentPage ?? 1;
   const computedTotalPages =
@@ -232,7 +237,7 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
                           type="number"
                           min="0"
                           max="100"
-                          value={productConfigs[product.productId]?.discountPercent ?? ""}
+                          value={productConfigs[product.productId]?.discountPercent ?? 10}
                           onChange={(e) => onUpdateProductConfig?.(product.productId, 'discountPercent', e.target.value === "" ? "" : Number(e.target.value))}
                           className="w-16 px-2 py-1 text-sm border rounded-lg focus:outline-none focus:border-blue-500 disabled:bg-zinc-100 disabled:text-zinc-400 dark:border-zinc-700 dark:bg-zinc-900 dark:disabled:bg-zinc-800"
                         />
@@ -242,7 +247,7 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
                         <input
                           type="number"
                           min="0"
-                          value={productConfigs[product.productId]?.maxQuantity ?? ""}
+                          value={productConfigs[product.productId]?.maxQuantity ?? 10}
                           onChange={(e) => onUpdateProductConfig?.(product.productId, 'maxQuantity', e.target.value === "" ? "" : Number(e.target.value))}
                           className="w-16 px-2 py-1 text-sm border rounded-lg focus:outline-none focus:border-blue-500 disabled:bg-zinc-100 disabled:text-zinc-400 dark:border-zinc-700 dark:bg-zinc-900 dark:disabled:bg-zinc-800"
                         />
@@ -252,7 +257,25 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
 
                   {/* ── CT ĐANG THAM GIA ── */}
                   <td className="py-3 px-6 text-right align-middle">
-                    <span className="text-xs text-zinc-400 italic">Trống</span>
+                    {(() => {
+                      if (isLoadingPromotions) return <span className="text-xs text-zinc-400 italic">Đang tải...</span>;
+                      
+                      const prodPromo = promotionsData?.find(p => p.productId === product.productId);
+                      const activePromo = prodPromo?.activePromotion;
+                      
+                      if (activePromo) {
+                        return (
+                          <div className="flex flex-col gap-1 items-end">
+                            <span className="font-medium text-zinc-900 dark:text-zinc-100 text-sm line-clamp-1" title={activePromo.name}>
+                              {activePromo.name}
+                            </span>
+                            <PromotionTypeBadge type={activePromo.promotionCampaignType} />
+                          </div>
+                        );
+                      }
+
+                      return <span className="text-xs text-zinc-400 italic">Trống</span>;
+                    })()}
                   </td>
                 </tr>
               );

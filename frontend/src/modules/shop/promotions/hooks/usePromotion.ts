@@ -93,3 +93,11 @@ export const useDeletePromotionShop = () => {
     },
   });
 };
+
+export const useGetProductPromotions = (productIds: number[]) => {
+  return useQuery({
+    queryKey: ["product-promotions", productIds],
+    queryFn: () => PromotionService.getProductPromotions(productIds),
+    enabled: productIds.length > 0,
+  });
+};

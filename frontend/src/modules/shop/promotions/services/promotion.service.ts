@@ -6,6 +6,10 @@ import type {
 } from "../types/promotion.type";
 import type { ApiResponse } from "@/libs/utils/api-response";
 import type { Pagination } from "@/libs/utils/pagination";
+import type {
+  ProductPromotionRequest,
+  ProductPromotionResponse,
+} from "../types/promotion-product.type";
 
 const PromotionService = {
   fetchPromotionShop: async (
@@ -15,7 +19,9 @@ const PromotionService = {
       ApiResponse<Pagination<PromotionResponse>>
     >(`/api/v1/shop/promotions/filter`, { params: options });
     if (!response.data.success || !response.data.data) {
-      throw new Error(response.data.message || "Failed to fetch promotion data");
+      throw new Error(
+        response.data.message || "Failed to fetch promotion data",
+      );
     }
     return response.data.data;
   },
@@ -62,6 +68,18 @@ const PromotionService = {
     if (!response.data.success) {
       throw new Error(response.data.message || "Delete promotion failed");
     }
+  },
+  getProductPromotions: async (
+    productIds: number[],
+  ): Promise<ProductPromotionResponse[]> => {
+    const res = await authAxios.post<ApiResponse<ProductPromotionResponse[]>>(
+      `/api/v1/shop/promotions/products`,
+      { productIds },
+    );
+    if (!res.data.success || !res.data.data) {
+      throw new Error(res.data.message || "Load product promotions failed");
+    }
+    return res.data.data;
   },
 };
 
