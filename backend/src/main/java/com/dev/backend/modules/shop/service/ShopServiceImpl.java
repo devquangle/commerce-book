@@ -30,6 +30,13 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     @Transactional(readOnly = true)
+    public Shop getById(Long id) {
+        return shopRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Shop not found with id: " + id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public ShopResponse getShopById(Long id) {
         Shop shop = shopRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Shop not found with id: " + id));

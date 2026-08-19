@@ -5,6 +5,8 @@ import com.dev.backend.modules.genre.service.GenreService;
 import com.dev.backend.modules.publisher.service.PublisherService;
 
 import com.dev.backend.modules.series.service.SeriesService;
+import com.dev.backend.modules.voucher.service.VoucherService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -25,6 +27,8 @@ public class LoadData implements CommandLineRunner {
     private final GenreService genreService;
     private final PublisherService publisherService;
     private final SeriesService seriesService;
+
+    private final VoucherService voucherService;
     @Override
     public void run(String... args) throws Exception {
         insertData();
@@ -39,6 +43,7 @@ public class LoadData implements CommandLineRunner {
         genreService.insertData();
         publisherService.insertData();
         seriesService.insertData();
+        voucherService.insertData();
         log.info("Khởi tạo dữ liệu mẫu hoàn tất.");
     }
 }
