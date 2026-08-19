@@ -40,8 +40,8 @@ const ProductDescription = ({ description }: ProductDescriptionProps) => {
             prose prose-sm md:prose-base tiptap max-w-none text-slate-600 leading-relaxed
             prose-p:mb-4 prose-a:text-blue-600 prose-img:rounded-xl prose-img:max-w-full
             prose-img:mx-auto prose-img:block
-            overflow-hidden transition-all duration-300
-            ${!isExpanded ? 'max-h-75' : ''}
+            overflow-hidden transition-[max-height] duration-500 ease-in-out
+            ${!isExpanded ? 'max-h-75' : 'max-h-[5000px]'}
           `}
         >
           {description ? (
@@ -53,7 +53,7 @@ const ProductDescription = ({ description }: ProductDescriptionProps) => {
         
         {/* Lớp phủ mờ (Fade out gradient) khi chưa mở rộng */}
         {!isExpanded && showButton && (
-          <div className="absolute bottom-0 left-0 right-0 h-28 bg-linear-to-t from-white via-white/80 to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 h-28 bg-linear-to-t from-white via-white/80 to-transparent pointer-events-none transition-opacity duration-300" />
         )}
       </div>
 
@@ -64,7 +64,7 @@ const ProductDescription = ({ description }: ProductDescriptionProps) => {
             onClick={() => setIsExpanded(!isExpanded)}
             className="px-8 py-2 text-sm font-semibold text-blue-600 border border-blue-200 rounded-full hover:bg-blue-50 hover:border-blue-300 transition-colors shadow-sm"
           >
-            {isExpanded ? 'Thu gọn' : 'Xem thêm'}
+            {isExpanded ? 'Rút gọn' : 'Xem thêm'}
           </button>
         </div>
       )}

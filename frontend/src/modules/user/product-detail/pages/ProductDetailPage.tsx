@@ -2,6 +2,8 @@ import React from "react";
 import ProductImages from "../components/ProductImages";
 import Container from "@/components/common/Container";
 import ProductDescription from "../components/ProductDescription";
+import ProductAttribute from "../components/ProductAttribute";
+import ProductInfo from "../components/ProductInfo";
 
 // --- Interfaces provided by user ---
 export interface ProductGenreResponse {
@@ -62,7 +64,7 @@ const mockProduct: ProductDetailResponse = {
   weight: 300,
   publishYear: "1925",
   pages: 180,
-  language: "English",
+  language: "eng",
   description:
     "The Great Gatsby, F. Scott Fitzgerald's third book, stands as the supreme achievement of his career. First published in 1925, this quintessential novel of the Jazz Age has been acclaimed by generations of readers. The story of the mysteriously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan, of lavish parties on Long Island at a time when The New York Times noted 'gin was the national drink and sex the national obsession,' it is an exquisitely crafted tale of America in the 1920s.",
   soldCount: 450,
@@ -106,100 +108,10 @@ const ProductDetailPage: React.FC = () => {
 
         {/* Right side: Product Information (8 columns) */}
         <div className="md:col-span-8 flex flex-col gap-6">
-          {/* Header Info */}
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {mockProduct.productName}
-            </h1>
-            <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-              <span>
-                Sold:{" "}
-                <strong className="text-gray-900">
-                  {mockProduct.soldCount}
-                </strong>
-              </span>
-              <span>•</span>
-              <span>
-                Author:{" "}
-                <strong className="text-gray-900">
-                  {mockProduct.productAuthors.map((a) => a.name).join(", ")}
-                </strong>
-              </span>
-            </div>
-            <div className="text-3xl font-bold text-red-600">
-              ${mockProduct.price.toFixed(2)}
-            </div>
-          </div>
-
-          {/* Details Table / Grid */}
-          <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-            <h3 className="text-lg font-semibold mb-4 text-gray-800">
-              Product Details
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-8 text-sm">
-              <div className="flex justify-between border-b border-gray-200 pb-2">
-                <span className="text-gray-500">Publisher</span>
-                <span className="font-medium text-gray-900">
-                  {mockProduct.productPublisher.name}
-                </span>
-              </div>
-              <div className="flex justify-between border-b border-gray-200 pb-2">
-                <span className="text-gray-500">Publish Year</span>
-                <span className="font-medium text-gray-900">
-                  {mockProduct.publishYear}
-                </span>
-              </div>
-              <div className="flex justify-between border-b border-gray-200 pb-2">
-                <span className="text-gray-500">Pages</span>
-                <span className="font-medium text-gray-900">
-                  {mockProduct.pages}
-                </span>
-              </div>
-              <div className="flex justify-between border-b border-gray-200 pb-2">
-                <span className="text-gray-500">Language</span>
-                <span className="font-medium text-gray-900">
-                  {mockProduct.language || "N/A"}
-                </span>
-              </div>
-              <div className="flex justify-between border-b border-gray-200 pb-2">
-                <span className="text-gray-500">Weight</span>
-                <span className="font-medium text-gray-900">
-                  {mockProduct.weight}g
-                </span>
-              </div>
-              <div className="flex justify-between border-b border-gray-200 pb-2">
-                <span className="text-gray-500">ISBN</span>
-                <span className="font-medium text-gray-900">
-                  {mockProduct.isbn || "N/A"}
-                </span>
-              </div>
-              <div className="flex justify-between border-b border-gray-200 pb-2 sm:col-span-2">
-                <span className="text-gray-500">Genres</span>
-                <span className="font-medium text-gray-900 flex flex-wrap gap-2 justify-end">
-                  {mockProduct.productGenres.map((g) => (
-                    <span
-                      key={g.id}
-                      className="bg-gray-200 px-2 py-1 rounded-md text-xs"
-                    >
-                      {g.name}
-                    </span>
-                  ))}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-4">
-            <button className="flex-1 bg-white text-blue-600 border border-blue-600 font-semibold py-3 px-6 rounded-lg hover:bg-blue-50 transition-colors">
-              Add to Cart
-            </button>
-            <button className="flex-1 bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">
-              Buy Now
-            </button>
-          </div>
-
-         <ProductDescription description={mockProduct.description}/>
+          {/* Product Info (Title, Price, Add to Cart) */}
+          <ProductInfo product={mockProduct} />
+          <ProductAttribute product={mockProduct} />
+          <ProductDescription description={mockProduct.description} />
         </div>
       </div>
     </Container>
