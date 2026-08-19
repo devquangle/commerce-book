@@ -1,6 +1,5 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { InputField } from "@/components/common/InputField";
 import { TextAreaField } from "@/components/common/TextAreaField";
 import Spinner from "@/components/common/Spinner";
@@ -31,6 +30,7 @@ const ShopVoucherAddPage = () => {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<VoucherRequest>({
     defaultValues: INITIAL_FORM,
@@ -100,28 +100,50 @@ const ShopVoucherAddPage = () => {
             />
           </div>
           <div className="md:col-span-6">
-            <InputField
-              label="Giá trị đơn hàng tối thiểu"
-              type="number"
-              required
-              {...register("minOrderValue", {
+            <Controller
+              name="minOrderValue"
+              control={control}
+              rules={{ 
                 required: "Vui lòng nhập giá trị tối thiểu",
-                min: { value: 0, message: "Không được nhỏ hơn 0" },
-              })}
-              error={errors.minOrderValue?.message}
+                min: { value: 0, message: "Không được nhỏ hơn 0" }
+              }}
+              render={({ field }) => (
+                <InputField
+                  label="Giá trị đơn hàng tối thiểu"
+                  type="text"
+                  required
+                  value={field.value !== undefined && field.value !== null ? new Intl.NumberFormat("vi-VN").format(field.value) : ""}
+                  onChange={(e) => {
+                    const rawValue = e.target.value.replace(/\D/g, "");
+                    field.onChange(rawValue ? Number(rawValue) : 0);
+                  }}
+                  error={errors.minOrderValue?.message}
+                />
+              )}
             />
           </div>
 
           <div className="md:col-span-6">
-            <InputField
-              label="Mức giảm tối đa"
-              type="number"
-              required
-              {...register("maxDiscount", {
+            <Controller
+              name="maxDiscount"
+              control={control}
+              rules={{ 
                 required: "Vui lòng nhập mức giảm tối đa",
-                min: { value: 0, message: "Không được nhỏ hơn 0" },
-              })}
-              error={errors.maxDiscount?.message}
+                min: { value: 0, message: "Không được nhỏ hơn 0" }
+              }}
+              render={({ field }) => (
+                <InputField
+                  label="Mức giảm tối đa"
+                  type="text"
+                  required
+                  value={field.value !== undefined && field.value !== null ? new Intl.NumberFormat("vi-VN").format(field.value) : ""}
+                  onChange={(e) => {
+                    const rawValue = e.target.value.replace(/\D/g, "");
+                    field.onChange(rawValue ? Number(rawValue) : 0);
+                  }}
+                  error={errors.maxDiscount?.message}
+                />
+              )}
             />
           </div>
           <div className="md:col-span-6">
