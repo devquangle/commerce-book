@@ -14,16 +14,9 @@ export interface PromotionResponse {
 
 export interface PromotionRequest {
   name: string;
-  code: string;
-  description: string;
-  discountPercent: number;
-  minOrderValue: number;
-  maxDiscount: number;
-  usageLimit: number;
-  usedCount: number;
-
   startDate: string;
   endDate: string;
+  promotionCampaignType: PromotionCampaignType;
   status: PromotionStatus;
 }
 

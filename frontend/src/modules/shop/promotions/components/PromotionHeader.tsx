@@ -45,9 +45,9 @@ export const PromotionHeader: React.FC<PromotionHeaderProps> = ({
 
   // Mode: List
   if (actualMode === "list") {
-    const displayTitle = title || "Promotion";
+    const displayTitle = title || "Giảm giá sản phẩm";
     const displaySubTitle =
-      subTitle || "Quản lý danh sách promotion của cửa hàng";
+      subTitle || "Quản lý danh sách giảm giá sản phẩm của cửa hàng";
 
     return (
       <div className="col-span-12 card-custom flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -74,12 +74,12 @@ export const PromotionHeader: React.FC<PromotionHeaderProps> = ({
   // Mode: Add or Update
   const isUpdateMode = actualMode === "update";
   const displayTitle =
-    title || (isUpdateMode ? "Cập nhật thông tin promotion" : "Thêm promotion mới");
+    title || (isUpdateMode ? "Cập nhật thông tin giảm giá sản phẩm" : "Thêm chương trình giảm giá sản phẩm mới");
   const displaySubTitle =
     subTitle ||
     (isUpdateMode
-      ? "Chỉnh sửa các thông tin promotion trong hệ thống."
-      : "Điền đầy đủ thông tin bên dưới để khởi tạo promotion mới trong hệ thống.");
+      ? "Chỉnh sửa các thông tin giảm giá sản phẩm trong hệ thống."
+      : "Điền đầy đủ thông tin bên dưới để khởi tạo giảm giá sản phẩm mới trong hệ thống.");
   const displaySubmitText = submitText || (isUpdateMode ? "Cập nhật" : "Thêm");
 
   return (

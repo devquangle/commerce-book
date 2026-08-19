@@ -1,26 +1,26 @@
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { InputField } from "@/components/common/InputField";
-import { TextAreaField } from "@/components/common/TextAreaField";
 import { InputDate } from "@/components/common/InputDate";
+import { SelectBox } from "@/components/common/SelectBox";
 import Spinner from "@/components/common/Spinner";
 import { PromotionHeader } from "../components/PromotionHeader";
 import { useCreatePromotionShop } from "../hooks/usePromotion";
-import type { PromotionRequest } from "../types/promotion.type";
+import type { PromotionRequest, PromotionCampaignType } from "../types/promotion.type";
 
 const INITIAL_FORM: PromotionRequest = {
   name: "",
-  code: "",
-  description: "",
-  discountPercent: 0,
-  minOrderValue: 0,
-  maxDiscount: 0,
-  usageLimit: 0,
-  usedCount: 0,
   startDate: "",
   endDate: "",
+  promotionCampaignType: "PRODUCT_DISCOUNT",
   status: "ACTIVE",
 };
+
+const CAMPAIGN_TYPE_OPTIONS = [
+  { label: "Flash Sale", value: "FLASH_SALE" },
+  { label: "Giảm giá sản phẩm", value: "PRODUCT_DISCOUNT" },
+  { label: "Khuyến mãi theo mùa", value: "SEASONAL" },
+];
 
 const ShopPromotionAddPage = () => {
   const navigate = useNavigate();
@@ -66,97 +66,31 @@ const ShopPromotionAddPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           <div className="md:col-span-6">
             <InputField
-              label="Tên chương trình/Promotion"
+              label="Tên chương trình khuyến mãi"
               placeholder="VD: Siêu Sale Tháng 10"
               required
               {...register("name", {
-                required: "Tên promotion không được để trống",
+                required: "Tên chương trình không được để trống",
               })}
               error={errors.name?.message}
             />
           </div>
-          <div className="md:col-span-6">
-            <InputField
-              label="Mã Promotion"
-              placeholder="VD: SALE10"
-              required
-              {...register("code", {
-                required: "Mã promotion không được để trống",
-              })}
-              error={errors.code?.message}
-            />
-          </div>
-
-          <div className="md:col-span-6">
-            <InputField
-              label="Phần trăm giảm (%)"
-              type="number"
-              required
-              {...register("discountPercent", {
-                required: "Vui lòng nhập phần trăm giảm",
-                min: { value: 0, message: "Không được nhỏ hơn 0" },
-                max: { value: 100, message: "Không được vượt quá 100" },
-              })}
-              error={errors.discountPercent?.message}
-            />
-          </div>
+          
           <div className="md:col-span-6">
             <Controller
-              name="minOrderValue"
+              name="promotionCampaignType"
               control={control}
-              rules={{ 
-                required: "Vui lòng nhập giá trị tối thiểu",
-                min: { value: 0, message: "Không được nhỏ hơn 0" }
-              }}
+              rules={{ required: "Vui lòng chọn loại chiến dịch" }}
               render={({ field }) => (
-                <InputField
-                  label="Giá trị đơn hàng tối thiểu"
-                  type="text"
+                <SelectBox
+                  label="Loại chiến dịch"
+                  options={CAMPAIGN_TYPE_OPTIONS}
                   required
-                  value={field.value !== undefined && field.value !== null ? new Intl.NumberFormat("vi-VN").format(field.value) : ""}
-                  onChange={(e) => {
-                    const rawValue = e.target.value.replace(/\D/g, "");
-                    field.onChange(rawValue ? Number(rawValue) : 0);
-                  }}
-                  error={errors.minOrderValue?.message}
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.target.value as PromotionCampaignType)}
+                  error={errors.promotionCampaignType?.message}
                 />
               )}
-            />
-          </div>
-
-          <div className="md:col-span-6">
-            <Controller
-              name="maxDiscount"
-              control={control}
-              rules={{ 
-                required: "Vui lòng nhập mức giảm tối đa",
-                min: { value: 0, message: "Không được nhỏ hơn 0" }
-              }}
-              render={({ field }) => (
-                <InputField
-                  label="Mức giảm tối đa"
-                  type="text"
-                  required
-                  value={field.value !== undefined && field.value !== null ? new Intl.NumberFormat("vi-VN").format(field.value) : ""}
-                  onChange={(e) => {
-                    const rawValue = e.target.value.replace(/\D/g, "");
-                    field.onChange(rawValue ? Number(rawValue) : 0);
-                  }}
-                  error={errors.maxDiscount?.message}
-                />
-              )}
-            />
-          </div>
-          <div className="md:col-span-6">
-            <InputField
-              label="Số lượt sử dụng tối đa"
-              type="number"
-              required
-              {...register("usageLimit", {
-                required: "Vui lòng nhập giới hạn lượt dùng",
-                min: { value: 1, message: "Ít nhất phải là 1" },
-              })}
-              error={errors.usageLimit?.message}
             />
           </div>
 
@@ -169,6 +103,7 @@ const ShopPromotionAddPage = () => {
                 <InputDate
                   label="Thời gian bắt đầu"
                   showTimeSelect
+                  required
                   value={field.value}
                   onChange={(date) => {
                     if (date) {
@@ -183,6 +118,7 @@ const ShopPromotionAddPage = () => {
               )}
             />
           </div>
+
           <div className="md:col-span-6">
             <Controller
               name="endDate"
@@ -192,6 +128,7 @@ const ShopPromotionAddPage = () => {
                 <InputDate
                   label="Thời gian kết thúc"
                   showTimeSelect
+                  required
                   value={field.value}
                   onChange={(date) => {
                     if (date) {
@@ -204,16 +141,6 @@ const ShopPromotionAddPage = () => {
                   error={errors.endDate?.message}
                 />
               )}
-            />
-          </div>
-
-          <div className="md:col-span-12">
-            <TextAreaField
-              label="Mô tả"
-              placeholder="Nhập mô tả chi tiết về promotion..."
-              rows={4}
-              {...register("description")}
-              error={errors.description?.message}
             />
           </div>
         </div>
