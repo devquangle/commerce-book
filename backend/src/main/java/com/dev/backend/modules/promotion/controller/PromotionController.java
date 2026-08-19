@@ -2,8 +2,10 @@ package com.dev.backend.modules.promotion.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,5 +33,13 @@ public class PromotionController {
         PageResponse<PromotionResponse> data = promotionService.filterPromotions(request,
                 userDetails.getShop().getId());
         return ResponseUtil.success("Load promotion success", data);
+    }
+
+    @DeleteMapping("/shop/promotions/{id}")
+    public ResponseEntity<ResponseData<Void>> delete(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        promotionService.delete(id, userDetails.getShop().getId());
+        return ResponseUtil.successMessage("Delete promotion success");
     }
 }

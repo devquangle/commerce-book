@@ -22,14 +22,14 @@ const getPromotionStatusValue = (status: PromotionStatus) => {
       return "Hoạt động";
     case "INACTIVE":
       return "Tạm ngưng";
-    case "DELETE":
+    case "DELETED":
       return "Đã xóa";
     default:
       return status;
   }
 };
 
-const VOUCHER_STATUS_LIST: PromotionStatus[] = ["ACTIVE", "INACTIVE", "DELETE"];
+const VOUCHER_STATUS_LIST: PromotionStatus[] = ["ACTIVE", "INACTIVE", "DELETED"];
 
 const statusOptions = [
   { label: "Tất cả", value: "" },
@@ -58,7 +58,7 @@ export const PromotionFilter = ({
           type="text"
           value={keyword}
           onChange={(e) => onKeywordChange(e.target.value)}
-          placeholder="Tên, mã promotion..."
+          placeholder="Tên chương trình khuyến mãi..."
         />
       </div>
       

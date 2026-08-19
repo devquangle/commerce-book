@@ -20,6 +20,5 @@ public class PromotionResponse {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private PromotionCampaignType promotionCampaignType;
-
     private PromotionStatus status;
 }

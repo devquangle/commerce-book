@@ -8,4 +8,6 @@ public interface PromotionService {
   void insertData();
 
   PageResponse<PromotionResponse> filterPromotions(PromotionFilterRequest request, Long shopId);
+
+  void delete(Long id, Long shopId);
 }

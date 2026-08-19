@@ -1,19 +1,16 @@
 import React from "react";
 import {
-  Ticket,
   Calendar,
-  DollarSign,
-  Percent,
-  Hash,
+  Megaphone,
 } from "lucide-react";
 import { Pagination } from "@/components/common/Pagination";
 import { Tooltip } from "@/components/common/Tooltip";
 import { EmptyState } from "@/components/common/EmptyState";
 import { type PromotionResponse } from "../types/promotion.type";
 import { PromotionActionMenu } from "./PromotionActionMenu";
-import { formatMoney } from "@/libs/utils/formatMoney.utils";
 import { useNavigate } from "react-router-dom";
 import { PromotionStatusBadge } from "./PromotionStatus";
+import { PromotionTypeBadge } from "./PromotionTypeBadge";
 
 export interface PromotionTableProps {
   promotions: PromotionResponse[];
@@ -88,9 +85,9 @@ export const PromotionTable: React.FC<PromotionTableProps> = ({
           <thead className="bg-zinc-50 dark:bg-zinc-800/40 body-text uppercase font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider">
             <tr>
               <th className="px-4 py-4 w-14 text-center">STT</th>
-              <th className="px-6 py-4 w-[30%]">Promotion</th>
-              <th className="px-6 py-4 w-[25%]">Chi tiết giảm giá</th>
-              <th className="px-6 py-4 w-[20%]">Sử dụng & Thời gian</th>
+              <th className="px-6 py-4 w-[35%]">Tên chương trình</th>
+              <th className="px-6 py-4 w-[20%]">Loại</th>
+              <th className="px-6 py-4 w-[20%]">Thời gian áp dụng</th>
               <th className="px-6 py-4 w-[15%]">Trạng thái</th>
               <th className="px-6 py-4 text-right w-24"></th>
             </tr>
@@ -108,93 +105,50 @@ export const PromotionTable: React.FC<PromotionTableProps> = ({
                   }
                   className="hover:bg-zinc-50/70 dark:hover:bg-zinc-800/30 transition-colors"
                 >
-                  {/* ── STT ── */}
                   <td className="px-4 py-4 text-center font-medium text-zinc-400 dark:text-zinc-500 body-text align-middle">
                     {stt}
                   </td>
 
-                  {/* ── THÔNG TIN VOUCHER CHUNG ── */}
                   <td className="py-3 px-6 align-middle">
                     <div className="flex gap-3 items-start">
-                      <div className="relative shrink-0 overflow-hidden w-12 h-12 rounded-xl border border-dashed border-slate-200/80 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 flex items-center justify-center shadow-xs mt-1">
-                        <Ticket
-                          size={20}
+                      <div className="relative shrink-0 overflow-hidden w-10 h-10 rounded-xl border border-dashed border-slate-200/80 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 flex items-center justify-center shadow-xs mt-0.5">
+                        <Megaphone
+                          size={18}
                           className="text-slate-400 dark:text-zinc-500"
                         />
                       </div>
-                      <div className="flex-1 min-w-0 flex flex-col gap-1">
+                      <div className="flex-1 min-w-0 flex flex-col gap-1 justify-center h-10">
                         <p
                           className="font-semibold text-zinc-900 dark:text-zinc-100 body-text leading-snug line-clamp-2"
                           title={promotion.name}
                         >
                           {promotion.name}
                         </p>
-                        <span className="text-sm font-mono text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 px-1.5 py-0.5 rounded w-fit border border-indigo-100 dark:border-indigo-500/20">
-                          {promotion.code}
-                        </span>
-                     
                       </div>
                     </div>
                   </td>
 
-                  {/* ── CHI TIẾT GIẢM GIÁ ── */}
                   <td className="py-3 px-6 align-middle">
-                    <div className="flex flex-col gap-1.5 caption-text">
-                      <Tooltip content="Mức giảm" position="top">
-                        <div className="flex items-center gap-1.5 font-semibold text-emerald-600 dark:text-emerald-400">
-                          <Percent size={13} className="shrink-0" />
-                          <span>Giảm {promotion.discountPercent}%</span>
-                        </div>
-                      </Tooltip>
-                      <Tooltip content="Đơn tối thiểu" position="top">
-                        <div className="flex items-center gap-1.5 text-zinc-600 dark:text-zinc-400">
-                          <DollarSign size={13} className="shrink-0" />
-                          <span>Đơn tối thiểu: {formatMoney(promotion.minOrderValue)}</span>
-                        </div>
-                      </Tooltip>
-                      {promotion.maxDiscount > 0 && (
-                        <Tooltip content="Giảm tối đa" position="top">
-                          <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400 text-xs">
-                            <DollarSign size={11} className="shrink-0" />
-                            <span>Tối đa: {formatMoney(promotion.maxDiscount)}</span>
-                          </div>
-                        </Tooltip>
-                      )}
+                    <PromotionTypeBadge type={promotion.promotionCampaignType} />
+                  </td>
+
+                  <td className="py-3 px-6 align-middle">
+                    <div className="flex flex-col gap-0.5 text-zinc-500 dark:text-zinc-400 text-xs mt-1">
+                      <div className="flex items-center gap-1.5">
+                        <Calendar size={12} className="shrink-0" />
+                        <span>Từ: {formatDate(promotion.startDate)}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Calendar size={12} className="shrink-0 " />
+                        <span>Đến: {formatDate(promotion.endDate)}</span>
+                      </div>
                     </div>
                   </td>
 
-                  {/* ── SỬ DỤNG & THỜI GIAN ── */}
-                  <td className="py-3 px-6 align-middle">
-                    <div className="flex flex-col gap-1.5 caption-text">
-                      <Tooltip content="Lượt sử dụng" position="top">
-                        <div className="flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300">
-                          <Hash size={13} className="shrink-0 text-zinc-400" />
-                          <span>
-                            Đã dùng: <span className="font-semibold">{promotion.usedCount}</span> / {promotion.usageLimit}
-                          </span>
-                        </div>
-                      </Tooltip>
-                      <Tooltip content="Thời gian áp dụng" position="top">
-                        <div className="flex flex-col gap-0.5 text-zinc-500 dark:text-zinc-400 text-xs mt-1">
-                          <div className="flex items-center gap-1.5">
-                            <Calendar size={11} className="shrink-0" />
-                            <span>Từ: {formatDate(promotion.startDate)}</span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            <Calendar size={11} className="shrink-0 " />
-                            <span>Đến: {formatDate(promotion.endDate)}</span>
-                          </div>
-                        </div>
-                      </Tooltip>
-                    </div>
-                  </td>
-
-                  {/* ── TRẠNG THÁI ── */}
                   <td className="py-3 px-6 align-middle">
                     <PromotionStatusBadge status={promotion.status} />
                   </td>
 
-                  {/* ── THAO TÁC ── */}
                   <td className="py-3 px-6 text-right align-middle">
                     <PromotionActionMenu
                       item={promotion}

@@ -1,18 +1,14 @@
-export type PromotionStatus = "ACTIVE" | "INACTIVE" | "DELETE";
-
+export type PromotionStatus = "ACTIVE" | "INACTIVE" | "DELETED";
+export type PromotionCampaignType =
+  | "FLASH_SALE"
+  | "PRODUCT_DISCOUNT"
+  | "SEASONAL";
 export interface PromotionResponse {
   id: number;
   name: string;
-  code: string;
-  description: string;
-  discountPercent: number;
-  minOrderValue: number;
-  maxDiscount: number;
-  usageLimit: number;
-  usedCount: number;
-
   startDate: string;
   endDate: string;
+  promotionCampaignType: PromotionCampaignType;
   status: PromotionStatus;
 }
 
@@ -33,10 +29,9 @@ export interface PromotionRequest {
 
 export interface PromotionFilterRequest {
   keyword?: string;
-  startDate?:string;
-  endDate?:string;
+  startDate?: string;
+  endDate?: string;
   status?: PromotionStatus;
   page?: number;
   size?: number;
 }
-
