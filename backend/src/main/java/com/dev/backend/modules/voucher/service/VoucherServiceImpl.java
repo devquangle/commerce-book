@@ -13,6 +13,12 @@ import com.dev.backend.modules.voucher.mapper.VoucherMapper;
 import com.dev.backend.modules.voucher.repository.VoucherRepository;
 
 import lombok.RequiredArgsConstructor;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -33,9 +40,26 @@ public class VoucherServiceImpl implements VoucherService {
     private final VoucherMapper voucherMapper;
 
     @Override
-    public PageResponse<VoucherResponse> filterVouchers(VoucherFilterRequest request, Integer shopId) {
-        // TODO Auto-generated method stub
-        return null;
+    public PageResponse<VoucherResponse> filterVouchers(VoucherFilterRequest request, Long shopId) {
+        Pageable pageable = PageRequest.of(
+                Math.max(0, Optional.ofNullable(request.getPage()).orElse(1) - 1),
+                Optional.ofNullable(request.getSize()).filter(s -> s > 0).orElse(10),
+                Sort.by(Sort.Direction.DESC, "id"));
+
+        Page<VoucherResponse> page = voucherRepository.searchVouchersByShopId(
+                StringUtils.trimToNull(request.getKeyword()),
+                request.getStartDate(),
+                request.getEndDate(),
+                request.getStatus(),
+                shopId,
+                pageable).map(voucherMapper::toDTO);
+
+        return new PageResponse<>(
+                page.getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages());
     }
 
     @Override

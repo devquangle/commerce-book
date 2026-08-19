@@ -12,5 +12,5 @@ public interface VoucherService {
 
     //VoucherResponse add(Voucher voucher, VoucherRequest request, Integer shopId);
 
-    PageResponse<VoucherResponse> filterVouchers(VoucherFilterRequest request,Integer shopId);
+    PageResponse<VoucherResponse> filterVouchers(VoucherFilterRequest request,Long shopId);
 }
