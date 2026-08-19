@@ -1,8 +1,6 @@
 package com.dev.backend.modules.promotion.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +19,7 @@ public class PromotionResponse {
     private String name;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private PromotionStatus status;
     private PromotionCampaignType promotionCampaignType;
+
+    private PromotionStatus status;
 }

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Edit, Trash2, Eye, MoreVertical } from "lucide-react";
+import {  Trash2, Eye, MoreVertical } from "lucide-react";
 import { type VoucherResponse } from "../types/voucher.type";
 
 interface VoucherActionMenuProps {
@@ -13,7 +13,6 @@ export const VoucherActionMenu: React.FC<VoucherActionMenuProps> = ({
   item,
   onDelete,
   onEdit,
-  onView,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openUpward, setOpenUpward] = useState(false);
