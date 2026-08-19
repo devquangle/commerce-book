@@ -28,6 +28,7 @@ public class PromotionProductServiceImpl implements PromotionProductService {
 
         private final PromotionProductRepository promotionProductRepository;
         private final ProductRepository productRepository;
+
         @Override
         public void setPromotionProducts(
                         Promotion promotion,
@@ -37,7 +38,8 @@ public class PromotionProductServiceImpl implements PromotionProductService {
                                         PromotionProduct promotionProduct = new PromotionProduct();
 
                                         promotionProduct.setPromotion(promotion);
-                                        promotionProduct.setProduct(productRepository.getReferenceById(item.getProductId()));
+                                        promotionProduct.setProduct(
+                                                        productRepository.getReferenceById(item.getProductId()));
                                         promotionProduct.setDiscountPercent(item.getDiscountPercent());
                                         promotionProduct.setMaxQuantity(item.getMaxQuantity());
                                         promotionProduct.setSoldQuantity(0);
@@ -58,7 +60,7 @@ public class PromotionProductServiceImpl implements PromotionProductService {
                 return promotionProductRepository.findByProductIds(productIds)
                                 .stream()
                                 .collect(Collectors.groupingBy(
-                                                projection -> Objects.requireNonNull(projection).productId(),
+                                                projection -> projection.productId(),
                                                 LinkedHashMap::new,
                                                 Collectors.toList()))
                                 .entrySet()
@@ -70,22 +72,30 @@ public class PromotionProductServiceImpl implements PromotionProductService {
                                                         .map(this::toPromotionResponse)
                                                         .toList();
 
+                                        // Promotion đang active và có discount cao nhất
                                         PromotionProductResponse activePromotion = promotions.stream()
                                                         .filter(promotion -> promotion
                                                                         .status() == PromotionStatus.ACTIVE
                                                                         && !promotion.startDate().isAfter(now)
                                                                         && !promotion.endDate().isBefore(now))
                                                         .max(Comparator.comparing(
-                                                                        (PromotionProductResponse promotion) -> promotion
-                                                                                        .discountPercent(),
+                                                                        promotion -> promotion.discountPercent(),
                                                                         Comparator.nullsFirst(
                                                                                         Comparator.naturalOrder())))
                                                         .orElse(null);
 
+                                        // History không bao gồm promotion đang active
+                                        List<PromotionProductResponse> history = promotions.stream()
+                                                        .filter(promotion -> activePromotion == null
+                                                                        || !Objects.equals(
+                                                                                        promotion.promotionId(),
+                                                                                        activePromotion.promotionId()))
+                                                        .toList();
+
                                         return new ProductPromotionResponse(
                                                         entry.getKey(),
                                                         activePromotion,
-                                                        promotions);
+                                                        history);
                                 })
                                 .toList();
         }

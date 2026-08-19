@@ -37,12 +37,20 @@ public class PromotionServiceImpl implements PromotionService {
         private final ShopService shopService;
         private final PromotionMapper promotionMapper;
         private final PromotionProductService promotionProductService;
+
         @Override
         public void delete(Long id, Long shopId) {
                 Promotion promotion = promotionRepository.findByIdAndShopId(id, shopId)
                                 .orElseThrow(() -> new NotFoundException("Không tìm thấy"));
                 promotion.setStatus(PromotionStatus.DELETED);
                 promotionRepository.save(promotion);
+        }
+
+        @Override
+        public PromotionResponse detail(Long id, Long shopId) {
+                Promotion promotion = promotionRepository.findByIdAndShopId(id, shopId)
+                                .orElseThrow(() -> new NotFoundException("Không tìm thấy"));
+                return promotionMapper.toDTO(promotion);
         }
 
         @Override

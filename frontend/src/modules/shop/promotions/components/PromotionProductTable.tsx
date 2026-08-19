@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   BookOpen,
   BadgeDollarSign,
@@ -27,6 +27,7 @@ export interface PromotionProductTableProps {
   onPageSizeChange?: (size: number) => void;
   productConfigs?: Record<number, { discountPercent?: number | string; maxQuantity?: number | string }>;
   onUpdateProductConfig?: (productId: number, field: 'discountPercent' | 'maxQuantity', value: number | string) => void;
+  promotionId?: number;
 }
 
 export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
@@ -43,11 +44,40 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
   onPageSizeChange,
   productConfigs = {},
   onUpdateProductConfig,
+  promotionId,
 }) => {
   const [pageSize, setPageSize] = useState(initialPageSize);
   
   const productIds = products.map((p) => p.productId);
   const { data: promotionsData, isLoading: isLoadingPromotions } = useGetProductPromotions(productIds);
+
+  const processedProductsRef = useRef<Set<number>>(new Set());
+
+  useEffect(() => {
+    if (promotionId && promotionsData) {
+      promotionsData.forEach((prodPromo) => {
+        if (processedProductsRef.current.has(prodPromo.productId)) return; // Only process once per product
+
+        const matchedPromo = 
+          (prodPromo.activePromotion?.promotionId === promotionId ? prodPromo.activePromotion : null) ||
+          prodPromo.promotionHistory.find((h) => h.promotionId === promotionId);
+
+        if (matchedPromo) {
+          // Auto check
+          if (onSelectProduct && !selectedProductIds.includes(prodPromo.productId)) {
+            onSelectProduct(prodPromo.productId, true);
+          }
+          // Auto fill configs
+          if (onUpdateProductConfig) {
+            onUpdateProductConfig(prodPromo.productId, 'discountPercent', matchedPromo.discountPercent);
+            onUpdateProductConfig(prodPromo.productId, 'maxQuantity', matchedPromo.maxQuantity);
+          }
+        }
+
+        processedProductsRef.current.add(prodPromo.productId);
+      });
+    }
+  }, [promotionsData, promotionId, selectedProductIds, onSelectProduct, onUpdateProductConfig]);
 
   const activePage = page ?? currentPage ?? 1;
   const computedTotalPages =

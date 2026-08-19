@@ -272,6 +272,7 @@ const ShopPromotionUpdatePage = () => {
             onPageChange={handlePageChange}
             onPageSizeChange={handlePageSizeChange}
             productConfigs={productConfigs}
+            promotionId={Number(id)}
             onUpdateProductConfig={(productId, field, value) => {
               setProductConfigs((prev) => ({
                 ...prev,

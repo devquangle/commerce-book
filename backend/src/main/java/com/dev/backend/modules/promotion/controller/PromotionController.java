@@ -48,6 +48,14 @@ public class PromotionController {
         return ResponseUtil.success("Create promotion success", data);
     }
 
+    @GetMapping("/shop/promotions/{id}")
+    public ResponseEntity<ResponseData<PromotionResponse>> detail(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        PromotionResponse data = promotionService.detail(id, userDetails.getShop().getId());
+        return ResponseUtil.success("Detail promotion success", data);
+    }
+
     @DeleteMapping("/shop/promotions/{id}")
     public ResponseEntity<ResponseData<Void>> delete(
             @PathVariable("id") Long id,
