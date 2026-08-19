@@ -16,11 +16,15 @@ import type { VoucherResponse } from "../types/voucher.type";
 const ShopVoucherListPage = () => {
   const {
     keyword,
+    startDate,
+    endDate,
     status,
     page,
     size,
     filterParams,
     handleKeywordChange,
+    handleStartDateChange,
+    handleEndDateChange,
     handleStatusChange,
     handlePageChange,
     handlePageSizeChange,
@@ -59,8 +63,12 @@ const ShopVoucherListPage = () => {
       <VoucherHeader />
       <VoucherFilter
         keyword={keyword}
+        startDate={startDate}
+        endDate={endDate}
         status={status}
         onKeywordChange={handleKeywordChange}
+        onStartDateChange={handleStartDateChange}
+        onEndDateChange={handleEndDateChange}
         onStatusChange={handleStatusChange}
         onReset={handleResetFilter}
       />

@@ -45,10 +45,20 @@ public class VoucherServiceImpl implements VoucherService {
                 Optional.ofNullable(request.getSize()).filter(s -> s > 0).orElse(10),
                 Sort.by(Sort.Direction.DESC, "id"));
 
+        LocalDateTime startDate = request.getStartDate() != null
+                ? request.getStartDate().atStartOfDay()
+                : null;
+
+        LocalDateTime endDate = request.getEndDate() != null
+                ? request.getEndDate()
+                        .plusDays(1)
+                        .atStartOfDay()
+                : null;
+
         Page<VoucherResponse> page = voucherRepository.searchVouchersByShopId(
                 StringUtils.trimToNull(request.getKeyword()),
-                request.getStartDate(),
-                request.getEndDate(),
+                startDate,
+                endDate,
                 request.getStatus(),
                 shopId,
                 pageable).map(voucherMapper::toDTO);
@@ -77,7 +87,7 @@ public class VoucherServiceImpl implements VoucherService {
         Voucher voucher = new Voucher();
         validate(request);
         voucherMapper.toEntity(voucher, request);
-        voucher.setCode(request.getCode());
+        voucher.setCode(request.getCode().toUpperCase());
         voucher.setUsedCount(0);
         voucher.setShop(shopService.getById(shopId));
         voucher.setStatus(VoucherStatus.ACTIVE);

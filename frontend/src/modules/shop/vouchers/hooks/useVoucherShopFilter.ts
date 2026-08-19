@@ -6,6 +6,8 @@ import useDebounce from "@/libs/utils/useDebounce";
 
 const initialFilterOptions = {
   keyword: "",
+  startDate: "",
+  endDate: "",
   status: null as VoucherStatus | null,
   page: 1,
   size: 10,
@@ -16,6 +18,14 @@ export const useVoucherShopFilter = () => {
 
   const [keyword, setKeyword] = useState<string>(
     () => searchParams.get("keyword") ?? initialFilterOptions.keyword
+  );
+
+  const [startDate, setStartDate] = useState<string>(
+    () => searchParams.get("startDate") ?? initialFilterOptions.startDate
+  );
+
+  const [endDate, setEndDate] = useState<string>(
+    () => searchParams.get("endDate") ?? initialFilterOptions.endDate
   );
 
   const [status, setStatus] = useState<VoucherStatus | null>(
@@ -39,6 +49,14 @@ export const useVoucherShopFilter = () => {
       params.set("keyword", debouncedKeyword.trim());
     }
 
+    if (startDate) {
+      params.set("startDate", startDate);
+    }
+
+    if (endDate) {
+      params.set("endDate", endDate);
+    }
+
     if (status) {
       params.set("status", status);
     }
@@ -52,10 +70,20 @@ export const useVoucherShopFilter = () => {
     }
 
     setSearchParams(params, { replace: true });
-  }, [debouncedKeyword, status, page, size, setSearchParams]);
+  }, [debouncedKeyword, startDate, endDate, status, page, size, setSearchParams]);
 
   const handleKeywordChange = useCallback((value: string) => {
     setKeyword(value);
+    setPage(1);
+  }, []);
+
+  const handleStartDateChange = useCallback((value: string) => {
+    setStartDate(value);
+    setPage(1);
+  }, []);
+
+  const handleEndDateChange = useCallback((value: string) => {
+    setEndDate(value);
     setPage(1);
   }, []);
 
@@ -75,6 +103,8 @@ export const useVoucherShopFilter = () => {
 
   const handleResetFilter = useCallback(() => {
     setKeyword(initialFilterOptions.keyword);
+    setStartDate(initialFilterOptions.startDate);
+    setEndDate(initialFilterOptions.endDate);
     setStatus(initialFilterOptions.status);
     setPage(initialFilterOptions.page);
     setSize(initialFilterOptions.size);
@@ -82,6 +112,8 @@ export const useVoucherShopFilter = () => {
 
   const filterParams: VoucherFilterRequest = {
     keyword: debouncedKeyword ? debouncedKeyword.trim() : "",
+    startDate: startDate || undefined,
+    endDate: endDate || undefined,
     status: status || undefined,
     page,
     size,
@@ -89,6 +121,8 @@ export const useVoucherShopFilter = () => {
 
   return {
     keyword,
+    startDate,
+    endDate,
     status,
     page,
     size,
@@ -99,6 +133,8 @@ export const useVoucherShopFilter = () => {
     setSize,
 
     handleKeywordChange,
+    handleStartDateChange,
+    handleEndDateChange,
     handleStatusChange,
     handlePageChange,
     handlePageSizeChange,

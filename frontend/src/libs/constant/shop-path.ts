@@ -41,8 +41,8 @@ export const SHOP_PATH = {
   VOUCHER_CREATE: "vouchers/add",
   VOUCHER_CREATE_FULL: "/shop/vouchers/add",
 
-  VOUCHER_UPDATE: "vouchers/edit",
-  VOUCHER_UPDATE_FULL: "/shop/vouchers/edit",
+  VOUCHER_UPDATE: "vouchers/edit/:id",
+  VOUCHER_UPDATE_FULL: "/shop/vouchers/edit/:id",
   REPORTS_FULL: "/shop/reports",
   ANALYTICS_FULL: "/shop/analytics",
 } as const;

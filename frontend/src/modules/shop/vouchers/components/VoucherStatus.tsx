@@ -2,7 +2,11 @@ import React from "react";
 import { type VoucherStatus } from "../types/voucher.type";
 import { Badge } from "@/components/common/Badge";
 
-export const getVoucherStatusBadge = (status: VoucherStatus) => {
+interface VoucherStatusProps {
+  status: VoucherStatus;
+}
+
+export const VoucherStatusBadge: React.FC<VoucherStatusProps> = ({ status }) => {
   switch (status) {
     case "ACTIVE":
       return <Badge variant="success" title="Hoạt động" />;
@@ -13,12 +17,4 @@ export const getVoucherStatusBadge = (status: VoucherStatus) => {
     default:
       return <Badge variant="secondary" title="Không xác định" />;
   }
-};
-
-interface VoucherStatusProps {
-  status: VoucherStatus;
-}
-
-export const VoucherStatusBadge: React.FC<VoucherStatusProps> = ({ status }) => {
-  return getVoucherStatusBadge(status);
 };

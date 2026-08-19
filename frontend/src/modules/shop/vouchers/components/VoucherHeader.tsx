@@ -63,7 +63,7 @@ export const VoucherHeader: React.FC<VoucherHeaderProps> = ({
         <Button
           variant="primary"
           icon={<Plus className="w-4 h-4" />}
-          onClick={onAddClick || (() => navigate("/shop/vouchers/create"))}
+          onClick={onAddClick || (() => navigate("/shop/vouchers/add"))}
         >
           Thêm mới
         </Button>

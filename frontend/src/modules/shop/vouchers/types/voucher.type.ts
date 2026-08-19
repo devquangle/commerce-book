@@ -33,6 +33,8 @@ export interface VoucherRequest {
 
 export interface VoucherFilterRequest {
   keyword?: string;
+  startDate?:string;
+  endDate?:string;
   status?: VoucherStatus;
   page?: number;
   size?: number;

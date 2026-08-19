@@ -42,7 +42,7 @@ export const VoucherMobileCard: React.FC<VoucherMobileCardProps> = ({
     if (onEdit) {
       onEdit(vouch);
     } else {
-      navigate(`/shop/vouchers/update/${vouch.id}`);
+      navigate(`/shop/vouchers/edit/${vouch.id}`);
     }
   };
 

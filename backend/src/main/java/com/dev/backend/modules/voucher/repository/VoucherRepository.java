@@ -26,12 +26,24 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
       SELECT v
       FROM Voucher v
       WHERE v.shop.id = :shopId
-        AND (:keyword IS NULL OR :keyword = ''
-             OR LOWER(v.code) LIKE LOWER(CONCAT('%', :keyword, '%'))
-             OR LOWER(v.name) LIKE LOWER(CONCAT('%', :keyword, '%')))
-        AND (:startDate IS NULL OR v.startDate >= :startDate)
-        AND (:endDate IS NULL OR v.endDate <= :endDate)
-        AND (:status IS NULL OR v.status = :status)
+        AND (
+            :keyword IS NULL
+            OR :keyword = ''
+            OR LOWER(v.code) LIKE LOWER(CONCAT('%', :keyword, '%'))
+            OR LOWER(v.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+        )
+        AND (
+            :startDate IS NULL
+            OR v.endDate >= :startDate
+        )
+        AND (
+            :endDate IS NULL
+            OR v.startDate <= :endDate
+        )
+        AND (
+            :status IS NULL
+            OR v.status = :status
+        )
       """)
   Page<Voucher> searchVouchersByShopId(
       @Param("keyword") String keyword,

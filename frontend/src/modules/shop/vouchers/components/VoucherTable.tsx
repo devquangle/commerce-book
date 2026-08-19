@@ -71,7 +71,7 @@ export const VoucherTable: React.FC<VoucherTableProps> = ({
     if (onEdit) {
       onEdit(voucher);
     } else {
-      navigate(`/shop/vouchers/update/${voucher.id}`);
+      navigate(`/shop/vouchers/edit/${voucher.id}`);
     }
   };
 
@@ -132,11 +132,7 @@ export const VoucherTable: React.FC<VoucherTableProps> = ({
                         <span className="text-sm font-mono text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 px-1.5 py-0.5 rounded w-fit border border-indigo-100 dark:border-indigo-500/20">
                           {voucher.code}
                         </span>
-                        {voucher.description && (
-                          <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-1 mt-0.5" title={voucher.description}>
-                            {voucher.description}
-                          </p>
-                        )}
+                     
                       </div>
                     </div>
                   </td>
@@ -185,7 +181,7 @@ export const VoucherTable: React.FC<VoucherTableProps> = ({
                             <span>Từ: {formatDate(voucher.startDate)}</span>
                           </div>
                           <div className="flex items-center gap-1.5">
-                            <Calendar size={11} className="shrink-0 opacity-0" />
+                            <Calendar size={11} className="shrink-0 " />
                             <span>Đến: {formatDate(voucher.endDate)}</span>
                           </div>
                         </div>

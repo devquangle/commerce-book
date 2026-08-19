@@ -1,6 +1,6 @@
 package com.dev.backend.modules.voucher.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import com.dev.backend.common.enums.VoucherStatus;
 
@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 public class VoucherFilterRequest {
     private String keyword;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private VoucherStatus status;
     private Integer page;
     private Integer size;

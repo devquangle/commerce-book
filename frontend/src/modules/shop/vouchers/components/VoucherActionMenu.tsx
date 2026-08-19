@@ -75,28 +75,15 @@ export const VoucherActionMenu: React.FC<VoucherActionMenuProps> = ({
               : "top-0 origin-top-right"
           }`}
         >
-          {onView && (
-            <button
-              onClick={() => {
-                setIsOpen(false);
-                onView(item);
-              }}
-              className="flex items-center gap-2 w-full px-3 py-2 body-text text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-blue-600 transition-colors cursor-pointer"
-            >
-              <Eye className="w-4 h-4" />
-              <span>Xem</span>
-            </button>
-          )}
-
           <button
             onClick={() => {
               setIsOpen(false);
               if (onEdit) onEdit(item);
             }}
-            className="flex items-center gap-2 w-full px-3 py-2 body-text text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-amber-600 transition-colors cursor-pointer"
+            className="flex items-center gap-2 w-full px-3 py-2 body-text text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-blue-600 transition-colors cursor-pointer"
           >
-            <Edit className="w-4 h-4" />
-            <span>Cập nhật</span>
+            <Eye className="w-4 h-4" />
+            <span>Xem</span>
           </button>
 
           <div className="h-px bg-zinc-100 dark:bg-zinc-800 my-1 w-full" />
