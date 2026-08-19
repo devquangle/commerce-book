@@ -5,9 +5,8 @@ import {
   Calendar,
   ChevronDown,
   ChevronUp,
-  Percent,
   DollarSign,
-  Hash,
+
 } from "lucide-react";
 import { type VoucherResponse } from "../types/voucher.type";
 import { VoucherActionMenu } from "./VoucherActionMenu";

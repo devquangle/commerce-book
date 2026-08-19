@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+import com.dev.backend.common.enums.VoucherStatus;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,6 +18,7 @@ public class VoucherRequest {
     private String code;
     private String name;
     private String description;
+    
     private Integer discountPercent;
     private Integer minOrderValue;
     private Integer maxDiscount;
@@ -26,5 +29,5 @@ public class VoucherRequest {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    private String status;
+    private VoucherStatus status;
 }

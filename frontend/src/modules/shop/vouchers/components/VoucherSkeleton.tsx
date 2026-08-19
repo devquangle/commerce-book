@@ -6,7 +6,7 @@ export const VoucherSkeleton = () => {
           <thead className="bg-slate-50/50 border-b border-slate-200">
             <tr className="text-slate-500">
               <th className="px-4 py-4 w-14 text-center">STT</th>
-              <th className="py-3 px-6 font-semibold caption-text uppercase tracking-wider w-[35%]">
+              <th className="py-3 px-6 font-semibold caption-text uppercase tracking-wider w-[30%]">
                 Voucher
               </th>
               <th className="py-3 px-6 font-semibold caption-text uppercase tracking-wider w-[25%]">
@@ -15,7 +15,7 @@ export const VoucherSkeleton = () => {
               <th className="py-3 px-6 font-semibold caption-text uppercase tracking-wider w-[20%]">
                 Sử dụng & Thời gian
               </th>
-              <th className="py-3 px-6 font-semibold caption-text uppercase tracking-wider w-[10%]">
+              <th className="py-3 px-6 font-semibold caption-text uppercase tracking-wider w-[15%]">
                 Trạng thái
               </th>
               <th className="py-3 px-6 font-semibold caption-text uppercase tracking-wider text-right w-16">

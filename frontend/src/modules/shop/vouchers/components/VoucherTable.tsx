@@ -88,10 +88,10 @@ export const VoucherTable: React.FC<VoucherTableProps> = ({
           <thead className="bg-zinc-50 dark:bg-zinc-800/40 body-text uppercase font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider">
             <tr>
               <th className="px-4 py-4 w-14 text-center">STT</th>
-              <th className="px-6 py-4 w-[35%]">Voucher</th>
+              <th className="px-6 py-4 w-[30%]">Voucher</th>
               <th className="px-6 py-4 w-[25%]">Chi tiết giảm giá</th>
               <th className="px-6 py-4 w-[20%]">Sử dụng & Thời gian</th>
-              <th className="px-6 py-4 w-[10%]">Trạng thái</th>
+              <th className="px-6 py-4 w-[15%]">Trạng thái</th>
               <th className="px-6 py-4 text-right w-24"></th>
             </tr>
           </thead>

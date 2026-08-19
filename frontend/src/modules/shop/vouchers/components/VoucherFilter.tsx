@@ -13,17 +13,17 @@ interface VoucherFilterProps {
 const getVoucherStatusValue = (status: VoucherStatus) => {
   switch (status) {
     case "ACTIVE":
-      return "Đang hoạt động";
+      return "Hoạt động";
     case "INACTIVE":
-      return "Ngừng hoạt động";
-    case "DELETED":
+      return "Tạm ngưng";
+    case "DELETE":
       return "Đã xóa";
     default:
       return status;
   }
 };
 
-const VOUCHER_STATUS_LIST: VoucherStatus[] = ["ACTIVE", "INACTIVE", "DELETED"];
+const VOUCHER_STATUS_LIST: VoucherStatus[] = ["ACTIVE", "INACTIVE", "DELETE"];
 
 const statusOptions = [
   { label: "Tất cả", value: "" },

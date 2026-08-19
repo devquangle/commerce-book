@@ -5,13 +5,13 @@ import { Badge } from "@/components/common/Badge";
 export const getVoucherStatusBadge = (status: VoucherStatus) => {
   switch (status) {
     case "ACTIVE":
-      return <Badge variant="success">Đang hoạt động</Badge>;
+      return <Badge variant="success" title="Hoạt động" />;
     case "INACTIVE":
-      return <Badge variant="warning">Ngừng hoạt động</Badge>;
-    case "DELETED":
-      return <Badge variant="error">Đã xóa</Badge>;
+      return <Badge variant="warning" title="Tạm ngưng" />;
+    case "DELETE":
+      return <Badge variant="danger" title="Đã xóa" />;
     default:
-      return <Badge variant="secondary">Không xác định</Badge>;
+      return <Badge variant="secondary" title="Không xác định" />;
   }
 };
 
