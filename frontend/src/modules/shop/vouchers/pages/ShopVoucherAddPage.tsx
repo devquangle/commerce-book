@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { InputField } from "@/components/common/InputField";
 import { TextAreaField } from "@/components/common/TextAreaField";
+import { InputDate } from "@/components/common/InputDate";
 import Spinner from "@/components/common/Spinner";
 import { VoucherHeader } from "../components/VoucherHeader";
 import { useCreateVoucherShop } from "../hooks/useVoucher";
@@ -160,25 +161,49 @@ const ShopVoucherAddPage = () => {
           </div>
 
           <div className="md:col-span-6">
-            <InputField
-              label="Thời gian bắt đầu"
-              type="datetime-local"
-              required
-              {...register("startDate", {
-                required: "Vui lòng chọn thời gian bắt đầu",
-              })}
-              error={errors.startDate?.message}
+            <Controller
+              name="startDate"
+              control={control}
+              rules={{ required: "Vui lòng chọn thời gian bắt đầu" }}
+              render={({ field }) => (
+                <InputDate
+                  label="Thời gian bắt đầu"
+                  showTimeSelect
+                  value={field.value}
+                  onChange={(date) => {
+                    if (date) {
+                      const pad = (n: number) => n.toString().padStart(2, '0');
+                      field.onChange(`${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`);
+                    } else {
+                      field.onChange("");
+                    }
+                  }}
+                  error={errors.startDate?.message}
+                />
+              )}
             />
           </div>
           <div className="md:col-span-6">
-            <InputField
-              label="Thời gian kết thúc"
-              type="datetime-local"
-              required
-              {...register("endDate", {
-                required: "Vui lòng chọn thời gian kết thúc",
-              })}
-              error={errors.endDate?.message}
+            <Controller
+              name="endDate"
+              control={control}
+              rules={{ required: "Vui lòng chọn thời gian kết thúc" }}
+              render={({ field }) => (
+                <InputDate
+                  label="Thời gian kết thúc"
+                  showTimeSelect
+                  value={field.value}
+                  onChange={(date) => {
+                    if (date) {
+                      const pad = (n: number) => n.toString().padStart(2, '0');
+                      field.onChange(`${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`);
+                    } else {
+                      field.onChange("");
+                    }
+                  }}
+                  error={errors.endDate?.message}
+                />
+              )}
             />
           </div>
 

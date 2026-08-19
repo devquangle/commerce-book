@@ -1,6 +1,8 @@
 import { Search, RotateCcw } from "lucide-react";
 import { type VoucherStatus } from "../types/voucher.type";
 import { SelectBox } from "@/components/common/SelectBox";
+import { InputField } from "@/components/common/InputField";
+import { InputDate } from "@/components/common/InputDate";
 
 interface VoucherFilterProps {
   keyword: string;
@@ -49,36 +51,47 @@ export const VoucherFilter = ({
   onReset,
 }: VoucherFilterProps) => {
   return (
-    <div className="card-custom flex flex-col sm:flex-row gap-4 flex-wrap">
-      <div className="relative flex-1 min-w-50">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-4 w-4 text-zinc-400" />
-        </div>
-        <input
+    <div className="card-custom grid grid-cols-1 md:grid-cols-12 gap-4 items-end p-4">
+      <div className="md:col-span-6 lg:col-span-6">
+        <InputField
+          icon={<Search className="h-4 w-4" />}
           type="text"
           value={keyword}
           onChange={(e) => onKeywordChange(e.target.value)}
-          placeholder="Tìm kiếm theo tên hoặc mã voucher..."
-          className="block w-full pl-10 pr-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          placeholder="Tên, mã voucher..."
         />
       </div>
-      <div className="flex flex-1 sm:flex-none gap-2 min-w-70">
-        <input
-          type="date"
+      
+      <div className="md:col-span-4 lg:col-span-4 flex gap-2">
+        <InputDate
+          placeholder="Từ ngày"
           value={startDate}
-          onChange={(e) => onStartDateChange(e.target.value)}
-          className="block w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-          title="Từ ngày"
+          onChange={(date) => {
+            if (date) {
+              const pad = (n: number) => n.toString().padStart(2, '0');
+              onStartDateChange(`${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`);
+            } else {
+              onStartDateChange("");
+            }
+          }}
+          containerClassName="flex-1"
         />
-        <input
-          type="date"
+        <InputDate
+          placeholder="Đến ngày"
           value={endDate}
-          onChange={(e) => onEndDateChange(e.target.value)}
-          className="block w-full px-3 py-2 border border-zinc-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-          title="Đến ngày"
+          onChange={(date) => {
+            if (date) {
+              const pad = (n: number) => n.toString().padStart(2, '0');
+              onEndDateChange(`${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`);
+            } else {
+              onEndDateChange("");
+            }
+          }}
+          containerClassName="flex-1"
         />
       </div>
-      <div className="flex items-center gap-2 min-w-40">
+      
+      <div className="md:col-span-2 lg:col-span-2 flex items-end gap-2">
         <SelectBox
           options={statusOptions}
           value={status || ""}
@@ -87,12 +100,12 @@ export const VoucherFilter = ({
               e.target.value ? (e.target.value as VoucherStatus) : null
             )
           }
-          containerClassName="w-full"
+          containerClassName="flex-1"
         />
         <button
           onClick={onReset}
           title="Làm mới bộ lọc"
-          className="p-2.5 border border-zinc-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors shrink-0"
+          className="h-10 px-3 border border-zinc-200 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors shrink-0 flex items-center justify-center"
         >
           <RotateCcw className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
         </button>
