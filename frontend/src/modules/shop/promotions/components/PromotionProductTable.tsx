@@ -371,6 +371,7 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
                           type="number"
                           min="0"
                           max="100"
+                          disabled={hasOverlap}
                           value={productConfigs[product.productId]?.discountPercent ?? 10}
                           onChange={(e) => onUpdateProductConfig?.(product.productId, 'discountPercent', e.target.value === "" ? "" : Number(e.target.value))}
                           className="w-16 px-2 py-1 text-sm border rounded-lg focus:outline-none focus:border-blue-500 disabled:bg-zinc-100 disabled:text-zinc-400 dark:border-zinc-700 dark:bg-zinc-900 dark:disabled:bg-zinc-800"
@@ -380,11 +381,18 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
                         <span className="text-xs text-zinc-500 w-16 text-right">SL Tối đa:</span>
                         <input
                           type="number"
-                          min="0"
+                          min="1"
+                          disabled={hasOverlap}
                           value={productConfigs[product.productId]?.maxQuantity ?? 10}
                           onChange={(e) => onUpdateProductConfig?.(product.productId, 'maxQuantity', e.target.value === "" ? "" : Number(e.target.value))}
                           className="w-16 px-2 py-1 text-sm border rounded-lg focus:outline-none focus:border-blue-500 disabled:bg-zinc-100 disabled:text-zinc-400 dark:border-zinc-700 dark:bg-zinc-900 dark:disabled:bg-zinc-800"
                         />
+                      </div>
+                      <div className="flex items-center gap-1.5 w-full mt-1">
+                        <span className="text-sm font-medium text-zinc-600 dark:text-zinc-300">Giá KM:</span>
+                        <span className="text-base font-bold text-rose-600 dark:text-rose-500">
+                          {formatMoney(product.price * (1 - (Number(productConfigs[product.productId]?.discountPercent ?? 10) / 100)))}
+                        </span>
                       </div>
                     </div>
                   </td>
