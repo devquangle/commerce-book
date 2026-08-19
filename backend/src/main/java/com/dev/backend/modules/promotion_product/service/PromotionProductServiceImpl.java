@@ -3,7 +3,6 @@ package com.dev.backend.modules.promotion_product.service;
 import com.dev.backend.modules.promotion_product.dto.ProductPromotionProjection;
 import com.dev.backend.modules.promotion_product.dto.ProductPromotionResponse;
 import com.dev.backend.modules.promotion_product.dto.PromotionProductResponse;
-import com.dev.backend.modules.promotion_product.entity.PromotionProduct;
 import com.dev.backend.modules.promotion_product.repository.PromotionProductRepository;
 
 import lombok.RequiredArgsConstructor;
