@@ -18,6 +18,13 @@ export interface PromotionRequest {
   endDate: string;
   promotionCampaignType: PromotionCampaignType;
   status: PromotionStatus;
+  products: ProductPromotion[];
+}
+
+export interface ProductPromotion {
+  productId: number;
+  discountPercent: number;
+  maxQuantity: number;
 }
 
 export interface PromotionFilterRequest {

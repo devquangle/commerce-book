@@ -1,26 +1,25 @@
 package com.dev.backend.modules.promotion.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+import com.dev.backend.common.enums.PromotionCampaignType;
+import com.dev.backend.common.enums.PromotionStatus;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class PromotionRequest {
-    private Long shopId;
-    private String code;
-    private String title;
-    private Double discountPercent;
-    private BigDecimal minOrderValue;
+    private String name;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private Integer usageLimit;
-    private List<Long> productIds;
+    private PromotionCampaignType promotionCampaignType;
+    private PromotionStatus status;
+    private List<ProductPromotion> products;
 }

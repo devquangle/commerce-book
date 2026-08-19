@@ -5,10 +5,12 @@ import com.dev.backend.common.enums.PromotionStatus;
 import com.dev.backend.common.exception.NotFoundException;
 import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.modules.promotion.dto.PromotionFilterRequest;
+import com.dev.backend.modules.promotion.dto.PromotionRequest;
 import com.dev.backend.modules.promotion.dto.PromotionResponse;
 import com.dev.backend.modules.promotion.entity.Promotion;
 import com.dev.backend.modules.promotion.mapper.PromotionMapper;
 import com.dev.backend.modules.promotion.repository.PromotionRepository;
+import com.dev.backend.modules.promotion_product.service.PromotionProductService;
 import com.dev.backend.modules.shop.service.ShopService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,13 +36,24 @@ public class PromotionServiceImpl implements PromotionService {
         private final PromotionRepository promotionRepository;
         private final ShopService shopService;
         private final PromotionMapper promotionMapper;
-
+        private final PromotionProductService promotionProductService;
         @Override
         public void delete(Long id, Long shopId) {
                 Promotion promotion = promotionRepository.findByIdAndShopId(id, shopId)
                                 .orElseThrow(() -> new NotFoundException("Không tìm thấy"));
                 promotion.setStatus(PromotionStatus.DELETED);
                 promotionRepository.save(promotion);
+        }
+
+        @Override
+        public PromotionResponse create(PromotionRequest request, Long shopId) {
+                Promotion promotion = new Promotion();
+                promotionMapper.toEntity(promotion, request);
+                promotion.setShop(shopService.getById(shopId));
+                promotion.setStatus(PromotionStatus.ACTIVE);
+                Promotion saved = promotionRepository.save(promotion);
+                promotionProductService.setPromotionProducts(promotion, request.getProducts());
+                return promotionMapper.toDTO(saved);
         }
 
         @Override

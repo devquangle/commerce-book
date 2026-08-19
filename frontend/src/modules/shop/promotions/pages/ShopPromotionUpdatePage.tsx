@@ -80,8 +80,22 @@ const ShopPromotionUpdatePage = () => {
   }, [promotionDetail, reset]);
 
   const onFormSubmit = async (data: PromotionRequest) => {
+    // Construct the products array from selectedProductIds and productConfigs
+    const productsPayload = selectedProductIds.map((id) => ({
+      productId: id,
+      discountPercent: Number(productConfigs[id]?.discountPercent ?? 10),
+      maxQuantity: Number(productConfigs[id]?.maxQuantity ?? 10),
+    }));
+
+    const finalPayload: PromotionRequest = {
+      ...data,
+      products: productsPayload,
+    };
+
+    console.log("PAYLOAD SUBMIT (Cập nhật):", finalPayload);
+
     try {
-      await updatePromotion(data);
+      await updatePromotion(finalPayload);
       navigate("/shop/promotions");
     } catch (error) {
       console.error("Lỗi khi cập nhật promotion:", error);

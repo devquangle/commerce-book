@@ -1,9 +1,13 @@
 package com.dev.backend.modules.promotion_product.service;
 
 import com.dev.backend.common.enums.PromotionStatus;
+import com.dev.backend.modules.product.repository.ProductRepository;
+import com.dev.backend.modules.promotion.dto.ProductPromotion;
+import com.dev.backend.modules.promotion.entity.Promotion;
 import com.dev.backend.modules.promotion_product.dto.ProductPromotionProjection;
 import com.dev.backend.modules.promotion_product.dto.ProductPromotionResponse;
 import com.dev.backend.modules.promotion_product.dto.PromotionProductResponse;
+import com.dev.backend.modules.promotion_product.entity.PromotionProduct;
 import com.dev.backend.modules.promotion_product.repository.PromotionProductRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +27,28 @@ import java.util.stream.Collectors;
 public class PromotionProductServiceImpl implements PromotionProductService {
 
         private final PromotionProductRepository promotionProductRepository;
+        private final ProductRepository productRepository;
+        @Override
+        public void setPromotionProducts(
+                        Promotion promotion,
+                        List<ProductPromotion> productPromotions) {
+                List<PromotionProduct> promotionProducts = productPromotions.stream()
+                                .map(item -> {
+                                        PromotionProduct promotionProduct = new PromotionProduct();
+
+                                        promotionProduct.setPromotion(promotion);
+                                        promotionProduct.setProduct(productRepository.getReferenceById(item.getProductId()));
+                                        promotionProduct.setDiscountPercent(item.getDiscountPercent());
+                                        promotionProduct.setMaxQuantity(item.getMaxQuantity());
+                                        promotionProduct.setSoldQuantity(0);
+                                        promotionProduct.setReservedQuantity(0);
+
+                                        return promotionProduct;
+                                })
+                                .toList();
+
+                promotionProductRepository.saveAll(promotionProducts);
+        }
 
         @Override
         public List<ProductPromotionResponse> getByProductIds(List<Long> productIds) {

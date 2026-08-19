@@ -7,7 +7,6 @@ import type {
 import type { ApiResponse } from "@/libs/utils/api-response";
 import type { Pagination } from "@/libs/utils/pagination";
 import type {
-  ProductPromotionRequest,
   ProductPromotionResponse,
 } from "../types/promotion-product.type";
 

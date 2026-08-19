@@ -262,19 +262,32 @@ export const PromotionProductTable: React.FC<PromotionProductTableProps> = ({
                       
                       const prodPromo = promotionsData?.find(p => p.productId === product.productId);
                       const activePromo = prodPromo?.activePromotion;
+                      const history = prodPromo?.promotionHistory || [];
                       
-                      if (activePromo) {
-                        return (
-                          <div className="flex flex-col gap-1 items-end">
-                            <span className="font-medium text-zinc-900 dark:text-zinc-100 text-sm line-clamp-1" title={activePromo.name}>
-                              {activePromo.name}
-                            </span>
-                            <PromotionTypeBadge type={activePromo.promotionCampaignType} />
-                          </div>
-                        );
-                      }
+                      return (
+                        <div className="flex flex-col gap-2 items-end">
+                          {activePromo ? (
+                            <div className="flex flex-col gap-1 items-end bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg border border-blue-100 dark:border-blue-800">
+                              <span className="font-semibold text-blue-700 dark:text-blue-300 text-sm line-clamp-1" title={activePromo.name}>
+                                {activePromo.name}
+                              </span>
+                              <PromotionTypeBadge type={activePromo.promotionCampaignType} />
+                              <div className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 flex flex-col items-end">
+                                <span>Giảm: <strong className="text-blue-600 dark:text-blue-400">{activePromo.discountPercent}%</strong></span>
+                                <span>SL Max: <strong>{activePromo.maxQuantity}</strong> | Đã bán: <strong>{activePromo.soldQuantity}</strong></span>
+                              </div>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-zinc-400 italic">Không có CT đang chạy</span>
+                          )}
 
-                      return <span className="text-xs text-zinc-400 italic">Trống</span>;
+                          {history.length > 0 && (
+                            <button className="text-xs font-medium text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors mt-1 underline">
+                              Xem lịch sử ({history.length})
+                            </button>
+                          )}
+                        </div>
+                      );
                     })()}
                   </td>
                 </tr>
