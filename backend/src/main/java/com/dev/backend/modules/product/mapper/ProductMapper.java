@@ -1,9 +1,9 @@
 package com.dev.backend.modules.product.mapper;
 
 import com.dev.backend.common.utils.TextUtils;
-import com.dev.backend.modules.product.dto.ProductDetailResponse;
-import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
+import com.dev.backend.modules.product.dto.request.ProductRequest;
+import com.dev.backend.modules.product.dto.response.ProductDetailResponse;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductProjection;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.entity.Product;

@@ -10,14 +10,14 @@ import com.dev.backend.modules.author_product.service.AuthorProductService;
 import com.dev.backend.modules.genre_product.service.GenreProductService;
 import com.dev.backend.modules.image_product.dto.ImageProductResponse;
 import com.dev.backend.modules.image_product.service.ImageProductService;
-import com.dev.backend.modules.product.dto.ProductDetailResponse;
-import com.dev.backend.modules.product.dto.ProductFilterRequest;
-import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.dto.ProductShopResponse;
+import com.dev.backend.modules.product.dto.request.ProductRequest;
+import com.dev.backend.modules.product.dto.request.ShopProductFilterRequest;
 import com.dev.backend.modules.product.dto.request.SuperAdminFilterRequest;
 import com.dev.backend.modules.product.dto.request.UserFilterRequest;
 import com.dev.backend.modules.product.dto.response.ProductCardResponse;
+import com.dev.backend.modules.product.dto.response.ProductDetailResponse;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductProjection;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.entity.Product;
@@ -225,7 +225,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         @Override
-        public PageResponse<ProductResponse> searchProductsForShop(ProductFilterRequest request, Long shopId) {
+        public PageResponse<ProductResponse> searchProductsForShop(ShopProductFilterRequest request, Long shopId) {
                 Pageable pageable = PageRequest.of(
                                 Math.max(0, Optional.ofNullable(request.getPage()).orElse(1) - 1),
                                 Optional.ofNullable(request.getSize()).filter(s -> s > 0).orElse(10),

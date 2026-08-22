@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.common.response.ResponseData;
 import com.dev.backend.common.response.ResponseUtil;
-import com.dev.backend.modules.product.dto.ProductDetailResponse;
-import com.dev.backend.modules.product.dto.ProductFilterRequest;
-import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.dto.ProductShopResponse;
-import com.dev.backend.modules.product.dto.RejectProductRequest;
+import com.dev.backend.modules.product.dto.request.ProductRequest;
+import com.dev.backend.modules.product.dto.request.RejectProductRequest;
+import com.dev.backend.modules.product.dto.request.ShopProductFilterRequest;
 import com.dev.backend.modules.product.dto.request.SuperAdminFilterRequest;
 import com.dev.backend.modules.product.dto.request.UserFilterRequest;
 import com.dev.backend.modules.product.dto.response.ProductCardResponse;
+import com.dev.backend.modules.product.dto.response.ProductDetailResponse;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.service.ProductService;
 import com.dev.backend.security.custom.CustomUserDetails;
@@ -43,7 +43,7 @@ public class ProductController {
 
     @GetMapping("/shop/products/filter")
     public ResponseEntity<ResponseData<PageResponse<ProductResponse>>> searchProductsForShop(
-            @ModelAttribute ProductFilterRequest request,
+            @ModelAttribute ShopProductFilterRequest request,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         PageResponse<ProductResponse> response = productService.searchProductsForShop(request,
                 userDetails.getShop().getId());
@@ -126,7 +126,7 @@ public class ProductController {
     @GetMapping("/product-detail")
     public ResponseEntity<ResponseData<?>> getProductDetail(
             @RequestParam("slug") String slug) {
-                
+
         return null;
     }
 }

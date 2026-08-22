@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.dev.backend.common.response.PageResponse;
-import com.dev.backend.modules.product.dto.ProductDetailResponse;
-import com.dev.backend.modules.product.dto.ProductFilterRequest;
-import com.dev.backend.modules.product.dto.ProductRequest;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.dto.ProductShopResponse;
+import com.dev.backend.modules.product.dto.request.ProductRequest;
+import com.dev.backend.modules.product.dto.request.ShopProductFilterRequest;
 import com.dev.backend.modules.product.dto.request.SuperAdminFilterRequest;
 import com.dev.backend.modules.product.dto.request.UserFilterRequest;
 import com.dev.backend.modules.product.dto.response.ProductCardResponse;
+import com.dev.backend.modules.product.dto.response.ProductDetailResponse;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.entity.Product;
 import com.dev.backend.modules.shop.dto.ShopSimpleResponse;
@@ -43,7 +43,7 @@ public interface ProductService {
         void validate(ProductRequest request);
 
         PageResponse<ProductResponse> searchProductsForShop(
-                        ProductFilterRequest request, Long shopId);
+                        ShopProductFilterRequest request, Long shopId);
 
         PageResponse<SuperAdminProductResponse> searchProductsForAdmin(
                         SuperAdminFilterRequest request);

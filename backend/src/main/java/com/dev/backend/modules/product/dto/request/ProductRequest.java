@@ -1,4 +1,4 @@
-package com.dev.backend.modules.product.dto;
+package com.dev.backend.modules.product.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
