@@ -14,7 +14,7 @@ export default function UserLayout({
       <UserSidebar />
       
       {/* Main content takes remaining height pushing footer to bottom */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-2">
+      <main className="flex-1 max-w-7xl w-full mx-auto">
         {children}
       </main>
 

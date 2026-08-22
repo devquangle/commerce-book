@@ -26,6 +26,12 @@ const ProductImages = ({ coverImages, productName = "Product" }: ProductImagesPr
     );
   }
   
+  const sortedImages = [...coverImages].sort((a, b) => {
+    if (a.isThumbnail && !b.isThumbnail) return -1;
+    if (!a.isThumbnail && b.isThumbnail) return 1;
+    return 0;
+  });
+
   return (
     <div className="lg:col-span-6 xl:col-span-4 flex flex-col gap-3">
       {/* Main Swiper */}
@@ -44,7 +50,7 @@ const ProductImages = ({ coverImages, productName = "Product" }: ProductImagesPr
           pagination={{ clickable: true }}
           className="aspect-4/5 relative group pb-8" // padding bottom for pagination dots
         >
-          {coverImages.map((img, idx) => (
+          {sortedImages.map((img, idx) => (
             <SwiperSlide key={idx} className="bg-slate-50">
               <img
                 src={img.url}
@@ -75,7 +81,7 @@ const ProductImages = ({ coverImages, productName = "Product" }: ProductImagesPr
       </div>
 
       {/* Thumbs Swiper (grid 4 columns) */}
-      {coverImages.length > 1 && (
+      {sortedImages.length > 1 && (
         <div className="hidden md:block">
           <Swiper
             modules={[Thumbs, FreeMode]}
@@ -86,7 +92,7 @@ const ProductImages = ({ coverImages, productName = "Product" }: ProductImagesPr
             watchSlidesProgress={true}
             className="product-thumbs p-2!"
           >
-            {coverImages.map((img, idx) => (
+            {sortedImages.map((img, idx) => (
               <SwiperSlide key={idx} className="cursor-pointer">
                 <div className="aspect-square overflow-hidden border border-slate-200 transition-all in-[.swiper-slide-thumb-active]:border-blue-600 in-[.swiper-slide-thumb-active]:ring-2 in-[.swiper-slide-thumb-active]:ring-blue-600 in-[.swiper-slide-thumb-active]:ring-offset-1 bg-white flex items-center justify-center p-1">
                   <img

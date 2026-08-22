@@ -31,7 +31,6 @@ public interface ImageProductRepository extends JpaRepository<ImageProduct, Long
                 )
                 FROM ImageProduct item
                 WHERE item.product.id = :productId
-                  AND item.isThumbnail = true
             """)
     List<ImageProductResponse> findImageResponsesByProductId(@Param("productId") Long productId);
 
