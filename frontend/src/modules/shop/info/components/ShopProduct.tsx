@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import type { ShopInfo } from '../types/shop.type';
-import { Store, MessageSquare, Star, BadgeCheck, Flag } from 'lucide-react';
-import { Button } from '@/components/common/Button';
+import { Store, Star, BadgeCheck, Flag } from 'lucide-react';
 import { formatCompactNumber } from '@/libs/utils/formatMoney.utils';
-import { useChat } from '@/modules/chat/context/ChatContext';
+import { Chat } from '@/components/common/Chat';
 
 export interface ProductShopProps {
   shop: ShopInfo;
@@ -13,7 +12,6 @@ export interface ProductShopProps {
 
 export const ShopProduct = ({ shop, onChatClick }: ProductShopProps) => {
   const navigate = useNavigate();
-  const { openChatWithShop } = useChat();
   const [imgError, setImgError] = useState(false);
 
   return (
@@ -38,14 +36,27 @@ export const ShopProduct = ({ shop, onChatClick }: ProductShopProps) => {
         </div>
         
         <div className="flex-1 min-w-0">
-          <Link to={`/shop/${shop.shopSlug}`} className="flex items-center gap-1.5">
-            <h3 className="text-base font-semibold hover:text-blue-600 transition-colors truncate">
-              {shop.shopName}
-            </h3>
-            {shop.verify && (
-              <BadgeCheck className="w-4 h-4 text-blue-500 shrink-0" />
-            )}
-          </Link>
+          <div className="flex items-center justify-between gap-2">
+            <Link to={`/shop/${shop.shopSlug}`} className="flex items-center gap-1.5 min-w-0">
+              <h3 className="text-base font-semibold hover:text-blue-600 transition-colors truncate">
+                {shop.shopName}
+              </h3>
+              {shop.verify && (
+                <BadgeCheck className="w-4 h-4 text-blue-500 shrink-0" />
+              )}
+            </Link>
+            <button 
+              className="text-gray-400 hover:text-red-500 transition-colors shrink-0 p-1"
+              title="Báo cáo"
+              onClick={(e) => {
+                e.preventDefault();
+                // TODO: Handle report shop
+                console.log('Report shop', shop.shopId);
+              }}
+            >
+              <Flag className="w-4 h-4" />
+            </button>
+          </div>
           
           <div className="flex items-center gap-3 mt-1 text-sm text-gray-600">
             <div className="flex items-center gap-1">
@@ -62,31 +73,7 @@ export const ShopProduct = ({ shop, onChatClick }: ProductShopProps) => {
         </div>
       </div>
       
-      <div className="flex gap-2">
-        <Button 
-          variant="outline"
-          className="flex-1 px-3 py-2 text-sm"
-          icon={<MessageSquare className="w-4 h-4" />}
-          onClick={() => {
-            openChatWithShop(shop.shopId);
-            onChatClick?.(shop.shopId);
-          }}
-        >
-          Chat
-        </Button>
-        
-        <Button 
-          variant="outline"
-          className="flex-1 px-3 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 border-gray-200"
-          icon={<Flag className="w-4 h-4" />}
-          onClick={() => {
-            // TODO: Handle report shop
-            console.log('Report shop', shop.shopId);
-          }}
-        >
-          Báo cáo
-        </Button>
-      </div>
+      <Chat shopId={shop.shopId} shopName={shop.shopName} onChatClick={onChatClick} />
     </div>
   );
 };

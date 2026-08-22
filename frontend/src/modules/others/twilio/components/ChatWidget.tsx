@@ -3,14 +3,14 @@ import { useChat } from '../context/ChatContext';
 import { X } from 'lucide-react';
 
 export const ChatWidget: React.FC = () => {
-  const { isOpen, closeChat } = useChat();
+  const { isOpen, closeChat, shopName } = useChat();
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed bottom-4 right-4 w-80 h-96 bg-white border border-gray-200 rounded-lg shadow-xl flex flex-col z-50">
       <div className="flex items-center justify-between p-3 border-b border-gray-200 bg-blue-600 text-white rounded-t-lg">
-        <h3 className="font-medium">Chat</h3>
+        <h3 className="font-medium">{shopName || 'Chat'}</h3>
         <button onClick={closeChat} className="p-1 hover:bg-blue-700 rounded transition-colors">
           <X className="w-4 h-4" />
         </button>

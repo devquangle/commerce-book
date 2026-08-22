@@ -8,8 +8,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SHOP_PATH } from "./libs/constant/shop-path";
-import { ChatProvider } from "@/modules/chat/context/ChatContext";
-import { ChatWidget } from "@/modules/chat/components/ChatWidget";
+import { ChatProvider } from "@/modules/others/twilio/context/ChatContext";
+import { ChatWidget } from "@/modules/others/twilio/components/ChatWidget";
 
 const queryClient = new QueryClient();
 
