@@ -126,7 +126,7 @@ public class ProductMapper {
         }
         SuperAdminProductResponse response = new SuperAdminProductResponse();
         response.setProductId(item.getProductId());
-        response.setName(item.getName());
+        response.setProductName(item.getName());
         response.setProductSlug(item.getProductSlug());
         response.setOriginalPrice(item.getOriginalPrice());
         response.setPrice(item.getPrice());

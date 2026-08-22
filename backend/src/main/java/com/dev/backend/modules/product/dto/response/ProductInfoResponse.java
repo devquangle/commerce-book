@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class ProductInfoResponse {
     private Long productId;
-    private String name;
+    private String productName;
     private String productSlug;
     private Integer originalPrice;
     private Integer price;

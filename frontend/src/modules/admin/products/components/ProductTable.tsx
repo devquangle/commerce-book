@@ -168,7 +168,7 @@ export const ProductTable = ({
                           <div className="relative shrink-0 overflow-hidden rounded-xl border border-slate-200/80 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 shadow-xs">
                             <img
                               src={product.urlImageDefault}
-                              alt={product.name}
+                              alt={product.productName}
                               className="w-14 h-20 object-cover"
                             />
                           </div>
@@ -188,9 +188,9 @@ export const ProductTable = ({
                         <Link
                           to={`/admin/products/detail?slug=${product.productSlug}`}
                           className="font-semibold text-zinc-900 dark:text-zinc-100 body-text leading-snug line-clamp-2 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-                          title={product.name}
+                          title={product.productName}
                         >
-                          {product.name}
+                          {product.productName}
                         </Link>
 
                         {/* Shop info */}

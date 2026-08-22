@@ -113,7 +113,7 @@ export const ProductMobileCard: React.FC<ProductMobileCardProps> = ({
           {product.urlImageDefault ? (
             <img
               src={product.urlImageDefault}
-              alt={product.name}
+              alt={product.productName}
               className="w-full h-full object-cover"
             />
           ) : (
@@ -128,9 +128,9 @@ export const ProductMobileCard: React.FC<ProductMobileCardProps> = ({
           <Link
             to={`/admin/products/detail?slug=${product.productSlug}`}
             className="font-semibold text-zinc-900 dark:text-white body-text leading-snug line-clamp-2 wrap-break-word hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-            title={product.name}
+            title={product.productName}
           >
-            {product.name}
+            {product.productName}
           </Link>
 
           {/* Dòng 2: Shop → link đến shop detail */}

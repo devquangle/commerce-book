@@ -85,7 +85,7 @@ export interface SuperAdminFilterRequest {
 
 export interface SuperAdminProductResponse {
   productId: number;
-  name: string;
+  productName: string;
   productSlug: string;
   originalPrice: number;
   price: number;
