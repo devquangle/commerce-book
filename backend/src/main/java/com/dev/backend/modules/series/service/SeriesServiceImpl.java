@@ -169,7 +169,7 @@ public class SeriesServiceImpl implements SeriesService {
     }
 
     @Override
-    public List<SeriesProductResponse> getSeriesWithBookCount() {
-        return seriesRepository.findSeriesWithBookCount();
+    public List<SeriesProductResponse> getSeriesWithProducts() {
+        return seriesRepository.findSeriesWithProducts();
     }
 }

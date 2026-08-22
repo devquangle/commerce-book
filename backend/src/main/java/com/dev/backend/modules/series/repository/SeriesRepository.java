@@ -43,12 +43,10 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
                 s.id,
                 s.name,
                 s.slug,
-                COUNT(p.id)
             )
             FROM Series s
             JOIN Product p ON p.series = s
             GROUP BY s.id, s.name, s.slug
-            ORDER BY COUNT(p.id) DESC
             """)
-    List<SeriesProductResponse> findSeriesWithBookCount();
+    List<SeriesProductResponse> findSeriesWithProducts();
 }

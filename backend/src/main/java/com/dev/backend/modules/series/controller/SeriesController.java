@@ -58,8 +58,8 @@ public class SeriesController {
     }
 
     @GetMapping("/series")
-    public ResponseEntity<ResponseData<List<SeriesProductResponse>>> getPublisherProducts() {
-        List<SeriesProductResponse> data = seriesService.getSeriesWithBookCount();
+    public ResponseEntity<ResponseData<List<SeriesProductResponse>>> getSeriesWithProducts() {
+        List<SeriesProductResponse> data = seriesService.getSeriesWithProducts();
         return ResponseUtil.success("Lấy danh sách thành công.", data);
     }
 }

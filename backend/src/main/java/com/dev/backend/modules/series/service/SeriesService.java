@@ -28,5 +28,5 @@ public interface SeriesService {
 
     PageResponse<SeriesResponse> search(SeriesFilterRequest request);
 
-    List<SeriesProductResponse> getSeriesWithBookCount();
+    List<SeriesProductResponse> getSeriesWithProducts();
 }
