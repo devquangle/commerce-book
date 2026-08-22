@@ -18,6 +18,7 @@ import com.dev.backend.modules.product.dto.request.SuperAdminFilterRequest;
 import com.dev.backend.modules.product.dto.request.UserFilterRequest;
 import com.dev.backend.modules.product.dto.response.ProductCardResponse;
 import com.dev.backend.modules.product.dto.response.ProductDetailResponse;
+import com.dev.backend.modules.product.dto.response.ProductFullResponse;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductProjection;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.entity.Product;
@@ -132,6 +133,20 @@ public class ProductServiceImpl implements ProductService {
                 List<ImageProductResponse> images = imageProductService.getImageResponsesByProductId(productId);
                 response.setAuthorIds(authorIds);
                 response.setGenreIds(genreIds);
+                response.setCoverImages(images);
+                return response;
+        }
+
+        @Override
+        public ProductFullResponse detailFull(String slug) {
+                Product product = getBySlug(slug);
+                Long productId = product.getId();
+                ProductFullResponse response = productMapper.toProductFullResponse(product);
+                List<ImageProductResponse> images = imageProductService.getImageResponsesByProductId(productId);
+                response.setProductAuthors(null);
+                response.setProductGenres(null);
+                response.setProductPublisher(null);
+                response.setProductSeries(null);
                 response.setCoverImages(images);
                 return response;
         }

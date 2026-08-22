@@ -4,6 +4,7 @@ import com.dev.backend.common.utils.TextUtils;
 import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.dto.request.ProductRequest;
 import com.dev.backend.modules.product.dto.response.ProductDetailResponse;
+import com.dev.backend.modules.product.dto.response.ProductFullResponse;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductProjection;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.entity.Product;
@@ -136,6 +137,30 @@ public class ProductMapper {
         response.setShopId(item.getShopId());
         response.setShopName(item.getShopName());
         response.setShopSlug(item.getShopSlug());
+        return response;
+    }
+
+    public ProductFullResponse toProductFullResponse(Product entity) {
+        if (entity == null) {
+            return null;
+        }
+        ProductFullResponse response = new ProductFullResponse();
+        response.setProductId(entity.getId());
+        response.setProductName(entity.getName());
+        response.setProductSlug(entity.getSlug());
+        response.setOriginalPrice(entity.getOriginalPrice());
+        response.setPrice(entity.getPrice());
+        response.setQuantity(entity.getQuantity());
+        response.setWeight(entity.getWeight());
+        response.setPublishYear(
+                entity.getPublishYear() != null
+                        ? entity.getPublishYear().toString()
+                        : null);
+        response.setPages(entity.getPages());
+        response.setLanguage(entity.getLanguage());
+        response.setIsbn(entity.getIsbn());
+        response.setDescription(entity.getDescription());
+        response.setStatus(entity.getStatus());
         return response;
     }
 }

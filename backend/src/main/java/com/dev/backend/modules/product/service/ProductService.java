@@ -12,6 +12,7 @@ import com.dev.backend.modules.product.dto.request.SuperAdminFilterRequest;
 import com.dev.backend.modules.product.dto.request.UserFilterRequest;
 import com.dev.backend.modules.product.dto.response.ProductCardResponse;
 import com.dev.backend.modules.product.dto.response.ProductDetailResponse;
+import com.dev.backend.modules.product.dto.response.ProductFullResponse;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.entity.Product;
 import com.dev.backend.modules.shop.dto.ShopSimpleResponse;
@@ -37,6 +38,10 @@ public interface ProductService {
         ProductDetailResponse detail(String slug, Long shopId);
 
         ProductDetailResponse detail(String slug);
+
+
+        
+        ProductFullResponse detailFull(String slug);
 
         void delete(Long id, Long shopId);
 
