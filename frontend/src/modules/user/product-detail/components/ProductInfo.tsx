@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Star, Minus, Plus, ShoppingCart, Heart } from "lucide-react";
+import { Star, Minus, Plus, ShoppingCart, Heart, Flag } from "lucide-react";
 import type { ProductFullResponse as ProductDetailResponse } from "../types/product-detail.type";
 import { showErrorToast, showSuccessToast } from "@/libs/utils/toastUtil";
 
@@ -57,9 +57,21 @@ export default function ProductInfo({ product, review }: ProductInfoProps) {
     <div className="flex flex-col gap-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
       <div>
         {/* Title */}
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900 leading-tight mb-3 tracking-tight">
-          {product.productName || "Chưa có tên sản phẩm"}
-        </h1>
+        <div className="flex items-start justify-between gap-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 leading-tight mb-3 tracking-tight">
+            {product.productName || "Chưa có tên sản phẩm"}
+          </h1>
+          <button 
+            className="text-gray-400 hover:text-red-500 transition-colors shrink-0 p-1 mt-1"
+            title="Báo cáo sản phẩm"
+            onClick={(e) => {
+              e.preventDefault();
+              console.log('Report product', product.productId);
+            }}
+          >
+            <Flag className="w-5 h-5" />
+          </button>
+        </div>
 
         {/* Rating & Sold Info */}
         <div className="flex items-center flex-wrap gap-3 text-sm mt-3 mb-6">

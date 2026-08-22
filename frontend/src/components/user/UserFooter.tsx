@@ -6,7 +6,7 @@ import { Logo } from "../common/Logo";
 
 export const UserFooter: React.FC = () => {
   return (
-    <footer className="bg-white dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800 py-6">
+    <footer className="bg-white dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800 pt-6 pb-24">
       <Container className="max-w-7xl px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
           {/* Brand Info */}

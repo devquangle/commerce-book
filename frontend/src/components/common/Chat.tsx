@@ -20,7 +20,7 @@ export const Chat = ({ shopId, shopName, onChatClick }: ChatProps) => {
         openChatWithShop(shopId, shopName);
         onChatClick?.(shopId);
       }}
-      className="fixed bottom-20 right-6 z-40 p-3 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center"
+      className="fixed bottom-24 right-6 z-40 w-10 h-10 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center"
       aria-label="Chat with shop"
     >
       <MessageSquare className="w-5 h-5" />

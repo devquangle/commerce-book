@@ -62,13 +62,12 @@ export const AccountMenu= () => {
           <span className="sr-only">Mở menu tài khoản</span>
           <User className="w-6 h-6 text-zinc-600 dark:text-zinc-400" />
 
-          <span className="body-text font-medium text-zinc-700 dark:text-zinc-200 max-w-32.5 truncate">
-            <span className="sm:hidden">Tài khoản</span>
-            <span className="hidden sm:inline">{displayUserName}</span>
+          <span className="hidden md:inline-block body-text font-medium text-zinc-700 dark:text-zinc-200 max-w-32.5 truncate">
+            {displayUserName}
           </span>
 
           <ChevronDown
-            className={`w-4 h-4 text-zinc-400 dark:text-zinc-500 transition-transform duration-200 ${
+            className={`hidden md:block w-4 h-4 text-zinc-400 dark:text-zinc-500 transition-transform duration-200 ${
               isDropdownOpen ? "rotate-180 text-blue-600 dark:text-blue-400" : ""
             }`}
           />
