@@ -22,7 +22,7 @@ public class AuthorProductController {
 
     @GetMapping("/authors")
     public ResponseEntity<ResponseData<List<AuthorProductResponse>>> getAuthorProducts() {
-        List<AuthorProductResponse> data = authorProductService.getAuthorsWithBookCount();
+        List<AuthorProductResponse> data = authorProductService.getAuthorsWithProducts();
         return ResponseUtil.success("Lấy danh sách thành công.", data);
     }
 }

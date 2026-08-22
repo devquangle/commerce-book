@@ -16,5 +16,5 @@ public interface AuthorProductService {
 
     void setAuthorsProduct(Product product, List<Long> authorIds);
 
-    List<AuthorProductResponse> getAuthorsWithBookCount();
+    List<AuthorProductResponse> getAuthorsWithProducts();
 }

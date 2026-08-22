@@ -39,13 +39,11 @@ public interface AuthorProductRepository extends JpaRepository<AuthorProduct, Lo
             SELECT new com.dev.backend.modules.author_product.dto.AuthorProductResponse(
                 a.id,
                 a.name,
-                a.slug,
-                COUNT(ap.product)
+                a.slug
             )
             FROM AuthorProduct ap
             JOIN ap.author a
             GROUP BY a.id, a.name, a.slug
-            ORDER BY COUNT(ap.product) DESC
             """)
-    List<AuthorProductResponse> findAuthorsWithBookCount();
+    List<AuthorProductResponse> findAuthorsWithProducts();
 }

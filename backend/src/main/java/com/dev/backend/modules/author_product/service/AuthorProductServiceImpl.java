@@ -72,9 +72,9 @@ public class AuthorProductServiceImpl implements AuthorProductService {
 
     }
 
-
     @Override
-    public List<AuthorProductResponse> getAuthorsWithBookCount() {
-        return authorProductRepository.findAuthorsWithBookCount();
+    @Transactional(readOnly = true)
+    public List<AuthorProductResponse> getAuthorsWithProducts() {
+        return authorProductRepository.findAuthorsWithProducts();
     }
 }
