@@ -42,7 +42,7 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
             SELECT new com.dev.backend.modules.series.dto.SeriesProductResponse(
                 s.id,
                 s.name,
-                s.slug,
+                s.slug
             )
             FROM Series s
             JOIN Product p ON p.series = s

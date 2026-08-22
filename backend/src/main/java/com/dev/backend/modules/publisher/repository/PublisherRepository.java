@@ -42,7 +42,7 @@ public interface PublisherRepository extends JpaRepository<Publisher, Long> {
             SELECT new com.dev.backend.modules.publisher.dto.PublisherProductResponse(
                 p.id,
                 p.name,
-                p.slug,
+                p.slug
             )
             FROM Publisher p
             JOIN Product pr ON pr.publisher = p

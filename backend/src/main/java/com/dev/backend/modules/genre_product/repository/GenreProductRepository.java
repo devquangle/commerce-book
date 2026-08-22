@@ -41,7 +41,7 @@ public interface GenreProductRepository extends JpaRepository<GenreProduct, Long
             SELECT new com.dev.backend.modules.genre_product.dto.GenreProductResponse(
                 g.id,
                 g.name,
-                g.slug,
+                g.slug
             )
             FROM GenreProduct gp
             JOIN gp.genre g
