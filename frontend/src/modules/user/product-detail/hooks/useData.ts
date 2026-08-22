@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { useProductDetail } from "./useProductDetail";
 
 export const useData = (slug:string) => {

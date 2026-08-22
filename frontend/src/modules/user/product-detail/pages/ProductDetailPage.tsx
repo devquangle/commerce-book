@@ -5,7 +5,7 @@ import ProductDescription from "../components/ProductDescription";
 import ProductAttribute from "../components/ProductAttribute";
 import ProductInfo from "../components/ProductInfo";
 import { useData } from "../hooks/useData";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const ProductDetailPage: React.FC = () => {
   const [searchParams] = useSearchParams();

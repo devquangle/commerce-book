@@ -2,46 +2,52 @@ import { useEffect, useRef, useState } from "react";
 interface ProductDescriptionProps {
   description: string | null;
 }
+
 const ProductDescription = ({ description }: ProductDescriptionProps) => {
-     const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const [showButton, setShowButton] = useState(false);
+  const [contentHeight, setContentHeight] = useState(0);
 
   useEffect(() => {
     const node = contentRef.current;
     if (!node) return;
 
-    // Cho phép thời gian DOM render HTML xong
     const checkHeight = () => {
-      const shouldShow = node.scrollHeight > 300;
-      if (shouldShow !== showButton) {
-        setShowButton(shouldShow);
-      }
+      if (!node) return;
+      setContentHeight(node.scrollHeight);
+      setShowButton(node.scrollHeight > 300);
     };
 
-    const rafId = window.requestAnimationFrame(checkHeight);
-    
-    // Fallback timer just in case images in HTML load later
-    const timeoutId = setTimeout(checkHeight, 500);
+    // Initial check
+    checkHeight();
+
+    // Observe changes in size (e.g. window resize or images loading)
+    const resizeObserver = new ResizeObserver(() => {
+      checkHeight();
+    });
+    resizeObserver.observe(node);
 
     return () => {
-      window.cancelAnimationFrame(rafId);
-      clearTimeout(timeoutId);
+      resizeObserver.disconnect();
     };
-  }, [description, showButton]);
+  }, [description]);
 
-  return  <div className="card-custom">
+  return (
+    <div className="card-custom">
       <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-6">Mô tả sản phẩm</h2>
       
       <div className="relative">
         <div 
           ref={contentRef}
+          style={{
+            maxHeight: isExpanded ? `${contentHeight}px` : '300px'
+          }}
           className={`
             prose prose-sm md:prose-base tiptap max-w-none text-slate-600 leading-relaxed
             prose-p:mb-4 prose-a:text-blue-600 prose-img:rounded-xl prose-img:max-w-full
-            prose-img:mx-auto prose-img:block
+            prose-img:mx-auto prose-img:block prose-headings:font-bold prose-headings:text-slate-900 prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg
             overflow-hidden transition-[max-height] duration-500 ease-in-out
-            ${!isExpanded ? 'max-h-75' : 'max-h-[5000px]'}
           `}
         >
           {description ? (
@@ -59,16 +65,17 @@ const ProductDescription = ({ description }: ProductDescriptionProps) => {
 
       {/* Nút Xem thêm / Thu gọn */}
       {showButton && (
-        <div className="mt-8 flex justify-center">
+        <div className="mt-4 flex justify-center">
           <button 
             onClick={() => setIsExpanded(!isExpanded)}
-            className="px-8 py-2 text-sm font-semibold text-blue-600 border border-blue-200 rounded-full hover:bg-blue-50 hover:border-blue-300 transition-colors shadow-sm"
+            className="text-blue-600 font-medium text-sm hover:underline cursor-pointer"
           >
             {isExpanded ? 'Rút gọn' : 'Xem thêm'}
           </button>
         </div>
       )}
     </div>
+  );
 };
 
 export default ProductDescription;
