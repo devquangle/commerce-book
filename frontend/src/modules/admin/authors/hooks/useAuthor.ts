@@ -84,7 +84,7 @@ export const useDeleteAuthor = () => {
 };
 export const useAuthorsWithProducts = () => {
   return useQuery<AuthorProductResponse[]>({
-    queryKey: ["authors-with-book-count"],
+    queryKey: ["authors-with-products"],
     queryFn: () => AuthorService.getAuthorsWithProducts(),
   });
 };

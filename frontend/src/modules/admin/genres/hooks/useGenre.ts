@@ -84,7 +84,7 @@ export const useDeleteGenre = () => {
 };
 export const useGenresWithProducts = () => {
   return useQuery<GenreProductResponse[]>({
-    queryKey: ["genres-with-book-count"],
+    queryKey: ["genres-with-products"],
     queryFn: () => GenreService.getGenresWithProducts(),
   });
 };

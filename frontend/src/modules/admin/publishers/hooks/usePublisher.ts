@@ -84,7 +84,7 @@ export const useDeletePublisher = () => {
 };
 export const usePublishersWithProducts = () => {
   return useQuery<PublisherProductResponse[]>({
-    queryKey: ["publishers-with-book-count"],
+    queryKey: ["publishers-with-products"],
     queryFn: () => PublisherService.getPublishersWithProducts(),
   });
 };

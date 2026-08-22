@@ -84,7 +84,7 @@ export const useDeleteSeries = () => {
 };
 export const useSeriesWithProducts = () => {
   return useQuery<SeriesProductResponse[]>({
-    queryKey: ["series-with-book-count"],
+    queryKey: ["series-with-products"],
     queryFn: () => SeriesService.getSeriesWithProducts(),
   });
 };

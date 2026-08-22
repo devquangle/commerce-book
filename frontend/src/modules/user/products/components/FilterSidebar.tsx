@@ -125,14 +125,12 @@ const RadioOption = ({
   checked,
   onChange,
   label,
-  icon,
-  count,
+  icon,
 }: {
   checked: boolean;
   onChange: () => void;
   label: React.ReactNode;
-  icon?: React.ReactNode;
-  count?: number;
+  icon?: React.ReactNode;
 }) => {
   return (
     <label className="flex items-center gap-3 cursor-pointer group">
@@ -148,11 +146,6 @@ const RadioOption = ({
       <div className={`flex-1 text-[13px] truncate ${checked ? 'text-slate-800 font-medium' : 'text-slate-600'}`}>
         {label}
       </div>
-      {count !== undefined && (
-        <div className="text-[11px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded shrink-0">
-          {count}
-        </div>
-      )}
     </label>
   );
 };
@@ -160,13 +153,11 @@ const RadioOption = ({
 const CheckboxOption = ({
   checked,
   onChange,
-  label,
-  count,
+  label,
 }: {
   checked: boolean;
   onChange: () => void;
-  label: React.ReactNode;
-  count?: number;
+  label: React.ReactNode;
 }) => {
   return (
     <label className="flex items-center gap-3 cursor-pointer group">
@@ -181,11 +172,6 @@ const CheckboxOption = ({
       <div className={`flex-1 text-[13px] truncate ${checked ? 'text-slate-800 font-medium' : 'text-slate-600'}`}>
         {label}
       </div>
-      {count !== undefined && (
-        <div className="text-[11px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded shrink-0">
-          {count}
-        </div>
-      )}
     </label>
   );
 };
@@ -276,7 +262,7 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
                 checked={(filterOptions.genres || []).includes(genre.slug)}
                 onChange={() => handleToggleArray('genres', genre.slug)}
                 label={genre.name}
-                count={genre.bookCount}
+
               />
             )}
           />
@@ -294,7 +280,7 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
                 checked={(filterOptions.authors || []).includes(author.slug)}
                 onChange={() => handleToggleArray('authors', author.slug)}
                 label={author.name}
-                count={author.bookCount}
+
               />
             )}
           />
@@ -312,7 +298,7 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
                 checked={filterOptions.publisher === pub.slug}
                 onChange={() => handleUpdateField('publisher', pub.slug)}
                 label={pub.name}
-                count={pub.bookCount}
+
               />
             )}
           >
@@ -337,7 +323,7 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
                 checked={filterOptions.series === s.slug}
                 onChange={() => handleUpdateField('series', s.slug)}
                 label={s.name}
-                count={s.bookCount}
+
               />
             )}
           >
