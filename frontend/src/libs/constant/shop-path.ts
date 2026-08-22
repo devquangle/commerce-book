@@ -33,6 +33,7 @@ export const SHOP_PATH = {
   MY_ACCOUNT_FULL: "/shop/my-account",
 
   REVIEWS_FULL: "/shop/reviews",
+  CHATS: "chats",
   CHATS_FULL: "/shop/chats",
   PROMOTIONS: "promotions",
   PROMOTION_CREATE: "promotions/add",

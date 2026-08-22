@@ -33,6 +33,7 @@ const ShopPromotionUpdatePage = lazy(() => import('@/modules/shop/promotions/pag
 const ShopVoucherListPage = lazy(() => import("@/modules/shop/vouchers/pages/ShopVoucherListPage"));
 const ShopVoucherAddPage = lazy(() => import("@/modules/shop/vouchers/pages/ShopVoucherAddPage"));
 const ShopVoucherUpdatePage = lazy(() => import("@/modules/shop/vouchers/pages/ShopVoucherUpdatePage"));
+const ShopChatPage = lazy(() => import("@/modules/shop/chats/pages/ShopChatPage"));
 export const ShopRoutes = () => {
   return (
     <ShopLayout>
@@ -63,6 +64,7 @@ export const ShopRoutes = () => {
           <Route path={SHOP_PATH.VOUCHERS} element={<ShopVoucherListPage />} />
           <Route path={SHOP_PATH.VOUCHER_CREATE} element={<ShopVoucherAddPage />} />
           <Route path={SHOP_PATH.VOUCHER_UPDATE} element={<ShopVoucherUpdatePage />} />
+          <Route path={SHOP_PATH.CHATS} element={<ShopChatPage />} />
           <Route path="*" element={<Navigate to={SHOP_PATH.ROOT} replace />} />
         </Routes>
       </Suspense>
