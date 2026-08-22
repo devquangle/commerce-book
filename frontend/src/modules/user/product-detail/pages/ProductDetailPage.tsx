@@ -6,7 +6,19 @@ import ProductAttribute from "../components/ProductAttribute";
 import ProductInfo from "../components/ProductInfo";
 import { useData } from "../hooks/useData";
 import { useSearchParams } from "react-router-dom";
+import { ShopProduct } from "@/modules/shop/info/components/ShopProduct";
+import type { ShopInfo } from "@/modules/shop/info/types/shop.type";
+const mockShop: ShopInfo = {
+  shopId: 1,
+  shopSlug: "binh-ban-book",
+  shopName: "BÌNH BÁN BOOK",
 
+  urlImage: "https://i.pravatar.cc/150?img=12",
+  verify: true,
+  rating: 4.9,
+  soldCount: 1000,
+  reviewCount: 7400,
+};
 const ProductDetailPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const slug = searchParams.get("slug");
@@ -23,13 +35,12 @@ const ProductDetailPage: React.FC = () => {
     <div className="min-h-screen mx-auto w-full space-y-16 py-4">
       <Container className="flex flex-col md:flex-row gap-6">
         {/* Left side: Images (tương đương 4 columns) */}
-        <div className="w-full md:w-1/3 md:sticky md:top-24 h-fit flex flex-col gap-4">
-          <div className="card-custom">
-            <ProductImages
-              coverImages={productDetail.coverImages}
-              productName={productDetail.productName}
-            />
-          </div>
+        <div className="w-full md:w-1/3 md:sticky md:top-24 h-fit flex flex-col gap-6">
+          <ProductImages
+            coverImages={productDetail.coverImages}
+            productName={productDetail.productName}
+          />
+          <ShopProduct shop={mockShop} />
         </div>
 
         {/* Right side: Product Information (tương đương 8 columns) */}

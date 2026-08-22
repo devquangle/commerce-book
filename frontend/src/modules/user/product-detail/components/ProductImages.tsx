@@ -33,7 +33,7 @@ const ProductImages = ({ coverImages, productName = "Product" }: ProductImagesPr
   });
 
   return (
-    <div className="lg:col-span-6 xl:col-span-4 flex flex-col gap-3">
+    <div className="card-custom lg:col-span-6 xl:col-span-4 flex flex-col gap-3">
       {/* Main Swiper */}
       <div className="overflow-hidden bg-slate-50 relative">
         <Swiper

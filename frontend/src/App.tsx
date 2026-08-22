@@ -8,6 +8,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SHOP_PATH } from "./libs/constant/shop-path";
+import { ChatProvider } from "@/modules/chat/context/ChatContext";
+import { ChatWidget } from "@/modules/chat/components/ChatWidget";
 
 const queryClient = new QueryClient();
 
@@ -15,23 +17,26 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <BrowserRouter>
-          <ScrollToTop />
-          <Routes>
-            {/* Admin panel: /admin/* */}
-            <Route path="/admin/*" element={<AdminRoutes />} />
+        <ChatProvider>
+          <BrowserRouter>
+            <ScrollToTop />
+            <Routes>
+              {/* Admin panel: /admin/* */}
+              <Route path="/admin/*" element={<AdminRoutes />} />
 
-            {/* Shop panel (seller dashboard): /shop/* */}
-            <Route path={`${SHOP_PATH.ROOT}/*`} element={<ShopRoutes />} />
+              {/* Shop panel (seller dashboard): /shop/* */}
+              <Route path={`${SHOP_PATH.ROOT}/*`} element={<ShopRoutes />} />
 
-            {/* User storefront: /* */}
-            <Route path="/*" element={<UserRoutes />} />
+              {/* User storefront: /* */}
+              <Route path="/*" element={<UserRoutes />} />
 
-            {/* Fallback */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </BrowserRouter>
-        <ToastContainer />
+              {/* Fallback */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </BrowserRouter>
+          <ChatWidget />
+          <ToastContainer />
+        </ChatProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
