@@ -127,3 +127,6 @@
 .react-datepicker__time-list-item--selected {
   @apply bg-blue-600 text-white hover:bg-blue-700;
 }
+.swiper-wrapper {
+  @apply py-2
+}

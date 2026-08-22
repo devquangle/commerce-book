@@ -35,9 +35,9 @@ const ProductDescription = ({ description }: ProductDescriptionProps) => {
 
   return (
     <div className="card-custom">
-      <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-6">Mô tả sản phẩm</h2>
+      <h2 className="text-xl md:text-2xl font-bold text-slate-900 mb-2">Mô tả sản phẩm</h2>
       
-      <div className="relative">
+      <div className="relative mt-2">
         <div 
           ref={contentRef}
           style={{
@@ -45,6 +45,7 @@ const ProductDescription = ({ description }: ProductDescriptionProps) => {
           }}
           className={`
             prose prose-sm md:prose-base tiptap max-w-none text-slate-600 leading-relaxed
+            [&>div>*:first-child]:mt-0
             prose-p:mb-4 prose-a:text-blue-600 prose-img:rounded-xl prose-img:max-w-full
             prose-img:mx-auto prose-img:block prose-headings:font-bold prose-headings:text-slate-900 prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg
             overflow-hidden transition-[max-height] duration-500 ease-in-out
