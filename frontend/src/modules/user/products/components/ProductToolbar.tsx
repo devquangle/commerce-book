@@ -79,7 +79,7 @@ const ProductToolbar = ({ onOpenFilter, totalElements, resetFilters }: ProductTo
       {/* 1. Quick Filters */}
       <div className="flex items-center gap-3 w-full max-w-full overflow-hidden">
         <span className="font-bold text-slate-700 text-sm shrink-0 hidden md:block">Bộ lọc nhanh:</span>
-        <div className="flex-1 min-w-0 flex items-center gap-2.5 overflow-x-auto py-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div className="flex-1 min-w-0 flex items-center gap-2.5 overflow-x-auto py-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
           <button 
             onClick={onOpenFilter}
             className="lg:hidden flex items-center gap-1.5 px-3.5 py-1.5 border border-slate-200 rounded-full transition-colors text-sm font-bold shadow-sm whitespace-nowrap bg-white text-slate-800"

@@ -20,10 +20,10 @@ const ProductDetailPage: React.FC = () => {
     );
 
   return (
-    <Container className="max-w-7xl py-6">
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-        {/* Left side: Images (4 columns) */}
-        <div className="md:col-span-4 md:sticky md:top-24 h-fit flex flex-col gap-4">
+    <div className="min-h-screen mx-auto w-full space-y-16 py-6">
+      <Container className="flex flex-col md:flex-row gap-6">
+        {/* Left side: Images (tương đương 4 columns) */}
+        <div className="w-full md:w-1/3 md:sticky md:top-24 h-fit flex flex-col gap-4">
           <div className="card-custom">
             <ProductImages
               coverImages={productDetail.coverImages}
@@ -32,15 +32,15 @@ const ProductDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right side: Product Information (8 columns) */}
-        <div className="md:col-span-8 flex flex-col gap-6">
+        {/* Right side: Product Information (tương đương 8 columns) */}
+        <div className="w-full md:w-2/3 flex flex-col gap-6">
           {/* Product Info (Title, Price, Add to Cart) */}
           <ProductInfo product={productDetail} />
           <ProductAttribute product={productDetail} />
           <ProductDescription description={productDetail.description} />
         </div>
-      </div>
-    </Container>
+      </Container>
+    </div>
   );
 };
 

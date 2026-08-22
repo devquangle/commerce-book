@@ -56,7 +56,6 @@ const FilterListSection = <T extends { name: string }>({
   onToggle,
   data,
   searchable = false,
-  limit = 5,
   renderItem,
   emptyText = "Không có dữ liệu",
   hideDivider,
@@ -105,7 +104,7 @@ const FilterListSection = <T extends { name: string }>({
       {children}
       
       {filteredData.length > 0 ? (
-        <div className="flex flex-col gap-3 max-h-[160px] overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-50 [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-300">
+        <div className="flex flex-col gap-3 max-h-40 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-50 [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-300">
           {filteredData.map(renderItem)}
         </div>
       ) : (
@@ -119,12 +118,14 @@ const RadioOption = ({
   checked,
   onChange,
   label,
-  icon,
+  icon,
+
 }: {
   checked: boolean;
   onChange: () => void;
   label: React.ReactNode;
-  icon?: React.ReactNode;
+  icon?: React.ReactNode;
+
 }) => {
   return (
     <label className="flex items-center gap-3 cursor-pointer group">
