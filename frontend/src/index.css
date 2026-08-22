@@ -112,7 +112,7 @@
 }
 
 .react-datepicker__navigation-icon::before {
-  @apply border-zinc-500 dark:border-zinc-400 border-[2px];
+  @apply border-zinc-500 dark:border-zinc-400 border-2;
 }
 
 .react-datepicker__time-container {

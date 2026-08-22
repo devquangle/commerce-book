@@ -11,8 +11,8 @@ import { StorefrontMegaMenu } from "./StorefrontMegaMenu";
 export const UserHeader: React.FC = () => {
   return (
     <nav className="fixed top-0 z-50 w-full h-17 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
-      <Container className="max-w-7xl flex h-full items-center justify-between px-2">
-        <div className="flex items-center justify-start rtl:justify-end">
+      <Container className="max-w-7xl flex h-full items-center justify-between">
+        <div className="flex items-center justify-start rtl:justify-end gap-2">
           <SidebarToggle />
           <Logo href="/home" />
         </div>

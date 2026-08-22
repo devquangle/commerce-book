@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Filter, RotateCcw, ChevronRight, ChevronDown, Building, Layers, Star, X, Search } from 'lucide-react';
+import { Filter, RotateCcw, ChevronRight, ChevronDown, Building, Layers, Star, X, Search, LayoutGrid, Users } from 'lucide-react';
 import { useData } from '../hooks/useData';
 import type { SearchProductsFilter } from '../types/search-product';
 
@@ -13,12 +13,14 @@ interface FilterSidebarProps {
 
 const FilterSection = ({
   title,
+  icon,
   isOpen,
   onToggle,
   children,
   hideDivider
 }: {
   title: string;
+  icon?: React.ReactNode;
   isOpen: boolean;
   onToggle: () => void;
   children: React.ReactNode;
@@ -30,7 +32,10 @@ const FilterSection = ({
         onClick={onToggle}
         className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg text-slate-700 font-bold text-xs tracking-wider transition-colors"
       >
-        <span>{title}</span>
+        <div className="flex items-center gap-2">
+          {icon && <span className="text-slate-400">{icon}</span>}
+          <span>{title}</span>
+        </div>
         {isOpen ? <ChevronDown size={16} className="text-slate-400" /> : <ChevronRight size={16} className="text-slate-400" />}
       </button>
       {isOpen && (
@@ -46,6 +51,7 @@ const FilterSection = ({
 const FilterListSection = <T extends { name: string }>({
 
   title,
+  icon,
   isOpen,
   onToggle,
   data,
@@ -58,6 +64,7 @@ const FilterListSection = <T extends { name: string }>({
 
 }: {
   title: string;
+  icon?: React.ReactNode;
   isOpen: boolean;
   onToggle: () => void;
   data: T[];
@@ -69,7 +76,6 @@ const FilterListSection = <T extends { name: string }>({
   children?: React.ReactNode;
 }) => {
   const [search, setSearch] = useState('');
-  const [showAll, setShowAll] = useState(false);
 
   const filteredData = useMemo(() => {
     if (!data) return [];
@@ -79,11 +85,8 @@ const FilterListSection = <T extends { name: string }>({
     );
   }, [data, search]);
 
-  const displayedData = showAll ? filteredData : filteredData.slice(0, limit);
-  const hasMore = filteredData.length > limit;
-
   return (
-    <FilterSection title={title} isOpen={isOpen} onToggle={onToggle} hideDivider={hideDivider}>
+    <FilterSection title={title} icon={icon} isOpen={isOpen} onToggle={onToggle} hideDivider={hideDivider}>
       {searchable && data && data.length > 0 && (
         <div className="relative mb-2">
           <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
@@ -101,19 +104,10 @@ const FilterListSection = <T extends { name: string }>({
       
       {children}
       
-      {displayedData.length > 0 ? (
-        <>
-          {displayedData.map(renderItem)}
-          
-          {hasMore && (
-            <button 
-              onClick={() => setShowAll(!showAll)}
-              className="text-xs text-blue-500 font-medium text-left mt-1 hover:text-blue-600 transition-colors"
-            >
-              {showAll ? "Thu gọn" : `Xem thêm (${filteredData.length - limit})`}
-            </button>
-          )}
-        </>
+      {filteredData.length > 0 ? (
+        <div className="flex flex-col gap-3 max-h-[160px] overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-50 [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-300">
+          {filteredData.map(renderItem)}
+        </div>
       ) : (
         <div className="text-[13px] text-slate-400 italic">{emptyText}</div>
       )}
@@ -153,11 +147,13 @@ const RadioOption = ({
 const CheckboxOption = ({
   checked,
   onChange,
-  label,
+  label,
+  icon,
 }: {
   checked: boolean;
   onChange: () => void;
-  label: React.ReactNode;
+  label: React.ReactNode;
+  icon?: React.ReactNode;
 }) => {
   return (
     <label className="flex items-center gap-3 cursor-pointer group">
@@ -169,6 +165,11 @@ const CheckboxOption = ({
           </svg>
         )}
       </div>
+      {icon && (
+        <div className="w-7 h-7 rounded bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">
+          {icon}
+        </div>
+      )}
       <div className={`flex-1 text-[13px] truncate ${checked ? 'text-slate-800 font-medium' : 'text-slate-600'}`}>
         {label}
       </div>
@@ -252,6 +253,7 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
           {/* THỂ LOẠI */}
           <FilterListSection
             title="THỂ LOẠI"
+            icon={<LayoutGrid size={16} />}
             isOpen={openSections['THỂ LOẠI']}
             onToggle={() => toggleSection('THỂ LOẠI')}
             data={genres || []}
@@ -262,7 +264,7 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
                 checked={(filterOptions.genres || []).includes(genre.slug)}
                 onChange={() => handleToggleArray('genres', genre.slug)}
                 label={genre.name}
-
+                icon={<LayoutGrid size={14} />}
               />
             )}
           />
@@ -270,6 +272,7 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
           {/* TÁC GIẢ */}
           <FilterListSection
             title="TÁC GIẢ"
+            icon={<Users size={16} />}
             isOpen={openSections['TÁC GIẢ']}
             onToggle={() => toggleSection('TÁC GIẢ')}
             data={authors || []}
@@ -280,7 +283,7 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
                 checked={(filterOptions.authors || []).includes(author.slug)}
                 onChange={() => handleToggleArray('authors', author.slug)}
                 label={author.name}
-
+                icon={<Users size={14} />}
               />
             )}
           />
@@ -288,6 +291,7 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
           {/* NHÀ XUẤT BẢN */}
           <FilterListSection
             title="NHÀ XUẤT BẢN"
+            icon={<Building size={16} />}
             isOpen={openSections['NHÀ XUẤT BẢN']}
             onToggle={() => toggleSection('NHÀ XUẤT BẢN')}
             data={publishers || []}
@@ -298,7 +302,7 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
                 checked={filterOptions.publisher === pub.slug}
                 onChange={() => handleUpdateField('publisher', pub.slug)}
                 label={pub.name}
-
+                icon={<Building size={14} />}
               />
             )}
           >
@@ -313,6 +317,7 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
           {/* SERIES */}
           <FilterListSection
             title="SERIES"
+            icon={<Layers size={16} />}
             isOpen={openSections['SERIES']}
             onToggle={() => toggleSection('SERIES')}
             data={series || []}
@@ -323,7 +328,7 @@ const FilterSidebar = ({ filterOptions, handleUpdateField, resetFilters, isOpen,
                 checked={filterOptions.series === s.slug}
                 onChange={() => handleUpdateField('series', s.slug)}
                 label={s.name}
-
+                icon={<Layers size={14} />}
               />
             )}
           >

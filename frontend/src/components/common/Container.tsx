@@ -8,7 +8,7 @@ export interface Props{
 
 const  Container = ({children,className=""}:Props) => {
   return (
-    <div className={`mx-auto w-full ${className}`}>{children}</div>
+    <div className={`mx-auto w-full p-4 lg:p-3 ${className}`}>{children}</div>
   )
 }
 
