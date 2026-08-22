@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import type { ProductDetailResponse } from "../types/product-detail.type";
+import type { ProductFullResponse as ProductDetailResponse } from "../types/product-detail.type";
 
 interface ProductAttributeProps {
   product: ProductDetailResponse;

@@ -1,4 +1,4 @@
-export interface ProductDetailResponse {
+export interface ProductFullResponse {
   productId: number;
   productName: string;
   productSlug: string;

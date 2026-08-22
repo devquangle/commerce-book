@@ -16,4 +16,6 @@ public interface GenreProductService {
     void setGenresProduct(Product product, List<Long> genreIds);
 
     List<GenreProductResponse> getGenresWithProducts();
+
+    List<GenreProductResponse> getGenresByProductId(Long productId);
 }

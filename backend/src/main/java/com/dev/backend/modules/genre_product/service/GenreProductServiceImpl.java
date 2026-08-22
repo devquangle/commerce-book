@@ -78,4 +78,8 @@ public class GenreProductServiceImpl implements GenreProductService {
     public List<GenreProductResponse> getGenresWithProducts() {
         return genreProductRepository.findGenresWithProducts();
     }
+    @Override
+    public List<GenreProductResponse> getGenresByProductId(Long productId) {
+        return genreProductRepository.findGenresByProductId(productId);
+    }
 }

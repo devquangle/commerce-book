@@ -17,4 +17,6 @@ public interface AuthorProductService {
     void setAuthorsProduct(Product product, List<Long> authorIds);
 
     List<AuthorProductResponse> getAuthorsWithProducts();
+
+    List<AuthorProductResponse> getAuthorsByProductId(Long productId);
 }

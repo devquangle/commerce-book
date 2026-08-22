@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Star, Minus, Plus, ShoppingCart, Heart } from "lucide-react";
-import type { ProductDetailResponse } from "../types/product-detail.type";
+import type { ProductFullResponse as ProductDetailResponse } from "../types/product-detail.type";
 import { showErrorToast, showSuccessToast } from "@/libs/utils/toastUtil";
 
 // Mock useAddToCart since it doesn't exist in codebase yet

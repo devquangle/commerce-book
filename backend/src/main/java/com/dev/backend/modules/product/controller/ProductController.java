@@ -28,6 +28,7 @@ import com.dev.backend.modules.product.dto.request.SuperAdminFilterRequest;
 import com.dev.backend.modules.product.dto.request.UserFilterRequest;
 import com.dev.backend.modules.product.dto.response.ProductCardResponse;
 import com.dev.backend.modules.product.dto.response.ProductDetailResponse;
+import com.dev.backend.modules.product.dto.response.ProductFullResponse;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.service.ProductService;
 import com.dev.backend.security.custom.CustomUserDetails;
@@ -124,9 +125,9 @@ public class ProductController {
     }
 
     @GetMapping("/product-detail")
-    public ResponseEntity<ResponseData<?>> getProductDetail(
+    public ResponseEntity<ResponseData<ProductFullResponse>> getProductDetail(
             @RequestParam("slug") String slug) {
-
-        return null;
+        ProductFullResponse response = productService.detailFull(slug);
+        return ResponseUtil.success("Lấy sản phẩm thành công", response);
     }
 }

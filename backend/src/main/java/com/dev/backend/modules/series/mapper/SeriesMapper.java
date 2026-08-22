@@ -1,6 +1,7 @@
 package com.dev.backend.modules.series.mapper;
 
 import com.dev.backend.common.utils.TextUtils;
+import com.dev.backend.modules.series.dto.SeriesProductResponse;
 import com.dev.backend.modules.series.dto.SeriesRequest;
 import com.dev.backend.modules.series.dto.SeriesResponse;
 import com.dev.backend.modules.series.entity.Series;
@@ -32,4 +33,10 @@ public class SeriesMapper {
         return response;
     }
 
+    public SeriesProductResponse toSeriesProductResponse(Series entity) {
+        if (entity == null) {
+            return null;
+        }
+        return new SeriesProductResponse(entity.getId(), entity.getName(), entity.getSlug());
+    }
 }

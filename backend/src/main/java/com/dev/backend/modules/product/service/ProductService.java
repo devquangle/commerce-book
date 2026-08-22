@@ -39,8 +39,6 @@ public interface ProductService {
 
         ProductDetailResponse detail(String slug);
 
-
-        
         ProductFullResponse detailFull(String slug);
 
         void delete(Long id, Long shopId);

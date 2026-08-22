@@ -1,6 +1,7 @@
 package com.dev.backend.modules.publisher.mapper;
 
 import com.dev.backend.common.utils.TextUtils;
+import com.dev.backend.modules.publisher.dto.PublisherProductResponse;
 import com.dev.backend.modules.publisher.dto.PublisherRequest;
 import com.dev.backend.modules.publisher.dto.PublisherResponse;
 import com.dev.backend.modules.publisher.entity.Publisher;
@@ -30,6 +31,14 @@ public class PublisherMapper {
         response.setSlug(entity.getSlug());
         response.setStatus(entity.getStatus());
         return response;
+    }
+
+    public PublisherProductResponse toPublisherProductResponse(Publisher entity){
+          if (entity == null) {
+            return null;
+        }
+
+        return new PublisherProductResponse(entity.getId(), entity.getName(), entity.getSlug());
     }
 
 }

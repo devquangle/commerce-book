@@ -77,4 +77,8 @@ public class AuthorProductServiceImpl implements AuthorProductService {
     public List<AuthorProductResponse> getAuthorsWithProducts() {
         return authorProductRepository.findAuthorsWithProducts();
     }
+    @Override
+    public List<AuthorProductResponse> getAuthorsByProductId(Long productId) {
+        return authorProductRepository.findAuthorsByProductId(productId);
+    }
 }

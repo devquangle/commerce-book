@@ -6,7 +6,9 @@ import com.dev.backend.common.exception.DuplicateFieldException;
 import com.dev.backend.common.exception.NotFoundException;
 import com.dev.backend.common.response.PageResponse;
 import com.dev.backend.common.utils.TextUtils;
+import com.dev.backend.modules.author_product.dto.AuthorProductResponse;
 import com.dev.backend.modules.author_product.service.AuthorProductService;
+import com.dev.backend.modules.genre_product.dto.GenreProductResponse;
 import com.dev.backend.modules.genre_product.service.GenreProductService;
 import com.dev.backend.modules.image_product.dto.ImageProductResponse;
 import com.dev.backend.modules.image_product.service.ImageProductService;
@@ -25,7 +27,11 @@ import com.dev.backend.modules.product.entity.Product;
 import com.dev.backend.modules.product.mapper.ProductMapper;
 import com.dev.backend.modules.product.repository.ProductRepository;
 import com.dev.backend.modules.product.repository.ProductRepositoryImpl;
+import com.dev.backend.modules.publisher.dto.PublisherProductResponse;
+import com.dev.backend.modules.publisher.mapper.PublisherMapper;
 import com.dev.backend.modules.publisher.service.PublisherService;
+import com.dev.backend.modules.series.dto.SeriesProductResponse;
+import com.dev.backend.modules.series.mapper.SeriesMapper;
 import com.dev.backend.modules.series.service.SeriesService;
 import com.dev.backend.modules.shop.dto.ShopSimpleResponse;
 import com.dev.backend.modules.shop.entity.Shop;
@@ -55,10 +61,10 @@ public class ProductServiceImpl implements ProductService {
         private final ProductRepository productRepository;
         private final ProductRepositoryImpl productRepositoryImpl;
         private final ProductMapper productMapper;
-
+        private final PublisherMapper publisherMapper;
+        private final SeriesMapper seriesMapper;
         private final PublisherService publisherService;
         private final SeriesService seriesService;
-
         private final AuthorProductService authorProductService;
         private final GenreProductService genreProductService;
         private final ImageProductService imageProductService;
@@ -143,10 +149,14 @@ public class ProductServiceImpl implements ProductService {
                 Long productId = product.getId();
                 ProductFullResponse response = productMapper.toProductFullResponse(product);
                 List<ImageProductResponse> images = imageProductService.getImageResponsesByProductId(productId);
-                response.setProductAuthors(null);
-                response.setProductGenres(null);
-                response.setProductPublisher(null);
-                response.setProductSeries(null);
+                List<AuthorProductResponse> authors = authorProductService.getAuthorsByProductId(productId);
+                List<GenreProductResponse> genres = genreProductService.getGenresByProductId(productId);
+                PublisherProductResponse publisher = publisherMapper.toPublisherProductResponse(product.getPublisher());
+                SeriesProductResponse series = seriesMapper.toSeriesProductResponse(product.getSeries());
+                response.setProductAuthors(authors);
+                response.setProductGenres(genres);
+                response.setProductPublisher(publisher);
+                response.setProductSeries(series);
                 response.setCoverImages(images);
                 return response;
         }

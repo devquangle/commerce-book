@@ -48,4 +48,16 @@ public interface GenreProductRepository extends JpaRepository<GenreProduct, Long
             GROUP BY g.id, g.name, g.slug
             """)
     List<GenreProductResponse> findGenresWithProducts();
+
+       @Query("""
+            SELECT new com.dev.backend.modules.genre_product.dto.GenreProductResponse(
+                g.id,
+                g.name,
+                g.slug
+            )
+            FROM GenreProduct gp
+            JOIN gp.genre g
+            WHERE gp.product.id =:productId
+            """)
+    List<GenreProductResponse> findGenresByProductId(@Param("productId") Long productId);
 }
