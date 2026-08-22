@@ -39,7 +39,7 @@ public class ImageProductServiceImpl implements ImageProductService {
             .stream()
             .collect(Collectors.toMap(
                     item -> item.getProduct().getId(),
-                    ImageProduct::getUrlImage
+                        item -> item.getUrlImage()
             ));
     }
 
@@ -66,7 +66,7 @@ public class ImageProductServiceImpl implements ImageProductService {
         // 2. Gom tất cả URL mới từ ImageResponse gửi lên thành một danh sách để đối
         // chiếu
         List<String> newUrls = imageResponses.stream()
-                .map(ImageResponse::getUrl)
+            .map(item -> item.getUrl())
                 .filter(url -> url != null && !url.isBlank())
                 .toList();
 

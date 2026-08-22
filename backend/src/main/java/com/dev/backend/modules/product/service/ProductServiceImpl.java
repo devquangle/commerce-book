@@ -202,7 +202,7 @@ public class ProductServiceImpl implements ProductService {
                                 pageable);
 
                 List<Long> productIds = page.stream()
-                                .map(SuperAdminProductProjection::getProductId)
+                                .map(product -> product.getProductId())
                                 .toList();
 
                 Map<Long, String> imageMap = imageProductService.findThumbnailMap(productIds);
@@ -240,7 +240,7 @@ public class ProductServiceImpl implements ProductService {
                 List<Product> products = page.getContent();
 
                 List<Long> productIds = products.stream()
-                                .map(Product::getId)
+                                .map(product -> product.getId())
                                 .toList();
 
                 Map<Long, List<String>> authorMap = authorProductService.findAuthorMap(productIds);
@@ -296,7 +296,7 @@ public class ProductServiceImpl implements ProductService {
                 return productRepository.findByIdIn(productIds)
                                 .stream()
                                 .collect(Collectors.toMap(
-                                                Product::getId,
+                                                product -> product.getId(),
                                                 product -> new ShopSimpleResponse(
                                                                 product.getShop().getId(),
                                                                 product.getShop().getName(),

@@ -139,13 +139,13 @@ public class GoogleBookServiceImpl implements GoogleBookService {
         return volumeInfo.getIndustryIdentifiers()
                 .stream()
                 .filter(i -> "ISBN_13".equals(i.getType()))
-                .map(GoogleBookApiResponse.IndustryIdentifiers::getIdentifier)
+                .map(identifier -> identifier.getIdentifier())
                 .findFirst()
                 .orElse(
                         volumeInfo.getIndustryIdentifiers()
                                 .stream()
                                 .filter(i -> "ISBN_10".equals(i.getType()))
-                                .map(GoogleBookApiResponse.IndustryIdentifiers::getIdentifier)
+                                .map(identifier -> identifier.getIdentifier())
                                 .findFirst()
                                 .orElse(null));
     }
