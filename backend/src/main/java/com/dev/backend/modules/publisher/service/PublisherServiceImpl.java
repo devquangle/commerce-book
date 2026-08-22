@@ -198,7 +198,7 @@ public class PublisherServiceImpl implements PublisherService {
         return publisher;
     }
     @Override
-    public List<PublisherProductResponse> getPublishersWithBookCount() {
-        return publisherRepository.findPublishersWithBookCount();
+    public List<PublisherProductResponse> getPublishersWithProducts() {
+        return publisherRepository.findPublishersWithProducts();
     }
 }

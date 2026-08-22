@@ -30,5 +30,5 @@ public interface PublisherService {
 
     PageResponse<PublisherResponse> search(PublisherFilterRequest request);
 
-    List<PublisherProductResponse> getPublishersWithBookCount();
+    List<PublisherProductResponse> getPublishersWithProducts();
 }

@@ -43,12 +43,10 @@ public interface PublisherRepository extends JpaRepository<Publisher, Long> {
                 p.id,
                 p.name,
                 p.slug,
-                COUNT(pr.id)
             )
             FROM Publisher p
             JOIN Product pr ON pr.publisher = p
             GROUP BY p.id, p.name, p.slug
-            ORDER BY COUNT(pr.id) DESC
             """)
-    List<PublisherProductResponse> findPublishersWithBookCount();
+    List<PublisherProductResponse> findPublishersWithProducts();
 }

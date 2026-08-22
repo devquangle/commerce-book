@@ -57,8 +57,8 @@ public class PublisherController {
     }
 
     @GetMapping("/publishers")
-    public ResponseEntity<ResponseData<List<PublisherProductResponse>>> getPublisherProducts() {
-        List<PublisherProductResponse> data = publisherService.getPublishersWithBookCount();
+    public ResponseEntity<ResponseData<List<PublisherProductResponse>>> getPublishersWithProducts() {
+        List<PublisherProductResponse> data = publisherService.getPublishersWithProducts();
         return ResponseUtil.success("Lấy danh sách thành công.", data);
     }
 }
