@@ -75,7 +75,7 @@ public class GenreProductServiceImpl implements GenreProductService {
     }
 
     @Override
-    public List<GenreProductResponse> getGenresWithBookCount() {
-        return genreProductRepository.findGenresWithBookCount();
+    public List<GenreProductResponse> getGenresWithProducts() {
+        return genreProductRepository.findGenresWithProducts();
     }
 }

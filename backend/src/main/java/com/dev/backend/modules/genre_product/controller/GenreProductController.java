@@ -21,8 +21,8 @@ public class GenreProductController {
      private final GenreProductService genreProductService;
 
     @GetMapping("/genres")
-    public ResponseEntity<ResponseData<List<GenreProductResponse>>> getAuthorProducts() {
-        List<GenreProductResponse> data = genreProductService.getGenresWithBookCount();
+    public ResponseEntity<ResponseData<List<GenreProductResponse>>> getGenresWithProducts() {
+        List<GenreProductResponse> data = genreProductService.getGenresWithProducts();
         return ResponseUtil.success("Lấy danh sách thành công.", data);
     }
 }

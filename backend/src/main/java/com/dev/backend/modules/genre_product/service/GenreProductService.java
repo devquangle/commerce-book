@@ -15,5 +15,5 @@ public interface GenreProductService {
 
     void setGenresProduct(Product product, List<Long> genreIds);
 
-    List<GenreProductResponse> getGenresWithBookCount();
+    List<GenreProductResponse> getGenresWithProducts();
 }
