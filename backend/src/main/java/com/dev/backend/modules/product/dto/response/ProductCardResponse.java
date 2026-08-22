@@ -16,6 +16,7 @@ import lombok.Setter;
 public class ProductCardResponse {
     private Long productId;
     private String productName;
+    private String productSlug;
     private Integer price; // giá sản phẩm product.price
     private Integer discountPercent;// phần %
     private Integer salePrice; // giá bán price × (100 - discountPercent) / 100
@@ -34,17 +35,13 @@ public class ProductCardResponse {
 
     private ProductStatus status;
 
-    public ProductCardResponse(Long productId, String productName, Integer price,
+    public ProductCardResponse(Long productId, String productName, String productSlug, Integer price,
             Integer discountPercent, Integer salePrice, String urlImageDefault,
-            Long shopId, String shopSlug, String shopName) {
-        this(productId, productName, price, discountPercent, salePrice,urlImageDefault, shopId, shopSlug, shopName, false);
-    }
-
-    public ProductCardResponse(Long productId, String productName, Integer price,
-            Integer discountPercent, Integer salePrice, String urlImageDefault,
-            Long shopId, String shopSlug, String shopName, Boolean isFavorite) {
+            Long shopId, String shopSlug, String shopName, Boolean isFavorite,
+            LocalDateTime approvedAt, ProductStatus status) {
         this.productId = productId;
         this.productName = productName;
+        this.productSlug = productSlug;
         this.price = price;
         this.discountPercent = discountPercent != null ? discountPercent : 0;
         this.salePrice = salePrice != null ? salePrice : price;
@@ -55,5 +52,7 @@ public class ProductCardResponse {
         this.averageRating = 0.0;
         this.soldCount = 0;
         this.isFavorite = isFavorite != null ? isFavorite : false;
+        this.approvedAt = approvedAt;
+        this.status = status;
     }
 }

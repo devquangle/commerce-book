@@ -76,6 +76,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         query.select(cb.construct(ProductCardResponse.class,
                 product.get("id"),
                 product.get("name"),
+                product.get("slug"),
                 product.get("price"),
                 discountPercentExpr,
                 salePriceExpr.as(Integer.class),
@@ -83,7 +84,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 shop.get("id"),
                 shop.get("slug"),
                 shop.get("name"),
-                isFavoriteExpr
+                isFavoriteExpr,
+                product.get("approvedAt"),
+                product.get("status")
         ));
 
         query.groupBy(

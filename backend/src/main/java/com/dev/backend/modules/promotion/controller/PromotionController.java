@@ -19,8 +19,6 @@ import com.dev.backend.modules.promotion.dto.PromotionFilterRequest;
 import com.dev.backend.modules.promotion.dto.PromotionRequest;
 import com.dev.backend.modules.promotion.dto.PromotionResponse;
 import com.dev.backend.modules.promotion.service.PromotionService;
-import com.dev.backend.modules.voucher.dto.VoucherRequest;
-import com.dev.backend.modules.voucher.dto.VoucherResponse;
 import com.dev.backend.security.custom.CustomUserDetails;
 
 import jakarta.validation.Valid;

@@ -14,6 +14,7 @@ const SearchProductService={
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message || "Failed to fetch product data");
     }
+    console.log(response.data.data);
     return response.data.data;
   },
 }

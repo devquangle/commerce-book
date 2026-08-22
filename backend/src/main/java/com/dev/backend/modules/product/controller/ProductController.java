@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dev.backend.common.response.PageResponse;
@@ -120,5 +121,12 @@ public class ProductController {
         Long userId = userDetails != null ? userDetails.getUserId() : null;
         PageResponse<ProductCardResponse> response = productService.filterProductsForUser(request, userId);
         return ResponseUtil.success("Lấy danh sách sản phẩm thành công", response);
+    }
+
+    @GetMapping("/product-detail")
+    public ResponseEntity<ResponseData<?>> getProductDetail(
+            @RequestParam("slug") String slug) {
+                
+        return null;
     }
 }

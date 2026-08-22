@@ -74,40 +74,55 @@
 }
 
 /* Fix react-datepicker spacing and styling with Tailwind */
+/* Fix react-datepicker spacing and styling with Tailwind */
 .react-datepicker {
-  @apply font-sans border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-lg bg-white dark:bg-zinc-900 !important;
+  @apply font-sans border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-lg bg-white dark:bg-zinc-900;
   padding: 8px;
 }
+
 .react-datepicker__header {
-  @apply bg-transparent border-b border-zinc-100 dark:border-zinc-800 pt-2 pb-1 !important;
+  @apply bg-transparent border-b border-zinc-100 dark:border-zinc-800 pt-2 pb-1;
 }
-.react-datepicker__day-name, .react-datepicker__day, .react-datepicker__time-name {
-  @apply w-8 h-8 leading-8 m-0.5 text-sm rounded-lg text-zinc-700 dark:text-zinc-300 transition-colors !important;
+
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+  @apply w-8 h-8 leading-8 m-0.5 text-sm rounded-lg text-zinc-700 dark:text-zinc-300 transition-colors;
 }
+
 .react-datepicker__day:hover {
-  @apply bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white !important;
+  @apply bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white;
 }
-.react-datepicker__day--selected, .react-datepicker__day--keyboard-selected {
-  @apply bg-blue-600 text-white font-medium hover:bg-blue-700 !important;
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  @apply bg-blue-600 text-white font-medium hover:bg-blue-700;
 }
+
 .react-datepicker__day--disabled {
-  @apply text-zinc-300 dark:text-zinc-600 hover:bg-transparent !important;
+  @apply text-zinc-300 dark:text-zinc-600 hover:bg-transparent;
 }
+
 .react-datepicker__current-month {
-  @apply text-[15px] font-bold text-zinc-900 dark:text-white mb-2 !important;
+  @apply text-[15px] font-bold text-zinc-900 dark:text-white mb-2;
 }
+
 .react-datepicker__navigation {
-  @apply top-3 !important;
+  @apply top-3;
 }
+
 .react-datepicker__navigation-icon::before {
-  @apply border-zinc-500 dark:border-zinc-400 border-w-[2px] !important;
+  @apply border-zinc-500 dark:border-zinc-400 border-[2px];
 }
+
 .react-datepicker__time-container {
-  @apply border-l border-zinc-200 dark:border-zinc-800 !important;
+  @apply border-l border-zinc-200 dark:border-zinc-800;
 }
+
 .react-datepicker__time-list-item {
-  @apply text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 !important;
+  @apply text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800;
 }
+
 .react-datepicker__time-list-item--selected {
-  @apply bg-blue-600 text-white hover:bg-blue-700 !important;
+  @apply bg-blue-600 text-white hover:bg-blue-700;
 }
