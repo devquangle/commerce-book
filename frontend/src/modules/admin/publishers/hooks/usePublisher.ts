@@ -82,9 +82,9 @@ export const useDeletePublisher = () => {
     },
   });
 };
-export const usePublishersWithBookCount = () => {
+export const usePublishersWithProducts = () => {
   return useQuery<PublisherProductResponse[]>({
     queryKey: ["publishers-with-book-count"],
-    queryFn: () => PublisherService.getPublishersWithBookCount(),
+    queryFn: () => PublisherService.getPublishersWithProducts(),
   });
 };

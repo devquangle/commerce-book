@@ -82,9 +82,9 @@ export const useDeleteAuthor = () => {
     },
   });
 };
-export const useAuthorsWithBookCount = () => {
+export const useAuthorsWithProducts = () => {
   return useQuery<AuthorProductResponse[]>({
     queryKey: ["authors-with-book-count"],
-    queryFn: () => AuthorService.getAuthorsWithBookCount(),
+    queryFn: () => AuthorService.getAuthorsWithProducts(),
   });
 };

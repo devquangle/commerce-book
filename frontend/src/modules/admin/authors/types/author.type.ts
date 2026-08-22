@@ -42,5 +42,4 @@ export interface AuthorProductResponse{
   id:number;
   name:string;
   slug:string;
-  bookCount:number;
 }

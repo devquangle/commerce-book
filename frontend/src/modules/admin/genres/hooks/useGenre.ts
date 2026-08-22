@@ -82,9 +82,9 @@ export const useDeleteGenre = () => {
     },
   });
 };
-export const useGenresWithBookCount = () => {
+export const useGenresWithProducts = () => {
   return useQuery<GenreProductResponse[]>({
     queryKey: ["genres-with-book-count"],
-    queryFn: () => GenreService.getGenresWithBookCount(),
+    queryFn: () => GenreService.getGenresWithProducts(),
   });
 };

@@ -53,7 +53,7 @@ const PublisherService = {
       throw new Error(response.data.message || "Failed to delete publisher");
     }
   },
-  getPublishersWithBookCount: async (): Promise<PublisherProductResponse[]> => {
+  getPublishersWithProducts: async (): Promise<PublisherProductResponse[]> => {
     const response =
       await authAxios.get<ApiResponse<PublisherProductResponse[]>>(
         "/api/v1/publishers",

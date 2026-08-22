@@ -82,9 +82,9 @@ export const useDeleteSeries = () => {
     },
   });
 };
-export const useSeriesWithBookCount = () => {
+export const useSeriesWithProducts = () => {
   return useQuery<SeriesProductResponse[]>({
     queryKey: ["series-with-book-count"],
-    queryFn: () => SeriesService.getSeriesWithBookCount(),
+    queryFn: () => SeriesService.getSeriesWithProducts(),
   });
 };

@@ -36,5 +36,5 @@ export interface PublisherProductResponse {
   id: number;
   name: string;
   slug: string;
-  bookCount: number;
+  ;
 }

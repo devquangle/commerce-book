@@ -43,7 +43,7 @@ const GenreService = {
       throw new Error(response.data.message || "Failed to delete genre");
     }
   },
-  getGenresWithBookCount: async (): Promise<GenreProductResponse[]> => {
+  getGenresWithProducts: async (): Promise<GenreProductResponse[]> => {
   const response = await authAxios.get<ApiResponse<GenreProductResponse[]>>(
     "/api/v1/genres"
   );

@@ -51,7 +51,7 @@ const AuthorService = {
       throw new Error(response.data.message || "Failed to delete author");
     }
   },
-  getAuthorsWithBookCount: async (): Promise<AuthorProductResponse[]> => {
+  getAuthorsWithProducts: async (): Promise<AuthorProductResponse[]> => {
     const response =
       await authAxios.get<ApiResponse<AuthorProductResponse[]>>(
         "/api/v1/authors",

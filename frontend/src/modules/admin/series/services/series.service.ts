@@ -51,7 +51,7 @@ const SeriesService = {
       throw new Error(response.data.message || "Failed to delete series");
     }
   },
-  getSeriesWithBookCount: async (): Promise<SeriesProductResponse[]> => {
+  getSeriesWithProducts: async (): Promise<SeriesProductResponse[]> => {
     const response =
       await authAxios.get<ApiResponse<SeriesProductResponse[]>>(
         "/api/v1/series",

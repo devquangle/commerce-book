@@ -36,5 +36,4 @@ export interface GenreProductResponse {
   id: number;
   name: string;
   slug: string;
-  bookCount: number;
 }
