@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Flame, Star, Clock, Gift, Filter, Search, X, Check } from 'lucide-react';
+import { Flame, Star, Clock, Gift, Filter, Search, X, Check, TrendingUp, TrendingDown } from 'lucide-react';
 import { useSearchProductsFilter } from '../hooks/useSearchProductsFilter';
-import { SORT_OPTIONS, type SortType } from '../types/search-product';
-import { SelectBox } from '../../../../components/common/SelectBox';
+import { SORT_OPTIONS} from '../types/search-product';
 import { useData } from '../hooks/useData';
 
 interface ProductToolbarProps {
@@ -74,67 +73,100 @@ const ProductToolbar = ({ onOpenFilter, totalElements, resetFilters }: ProductTo
     activeFilters.push({ label: `Dưới ${filterOptions.maxPrice.toLocaleString('vi-VN')} đ`, onRemove: () => handleUpdateField('maxPrice', undefined) });
   }
 
+  if (filterOptions.sort) {
+    const sortOption = SORT_OPTIONS.find(s => s.value === filterOptions.sort);
+    if (sortOption && sortOption.value !== "") {
+      activeFilters.push({ label: sortOption.label, onRemove: () => handleUpdateField('sort', undefined) });
+    }
+  }
+
   return (
-    <div className="card-custom flex flex-col gap-4">
+    <div className="card-custom flex flex-col gap-4 w-full min-w-0">
       {/* 1. Quick Filters */}
-      <div className="flex items-center gap-3 w-full max-w-full overflow-hidden">
+      <div className="flex flex-col md:flex-row md:items-center gap-3 w-full">
         <span className="font-bold text-slate-700 text-sm shrink-0 hidden md:block">Bộ lọc nhanh:</span>
-        <div className="flex-1 min-w-0 flex items-center gap-2.5 overflow-x-auto py-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
-          <button 
-            onClick={onOpenFilter}
-            className="lg:hidden flex items-center gap-1.5 px-3.5 py-1.5 border border-slate-200 rounded-full transition-colors text-sm font-bold shadow-sm whitespace-nowrap bg-white text-slate-800"
-          >
-            <Filter size={16} />
-            <span>Bộ lọc</span>
-          </button>
-          <button 
-            onClick={() => handleUpdateField('sort', filterOptions.sort === 'soldCount' ? '' : 'soldCount')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 border rounded-full transition-colors text-sm font-medium shadow-sm whitespace-nowrap ${
-              filterOptions.sort === 'soldCount' 
-                ? 'bg-orange-50 border-orange-200 text-orange-700' 
-                : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-700'
-            }`}
-          >
-            <Flame size={16} className="text-orange-500 fill-orange-500/20" />
-            <span>Bán chạy</span>
-            <Check size={14} className={`transition-opacity ${filterOptions.sort === 'soldCount' ? 'opacity-100 text-orange-500' : 'opacity-0'}`} />
-          </button>
-          <button 
-            onClick={() => handleUpdateField('rating', filterOptions.rating === 4 ? undefined : 4)}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 border rounded-full transition-colors text-sm font-medium shadow-sm whitespace-nowrap ${
-              filterOptions.rating === 4 
-                ? 'bg-yellow-50 border-yellow-200 text-yellow-700' 
-                : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-700'
-            }`}
-          >
-            <Star size={16} className="text-yellow-400 fill-yellow-400" />
-            <span>4 sao+</span>
-            <Check size={14} className={`transition-opacity ${filterOptions.rating === 4 ? 'opacity-100 text-yellow-600' : 'opacity-0'}`} />
-          </button>
-          <button 
-            onClick={() => handleUpdateField('sort', filterOptions.sort === 'newest' ? '' : 'newest')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 border rounded-full transition-colors text-sm font-medium shadow-sm whitespace-nowrap ${
-              filterOptions.sort === 'newest' 
-                ? 'bg-blue-50 border-blue-200 text-blue-700' 
-                : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-700'
-            }`}
-          >
-            <Clock size={16} className={filterOptions.sort === 'newest' ? "text-blue-500" : "text-blue-400"} />
-            <span>Mới nhất</span>
-            <Check size={14} className={`transition-opacity ${filterOptions.sort === 'newest' ? 'opacity-100 text-blue-500' : 'opacity-0'}`} />
-          </button>
-          <button 
-            onClick={() => handleUpdateField('sort', filterOptions.sort === 'hasPromotion' ? '' : 'hasPromotion')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 border rounded-full transition-colors text-sm font-medium shadow-sm whitespace-nowrap ${
-              filterOptions.sort === 'hasPromotion' 
-                ? 'bg-red-50 border-red-200 text-red-700' 
-                : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-700'
-            }`}
-          >
-            <Gift size={16} className="text-red-500" />
-            <span>Khuyến mãi</span>
-            <Check size={14} className={`transition-opacity ${filterOptions.sort === 'hasPromotion' ? 'opacity-100 text-red-500' : 'opacity-0'}`} />
-          </button>
+        <div className="w-full overflow-x-auto pb-1.5 [&::-webkit-scrollbar]:block [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:bg-blue-400 hover:[&::-webkit-scrollbar-thumb]:bg-blue-500 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-full">
+          <div className="flex flex-nowrap items-center gap-2.5 w-max">
+            <button 
+              onClick={onOpenFilter}
+              className="lg:hidden flex shrink-0 items-center gap-1.5 px-3.5 py-1.5 border border-slate-200 rounded-full transition-colors text-sm font-bold shadow-sm whitespace-nowrap bg-white text-slate-800"
+            >
+              <Filter size={16} />
+              <span>Bộ lọc</span>
+            </button>
+            <button 
+              onClick={() => handleUpdateField('sort', filterOptions.sort === 'soldCount' ? '' : 'soldCount')}
+              className={`flex shrink-0 items-center gap-1.5 px-3.5 py-1.5 border rounded-full transition-colors text-sm font-medium shadow-sm whitespace-nowrap ${
+                filterOptions.sort === 'soldCount' 
+                  ? 'bg-orange-50 border-orange-200 text-orange-700' 
+                  : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-700'
+              }`}
+            >
+              <Flame size={16} className="text-orange-500 fill-orange-500/20" />
+              <span>Bán chạy</span>
+              <Check size={14} className={`transition-opacity ${filterOptions.sort === 'soldCount' ? 'opacity-100 text-orange-500' : 'opacity-0'}`} />
+            </button>
+            <button 
+              onClick={() => handleUpdateField('rating', filterOptions.rating === 4 ? undefined : 4)}
+              className={`flex shrink-0 items-center gap-1.5 px-3.5 py-1.5 border rounded-full transition-colors text-sm font-medium shadow-sm whitespace-nowrap ${
+                filterOptions.rating === 4 
+                  ? 'bg-yellow-50 border-yellow-200 text-yellow-700' 
+                  : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-700'
+              }`}
+            >
+              <Star size={16} className="text-yellow-400 fill-yellow-400" />
+              <span>4 sao+</span>
+              <Check size={14} className={`transition-opacity ${filterOptions.rating === 4 ? 'opacity-100 text-yellow-600' : 'opacity-0'}`} />
+            </button>
+            <button 
+              onClick={() => handleUpdateField('sort', filterOptions.sort === 'newest' ? '' : 'newest')}
+              className={`flex shrink-0 items-center gap-1.5 px-3.5 py-1.5 border rounded-full transition-colors text-sm font-medium shadow-sm whitespace-nowrap ${
+                filterOptions.sort === 'newest' 
+                  ? 'bg-blue-50 border-blue-200 text-blue-700' 
+                  : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-700'
+              }`}
+            >
+              <Clock size={16} className={filterOptions.sort === 'newest' ? "text-blue-500" : "text-blue-400"} />
+              <span>Mới nhất</span>
+              <Check size={14} className={`transition-opacity ${filterOptions.sort === 'newest' ? 'opacity-100 text-blue-500' : 'opacity-0'}`} />
+            </button>
+            <button 
+              onClick={() => handleUpdateField('sort', filterOptions.sort === 'hasPromotion' ? '' : 'hasPromotion')}
+              className={`flex shrink-0 items-center gap-1.5 px-3.5 py-1.5 border rounded-full transition-colors text-sm font-medium shadow-sm whitespace-nowrap ${
+                filterOptions.sort === 'hasPromotion' 
+                  ? 'bg-red-50 border-red-200 text-red-700' 
+                  : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-700'
+              }`}
+            >
+              <Gift size={16} className="text-red-500" />
+              <span>Khuyến mãi</span>
+              <Check size={14} className={`transition-opacity ${filterOptions.sort === 'hasPromotion' ? 'opacity-100 text-red-500' : 'opacity-0'}`} />
+            </button>
+            <button 
+              onClick={() => handleUpdateField('sort', filterOptions.sort === 'priceAsc' ? '' : 'priceAsc')}
+              className={`flex shrink-0 items-center gap-1.5 px-3.5 py-1.5 border rounded-full transition-colors text-sm font-medium shadow-sm whitespace-nowrap ${
+                filterOptions.sort === 'priceAsc' 
+                  ? 'bg-emerald-50 border-emerald-200 text-emerald-700' 
+                  : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-700'
+              }`}
+            >
+              <TrendingUp size={16} className="text-emerald-500" />
+              <span>Giá thấp - cao</span>
+              <Check size={14} className={`transition-opacity ${filterOptions.sort === 'priceAsc' ? 'opacity-100 text-emerald-500' : 'opacity-0'}`} />
+            </button>
+            <button 
+              onClick={() => handleUpdateField('sort', filterOptions.sort === 'priceDesc' ? '' : 'priceDesc')}
+              className={`flex shrink-0 items-center gap-1.5 px-3.5 py-1.5 border rounded-full transition-colors text-sm font-medium shadow-sm whitespace-nowrap ${
+                filterOptions.sort === 'priceDesc' 
+                  ? 'bg-purple-50 border-purple-200 text-purple-700' 
+                  : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-700'
+              }`}
+            >
+              <TrendingDown size={16} className="text-purple-500" />
+              <span>Giá cao - thấp</span>
+              <Check size={14} className={`transition-opacity ${filterOptions.sort === 'priceDesc' ? 'opacity-100 text-purple-500' : 'opacity-0'}`} />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -176,22 +208,15 @@ const ProductToolbar = ({ onOpenFilter, totalElements, resetFilters }: ProductTo
         </div>
       )}
 
-      {/* 3. Results count and Sort Dropdown */}
-      <div className="flex items-center justify-between border-t border-slate-100 pt-4 mt-1">
+      {/* 3. Results count */}
+      <div className="border-t border-slate-100 pt-4 mt-1">
         <div className="text-slate-500 text-sm">
-          Hiển thị <span className="font-bold text-slate-800">{totalElements > 0 ? (filterOptions.page! - 1) * filterOptions.size! + 1 : 0}</span>–<span className="font-bold text-slate-800">{Math.min(filterOptions.page! * filterOptions.size!, totalElements)}</span> trong <span className="font-bold text-slate-800">{totalElements}</span> kết quả
-        </div>
-        
-        <div className="w-45">
-          <SelectBox 
-            value={filterOptions.sort || ''}
-            onChange={(e) => handleUpdateField('sort', e.target.value as SortType)}
-            options={SORT_OPTIONS.map(opt => ({
-              value: opt.value,
-              label: opt.label === "Tất cả" ? "Phổ biến nhất" : opt.label
-            }))}
-            className="bg-white border-slate-200 text-slate-700 font-medium h-10.5! shadow-sm hover:bg-slate-50/50"
-          />
+          <span className="hidden md:inline">Hiển thị </span>
+          <span className="font-bold text-slate-800">{totalElements > 0 ? (filterOptions.page! - 1) * filterOptions.size! + 1 : 0}</span>-<span className="font-bold text-slate-800">{Math.min(filterOptions.page! * filterOptions.size!, totalElements)}</span>
+          <span className="hidden md:inline"> trong </span>
+          <span className="md:hidden">/</span>
+          <span className="font-bold text-slate-800">{totalElements}</span>
+          <span className="hidden md:inline"> kết quả</span>
         </div>
       </div>
     </div>
