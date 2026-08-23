@@ -37,6 +37,6 @@ public class ProductFullResponse {
     private PublisherProductResponse productPublisher;
     private SeriesProductResponse productSeries;
     private List<ImageProductResponse> coverImages;
-
+    private Integer discountPercent;
 
 }

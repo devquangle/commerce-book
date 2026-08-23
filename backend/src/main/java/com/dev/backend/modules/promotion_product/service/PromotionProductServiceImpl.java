@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +29,31 @@ public class PromotionProductServiceImpl implements PromotionProductService {
 
         private final PromotionProductRepository promotionProductRepository;
         private final ProductRepository productRepository;
+
+        @Override
+        public Integer getCurrentDiscountPercent(Long productId) {
+                if (productId == null) {
+                        return 0;
+                }
+
+                return promotionProductRepository.findActivePromotionByProductId(productId)
+                                .filter(this::isPromotionAvailable)
+                                .map(promotionProduct -> promotionProduct.getDiscountPercent())
+                                .filter(percent -> percent != null && percent > 0)
+                                .orElse(0);
+        }
+
+        private boolean isPromotionAvailable(PromotionProduct promo) {
+                // Nếu maxQuantity là null (nghĩa là không giới hạn số lượng), mặc định còn hàng
+                if (promo.getMaxQuantity() == null) {
+                        return true;
+                }
+
+                int sold = Optional.ofNullable(promo.getSoldQuantity()).orElse(0);
+                int reserved = Optional.ofNullable(promo.getReservedQuantity()).orElse(0);
+
+                return (sold + reserved) < promo.getMaxQuantity();
+        }
 
         @Override
         @Transactional

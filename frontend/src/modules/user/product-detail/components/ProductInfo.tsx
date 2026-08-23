@@ -43,7 +43,7 @@ export default function ProductInfo({ product, review }: ProductInfoProps) {
   };
 
   const originalPrice = product.price || 0;
-  const discountPercent = 0; // Nếu ProductDetailResponse có discount thì thay vào
+  const discountPercent = product.discountPercent || 0; 
   const hasDiscount = discountPercent > 0 && discountPercent < 100;
   const finalPrice = hasDiscount
     ? Math.round(originalPrice - (originalPrice * discountPercent / 100))

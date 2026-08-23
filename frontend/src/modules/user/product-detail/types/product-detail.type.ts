@@ -17,6 +17,7 @@ export interface ProductFullResponse {
   productGenres: ProductGenreResponse[] | [];
   productAuthors: ProductAuthorResponse[] | [];
   coverImages: ProductImageResponse[] | [];
+  discountPercent: number | null;
 }
 export interface ProductGenreResponse {
   id: number;

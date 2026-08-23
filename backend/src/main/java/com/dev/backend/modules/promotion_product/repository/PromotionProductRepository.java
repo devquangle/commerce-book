@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PromotionProductRepository extends JpaRepository<PromotionProduct, Long> {
@@ -37,4 +38,15 @@ public interface PromotionProductRepository extends JpaRepository<PromotionProdu
     @Modifying
     @Query("DELETE FROM PromotionProduct item WHERE item.promotion.id = :promotionId")
     void deleteByPromotionId(@Param("promotionId") Long promotionId);
+
+    @Query("""
+                SELECT pp
+                FROM PromotionProduct pp
+                JOIN FETCH pp.promotion p
+                WHERE pp.product.id = :productId
+                  AND p.status =  com.dev.backend.common.enums.PromotionStatus.ACTIVE
+                  AND CURRENT_DATE BETWEEN p.startDate AND p.endDate
+            """)
+    Optional<PromotionProduct> findActivePromotionByProductId(
+            @Param("productId") Long productId);
 }

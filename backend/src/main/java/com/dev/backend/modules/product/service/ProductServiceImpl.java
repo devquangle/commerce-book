@@ -27,6 +27,7 @@ import com.dev.backend.modules.product.entity.Product;
 import com.dev.backend.modules.product.mapper.ProductMapper;
 import com.dev.backend.modules.product.repository.ProductRepository;
 import com.dev.backend.modules.product.repository.ProductRepositoryImpl;
+import com.dev.backend.modules.promotion_product.service.PromotionProductService;
 import com.dev.backend.modules.publisher.dto.PublisherProductResponse;
 import com.dev.backend.modules.publisher.mapper.PublisherMapper;
 import com.dev.backend.modules.publisher.service.PublisherService;
@@ -60,14 +61,17 @@ public class ProductServiceImpl implements ProductService {
 
         private final ProductRepository productRepository;
         private final ProductRepositoryImpl productRepositoryImpl;
+
         private final ProductMapper productMapper;
         private final PublisherMapper publisherMapper;
+
         private final SeriesMapper seriesMapper;
         private final PublisherService publisherService;
         private final SeriesService seriesService;
         private final AuthorProductService authorProductService;
         private final GenreProductService genreProductService;
         private final ImageProductService imageProductService;
+        private final PromotionProductService promotionProductService;
 
         @Override
         @Transactional(readOnly = true)
@@ -153,11 +157,15 @@ public class ProductServiceImpl implements ProductService {
                 List<GenreProductResponse> genres = genreProductService.getGenresByProductId(productId);
                 PublisherProductResponse publisher = publisherMapper.toPublisherProductResponse(product.getPublisher());
                 SeriesProductResponse series = seriesMapper.toSeriesProductResponse(product.getSeries());
+                Integer discountPercent = promotionProductService.getCurrentDiscountPercent(productId);
+              
                 response.setProductAuthors(authors);
                 response.setProductGenres(genres);
                 response.setProductPublisher(publisher);
                 response.setProductSeries(series);
                 response.setCoverImages(images);
+                response.setDiscountPercent(discountPercent);
+
                 return response;
         }
 
