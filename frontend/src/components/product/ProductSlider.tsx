@@ -12,9 +12,10 @@ interface ProductSliderProps {
   products: ProductCardResponse[];
   id?: string;
   hideShop?: boolean;
+  rows?: number;
 }
 
-const ProductSlider = ({ title, products, id = 'default', hideShop = false }: ProductSliderProps) => {
+const ProductSlider = ({ title, products, id = 'default', hideShop = false, rows = 2 }: ProductSliderProps) => {
   const nextClass = `slider-next-${id}`;
   const prevClass = `slider-prev-${id}`;
 
@@ -36,15 +37,12 @@ const ProductSlider = ({ title, products, id = 'default', hideShop = false }: Pr
 
       <div className="-mx-4 px-4">
         <Swiper
-          modules={[Navigation, Grid]}
+          modules={rows > 1 ? [Navigation, Grid] : [Navigation]}
           navigation={{
             nextEl: `.${nextClass}`,
             prevEl: `.${prevClass}`,
           }}
-          grid={{
-            rows: 2,
-            fill: "row"
-          }}
+          {...(rows > 1 ? { grid: { rows, fill: "row" } } : {})}
           spaceBetween={16}
           slidesPerView={2}
           breakpoints={{

@@ -2,7 +2,7 @@ import type { ShopInfo as ShopInfoType } from "../../modules/shop/types/shop.typ
 import { Star, MapPin, BadgeCheck, Flag } from "lucide-react";
 import { clsx } from "clsx";
 import { Button } from "../ui/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { formatCompactNumber } from "@/libs/utils/formatMoney.utils";
 
 interface ShopInfoProps {
@@ -54,14 +54,16 @@ const ShopInfo: React.FC<ShopInfoProps> = ({
         <div className="flex flex-col gap-1.5 flex-1 min-w-0">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex justify-between items-center gap-2">
-              <h1
-                className={clsx(
-                  "font-bold text-gray-800 truncate",
-                  isHorizontal ? "text-lg" : "text-md",
-                )}
-              >
-                {shopInfo.shopName}
-              </h1>
+              <Link to={`/${shopInfo.shopSlug}`}>
+                <h1
+                  className={clsx(
+                    "font-bold text-gray-800 truncate hover:text-blue-600 transition-colors",
+                    isHorizontal ? "text-lg" : "text-md",
+                  )}
+                >
+                  {shopInfo.shopName}
+                </h1>
+              </Link>
               {shopInfo.isVerified &&
                 (isHorizontal ? (
                   <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-2 py-0.5 rounded text-[11px] font-medium whitespace-nowrap">
@@ -97,12 +99,12 @@ const ShopInfo: React.FC<ShopInfoProps> = ({
               <span className="font-medium text-gray-800">
                 {shopInfo.stats?.rating || 0}
               </span>
-              {typeof shopInfo.stats?.reviewCount === 'number' && (
+              {typeof shopInfo.stats?.reviewCount === "number" && (
                 <span className="text-gray-500">
                   {formatCompactNumber(shopInfo.stats.reviewCount)} đánh giá
                 </span>
               )}
-              {typeof shopInfo.stats?.soldCount === 'number' && (
+              {typeof shopInfo.stats?.soldCount === "number" && (
                 <span className="text-gray-500 text-[13px] border-l border-gray-300 pl-3">
                   Đã bán {formatCompactNumber(shopInfo.stats.soldCount)}
                 </span>
