@@ -25,8 +25,8 @@ const ProfilePage = lazy(() => import("@/modules/auth/components/ProfilePage"));
 const RegisterShopPage = lazy(
   () => import("@/modules/user/register-shop/pages/RegisterShopPage"),
 );
-const SearchProductsPage = lazy(
-  () => import("@/modules/user/products/pages/SearchProductsPage")
+const SearchProductPage = lazy(
+  () => import("@/modules/product/pages/user/SearchProductPage")
 );
 const ProductDetailPage = lazy(
   () => import("@/modules/user/product-detail/pages/ProductDetailPage")
@@ -44,7 +44,7 @@ export const UserRoutes: React.FC = () => {
           <Route path="register-shop" element={<RegisterShopPage />} />
           <Route path="books" element={<BookList />} />
           <Route path="books/:id" element={<BookDetail />} />
-          <Route path="products" element={<SearchProductsPage />} />
+          <Route path="products" element={<SearchProductPage />} />
           <Route path="product-detail" element={<ProductDetailPage />} />
           <Route path="search" element={<Search />} />
           <Route path="cart" element={<Cart />} />

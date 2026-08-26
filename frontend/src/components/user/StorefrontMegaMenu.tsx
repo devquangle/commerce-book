@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, Book, BookOpen, Heart, Star, Sparkles, Feather, PenTool, Coffee, Monitor } from "lucide-react";
-import { useData } from "@/modules/user/products/hooks/useData";
+import { useData } from "@/modules/product/hooks/useData";
 
 export const StorefrontMegaMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);

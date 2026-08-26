@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import FilterSidebar from '../components/FilterSidebar';
-import ProductToolbar from '../components/ProductToolbar';
-import { useSearchProductsFilter } from '../hooks/useSearchProductsFilter';
-import Container from '@/components/common/Container';
-import { useSearchProducts } from '../hooks/useSearchProducts';
-import ProductCard from '../components/ProductCard';
-import { Pagination } from '@/components/common/Pagination';
 
-const SearchProductsPage = () => {
+import { Pagination } from '@/components/common/Pagination';
+import { useSearchProductsFilter } from '../../hooks/useSearchProductsFilter';
+import { useSearchProducts } from '../../hooks/useSearchProducts';
+import FilterSidebar from '../../components/FilterSidebar';
+
+import ProductToolbar from '../../components/ProductToolbar';
+import ProductCard from '../../components/ProductCard';
+import Container from '@/components/common/Container';
+
+const SearchProductPage = () => {
   const { filterOptions, handleUpdateField, resetFilters } = useSearchProductsFilter();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   
@@ -72,4 +74,4 @@ const SearchProductsPage = () => {
   );
 };
 
-export default SearchProductsPage;
+export default SearchProductPage;
