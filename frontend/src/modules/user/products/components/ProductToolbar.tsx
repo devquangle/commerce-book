@@ -84,7 +84,6 @@ const ProductToolbar = ({ onOpenFilter, totalElements, resetFilters }: ProductTo
     <div className="card-custom flex flex-col gap-4 w-full min-w-0">
       {/* 1. Quick Filters */}
       <div className="flex flex-col md:flex-row md:items-center gap-3 w-full">
-        <span className="font-bold text-slate-700 text-sm shrink-0 hidden md:block">Bộ lọc nhanh:</span>
         <div className="w-full overflow-x-auto pb-1.5 [&::-webkit-scrollbar]:block [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:bg-blue-400 hover:[&::-webkit-scrollbar-thumb]:bg-blue-500 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-full">
           <div className="flex flex-nowrap items-center gap-2.5 w-max">
             <button 
@@ -104,7 +103,6 @@ const ProductToolbar = ({ onOpenFilter, totalElements, resetFilters }: ProductTo
             >
               <Flame size={16} className="text-orange-500 fill-orange-500/20" />
               <span>Bán chạy</span>
-              <Check size={14} className={`transition-opacity ${filterOptions.sort === 'soldCount' ? 'opacity-100 text-orange-500' : 'opacity-0'}`} />
             </button>
             <button 
               onClick={() => handleUpdateField('rating', filterOptions.rating === 4 ? undefined : 4)}
@@ -116,7 +114,6 @@ const ProductToolbar = ({ onOpenFilter, totalElements, resetFilters }: ProductTo
             >
               <Star size={16} className="text-yellow-400 fill-yellow-400" />
               <span>4 sao+</span>
-              <Check size={14} className={`transition-opacity ${filterOptions.rating === 4 ? 'opacity-100 text-yellow-600' : 'opacity-0'}`} />
             </button>
             <button 
               onClick={() => handleUpdateField('sort', filterOptions.sort === 'newest' ? '' : 'newest')}
@@ -128,7 +125,6 @@ const ProductToolbar = ({ onOpenFilter, totalElements, resetFilters }: ProductTo
             >
               <Clock size={16} className={filterOptions.sort === 'newest' ? "text-blue-500" : "text-blue-400"} />
               <span>Mới nhất</span>
-              <Check size={14} className={`transition-opacity ${filterOptions.sort === 'newest' ? 'opacity-100 text-blue-500' : 'opacity-0'}`} />
             </button>
             <button 
               onClick={() => handleUpdateField('sort', filterOptions.sort === 'hasPromotion' ? '' : 'hasPromotion')}
@@ -140,7 +136,6 @@ const ProductToolbar = ({ onOpenFilter, totalElements, resetFilters }: ProductTo
             >
               <Gift size={16} className="text-red-500" />
               <span>Khuyến mãi</span>
-              <Check size={14} className={`transition-opacity ${filterOptions.sort === 'hasPromotion' ? 'opacity-100 text-red-500' : 'opacity-0'}`} />
             </button>
             <button 
               onClick={() => handleUpdateField('sort', filterOptions.sort === 'priceAsc' ? '' : 'priceAsc')}
@@ -152,7 +147,6 @@ const ProductToolbar = ({ onOpenFilter, totalElements, resetFilters }: ProductTo
             >
               <TrendingUp size={16} className="text-emerald-500" />
               <span>Giá thấp - cao</span>
-              <Check size={14} className={`transition-opacity ${filterOptions.sort === 'priceAsc' ? 'opacity-100 text-emerald-500' : 'opacity-0'}`} />
             </button>
             <button 
               onClick={() => handleUpdateField('sort', filterOptions.sort === 'priceDesc' ? '' : 'priceDesc')}
@@ -164,7 +158,6 @@ const ProductToolbar = ({ onOpenFilter, totalElements, resetFilters }: ProductTo
             >
               <TrendingDown size={16} className="text-purple-500" />
               <span>Giá cao - thấp</span>
-              <Check size={14} className={`transition-opacity ${filterOptions.sort === 'priceDesc' ? 'opacity-100 text-purple-500' : 'opacity-0'}`} />
             </button>
           </div>
         </div>

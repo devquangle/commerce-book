@@ -67,7 +67,7 @@
 }
 
 @utility caption-text {
-  @apply text-xs md:text-sm text-slate-500;
+  @apply text-xs  text-slate-500;
 }
 
 @utility text-muted {

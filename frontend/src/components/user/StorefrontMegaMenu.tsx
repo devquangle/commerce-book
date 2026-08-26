@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, Book, BookOpen, Heart, Star, Sparkles, Feather, PenTool, Coffee, Monitor } from "lucide-react";
+import { useData } from "@/modules/user/products/hooks/useData";
 
 export const StorefrontMegaMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { genres, authors } = useData();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -18,21 +20,8 @@ export const StorefrontMegaMenu: React.FC = () => {
     };
   }, []);
 
-  const categories = [
-    { name: "Văn học", icon: Book, count: 1205, href: "/books?category=van-hoc" },
-    { name: "Kỹ năng sống", icon: Heart, count: 854, href: "/books?category=ky-nang" },
-    { name: "Kinh tế", icon: Star, count: 642, href: "/books?category=kinh-te" },
-    { name: "Thiếu nhi", icon: Sparkles, count: 1530, href: "/books?category=thieu-nhi" },
-    { name: "Công nghệ", icon: Monitor, count: 420, href: "/books?category=cong-nghe" },
-  ];
-
-  const authors = [
-    { name: "Nguyễn Nhật Ánh", icon: Feather, count: 45, href: "/books?author=nguyen-nhat-anh" },
-    { name: "Haruki Murakami", icon: PenTool, count: 28, href: "/books?author=haruki-murakami" },
-    { name: "Higashino Keigo", icon: Coffee, count: 32, href: "/books?author=higashino-keigo" },
-    { name: "Thích Nhất Hạnh", icon: Heart, count: 56, href: "/books?author=thich-nhat-hanh" },
-    { name: "Paulo Coelho", icon: Sparkles, count: 15, href: "/books?author=paulo-coelho" },
-  ];
+  const genreIcons = [Book, Heart, Star, Sparkles, Monitor];
+  const authorIcons = [Feather, PenTool, Coffee, Heart, Sparkles];
 
   return (
     <div ref={menuRef}>
@@ -59,12 +48,12 @@ export const StorefrontMegaMenu: React.FC = () => {
               Thể loại nổi bật
             </h3>
             <ul className="space-y-1">
-              {categories.map((item) => {
-                const Icon = item.icon;
+              {genres?.slice(0, 5).map((item, index) => {
+                const Icon = genreIcons[index % genreIcons.length];
                 return (
-                  <li key={item.name}>
+                  <li key={item.id}>
                     <Link
-                      to={item.href}
+                      to={`/products?genres=${item.slug}`}
                       onClick={() => setIsOpen(false)}
                       className="flex items-center justify-between p-2 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors group"
                     >
@@ -76,15 +65,12 @@ export const StorefrontMegaMenu: React.FC = () => {
                           {item.name}
                         </span>
                       </div>
-                      <span className="text-xs text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded-full">
-                        {item.count}
-                      </span>
                     </Link>
                   </li>
                 );
               })}
             </ul>
-            <Link to="/categories" className="inline-block mt-4 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline">
+            <Link to="/products" className="inline-block mt-4 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline">
               Xem tất cả thể loại &rarr;
             </Link>
           </div>
@@ -95,12 +81,12 @@ export const StorefrontMegaMenu: React.FC = () => {
               Tác giả tiêu biểu
             </h3>
             <ul className="space-y-1">
-              {authors.map((item) => {
-                const Icon = item.icon;
+              {authors?.slice(0, 5).map((item, index) => {
+                const Icon = authorIcons[index % authorIcons.length];
                 return (
-                  <li key={item.name}>
+                  <li key={item.id}>
                     <Link
-                      to={item.href}
+                      to={`/products?authors=${item.slug}`}
                       onClick={() => setIsOpen(false)}
                       className="flex items-center justify-between p-2 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors group"
                     >
@@ -112,15 +98,12 @@ export const StorefrontMegaMenu: React.FC = () => {
                           {item.name}
                         </span>
                       </div>
-                      <span className="text-xs text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded-full">
-                        {item.count}
-                      </span>
                     </Link>
                   </li>
                 );
               })}
             </ul>
-            <Link to="/authors" className="inline-block mt-4 text-sm font-semibold text-pink-600 dark:text-pink-400 hover:underline">
+            <Link to="/products" className="inline-block mt-4 text-sm font-semibold text-pink-600 dark:text-pink-400 hover:underline">
               Khám phá tác giả &rarr;
             </Link>
           </div>
@@ -182,7 +165,7 @@ export const StorefrontMegaMenu: React.FC = () => {
             <h4 className="font-bold text-zinc-900 dark:text-white mb-2">Tháng Đọc Sách</h4>
             <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-4">Khám phá hàng ngàn tựa sách mới ra mắt tháng này với ưu đãi ngập tràn.</p>
             <Link
-              to="/promotions"
+              to="/products?promotions=true"
               onClick={() => setIsOpen(false)}
               className="px-4 py-2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-sm font-semibold rounded-lg hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors"
             >

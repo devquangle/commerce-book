@@ -15,7 +15,7 @@ const SearchProductsPage = () => {
   const products = data?.items || [];
   const totalElements = data?.totalItems || 0;
   return (
-    <div className="min-h-screen mx-auto w-full space-y-16 py-6">
+    <div className="min-h-screen mx-auto w-full space-y-16 py-4">
       <Container className="flex flex-col lg:flex-row gap-6">
         {/* Left Sidebar */}
         <FilterSidebar 

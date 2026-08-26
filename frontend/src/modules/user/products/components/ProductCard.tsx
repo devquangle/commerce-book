@@ -20,8 +20,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         />
       </div>
 
-      <div className="p-2 flex flex-col flex-1">
-        <h3 className="font-medium text-xs text-zinc-800 dark:text-zinc-100 line-clamp-2 mb-1 min-h-[32px] leading-relaxed">
+      <div className="p-2.5 flex flex-col flex-1">
+        <h3 className="font-medium caption-text text-zinc-800 dark:text-zinc-100 line-clamp-2 mb-1 min-h-8 leading-relaxed">
           <Link
             to={`/product-detail?slug=${product.productSlug}`}
             className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
@@ -33,26 +33,26 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="flex items-center gap-1.5 mb-1">
           <div className="flex items-center gap-0.5">
             <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-            <span className="text-[10px] font-medium text-zinc-700 dark:text-zinc-300">
+            <span className="caption-text font-medium dark:text-zinc-300">
               {product.averageRating?.toFixed(1)}
             </span>
           </div>
-          <span className="text-[10px] text-zinc-400 dark:text-zinc-500">
+          <span className="caption-text dark:text-zinc-400">
             • Đã bán {formatCompactNumber(product.soldCount)}
           </span>
         </div>
 
-        <div className="flex items-center flex-wrap gap-x-1.5 gap-y-1 mb-2">
+        <div className="flex items-center flex-wrap gap-x-1.5 gap-y-1 mb-1">
           <span className="font-bold text-sm text-blue-600 dark:text-blue-400">
             {formatMoney(product.salePrice)}
           </span>
           {product.price > product.salePrice && (
             <div className="flex items-center gap-1">
-              <span className="text-[10px] text-zinc-400 line-through">
+              <span className="caption-text line-through dark:text-zinc-400">
                 {formatMoney(product.price)}
               </span>
               {product.discountPercent > 0 && (
-                <span className="bg-red-50 text-red-500 border border-red-200 text-[9px] font-bold px-1 py-0.5 rounded-[2px] leading-none">
+                <span className="bg-red-50 text-red-500 border border-red-200 text-[9px] font-bold px-1 py-0.5 rounded-xs leading-none">
                   -{product.discountPercent}%
                 </span>
               )}
@@ -60,7 +60,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           )}
         </div>
 
-        <div className="text-[10px] text-zinc-500 dark:text-zinc-400 mt-auto border-t border-zinc-100 dark:border-zinc-800 pt-1.5">
+        <div className="caption-text mt-auto border-t border-zinc-100 dark:border-zinc-800 pt-1.5 dark:text-zinc-400">
           <Link
             to={`/shops/${product.shopSlug}`}
             className="inline-flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors max-w-full"
