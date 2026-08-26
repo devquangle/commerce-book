@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import { InputField  } from "@/components/common/InputField";
-import { InputFieldPassword } from "@/components/common/InputFieldPassword";
+import { FormInput } from "@/components/common/FormInput";
+import { FormInputPassword } from "@/components/common/FormInputPassword";
+
 import { Button } from "@/components/common/Button";
 import { useAuth } from "@/context/useAuth";
 import Container from "@/components/common/Container";
@@ -10,16 +11,14 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
 import { showErrorToast, showSuccessToast } from "./../../../libs/utils/toastUtil";
-import Spinner from "@/components/common/Spinner";
 import type { AxiosError } from "axios";
 import type { ApiResponse } from "@/libs/utils/api-response";
 
 const LoginPage = () => {
   const {
-    register,
+    control,
     handleSubmit,
     setError,
-    formState: { errors },
   } = useForm<LoginRequest>();
   const auth = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -46,9 +45,7 @@ const LoginPage = () => {
       setIsLoading(false);
     }
   };
-  if (isLoading) {
-    return <Spinner />;
-  }
+  
   return (
     <Container className="px-4 md:px-8">
       <div className=" flex justify-center items-center min-h-[80vh] py-4">
@@ -56,7 +53,7 @@ const LoginPage = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="w-full max-w-md  space-y-4"
         >
-          <div className="card-custom flex flex-col gap-3">
+          <div className="card-custom flex flex-col gap-2">
             {/* Title */}
             <div className="text-center">
               <h1 className="text-2xl font-bold text-blue-700">
@@ -67,24 +64,27 @@ const LoginPage = () => {
               </p>
             </div>
 
-            <InputField
+            <FormInput
+              name="email"
+              control={control}
               label="Email"
               type="email"
               placeholder="you@example.com"
-              {...register("email", {
+              rules={{
                 required: "Email không được bỏ trống.",
                 pattern: {
                   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                   message: "Email không hợp lệ.",
                 },
-              })}
-              error={errors?.email?.message}
+              }}
             />
-            <InputFieldPassword
+            <FormInputPassword
+              name="password"
+              control={control}
               label="Mật khẩu"
               placeholder="••••••••"
               id="current-password"
-              {...register("password", {
+              rules={{
                 required: "Mật khẩu không được để trống.",
                 // minLength: {
                 //   value: 8,
@@ -94,13 +94,12 @@ const LoginPage = () => {
                 //   value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
                 //   message: "Phải có: chữ thường, chữ hoa, số, ký tự đặc biệt."
                 // }
-              })}
-              error={errors?.password?.message}
+              }}
             />
 
             {/* Login button */}
-            <Button type="submit" className="mt-2 py-3" fullWidth>
-              Đăng nhập
+            <Button type="submit" className="mt-2 py-3" fullWidth disabled={isLoading}>
+              {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
             </Button>
 
             {/* Divider */}
