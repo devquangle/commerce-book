@@ -83,8 +83,8 @@ export const Pagination: React.FC<PaginationProps> = ({
       <div className="flex flex-row items-center gap-2 sm:gap-3">
         {/* Per-Page Select Dropdown in front of navigation buttons */}
         {onPageSizeChange && (
-          <div className="hidden sm:flex items-center justify-center gap-2 border-e border-zinc-200 dark:border-zinc-800 pe-3 text-zinc-500 dark:text-zinc-400">
-            <span className="hidden sm:inline">Hiển thị</span>
+          <div className="hidden sm:flex items-center justify-center gap-2 border-e border-zinc-200 dark:border-zinc-800 pe-3 text-zinc-500 dark:text-zinc-400 shrink-0">
+            <span className="hidden sm:inline whitespace-nowrap">Hiển thị</span>
             <SelectBox
               value={pageSize}
               onChange={(e) => onPageSizeChange(Number(e.target.value))}
@@ -95,6 +95,7 @@ export const Pagination: React.FC<PaginationProps> = ({
               containerClassName="!space-y-0 w-[72px]"
               className="px-2! py-1.5! min-h-0!"
               openDirection="up"
+              hideMessage={true}
             />
           </div>
         )}

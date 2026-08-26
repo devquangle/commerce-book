@@ -20,7 +20,7 @@ const ProductCard = ({ product, hideShop = false }:ProductCardProps) => {
         />
       </div>
 
-      <div className="p-2.5 flex flex-col flex-1">
+      <div className="p-3 flex flex-col flex-1">
         <h3 className="font-medium caption-text text-zinc-800 dark:text-zinc-100 line-clamp-2 mb-1 min-h-8 leading-relaxed">
           <Link
             to={`/product-detail?slug=${product.productSlug}`}

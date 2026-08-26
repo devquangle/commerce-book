@@ -22,6 +22,7 @@ export interface SelectBoxProps
   openDirection?: "up" | "down";
   searchable?: boolean;
   searchPlaceholder?: string;
+  hideMessage?: boolean;
 }
 
 export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
@@ -46,6 +47,7 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
       openDirection = "down",
       searchable = false,
       searchPlaceholder = "Tìm kiếm...",
+      hideMessage = false,
       ...props
     },
     ref
@@ -258,13 +260,15 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
             )}
           </div>
 
-        <div className="min-h-[20px] mt-1.5">
-          {error ? (
-            <p className="text-xs text-red-500 font-medium">{error}</p>
-          ) : helperText ? (
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">{helperText}</p>
-          ) : null}
-        </div>
+        {!hideMessage && (
+          <div className="min-h-[20px] mt-1.5">
+            {error ? (
+              <p className="text-xs text-red-500 font-medium">{error}</p>
+            ) : helperText ? (
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">{helperText}</p>
+            ) : null}
+          </div>
+        )}
       </div>
     );
   }
