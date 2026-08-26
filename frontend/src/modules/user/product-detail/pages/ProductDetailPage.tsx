@@ -6,8 +6,8 @@ import ProductAttribute from "../components/ProductAttribute";
 import ProductInfo from "../components/ProductInfo";
 import { useData } from "../hooks/useData";
 import { useSearchParams } from "react-router-dom";
-import { ShopProduct } from "@/modules/shop/info/components/ShopProduct";
-import type { ShopInfo } from "@/modules/shop/info/types/shop.type";
+import ShopInfo from "@/components/shop/ShopInfo";
+import type { ShopInfo as ShopInfoType } from "@/modules/shop/types/shop.type";
 import ProductReviews from "../components/ProductReviews";
 import RelatedProducts from "../components/RelatedProducts";
 import type { ProductReviewResponse } from "../types/product-review.type";
@@ -306,17 +306,21 @@ const mockReviewData: ProductReviewResponse = {
   ]
 };
 
-const mockShop: ShopInfo = {
-  shopId: 1,
-  shopSlug: "binh-ban-book",
-  shopName: "BÌNH BÁN BOOK",
-
-  urlImage: "https://i.pravatar.cc/150?img=12",
-  verify: true,
-  rating: 4.9,
-  soldCount: 1000,
-  reviewCount: 7400,
+const mockShop: ShopInfoType = {
+  id: 'shop-1',
+  name: "BÌNH BÁN BOOK",
+  logo: "https://i.pravatar.cc/150?img=12",
+  isVerified: true,
+  streetFull: 'TP. Hồ Chí Minh',
+  description: 'Chuyên cung cấp các loại sách văn học, kỹ năng, tiểu thuyết chất lượng.',
+  stats: {
+    rating: 4.9,
+    reviewCount: 7400,
+    soldCount: 1000,
+    joinedYear: '2020',
+  }
 };
+
 const ProductDetailPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const slug = searchParams.get("slug");
@@ -338,7 +342,7 @@ const ProductDetailPage: React.FC = () => {
             coverImages={productDetail.coverImages}
             productName={productDetail.productName}
           />
-          <ShopProduct shop={mockShop} />
+          <ShopInfo shopInfo={mockShop} layout="vertical" />
         </div>
 
         {/* Right side: Product Information (tương đương 8 columns) */}

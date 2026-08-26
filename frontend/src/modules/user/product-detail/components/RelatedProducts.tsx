@@ -1,8 +1,8 @@
 import React from 'react';
-import type { ProductCardResponse } from '../../products/types/product-card.type';
+import type { ProductCardResponse } from '@/modules/product/types/product-card.type';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Grid } from 'swiper/modules';
-import ProductCard from '../../products/components/ProductCard';
+import ProductCard from "@/modules/product/components/ProductCard";
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import 'swiper/css';
 import 'swiper/css/navigation';

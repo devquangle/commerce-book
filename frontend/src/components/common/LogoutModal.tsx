@@ -1,6 +1,7 @@
 import React from "react";
-import { Modal } from "./Modal";
+
 import { LogOut } from "lucide-react";
+import { Modal } from "../ui/Modal";
 
 export interface LogoutModalProps {
   isOpen: boolean;
