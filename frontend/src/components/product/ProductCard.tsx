@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Star, Store } from "lucide-react";
-import type { ProductCardResponse } from "../types/product-card.type";
+import type { ProductCardResponse } from "../../modules/product/types/product-card.type";
 import { formatMoney, formatCompactNumber } from "@/libs/utils/formatMoney.utils";
 
 interface ProductCardProps {

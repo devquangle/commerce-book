@@ -307,8 +307,9 @@ const mockReviewData: ProductReviewResponse = {
 };
 
 const mockShop: ShopInfoType = {
-  id: 'shop-1',
-  name: "BÌNH BÁN BOOK",
+  shopId: 1,
+  shopName: "BÌNH BÁN BOOK",
+  shopSlug:"binh-ban-book",
   logo: "https://i.pravatar.cc/150?img=12",
   isVerified: true,
   streetFull: 'TP. Hồ Chí Minh',

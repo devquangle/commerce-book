@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Flame, Star, Clock, Gift, Filter, Search, X, Check, TrendingUp, TrendingDown } from 'lucide-react';
-import { useSearchProductsFilter } from '../hooks/useSearchProductsFilter';
-import { SORT_OPTIONS} from '../types/search-product';
-import { useData } from '../hooks/useData';
+import { Flame, Star, Clock, Gift, Filter, Search, X, TrendingUp, TrendingDown } from 'lucide-react';
+import { useSearchProductsFilter } from '../../modules/product/hooks/useSearchProductsFilter';
+import { SORT_OPTIONS} from '../../modules/product/types/search-product';
+import { useData } from '../../modules/product/hooks/useData';
 
 interface ProductToolbarProps {
   onOpenFilter: () => void;

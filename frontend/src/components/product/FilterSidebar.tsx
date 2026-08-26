@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Filter, RotateCcw, ChevronRight, ChevronDown, Building, Layers, Star, X, Search, LayoutGrid, Users } from 'lucide-react';
-import type { SearchProductsFilter } from '../types/search-product';
-import { useData } from '../hooks/useData';
+import type { SearchProductsFilter } from '../../modules/product/types/search-product';
+import { useData } from '../../modules/product/hooks/useData';
 
 interface FilterSidebarProps {
   filterOptions: SearchProductsFilter;

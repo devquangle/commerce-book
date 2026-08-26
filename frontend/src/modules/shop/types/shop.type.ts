@@ -8,8 +8,9 @@ export interface ShopStats {
 }
 
 export interface ShopInfo {
-  id: string;
-  name: string;
+  shopId: number;
+  shopName: string;
+  shopSlug:string;
   logo: string;
   banner?: string[];
   isVerified: boolean;

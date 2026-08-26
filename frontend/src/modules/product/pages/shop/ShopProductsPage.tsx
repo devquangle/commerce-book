@@ -3,8 +3,9 @@ import type { ShopInfo } from '@/modules/shop/types/shop.type';
 
 // Dữ liệu mẫu (mock data) theo đúng thiết kế UI
 const mockShopInfo: ShopInfo = {
-  id: 'shop-1',
-  name: 'Nhà Sách Phương Nam',
+  shopId: 1,
+  shopName: 'Nhà Sách Phương Nam',
+  shopSlug:'nha-sach-phuong-nam',
   logo: '',
   banner: [
     'https://placehold.co/1200x300/2563eb/white?text=Banner+1',

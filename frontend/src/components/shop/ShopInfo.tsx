@@ -1,6 +1,9 @@
 import type { ShopInfo as ShopInfoType } from "../../modules/shop/types/shop.type";
 import { Star, MapPin, BadgeCheck, Flag } from "lucide-react";
 import { clsx } from "clsx";
+import { Button } from "../ui/Button";
+import { useNavigate } from "react-router-dom";
+import { formatCompactNumber } from "@/libs/utils/formatMoney.utils";
 
 interface ShopInfoProps {
   shopInfo: ShopInfoType;
@@ -12,33 +15,34 @@ const ShopInfo: React.FC<ShopInfoProps> = ({
   layout = "horizontal",
 }) => {
   const isHorizontal = layout === "horizontal";
+  const navigate = useNavigate();
 
   return (
     <div
       className={clsx(
         "bg-white rounded-xl shadow-sm border border-gray-100 p-6",
         "flex gap-6 justify-between items-start relative z-10",
-        isHorizontal ? "flex-col lg:flex-row mx-4 md:mx-8 mb-6" : "flex-col"
+        isHorizontal ? "flex-col lg:flex-row mx-4 md:mx-8 mb-6" : "flex-col",
       )}
     >
       {/* Left: Logo & Details */}
       <div
         className={clsx(
           "flex flex-1 w-full",
-          isHorizontal ? "flex-col sm:flex-row gap-6" : "flex-row gap-4"
+          isHorizontal ? "flex-col sm:flex-row gap-6" : "flex-row gap-4",
         )}
       >
         {/* Logo */}
         <div
           className={clsx(
             "rounded-full bg-emerald-400 shrink-0 flex items-center justify-center overflow-hidden border-2 md:border-4 border-white shadow-sm",
-            isHorizontal ? "w-24 h-24" : "w-16 h-16"
+            isHorizontal ? "w-24 h-24" : "w-16 h-16",
           )}
         >
           {shopInfo.logo ? (
             <img
               src={shopInfo.logo}
-              alt={shopInfo.name}
+              alt={shopInfo.shopName}
               className="w-full h-full object-cover"
             />
           ) : (
@@ -53,10 +57,10 @@ const ShopInfo: React.FC<ShopInfoProps> = ({
               <h1
                 className={clsx(
                   "font-bold text-gray-800 truncate",
-                  isHorizontal ? "text-lg" : "text-md"
+                  isHorizontal ? "text-lg" : "text-md",
                 )}
               >
-                {shopInfo.name}
+                {shopInfo.shopName}
               </h1>
               {shopInfo.isVerified &&
                 (isHorizontal ? (
@@ -68,13 +72,16 @@ const ShopInfo: React.FC<ShopInfoProps> = ({
                 ))}
             </div>
             <div>
-              <button
-                className="text-gray-400 hover:text-gray-600 flex items-center gap-1.5 text-xs font-medium hover:bg-gray-50 px-2.5 py-1.5 rounded-lg transition-colors border border-transparent hover:border-gray-200"
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate(`/report-shop/${shopInfo.shopSlug}`)}
+                className="text-gray-400 hover:text-gray-600 px-2.5 py-1.5 rounded-lg transition-colors border border-transparent hover:border-gray-200"
                 title="Báo cáo"
+                icon={<Flag className="w-3.5 h-3.5" />}
               >
-                <Flag className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Báo cáo</span>
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -82,7 +89,7 @@ const ShopInfo: React.FC<ShopInfoProps> = ({
           <div
             className={clsx(
               "flex flex-wrap items-center text-gray-600",
-              isHorizontal ? "gap-6 text-[15px]" : "gap-3 text-sm"
+              isHorizontal ? "gap-6 text-[15px]" : "gap-3 text-sm",
             )}
           >
             <div className="flex items-center gap-1.5">
@@ -90,12 +97,14 @@ const ShopInfo: React.FC<ShopInfoProps> = ({
               <span className="font-medium text-gray-800">
                 {shopInfo.stats?.rating || 0}
               </span>
-              {shopInfo.stats?.reviewCount !== undefined && (
+              {typeof shopInfo.stats?.reviewCount === 'number' && (
                 <span className="text-gray-500">
-                  {shopInfo.stats.reviewCount >= 1000
-                    ? (shopInfo.stats.reviewCount / 1000).toFixed(1) + "k"
-                    : shopInfo.stats.reviewCount}{" "}
-                  đánh giá
+                  {formatCompactNumber(shopInfo.stats.reviewCount)} đánh giá
+                </span>
+              )}
+              {typeof shopInfo.stats?.soldCount === 'number' && (
+                <span className="text-gray-500 text-[13px] border-l border-gray-300 pl-3">
+                  Đã bán {formatCompactNumber(shopInfo.stats.soldCount)}
                 </span>
               )}
             </div>
