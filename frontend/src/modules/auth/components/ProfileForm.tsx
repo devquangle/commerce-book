@@ -1,5 +1,5 @@
-import { InputField } from "@/components/common/InputField";
-import { Button } from "@/components/common/Button";
+import { InputField } from "@/components/ui/InputField";
+import { Button } from "@/components/ui/Button";
 import type { UserRequest } from "@/modules/auth/types/user.type";
 import type { FieldErrors, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
 

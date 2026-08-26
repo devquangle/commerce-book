@@ -1,11 +1,11 @@
 import  { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-import { InputField } from "@/components/common/InputField";
-import { TextAreaField } from "@/components/common/TextAreaField";
-import { InputDate } from "@/components/common/InputDate";
-import { SelectBox } from "@/components/common/SelectBox";
-import Spinner from "@/components/common/Spinner";
+import { InputField } from "@/components/ui/InputField";
+import { TextAreaField } from "@/components/ui/TextAreaField";
+import { InputDate } from "@/components/ui/InputDate";
+import { SelectBox } from "@/components/ui/SelectBox";
+import Spinner from "@/components/ui/Spinner";
 import { VoucherHeader } from "../components/VoucherHeader";
 import { useUpdateVoucherShop, useVoucherShopDetail } from "../hooks/useVoucher";
 import type { VoucherRequest } from "../types/voucher.type";

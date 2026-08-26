@@ -1,4 +1,4 @@
-import { SidebarToggle } from "./SidebarToggle";
+import { SidebarToggle } from "../ui/SidebarToggle";
 import { AccountMenu } from "./AccountMenu";
 import { Logo } from "../common/Logo";
 import { SHOP_PATH } from "@/libs/constant/shop-path";
@@ -18,3 +18,4 @@ export const ShopHeader = () => {
     </nav>
   );
 };
+

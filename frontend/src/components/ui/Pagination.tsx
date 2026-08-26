@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { SelectBox } from "@/components/common/SelectBox";
+import { SelectBox } from "@/components/ui/SelectBox";
 
 export interface PaginationProps {
   currentPage: number;
@@ -163,3 +163,4 @@ export const Pagination: React.FC<PaginationProps> = ({
     </div>
   );
 };
+

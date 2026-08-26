@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-import { InputField } from "@/components/common/InputField";
-import { InputDate } from "@/components/common/InputDate";
-import { SelectBox } from "@/components/common/SelectBox";
-import Spinner from "@/components/common/Spinner";
+import { InputField } from "@/components/ui/InputField";
+import { InputDate } from "@/components/ui/InputDate";
+import { SelectBox } from "@/components/ui/SelectBox";
+import Spinner from "@/components/ui/Spinner";
 import { PromotionHeader } from "../components/PromotionHeader";
 import { useUpdatePromotionShop, usePromotionShopDetail } from "../hooks/usePromotion";
 import type { PromotionRequest, PromotionCampaignType } from "../types/promotion.type";

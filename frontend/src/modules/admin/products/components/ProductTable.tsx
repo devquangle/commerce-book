@@ -8,9 +8,9 @@ import {
   AlertCircle,
   ChevronDown
 } from "lucide-react";
-import { Pagination } from "@/components/common/Pagination";
-import { Tooltip } from "@/components/common/Tooltip";
-import { Badge } from "@/components/common/Badge";
+import { Pagination } from "@/components/ui/Pagination";
+import { Tooltip } from "@/components/ui/Tooltip";
+import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/common/EmptyState";
 import { formatMoney } from "@/libs/utils/formatMoney.utils";
 import { Link, useNavigate } from "react-router-dom";

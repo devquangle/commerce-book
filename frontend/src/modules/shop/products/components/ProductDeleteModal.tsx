@@ -1,6 +1,6 @@
 import { AlertTriangle, X } from "lucide-react";
 import type { ProductResponse } from "../types/product.type";
-import { Button } from "@/components/common/Button";
+import { Button } from "@/components/ui/Button";
 
 interface ProductDeleteModalProps {
   isOpen: boolean;

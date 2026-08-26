@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Mail, MapPin, Phone } from "lucide-react";
-import Container from "../common/Container";
+import Container from "../ui/Container";
 import { Logo } from "../common/Logo";
 
 export const UserFooter: React.FC = () => {
@@ -86,3 +86,4 @@ export const UserFooter: React.FC = () => {
     </footer>
   );
 };
+

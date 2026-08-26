@@ -1,10 +1,10 @@
-import { Button } from "@/components/common/Button";
-import Container from "@/components/common/Container";
+import { Button } from "@/components/ui/Button";
+import Container from "@/components/ui/Container";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import type { RegisterUserRequest } from "../../../auth/types/register-user";
-import { InputField  } from "@/components/common/InputField";
-import { InputFieldPassword } from "@/components/common/InputFieldPassword";
+import { InputField  } from "@/components/ui/InputField";
+import { InputFieldPassword } from "@/components/ui/InputFieldPassword";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
 import { useRegisterMutation } from "@/modules/auth/hooks/useAuth";
 import { showSuccessToast } from "@/libs/utils/toastUtil";

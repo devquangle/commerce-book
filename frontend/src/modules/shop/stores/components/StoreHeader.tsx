@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Camera, Store, ExternalLink, Save, Eye, Pencil, X } from "lucide-react";
-import { Button } from "@/components/common/Button";
+import { Button } from "@/components/ui/Button";
 
 export const StoreHeader = () => {
   const [bannerUrl, setBannerUrl] = useState<string | null>(null);

@@ -18,7 +18,7 @@ import {
 } from "./hooks/useSeries";
 import type { SeriesResponse, SeriesRequest } from "./types/series.type";
 import { EmptyState } from "@/components/common/EmptyState";
-import { Pagination } from "@/components/common/Pagination";
+import { Pagination } from "@/components/ui/Pagination";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
 import type { UseFormSetError } from "react-hook-form";
 

@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { MapPin, Navigation, Home } from "lucide-react";
-import { InputField } from "@/components/common/InputField";
-import { SelectBox } from "@/components/common/SelectBox";
+import { InputField } from "@/components/ui/InputField";
+import { SelectBox } from "@/components/ui/SelectBox";
 import type { RegisterShopRequest } from "../types/register-shop.type";
 
 // Administrative address datasets

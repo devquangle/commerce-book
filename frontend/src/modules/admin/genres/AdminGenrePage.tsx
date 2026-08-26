@@ -15,7 +15,7 @@ import {
 } from "./hooks/useGenre";
 import type { GenreResponse, GenreRequest } from "./types/genre.type";
 import { EmptyState } from "@/components/common/EmptyState";
-import { Pagination } from "@/components/common/Pagination";
+import { Pagination } from "@/components/ui/Pagination";
 import type { UseFormSetError } from "react-hook-form";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
 
@@ -180,3 +180,4 @@ const AdminGenrePage = () => {
 };
 
 export default AdminGenrePage;
+

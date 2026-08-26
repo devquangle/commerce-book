@@ -1,6 +1,6 @@
 import { MapPin, Navigation } from "lucide-react";
-import { InputField } from "@/components/common/InputField";
-import { SearchableSelect } from "@/components/common/SearchableSelect";
+import { InputField } from "@/components/ui/InputField";
+import { SelectBox } from "@/components/ui/SelectBox";
 
 const MOCK_PROVINCES = [
   { value: 1, label: "Hà Nội" },
@@ -39,7 +39,7 @@ export const StoreAddress = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Tỉnh / Thành phố */}
-        <SearchableSelect
+        <SelectBox searchable
           label="Tỉnh / Thành phố"
           options={MOCK_PROVINCES}
           value={2}
@@ -48,7 +48,7 @@ export const StoreAddress = () => {
         />
 
         {/* Quận / Huyện */}
-        <SearchableSelect
+        <SelectBox searchable
           label="Quận / Huyện"
           options={MOCK_DISTRICTS}
           value={1}
@@ -57,7 +57,7 @@ export const StoreAddress = () => {
         />
 
         {/* Phường / Xã */}
-        <SearchableSelect
+        <SelectBox searchable
           label="Phường / Xã"
           options={MOCK_WARDS}
           value="001"

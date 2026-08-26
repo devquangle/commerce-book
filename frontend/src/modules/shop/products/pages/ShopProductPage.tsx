@@ -1,4 +1,4 @@
-import { Pagination } from "@/components/common/Pagination";
+import { Pagination } from "@/components/ui/Pagination";
 import { useState } from "react";
 import { ProductHeader } from "../components/ProductHeader";
 import { ProductFilter } from "../components/ProductFilter";

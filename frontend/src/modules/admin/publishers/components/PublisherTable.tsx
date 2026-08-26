@@ -1,6 +1,6 @@
 import React from "react";
 import { getLabelPublisherStatus, type PublisherResponse } from "../types/publisher.type";
-import { Pagination } from "@/components/common/Pagination";
+import { Pagination } from "@/components/ui/Pagination";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PublisherActionMenu } from "./PublisherActionMenu";
 

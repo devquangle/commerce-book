@@ -1,8 +1,8 @@
 import React from "react";
 import { Search, X, RotateCcw } from "lucide-react";
 import type { GenreStatus } from "../types/genre.type";
-import { SelectBox } from "@/components/common/SelectBox";
-import { Button } from "@/components/common/Button";
+import { SelectBox } from "@/components/ui/SelectBox";
+import { Button } from "@/components/ui/Button";
 
 interface GenreFilterProps {
   keyword: string;
@@ -71,3 +71,4 @@ export const GenreFilter: React.FC<GenreFilterProps> = ({
     </div>
   );
 };
+

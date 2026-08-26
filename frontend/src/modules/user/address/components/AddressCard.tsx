@@ -1,5 +1,5 @@
 import { Edit, Trash2 } from "lucide-react";
-import { Button } from "@/components/common/Button";
+import { Button } from "@/components/ui/Button";
 import type { AddressResponse } from "../types/address.type";
 
 interface AddressCardProps {

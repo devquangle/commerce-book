@@ -62,7 +62,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
         <div className="caption-text mt-auto border-t border-zinc-100 dark:border-zinc-800 pt-1.5 dark:text-zinc-400">
           <Link
-            to={`/shops/${product.shopSlug}`}
+            to={`/${product.shopSlug}`}
             className="inline-flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors max-w-full"
           >
             <Store className="w-2.5 h-2.5 shrink-0" />

@@ -5,7 +5,7 @@ import type { ProductRequest } from "../types/product.type";
 import { SlidersHorizontal } from "lucide-react";
 
 import SearchableMultiSelect from "@/components/common/SearchableMultiSelect";
-import { SearchableSelect } from "@/components/common/SearchableSelect";
+import { SelectBox } from "@/components/ui/SelectBox";
 
 export interface ProductAttributeProps {
   control?: Control<ProductRequest>;
@@ -167,7 +167,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
                 required: "Vui lòng chọn nhà xuất bản.",
               }}
               render={({ field }) => (
-                <SearchableSelect
+                <SelectBox searchable
                   label="Nhà xuất bản"
                   required
                   disabled={disabled}
@@ -183,7 +183,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
               )}
             />
           ) : (
-            <SearchableSelect
+            <SelectBox searchable
               label="Nhà xuất bản"
               required
               disabled={disabled}
@@ -198,7 +198,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
               name="seriesId"
               control={control}
               render={({ field }) => (
-                <SearchableSelect
+                <SelectBox searchable
                   label="Bộ sách"
                   disabled={disabled}
                   placeholder="Chọn bộ sách..."
@@ -213,7 +213,7 @@ const ProductAttribute: React.FC<ProductAttributeProps> = ({
               )}
             />
           ) : (
-            <SearchableSelect
+            <SelectBox searchable
               label="Bộ sách"
               disabled={disabled}
               placeholder="Chọn bộ sách..."

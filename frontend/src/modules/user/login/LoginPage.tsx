@@ -2,9 +2,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { FormInput } from "@/components/common/FormInput";
 import { FormInputPassword } from "@/components/common/FormInputPassword";
 
-import { Button } from "@/components/common/Button";
+import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/context/useAuth";
-import Container from "@/components/common/Container";
+import Container from "@/components/ui/Container";
 import type { LoginRequest } from "@/modules/auth/types/login.type";
 
 import { useForm } from "react-hook-form";

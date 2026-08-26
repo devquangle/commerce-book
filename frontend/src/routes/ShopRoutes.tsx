@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import ShopLayout from "@/layouts/ShopLayout";
-import Spinner from "@/components/common/Spinner";
+import Spinner from "@/components/ui/Spinner";
 import { SHOP_PATH } from "@/libs/constant/shop-path";
 
 // Lazy-loaded pages

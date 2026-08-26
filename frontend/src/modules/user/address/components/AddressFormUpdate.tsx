@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
-import { InputField } from "@/components/common/InputField";
-import { SearchableSelect } from "@/components/common/SearchableSelect";
-import { TextAreaField } from "@/components/common/TextAreaField";
-import { Button } from "@/components/common/Button";
+import { InputField } from "@/components/ui/InputField";
+import { SelectBox } from "@/components/ui/SelectBox";
+import { TextAreaField } from "@/components/ui/TextAreaField";
+import { Button } from "@/components/ui/Button";
 import {
   useProvinces,
   useDistricts,
@@ -73,7 +73,7 @@ const AddressFormUpdate = ({ addressId }: AddressFormUpdateProps) => {
   );
   const { data: wards = [] } = useWards(districtId ? Number(districtId) : null);
 
-  // Map sang format của SearchableSelect
+  // Map sang format của SelectBox
   const provinceOptions = Array.isArray(provinces)
     ? provinces.map((p: ProvinceResponse) => ({
         label: p.provinceName,
@@ -159,7 +159,7 @@ const AddressFormUpdate = ({ addressId }: AddressFormUpdateProps) => {
             name="provinceId"
             rules={{ required: "Vui lòng chọn Tỉnh/Thành phố." }}
             render={({ field, fieldState: { error } }) => (
-              <SearchableSelect
+              <SelectBox searchable
                 label="Tỉnh/Thành phố"
                 placeholder="Chọn Tỉnh/Thành phố"
                 options={provinceOptions}
@@ -183,7 +183,7 @@ const AddressFormUpdate = ({ addressId }: AddressFormUpdateProps) => {
             name="districtId"
             rules={{ required: "Vui lòng chọn Quận/Huyện." }}
             render={({ field, fieldState: { error } }) => (
-              <SearchableSelect
+              <SelectBox searchable
                 label="Quận/Huyện"
                 placeholder="Chọn Quận/Huyện"
                 options={districtOptions}
@@ -207,7 +207,7 @@ const AddressFormUpdate = ({ addressId }: AddressFormUpdateProps) => {
             name="wardCode"
             rules={{ required: "Vui lòng chọn Phường/Xã." }}
             render={({ field, fieldState: { error } }) => (
-              <SearchableSelect
+              <SelectBox searchable
                 label="Phường/Xã"
                 placeholder="Chọn Phường/Xã"
                 options={wardOptions}

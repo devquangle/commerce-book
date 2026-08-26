@@ -1,6 +1,6 @@
 import React from "react";
 import { type VoucherStatus } from "../types/voucher.type";
-import { Badge } from "@/components/common/Badge";
+import { Badge } from "@/components/ui/Badge";
 
 interface VoucherStatusProps {
   status: VoucherStatus;

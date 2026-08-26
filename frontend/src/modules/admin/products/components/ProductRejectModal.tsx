@@ -4,7 +4,7 @@ import type {
   ProductDetailResponse,
   SuperAdminProductResponse,
 } from "@/modules/shop/products/types/product.type";
-import { Button } from "@/components/common/Button";
+import { Button } from "@/components/ui/Button";
 import { useRejectProduct } from "@/modules/shop/products/hooks/useProduct";
 interface ProductRejectModalProps {
   isOpen: boolean;

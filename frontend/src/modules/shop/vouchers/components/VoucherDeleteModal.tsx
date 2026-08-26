@@ -1,6 +1,6 @@
 import { AlertTriangle, X } from "lucide-react";
 import type { VoucherResponse } from "../types/voucher.type";
-import { Button } from "@/components/common/Button";
+import { Button } from "@/components/ui/Button";
 
 interface VoucherDeleteModalProps {
   isOpen: boolean;

@@ -1,6 +1,6 @@
 import React from "react";
-import { Modal } from "@/components/common/Modal";
-import { Button } from "@/components/common/Button";
+import { Modal } from "@/components/ui/Modal";
+import { Button } from "@/components/ui/Button";
 import type { PublisherResponse } from "../types/publisher.type";
 
 interface PublisherDeleteModalProps {

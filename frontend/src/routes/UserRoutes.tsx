@@ -2,12 +2,13 @@ import React, { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import UserLayout from "@/layouts/UserLayout";
 import ProfileLayout from "@/layouts/ProfileLayout";
-import Spinner from "@/components/common/Spinner";
+import Spinner from "@/components/ui/Spinner";
 import RegisterPage from "@/modules/user/register/pages/RegisterPage";
 import ConfirmEmailPage from "@/modules/user/register/pages/ConfirmEmailPage";
 import AddressPage from "@/modules/user/address/pages/AddressPage";
 import AddressCreatePage from "@/modules/user/address/pages/AddressCreatePage";
 import AddressUpdatePage from "@/modules/user/address/pages/AddressUpdatePage";
+import ShopProductsPage from "@/modules/product/pages/shop/ShopProductsPage";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("@/modules/user/pages/Home"));
@@ -46,6 +47,7 @@ export const UserRoutes: React.FC = () => {
           <Route path="books/:id" element={<BookDetail />} />
           <Route path="products" element={<SearchProductPage />} />
           <Route path="product-detail" element={<ProductDetailPage />} />
+           <Route path="/:shopSlug" element={<ShopProductsPage />} />
           <Route path="search" element={<Search />} />
           <Route path="cart" element={<Cart />} />
           <Route path="checkout" element={<Checkout />} />

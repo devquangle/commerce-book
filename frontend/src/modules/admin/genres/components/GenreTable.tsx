@@ -1,6 +1,6 @@
 import React from "react";
 import { getLabelGenreStatus, type GenreResponse } from "../types/genre.type";
-import { Pagination } from "@/components/common/Pagination";
+import { Pagination } from "@/components/ui/Pagination";
 import { EmptyState } from "@/components/common/EmptyState";
 import { GenreActionMenu } from "./GenreActionMenu";
 
@@ -111,3 +111,4 @@ export const GenreTable: React.FC<GenreTableProps> = ({
     </div>
   );
 };
+

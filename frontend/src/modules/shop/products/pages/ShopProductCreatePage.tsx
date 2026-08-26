@@ -13,7 +13,7 @@ import { useBookFormData } from "../hooks/useBookFormData";
 import type { ProductImageResponse } from "@/services/cloudinary/type/cloudinary.type";
 import { useUploadImages } from "@/services/cloudinary/hooks/useCloudinary";
 import { useCreateProductShop } from "../hooks/useProduct";
-import Spinner from "@/components/common/Spinner";
+import Spinner from "@/components/ui/Spinner";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
 
 const ShopProductCreatePage = () => {

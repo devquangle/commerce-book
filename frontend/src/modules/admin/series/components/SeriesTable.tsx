@@ -1,6 +1,6 @@
 import React from "react";
 import { getLabelSeriesStatus, type SeriesResponse } from "../types/series.type";
-import { Pagination } from "@/components/common/Pagination";
+import { Pagination } from "@/components/ui/Pagination";
 import { EmptyState } from "@/components/common/EmptyState";
 import { SeriesActionMenu } from "./SeriesActionMenu";
 

@@ -1,8 +1,8 @@
 import React from "react";
 import { Search, X, RotateCcw } from "lucide-react";
 import type { AuthorStatus } from "../types/author.type";
-import { SelectBox } from "@/components/common/SelectBox";
-import { Button } from "@/components/common/Button";
+import { SelectBox } from "@/components/ui/SelectBox";
+import { Button } from "@/components/ui/Button";
 
 interface AuthorFilterProps {
   keyword: string;
@@ -71,3 +71,4 @@ export const AuthorFilter: React.FC<AuthorFilterProps> = ({
     </div>
   );
 };
+

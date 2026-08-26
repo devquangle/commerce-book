@@ -1,5 +1,5 @@
 import { FileText, Lightbulb } from "lucide-react";
-import { TextAreaField } from "@/components/common/TextAreaField";
+import { TextAreaField } from "@/components/ui/TextAreaField";
 
 export const StoreDescription = () => {
   return (

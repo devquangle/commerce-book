@@ -1,8 +1,8 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { Mail, Phone, Lock, ShieldCheck } from "lucide-react";
-import { InputField  } from "@/components/common/InputField";
-import { InputFieldPassword } from "@/components/common/InputFieldPassword";
+import { InputField  } from "@/components/ui/InputField";
+import { InputFieldPassword } from "@/components/ui/InputFieldPassword";
 import type { RegisterShopRequest } from "../types/register-shop.type";
 
 export const StepAccountInfo: React.FC = () => {

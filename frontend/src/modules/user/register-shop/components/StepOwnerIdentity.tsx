@@ -21,9 +21,9 @@ import {
   Fingerprint,
 } from "lucide-react";
 import axios from "axios";
-import { InputField } from "@/components/common/InputField";
-import { Button } from "@/components/common/Button";
-import SingleImageUploadNoUrl from "@/components/common/SingleImageUploadNoUrl";
+import { InputField } from "@/components/ui/InputField";
+import { Button } from "@/components/ui/Button";
+import SingleImageUpload from "@/components/common/SingleImageUpload";
 import { CameraModal } from "./CameraModal";
 import type { RegisterShopRequest } from "../types/register-shop.type";
 
@@ -339,10 +339,10 @@ export const StepOwnerIdentity: React.FC = () => {
                 <CheckCircle className="w-3.5 h-3.5 text-emerald-500 ml-auto" />
               )}
             </p>
-            <SingleImageUploadNoUrl
+            <SingleImageUpload
               file={frontCccdFile}
               setFile={setFrontCccdFile}
-              currentImageUrl={frontCccdUrl}
+              avatarUrl={frontCccdUrl}
               onClearImage={() => setFrontCccdUrl("")}
               label=""
             />
@@ -364,10 +364,10 @@ export const StepOwnerIdentity: React.FC = () => {
                 <CheckCircle className="w-3.5 h-3.5 text-emerald-500 ml-auto" />
               )}
             </p>
-            <SingleImageUploadNoUrl
+            <SingleImageUpload
               file={backCccdFile}
               setFile={setBackCccdFile}
-              currentImageUrl={backCccdUrl}
+              avatarUrl={backCccdUrl}
               onClearImage={() => setBackCccdUrl("")}
               label=""
             />

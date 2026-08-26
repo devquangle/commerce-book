@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Modal } from "@/components/common/Modal";
-import { InputField  } from "@/components/common/InputField";
-import { InputFieldPassword } from "@/components/common/InputFieldPassword";
+import { Modal } from "@/components/ui/Modal";
+import { InputField  } from "@/components/ui/InputField";
+import { InputFieldPassword } from "@/components/ui/InputFieldPassword";
 import { AuthService } from "@/modules/auth/services/auth.service";
 import type { ChangePasswordRequest } from "@/modules/auth/types/user.type";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";

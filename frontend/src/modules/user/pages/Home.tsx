@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Star, ShoppingCart, Heart, TrendingUp, BookOpen, Clock, Award } from "lucide-react";
-import Container from "@/components/common/Container";
+import Container from "@/components/ui/Container";
 
 // --- Mock Data ---
 const featuredBooks = [

@@ -1,7 +1,7 @@
 import React from "react";
 import { CheckCircle2, Store, ArrowRight } from "lucide-react";
-import { Modal } from "@/components/common/Modal";
-import { Button } from "@/components/common/Button";
+import { Modal } from "@/components/ui/Modal";
+import { Button } from "@/components/ui/Button";
 
 export interface RegisterShopSuccessModalProps {
   isOpen: boolean;

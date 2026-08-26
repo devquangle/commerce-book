@@ -10,8 +10,8 @@ import { StepOwnerIdentity } from "../components/StepOwnerIdentity";
 import { StepShopInfo } from "../components/StepShopInfo";
 import { StepShopAddress } from "../components/StepShopAddress";
 import { RegisterShopSuccessModal } from "../components/RegisterShopSuccessModal";
-import { Button } from "@/components/common/Button";
-import Container from "@/components/common/Container";
+import { Button } from "@/components/ui/Button";
+import Container from "@/components/ui/Container";
 
 const INITIAL_FORM_DATA: RegisterShopRequest = {
   // Step 1

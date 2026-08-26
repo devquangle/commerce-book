@@ -1,6 +1,6 @@
 import { AlertTriangle, X } from "lucide-react";
 import type { PromotionResponse } from "../types/promotion.type";
-import { Button } from "@/components/common/Button";
+import { Button } from "@/components/ui/Button";
 
 interface PromotionDeleteModalProps {
   isOpen: boolean;

@@ -1,8 +1,8 @@
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import Webcam from "react-webcam";
 import { Camera, RefreshCw, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
-import { Modal } from "@/components/common/Modal";
-import { Button } from "@/components/common/Button";
+import { Modal } from "@/components/ui/Modal";
+import { Button } from "@/components/ui/Button";
 import { FilesetResolver, FaceLandmarker } from "@mediapipe/tasks-vision";
 
 export interface CaptureResult {

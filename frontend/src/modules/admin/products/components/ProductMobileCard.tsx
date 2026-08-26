@@ -8,7 +8,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { ProductActionMenu } from "./ProductActionMenu";
 import { formatMoney } from "@/libs/utils/formatMoney.utils";
-import { Badge } from "@/components/common/Badge";
+import { Badge } from "@/components/ui/Badge";
 import {
   getProductStatusInfo,
   type ProductStatus,

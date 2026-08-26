@@ -1,9 +1,9 @@
 import React from "react";
 import { useForm, Controller, type UseFormSetError } from "react-hook-form";
-import { Modal } from "@/components/common/Modal";
-import { InputField } from "@/components/common/InputField";
-import { SelectBox } from "@/components/common/SelectBox";
-import { Button } from "@/components/common/Button";
+import { Modal } from "@/components/ui/Modal";
+import { InputField } from "@/components/ui/InputField";
+import { SelectBox } from "@/components/ui/SelectBox";
+import { Button } from "@/components/ui/Button";
 import type {
   PublisherRequest,
   PublisherResponse,

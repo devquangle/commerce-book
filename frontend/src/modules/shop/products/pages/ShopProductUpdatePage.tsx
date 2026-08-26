@@ -17,7 +17,7 @@ import {
   useProductShopDetail,
   useUpdateProductShop,
 } from "../hooks/useProduct";
-import Spinner from "@/components/common/Spinner";
+import Spinner from "@/components/ui/Spinner";
 import { AlertTriangle } from "lucide-react";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
 

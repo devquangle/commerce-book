@@ -1,6 +1,6 @@
 import React from "react";
 import { type PromotionStatus } from "../types/promotion.type";
-import { Badge } from "@/components/common/Badge";
+import { Badge } from "@/components/ui/Badge";
 
 interface PromotionStatusProps {
   status: PromotionStatus;

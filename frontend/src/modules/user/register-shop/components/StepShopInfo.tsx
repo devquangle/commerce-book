@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Store, Building2, CreditCard, UserCheck, Image as ImageIcon } from "lucide-react";
-import { InputField } from "@/components/common/InputField";
-import { TextAreaField } from "@/components/common/TextAreaField";
-import { SelectBox } from "@/components/common/SelectBox";
+import { InputField } from "@/components/ui/InputField";
+import { TextAreaField } from "@/components/ui/TextAreaField";
+import { SelectBox } from "@/components/ui/SelectBox";
 import SingleImageUpload from "@/components/common/SingleImageUpload";
 import type { RegisterShopRequest } from "../types/register-shop.type";
 

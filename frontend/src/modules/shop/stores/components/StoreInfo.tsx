@@ -1,5 +1,5 @@
 import { Store } from "lucide-react";
-import { InputField } from "@/components/common/InputField";
+import { InputField } from "@/components/ui/InputField";
 
 export const StoreInfo = () => {
   return (

@@ -5,8 +5,8 @@ import {
   Receipt,
   Package,
 } from "lucide-react";
-import { Pagination } from "@/components/common/Pagination";
-import { Tooltip } from "@/components/common/Tooltip";
+import { Pagination } from "@/components/ui/Pagination";
+import { Tooltip } from "@/components/ui/Tooltip";
 import { EmptyState } from "@/components/common/EmptyState";
 import { type ProductResponse } from "@/modules/shop/products/types/product.type";
 import { formatMoney } from "@/libs/utils/formatMoney.utils";

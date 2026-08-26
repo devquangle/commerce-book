@@ -11,7 +11,7 @@ import { INITIAL_FORM } from "@/modules/shop/products/types/product-data.type";
 import type { ProductRequest } from "@/modules/shop/products/types/product.type";
 import { useBookFormData } from "@/modules/shop/products/hooks/useBookFormData";
 import { useProductDetailForAdmin } from "@/modules/shop/products/hooks/useProduct";
-import Spinner from "@/components/common/Spinner";
+import Spinner from "@/components/ui/Spinner";
 import { ProductApproveModal } from "../components/ProductApproveModal";
 import { ProductRejectModal } from "../components/ProductRejectModal";
 import ProductReason from "@/modules/shop/products/components/ProductReason";

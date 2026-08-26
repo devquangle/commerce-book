@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button } from "@/components/common/Button";
-import Spinner from "@/components/common/Spinner";
+import { Button } from "@/components/ui/Button";
+import Spinner from "@/components/ui/Spinner";
 import {
   useVerifyRegisterMutation,
   useResendVerificationEmailMutation,

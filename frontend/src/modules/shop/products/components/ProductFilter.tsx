@@ -4,7 +4,7 @@ import {
   PRODUCT_STATUS_LIST,
   getProductStatusValue,
 } from "../types/product-status.type";
-import { SelectBox } from "@/components/common/SelectBox";
+import { SelectBox } from "@/components/ui/SelectBox";
 
 interface ProductFilterProps {
   keyword: string;

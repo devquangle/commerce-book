@@ -6,8 +6,8 @@ import {
   Percent,
   Hash,
 } from "lucide-react";
-import { Pagination } from "@/components/common/Pagination";
-import { Tooltip } from "@/components/common/Tooltip";
+import { Pagination } from "@/components/ui/Pagination";
+import { Tooltip } from "@/components/ui/Tooltip";
 import { EmptyState } from "@/components/common/EmptyState";
 import { type VoucherResponse } from "../types/voucher.type";
 import { VoucherActionMenu } from "./VoucherActionMenu";

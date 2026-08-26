@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal } from "@/components/common/Modal";
+import { Modal } from "@/components/ui/Modal";
 import { useSetDefaultAddress } from "../hooks/useAddress";
 import type { AddressResponse } from "../types/address.type";
 import { showErrorToast } from "@/libs/utils/toastUtil";

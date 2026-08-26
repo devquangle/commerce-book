@@ -1,8 +1,8 @@
 import React from "react";
 import { Search, X, RotateCcw } from "lucide-react";
 import type { SeriesStatus } from "../types/series.type";
-import { SelectBox } from "@/components/common/SelectBox";
-import { Button } from "@/components/common/Button";
+import { SelectBox } from "@/components/ui/SelectBox";
+import { Button } from "@/components/ui/Button";
 
 interface SeriesFilterProps {
   keyword: string;

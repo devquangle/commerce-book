@@ -4,15 +4,21 @@ import { Upload, Trash2, Edit, Eye, X } from "lucide-react"; // Thêm Eye và X
 type SingleImageUploadProps = {
   file: File | null;
   setFile: (file: File | null) => void;
-  avatarUrl: string;
-  setAvatarUrl: (url: string) => void;
+  avatarUrl?: string | null;
+  setAvatarUrl?: (url: string) => void;
+  onClearImage?: () => void;
+  label?: string;
+  allowUrlInput?: boolean;
 };
 
 export default function SingleImageUpload({
   file,
   setFile,
-  avatarUrl,
+  avatarUrl = "",
   setAvatarUrl,
+  onClearImage,
+  label = "Ảnh đại diện",
+  allowUrlInput = false,
 }: SingleImageUploadProps) {
   const [imageUploadMode, setImageUploadMode] = useState<"file" | "url">("file");
   const [tempImageUrl, setTempImageUrl] = useState("");
@@ -22,7 +28,7 @@ export default function SingleImageUpload({
   const currentDisplayImage = file ? URL.createObjectURL(file) : avatarUrl;
 
   const handleAddImageUrl = () => {
-    if (tempImageUrl.trim()) {
+    if (tempImageUrl.trim() && setAvatarUrl) {
       setAvatarUrl(tempImageUrl.trim());
       setFile(null);
     }
@@ -30,41 +36,44 @@ export default function SingleImageUpload({
 
   const handleClearImage = () => {
     setFile(null);
-    setAvatarUrl("");
+    if (setAvatarUrl) setAvatarUrl("");
     setTempImageUrl("");
+    if (onClearImage) onClearImage();
   };
 
   return (
     <div className="space-y-2">
       <label className="text-sm font-semibold text-slate-700">
-        Ảnh đại diện
+        {label}
       </label>
 
       {/* Tabs Switch Mode */}
-      <div className="flex rounded-lg bg-slate-100 p-1">
-        <button
-          type="button"
-          onClick={() => setImageUploadMode("file")}
-          className={`flex-1 py-2 rounded-md text-sm transition ${
-            imageUploadMode === "file"
-              ? "bg-white shadow text-indigo-600 font-semibold"
-              : "text-slate-500"
-          }`}
-        >
-          Tải tệp ảnh
-        </button>
-        <button
-          type="button"
-          onClick={() => setImageUploadMode("url")}
-          className={`flex-1 py-2 rounded-md text-sm transition ${
-            imageUploadMode === "url"
-              ? "bg-white shadow text-indigo-600 font-semibold"
-              : "text-slate-500"
-          }`}
-        >
-          Nhập URL
-        </button>
-      </div>
+      {allowUrlInput && (
+        <div className="flex rounded-lg bg-slate-100 p-1">
+          <button
+            type="button"
+            onClick={() => setImageUploadMode("file")}
+            className={`flex-1 py-2 rounded-md text-sm transition ${
+              imageUploadMode === "file"
+                ? "bg-white shadow text-indigo-600 font-semibold"
+                : "text-slate-500"
+            }`}
+          >
+            Tải tệp ảnh
+          </button>
+          <button
+            type="button"
+            onClick={() => setImageUploadMode("url")}
+            className={`flex-1 py-2 rounded-md text-sm transition ${
+              imageUploadMode === "url"
+                ? "bg-white shadow text-indigo-600 font-semibold"
+                : "text-slate-500"
+            }`}
+          >
+            Nhập URL
+          </button>
+        </div>
+      )}
 
       {/* CHẾ ĐỘ 1: Tải tệp lên */}
       {imageUploadMode === "file" && !currentDisplayImage && (
@@ -79,7 +88,7 @@ export default function SingleImageUpload({
             onChange={(e) => {
               if (e.target.files?.[0]) {
                 setFile(e.target.files[0]);
-                setAvatarUrl("");
+                if (setAvatarUrl) setAvatarUrl("");
               }
               e.target.value = "";
             }}
@@ -166,7 +175,7 @@ export default function SingleImageUpload({
             onChange={(e) => {
               if (e.target.files?.[0]) {
                 setFile(e.target.files[0]);
-                setAvatarUrl("");
+                if (setAvatarUrl) setAvatarUrl("");
                 setImageUploadMode("file");
               }
               e.target.value = "";

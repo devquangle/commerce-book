@@ -9,11 +9,11 @@ import {
 } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { Modal } from "@/components/common/Modal";
-import { InputField } from "@/components/common/InputField";
-import { TextAreaField } from "@/components/common/TextAreaField";
-import { SelectBox } from "@/components/common/SelectBox";
-import { Button } from "@/components/common/Button";
+import { Modal } from "@/components/ui/Modal";
+import { InputField } from "@/components/ui/InputField";
+import { TextAreaField } from "@/components/ui/TextAreaField";
+import { SelectBox } from "@/components/ui/SelectBox";
+import { Button } from "@/components/ui/Button";
 import SingleImageUpload from "@/components/common/SingleImageUpload";
 import useDebounce from "@/libs/utils/useDebounce";
 import { useWikipedia } from "../hooks/useWikipedia";
@@ -274,3 +274,4 @@ export const AuthorModal: React.FC<AuthorModalProps> = ({
     />
   );
 };
+

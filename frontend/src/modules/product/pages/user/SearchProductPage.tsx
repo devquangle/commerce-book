@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
-import { Pagination } from '@/components/common/Pagination';
+import { Pagination } from '@/components/ui/Pagination';
 import { useSearchProductsFilter } from '../../hooks/useSearchProductsFilter';
 import { useSearchProducts } from '../../hooks/useSearchProducts';
 import FilterSidebar from '../../components/FilterSidebar';
 
 import ProductToolbar from '../../components/ProductToolbar';
 import ProductCard from '../../components/ProductCard';
-import Container from '@/components/common/Container';
+import Container from '@/components/ui/Container';
 
 const SearchProductPage = () => {
   const { filterOptions, handleUpdateField, resetFilters } = useSearchProductsFilter();

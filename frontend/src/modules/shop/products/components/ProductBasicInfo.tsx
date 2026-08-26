@@ -18,12 +18,12 @@ import { useGetUrlImages } from "../hooks/useSearchApi";
 import { useDebounce } from "@/hooks/useDebounce";
 import { showSuccessToast, showWarningToast } from "@/libs/utils/toastUtil";
 import { INITIAL_FORM } from "../types/product-data.type";
-import { InputField } from "@/components/common/InputField";
+import { InputField } from "@/components/ui/InputField";
 import { AlertTriangle, BookOpen, Sparkles } from "lucide-react";
-import Spinner from "@/components/common/Spinner";
+import Spinner from "@/components/ui/Spinner";
 import { SearchInput } from "@/components/common/SearchInput";
-import { SearchableSelect } from "@/components/common/SearchableSelect";
-import { SelectBox } from "@/components/common/SelectBox";
+import { SelectBox } from "@/components/ui/SelectBox";
+import { SelectBox } from "@/components/ui/SelectBox";
 import type { ProductImageRequest } from "@/services/cloudinary/type/cloudinary.type";
 
 registerLocale(viLocale);
@@ -485,7 +485,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
                 required: "Vui lòng chọn ngôn ngữ.",
               }}
               render={({ field }) => (
-                <SearchableSelect
+                <SelectBox searchable
                   label="Ngôn ngữ"
                   required
                   disabled={disabled}
@@ -498,7 +498,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
               )}
             />
           ) : (
-            <SearchableSelect
+            <SelectBox searchable
               label="Ngôn ngữ"
               required
               disabled={disabled}
@@ -515,7 +515,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
                 name="status"
                 control={control}
                 render={({ field }) => (
-                  <SelectBox
+                  <SelectBox searchable
                     label="Trạng thái"
                     required
                     disabled={disabled}
@@ -528,7 +528,7 @@ export const ProductBasicInfo: React.FC<ProductBasicInfoProps> = ({
                 )}
               />
             ) : (
-              <SelectBox
+              <SelectBox searchable
                 label="Trạng thái"
                 disabled={disabled}
                 options={STATUS_OPTIONS}

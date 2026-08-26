@@ -17,7 +17,7 @@ import { ProfileHeader } from "./ProfileHeader";
 import { ProfileForm } from "./ProfileForm";
 import { ProfileAvatar } from "./ProfileAvatar";
 import { ChangePassModal } from "./ChangePassModal";
-import Spinner from "@/components/common/Spinner";
+import Spinner from "@/components/ui/Spinner";
 
 const ProfilePage = () => {
   const { userInfo, setUserInfo } = useAuth();

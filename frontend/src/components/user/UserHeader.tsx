@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import { Search, Mic, Image as ImageIcon, ShoppingCart } from "lucide-react";
 
 import { Logo } from "../common/Logo";
-import { SidebarToggle } from "./SidebarToggle";
+import { SidebarToggle } from "../ui/SidebarToggle";
 import { AccountMenu } from "./AccountMenu";
-import Container from "../common/Container";
+import Container from "../ui/Container";
 import { StorefrontMegaMenu } from "./StorefrontMegaMenu";
 
 export const UserHeader: React.FC = () => {
@@ -60,3 +60,4 @@ export const UserHeader: React.FC = () => {
     </nav>
   );
 };
+

@@ -1,6 +1,6 @@
 import React from "react";
 import ProductImages from "../components/ProductImages";
-import Container from "@/components/common/Container";
+import Container from "@/components/ui/Container";
 import ProductDescription from "../components/ProductDescription";
 import ProductAttribute from "../components/ProductAttribute";
 import ProductInfo from "../components/ProductInfo";

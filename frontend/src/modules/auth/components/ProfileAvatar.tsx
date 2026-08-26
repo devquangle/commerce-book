@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { X, Eye, Edit3 } from "lucide-react";
-import { Button } from "@/components/common/Button";
+import { Button } from "@/components/ui/Button";
 
 export interface ProfileAvatarProps {
   avatar: string;

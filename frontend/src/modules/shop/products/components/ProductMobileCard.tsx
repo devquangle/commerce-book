@@ -20,7 +20,7 @@ import {
 } from "../types/product.type";
 import { ProductActionMenu } from "./ProductActionMenu";
 import { formatMoney } from "@/libs/utils/formatMoney.utils";
-import { Badge } from "@/components/common/Badge";
+import { Badge } from "@/components/ui/Badge";
 import { registerLocale, getNames } from "@cospired/i18n-iso-languages";
 import viLocale from "@cospired/i18n-iso-languages/langs/vi.json";
 

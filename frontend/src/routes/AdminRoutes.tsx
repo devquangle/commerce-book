@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLayout from "@/layouts/AdminLayout";
-import Spinner from "@/components/common/Spinner";
+import Spinner from "@/components/ui/Spinner";
 import { ADMIN_PATH } from "@/libs/constant/admin-path";
 
 // Lazy-loaded pages

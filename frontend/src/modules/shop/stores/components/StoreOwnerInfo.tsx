@@ -7,8 +7,8 @@ import {
   ShieldCheck,
   ShieldX,
 } from "lucide-react";
-import { InputField } from "@/components/common/InputField";
-import { SelectBox } from "@/components/common/SelectBox";
+import { InputField } from "@/components/ui/InputField";
+import { SelectBox } from "@/components/ui/SelectBox";
 
 const SEX_OPTIONS = [
   { value: "MALE", label: "Nam" },

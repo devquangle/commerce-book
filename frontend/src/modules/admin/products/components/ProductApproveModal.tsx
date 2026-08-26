@@ -3,7 +3,7 @@ import type {
   ProductDetailResponse,
   SuperAdminProductResponse,
 } from "@/modules/shop/products/types/product.type";
-import { Button } from "@/components/common/Button";
+import { Button } from "@/components/ui/Button";
 import { useApproveProduct } from "@/modules/shop/products/hooks/useProduct";
 import { Loader2 } from "lucide-react";
 

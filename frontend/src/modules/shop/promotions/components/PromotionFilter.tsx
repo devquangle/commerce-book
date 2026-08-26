@@ -1,8 +1,8 @@
 import { Search, RotateCcw } from "lucide-react";
 import { type PromotionStatus } from "../types/promotion.type";
-import { SelectBox } from "@/components/common/SelectBox";
-import { InputField } from "@/components/common/InputField";
-import { InputDate } from "@/components/common/InputDate";
+import { SelectBox } from "@/components/ui/SelectBox";
+import { InputField } from "@/components/ui/InputField";
+import { InputDate } from "@/components/ui/InputDate";
 
 interface PromotionFilterProps {
   keyword: string;

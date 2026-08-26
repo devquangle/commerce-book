@@ -1,8 +1,8 @@
 import React from "react";
 import { Search, X, RotateCcw } from "lucide-react";
 import type { PublisherStatus } from "../types/publisher.type";
-import { SelectBox } from "@/components/common/SelectBox";
-import { Button } from "@/components/common/Button";
+import { SelectBox } from "@/components/ui/SelectBox";
+import { Button } from "@/components/ui/Button";
 
 interface PublisherFilterProps {
   keyword: string;
