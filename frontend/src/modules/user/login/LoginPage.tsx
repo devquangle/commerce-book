@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
-import { InputField } from "@/components/common/InputField";
+import { InputField  } from "@/components/common/InputField";
+import { InputFieldPassword } from "@/components/common/InputFieldPassword";
 import { Button } from "@/components/common/Button";
 import { useAuth } from "@/context/useAuth";
 import Container from "@/components/common/Container";
@@ -79,9 +80,8 @@ const LoginPage = () => {
               })}
               error={errors?.email?.message}
             />
-            <InputField
+            <InputFieldPassword
               label="Mật khẩu"
-              type="password"
               placeholder="••••••••"
               id="current-password"
               {...register("password", {

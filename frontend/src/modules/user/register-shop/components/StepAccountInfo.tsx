@@ -1,7 +1,8 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { Mail, Phone, Lock, ShieldCheck } from "lucide-react";
-import { InputField } from "@/components/common/InputField";
+import { InputField  } from "@/components/common/InputField";
+import { InputFieldPassword } from "@/components/common/InputFieldPassword";
 import type { RegisterShopRequest } from "../types/register-shop.type";
 
 export const StepAccountInfo: React.FC = () => {
@@ -27,7 +28,7 @@ export const StepAccountInfo: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Email */}
-        <InputField
+        <InputFieldPassword
           label="Email chủ sở hữu"
           type="email"
           placeholder="example@domain.com"
@@ -67,7 +68,7 @@ export const StepAccountInfo: React.FC = () => {
         {/* Password */}
         <InputField
           label="Mật khẩu tài khoản Shop"
-          type="password"
+          
           placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)"
           required
           icon={<Lock className="w-4 h-4 text-zinc-400" />}
@@ -83,9 +84,9 @@ export const StepAccountInfo: React.FC = () => {
         />
 
         {/* Confirm Password */}
-        <InputField
+        <InputFieldPassword
           label="Xác nhận mật khẩu"
-          type="password"
+          
           placeholder="Nhập lại mật khẩu vừa đặt"
           required
           icon={<ShieldCheck className="w-4 h-4 text-zinc-400" />}

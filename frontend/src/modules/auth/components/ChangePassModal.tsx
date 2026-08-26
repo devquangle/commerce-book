@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Modal } from "@/components/common/Modal";
-import { InputField } from "@/components/common/InputField";
+import { InputField  } from "@/components/common/InputField";
+import { InputFieldPassword } from "@/components/common/InputFieldPassword";
 import { AuthService } from "@/modules/auth/services/auth.service";
 import type { ChangePasswordRequest } from "@/modules/auth/types/user.type";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
@@ -62,18 +63,18 @@ export const ChangePassModal: React.FC<ChangePassModalProps> = ({
       isLoading={isLoading}
     >
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-        <InputField
+        <InputFieldPassword
           label="Mật khẩu hiện tại"
-          type="password"
+          
           placeholder="Nhập mật khẩu hiện tại"
           {...register("oldPassword", {
             required: "Mật khẩu hiện tại là bắt buộc.",
           })}
           error={errors.oldPassword?.message as string}
         />
-        <InputField
+        <InputFieldPassword
           label="Mật khẩu mới"
-          type="password"
+          
           placeholder="Nhập mật khẩu mới"
           {...register("newPassword", {
             required: "Mật khẩu mới là bắt buộc.",
@@ -84,9 +85,9 @@ export const ChangePassModal: React.FC<ChangePassModalProps> = ({
           })}
           error={errors.newPassword?.message as string}
         />
-        <InputField
+        <InputFieldPassword
           label="Xác nhận mật khẩu mới"
-          type="password"
+          
           placeholder="Xác nhận mật khẩu mới"
           {...register("confirmPassword", {
             required: "Xác nhận mật khẩu mới là bắt buộc",

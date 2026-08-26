@@ -3,7 +3,8 @@ import Container from "@/components/common/Container";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import type { RegisterUserRequest } from "../../../auth/types/register-user";
-import { InputField } from "@/components/common/InputField";
+import { InputField  } from "@/components/common/InputField";
+import { InputFieldPassword } from "@/components/common/InputFieldPassword";
 import { mapServerErrors } from "@/libs/utils/mapServerErrors";
 import { useRegisterMutation } from "@/modules/auth/hooks/useAuth";
 import { showSuccessToast } from "@/libs/utils/toastUtil";
@@ -50,7 +51,7 @@ const RegisterPage = () => {
               </p>
             </div>
 
-            <InputField
+            <InputFieldPassword
               label="Email"
               type="email"
               placeholder="you@example.com"
@@ -65,7 +66,7 @@ const RegisterPage = () => {
             />
             <InputField
               label="Mật khẩu"
-              type="password"
+              
               placeholder="••••••••"
               id="current-password"
               {...register("password", {
@@ -82,9 +83,9 @@ const RegisterPage = () => {
               error={errors?.password?.message}
             />
 
-            <InputField
+            <InputFieldPassword
               label="Xác nhận mật khẩu"
-              type="password"
+              
               placeholder="••••••••"
               id="confirm-password"
               {...register("confirmPassword", {

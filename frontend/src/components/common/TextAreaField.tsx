@@ -33,11 +33,11 @@ export const TextAreaField = React.forwardRef<
       id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
 
     return (
-      <div className={`space-y-2 ${containerClassName}`}>
+      <div className={`w-full ${containerClassName}`}>
         {label && (
           <label
             htmlFor={textareaId}
-            className="block text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300"
+            className="mb-1.5 block text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300"
           >
             {label} {required && <span className="text-red-500">*</span>}
           </label>
@@ -55,11 +55,13 @@ export const TextAreaField = React.forwardRef<
           {...props}
         />
 
-        {error ? (
-          <p className="text-xs text-red-500 font-medium">{error}</p>
-        ) : helperText ? (
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">{helperText}</p>
-        ) : null}
+        <div className="min-h-[20px] mt-1.5">
+          {error ? (
+            <p className="text-xs text-red-500 font-medium">{error}</p>
+          ) : helperText ? (
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">{helperText}</p>
+          ) : null}
+        </div>
       </div>
     );
   }
