@@ -36,14 +36,14 @@ public interface AuthorProductRepository extends JpaRepository<AuthorProduct, Lo
     List<Long> findAuthorIdsByProductId(@Param("productId") Long productId);
 
     @Query("""
-            SELECT new com.dev.backend.modules.author_product.dto.AuthorProductResponse(
+            SELECT DISTINCT new com.dev.backend.modules.author_product.dto.AuthorProductResponse(
                 a.id,
                 a.name,
                 a.slug
             )
-            FROM AuthorProduct ap
-            JOIN ap.author a
-            GROUP BY a.id, a.name, a.slug
+            FROM AuthorProduct item
+            JOIN item.author a
+            WHERE item.product.status = 'ACTIVE'
             """)
     List<AuthorProductResponse> findAuthorsWithProducts();
 

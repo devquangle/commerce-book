@@ -45,8 +45,8 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
                 s.slug
             )
             FROM Series s
-            JOIN Product p ON p.series = s
-            GROUP BY s.id, s.name, s.slug
+            JOIN Product p
+            WHERE p.status = 'ACTIVE'
             """)
     List<SeriesProductResponse> findSeriesWithProducts();
 }
