@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { Star, Store } from "lucide-react";
 import type { ProductCardResponse } from "../../modules/product/types/product-card.type";
@@ -6,9 +5,10 @@ import { formatMoney, formatCompactNumber } from "@/libs/utils/formatMoney.utils
 
 interface ProductCardProps {
   product: ProductCardResponse;
+  hideShop?: boolean;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard = ({ product, hideShop = false }:ProductCardProps) => {
   return (
     <div className="card-custom p-0! group flex flex-col overflow-hidden hover:-translate-y-1 transition-all duration-300">
       <div className="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-800">
@@ -60,15 +60,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           )}
         </div>
 
-        <div className="caption-text mt-auto border-t border-zinc-100 dark:border-zinc-800 pt-1.5 dark:text-zinc-400">
-          <Link
-            to={`/${product.shopSlug}`}
-            className="inline-flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors max-w-full"
-          >
-            <Store className="w-2.5 h-2.5 shrink-0" />
-            <span className="truncate">{product.shopName}</span>
-          </Link>
-        </div>
+        {!hideShop && (
+          <div className="caption-text mt-auto border-t border-zinc-100 dark:border-zinc-800 pt-1.5 dark:text-zinc-400">
+            <Link
+              to={`/${product.shopSlug}`}
+              className="inline-flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors max-w-full"
+            >
+              <Store className="w-2.5 h-2.5 shrink-0" />
+              <span className="truncate">{product.shopName}</span>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

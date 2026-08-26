@@ -30,6 +30,7 @@ const ShopProductsPage = () => {
       <ShopBanner shopInfo={mockShopInfo} />
       
       {/* Phần dành cho Flash sale và Danh sách sản phẩm sẽ nằm ở đây */}
+      
       {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
       </div> */}
     </div>

@@ -1,4 +1,3 @@
-import React from 'react';
 import type { ProductCardResponse } from '@/modules/product/types/product-card.type';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Grid } from 'swiper/modules';
@@ -8,21 +7,28 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/grid';
 
-interface RelatedProductsProps {
-  relatedProducts: ProductCardResponse[];
+interface ProductSliderProps {
+  title: string;
+  products: ProductCardResponse[];
+  id?: string;
+  hideShop?: boolean;
 }
-const RelatedProducts = ({relatedProducts}:RelatedProductsProps) => {
+
+const ProductSlider = ({ title, products, id = 'default', hideShop = false }: ProductSliderProps) => {
+  const nextClass = `slider-next-${id}`;
+  const prevClass = `slider-prev-${id}`;
+
   return (
     <div className="card-custom relative">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-slate-900">
-          Sản phẩm tương tự
+          {title}
         </h2>
         <div className="flex items-center gap-2">
-          <button className="related-prev w-10 h-10 bg-white border border-slate-200 rounded-full shadow-sm flex items-center justify-center text-slate-600 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+          <button className={`${prevClass} w-10 h-10 bg-white border border-slate-200 rounded-full shadow-sm flex items-center justify-center text-slate-600 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed`}>
             <ChevronLeft size={20} />
           </button>
-          <button className="related-next w-10 h-10 bg-white border border-slate-200 rounded-full shadow-sm flex items-center justify-center text-slate-600 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+          <button className={`${nextClass} w-10 h-10 bg-white border border-slate-200 rounded-full shadow-sm flex items-center justify-center text-slate-600 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed`}>
             <ChevronRight size={20} />
           </button>
         </div>
@@ -32,8 +38,8 @@ const RelatedProducts = ({relatedProducts}:RelatedProductsProps) => {
         <Swiper
           modules={[Navigation, Grid]}
           navigation={{
-            nextEl: ".related-next",
-            prevEl: ".related-prev",
+            nextEl: `.${nextClass}`,
+            prevEl: `.${prevClass}`,
           }}
           grid={{
             rows: 2,
@@ -49,9 +55,9 @@ const RelatedProducts = ({relatedProducts}:RelatedProductsProps) => {
           }}
           className="related-products-swiper py-2"
         >
-          {relatedProducts.map((product) => (
+          {products.map((product) => (
             <SwiperSlide key={product.productId} className="h-auto!">
-              <ProductCard product={product} />
+              <ProductCard product={product} hideShop={hideShop} />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -60,4 +66,4 @@ const RelatedProducts = ({relatedProducts}:RelatedProductsProps) => {
   );
 }
 
-export default RelatedProducts
+export default ProductSlider;
