@@ -29,7 +29,7 @@ public class ProductCardResponse {
     private String shopSlug;
     private String shopName;
 
-    private boolean isFavorite;
+   
 
     private LocalDateTime approvedAt;
 
@@ -37,7 +37,7 @@ public class ProductCardResponse {
 
     public ProductCardResponse(Long productId, String productName, String productSlug, Integer price,
             Integer discountPercent, Integer salePrice, String urlImageDefault,
-            Long shopId, String shopSlug, String shopName, Boolean isFavorite,
+            Long shopId, String shopSlug, String shopName,
             LocalDateTime approvedAt, ProductStatus status) {
         this.productId = productId;
         this.productName = productName;
@@ -51,7 +51,6 @@ public class ProductCardResponse {
         this.shopName = shopName;
         this.averageRating = 0.0;
         this.soldCount = 0;
-        this.isFavorite = isFavorite != null ? isFavorite : false;
         this.approvedAt = approvedAt;
         this.status = status;
     }

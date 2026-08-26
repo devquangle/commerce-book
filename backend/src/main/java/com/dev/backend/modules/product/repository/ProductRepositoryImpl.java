@@ -59,20 +59,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             100
         );
 
-        Expression<Boolean> isFavoriteExpr;
-        if (userId != null) {
-            Subquery<Long> favSubquery = query.subquery(Long.class);
-            Root<com.dev.backend.modules.favorite.entity.Favorite> favRoot = favSubquery.from(com.dev.backend.modules.favorite.entity.Favorite.class);
-            favSubquery.select(cb.literal(1L));
-            favSubquery.where(
-                cb.equal(favRoot.get("product"), product),
-                cb.equal(favRoot.get("user").get("id"), userId)
-            );
-            isFavoriteExpr = cb.exists(favSubquery);
-        } else {
-            isFavoriteExpr = cb.literal(false);
-        }
-
         query.select(cb.construct(ProductCardResponse.class,
                 product.get("id"),
                 product.get("name"),
@@ -84,7 +70,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 shop.get("id"),
                 shop.get("slug"),
                 shop.get("name"),
-                isFavoriteExpr,
                 product.get("approvedAt"),
                 product.get("status")
         ));

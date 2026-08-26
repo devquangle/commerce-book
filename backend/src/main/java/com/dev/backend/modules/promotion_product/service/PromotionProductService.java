@@ -1,7 +1,5 @@
 package com.dev.backend.modules.promotion_product.service;
 
-import com.dev.backend.modules.cart.entity.CartItem;
-import com.dev.backend.modules.order.entity.OrderItem;
 import com.dev.backend.modules.promotion.dto.ProductPromotion;
 import com.dev.backend.modules.promotion.entity.Promotion;
 import com.dev.backend.modules.promotion_product.dto.ProductPromotionResponse;

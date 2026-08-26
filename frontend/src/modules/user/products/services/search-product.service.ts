@@ -8,6 +8,7 @@ const SearchProductService={
   searchProductsForUser: async (
     options?: SearchProductsFilter,
   ): Promise<Pagination<ProductCardResponse>> => {
+    console.log("param",options);
     const response = await publicAxios.get<
       ApiResponse<Pagination<ProductCardResponse>>
     >(`/api/v1/products/filter`, { params: options });
