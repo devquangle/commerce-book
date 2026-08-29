@@ -130,3 +130,22 @@
 .swiper-wrapper {
   @apply py-2
 }
+.swiper-button-next,
+.swiper-button-prev {
+  @apply bg-white rounded-full shadow-sm border border-slate-200 dark:border-zinc-800 flex items-center justify-center;
+  width: 32px !important;
+  height: 32px !important;
+  color: #334155 !important;
+  --swiper-navigation-size: 14px;
+}
+.dark .swiper-button-next,
+.dark .swiper-button-prev {
+  @apply bg-zinc-800 text-slate-300;
+  color: #cbd5e1 !important;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 14px !important;
+  font-weight: 700;
+}

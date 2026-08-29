@@ -76,8 +76,8 @@ const ProfilePage = () => {
       }
       if (avatarFile) {
         const imageUrl = await UploadImageService.uploadFile(avatarFile);
-        updatedData.avatarUrl = imageUrl;
-        setAvatar(imageUrl);
+        updatedData.avatarUrl = imageUrl.url;
+        setAvatar(imageUrl.url);
       }
 
       const userRes = await AuthService.updateUser(updatedData);

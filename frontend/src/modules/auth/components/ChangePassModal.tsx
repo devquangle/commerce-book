@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Modal } from "@/components/ui/Modal";
-import { InputField  } from "@/components/ui/InputField";
 import { InputFieldPassword } from "@/components/ui/InputFieldPassword";
 import { AuthService } from "@/modules/auth/services/auth.service";
 import type { ChangePasswordRequest } from "@/modules/auth/types/user.type";
@@ -65,7 +64,6 @@ export const ChangePassModal: React.FC<ChangePassModalProps> = ({
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         <InputFieldPassword
           label="Mật khẩu hiện tại"
-          
           placeholder="Nhập mật khẩu hiện tại"
           {...register("oldPassword", {
             required: "Mật khẩu hiện tại là bắt buộc.",
