@@ -5,6 +5,7 @@ import com.dev.backend.modules.product.dto.ProductResponse;
 import com.dev.backend.modules.product.dto.request.ProductRequest;
 import com.dev.backend.modules.product.dto.response.ProductDetailResponse;
 import com.dev.backend.modules.product.dto.response.ProductFullResponse;
+import com.dev.backend.modules.product.dto.response.ProductInfo;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductProjection;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.entity.Product;
@@ -77,14 +78,36 @@ public class ProductMapper {
 
     }
 
-    // public ProductInfo toDTO(Product entity) {
-    // if (entity == null) {
-    // return null;
-    // }
-    // ProductInfo response = new ProductInfo();
+    public ProductInfo toProductInfo(Product entity) {
+        if (entity == null) {
+            return null;
+        }
+        ProductInfo response = new ProductInfo();
+        response.setProductId(entity.getId().intValue());
+        response.setProductName(entity.getName());
+        response.setProductSlug(entity.getSlug());
+        response.setPrice(entity.getPrice());
+        response.setQuantity(entity.getQuantity());
+        response.setWeight(entity.getWeight());
+        response.setPublishYear(
+                entity.getPublishYear() != null
+                        ? entity.getPublishYear().toString()
+                        : null);
+        response.setPages(entity.getPages());
+        response.setLanguage(entity.getLanguage());
+        response.setIsbn(entity.getIsbn());
+        response.setPublisherName(
+                entity.getPublisher() != null
+                        ? entity.getPublisher().getName()
+                        : null);
 
-    // return response;
-    // }
+        response.setSeriesName(
+                entity.getSeries() != null
+                        ? entity.getSeries().getName()
+                        : null);
+        response.setStatus(entity.getStatus());
+        return response;
+    }
 
     public ProductDetailResponse toDetailDTO(Product entity) {
         if (entity == null) {

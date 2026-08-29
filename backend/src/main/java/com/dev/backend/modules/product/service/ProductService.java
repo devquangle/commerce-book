@@ -13,6 +13,7 @@ import com.dev.backend.modules.product.dto.request.UserFilterRequest;
 import com.dev.backend.modules.product.dto.response.ProductCardResponse;
 import com.dev.backend.modules.product.dto.response.ProductDetailResponse;
 import com.dev.backend.modules.product.dto.response.ProductFullResponse;
+import com.dev.backend.modules.product.dto.response.ProductInfo;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.entity.Product;
 import com.dev.backend.modules.shop.dto.ShopSimpleResponse;
@@ -30,6 +31,8 @@ public interface ProductService {
         Product getBySlug(String slug);
 
         ProductResponse mapToDTO(Product product);
+
+        ProductInfo maProductInfo(Product product);
 
         ProductResponse create(ProductRequest request, Shop shop);
 

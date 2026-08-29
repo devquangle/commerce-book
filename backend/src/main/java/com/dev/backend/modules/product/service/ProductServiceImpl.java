@@ -21,6 +21,7 @@ import com.dev.backend.modules.product.dto.request.UserFilterRequest;
 import com.dev.backend.modules.product.dto.response.ProductCardResponse;
 import com.dev.backend.modules.product.dto.response.ProductDetailResponse;
 import com.dev.backend.modules.product.dto.response.ProductFullResponse;
+import com.dev.backend.modules.product.dto.response.ProductInfo;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductProjection;
 import com.dev.backend.modules.product.dto.response.SuperAdminProductResponse;
 import com.dev.backend.modules.product.entity.Product;
@@ -134,6 +135,19 @@ public class ProductServiceImpl implements ProductService {
         }
 
         @Override
+        public ProductInfo maProductInfo(Product product) {
+                ProductInfo response = productMapper.toProductInfo(product);
+                Long productId = product.getId();
+                List<String> authorsName = authorProductService.getAuthorNamesByProductId(productId);
+                List<String> genresName = genreProductService.getGenreNamesByProductId(productId);
+                String urlImageDefault = imageProductService.getDefaultImageUrlByProductId(productId);
+                response.setAuthorsName(authorsName);
+                response.setGenresName(genresName);
+                response.setUrlImageDefault(urlImageDefault);
+                return response;
+        }
+
+        @Override
         public ProductDetailResponse detail(String slug, Long shopId) {
                 Product product = getProductBySlugAndShopId(slug, shopId);
                 Long productId = product.getId();
@@ -158,7 +172,7 @@ public class ProductServiceImpl implements ProductService {
                 PublisherProductResponse publisher = publisherMapper.toPublisherProductResponse(product.getPublisher());
                 SeriesProductResponse series = seriesMapper.toSeriesProductResponse(product.getSeries());
                 Integer discountPercent = promotionProductService.getCurrentDiscountPercent(productId);
-              
+
                 response.setProductAuthors(authors);
                 response.setProductGenres(genres);
                 response.setProductPublisher(publisher);
