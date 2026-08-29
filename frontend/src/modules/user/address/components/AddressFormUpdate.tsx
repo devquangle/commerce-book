@@ -23,9 +23,10 @@ import type { ApiResponse } from "@/libs/utils/api-response";
 
 type AddressFormUpdateProps = {
   addressId: number;
+  onSuccess?: () => void;
 };
 
-const AddressFormUpdate = ({ addressId }: AddressFormUpdateProps) => {
+const AddressFormUpdate = ({ addressId, onSuccess }: AddressFormUpdateProps) => {
   const navigate = useNavigate();
   const { data: addressDetail, isLoading: isLoadingDetail } = useAddressDetail(addressId);
   const updateMutation = useUpdateAddress();
@@ -100,7 +101,11 @@ const AddressFormUpdate = ({ addressId }: AddressFormUpdateProps) => {
       { id: addressId, data },
       {
         onSuccess: () => {
-          navigate(-1); // Quay lại trang trước đó
+          if (onSuccess) {
+            onSuccess();
+          } else {
+            navigate(-1); // Quay lại trang trước đó
+          }
         },
         onError: (error) => {
           const axiosError = error as AxiosError<ApiResponse<unknown>>;

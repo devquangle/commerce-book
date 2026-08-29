@@ -22,9 +22,10 @@ import type { ApiResponse } from "@/libs/utils/api-response";
 
 type AddressFormAddProps = {
   isPayment?: boolean;
+  onSuccess?: () => void;
 };
 
-const AddressFormAdd = ({ isPayment }: AddressFormAddProps) => {
+const AddressFormAdd = ({ isPayment, onSuccess }: AddressFormAddProps) => {
   const {
     register,
     handleSubmit,
@@ -80,8 +81,10 @@ const AddressFormAdd = ({ isPayment }: AddressFormAddProps) => {
   const onSubmit = (data: AddressRequest) => {
     createMutation.mutate(data, {
       onSuccess: () => {
-        if (!isPayment) {
-          navigate(-1); // Quay lại trang trước đó (danh sách địa chỉ)
+        if (onSuccess) {
+          onSuccess();
+        } else if (!isPayment) {
+          navigate(-1);
         }
       },
       onError: (error) => {

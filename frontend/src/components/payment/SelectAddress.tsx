@@ -1,46 +1,66 @@
-import React, { useState } from "react";
-import { MapPin, ChevronDown, CheckCircle2, Plus } from "lucide-react";
+﻿import React, { useState, useEffect } from "react";
+import { MapPin, ChevronDown, CheckCircle2, Plus, Loader2 } from "lucide-react";
 import type { AddressResponse } from "@/modules/user/address/types/address.type";
 import { Modal } from "@/components/ui/Modal";
+import { useAddresses } from "@/modules/user/address/hooks/useAddress";
 
 interface SelectAddressProps {
-  addresses: AddressResponse[];
-  selectedAddressId: number | null;
   onSelect: (address: AddressResponse) => void;
 }
 
-const SelectAddress: React.FC<SelectAddressProps> = ({
-  addresses,
-  selectedAddressId,
-  onSelect,
-}) => {
+const SelectAddress: React.FC<SelectAddressProps> = ({ onSelect }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+
+  const { data: addresses = [], isLoading } = useAddresses();
+
+  // Tu dong chon dia chi mac dinh khi load xong
+  useEffect(() => {
+    if (addresses.length > 0 && selectedAddressId === null) {
+      const defaultAddress =
+        addresses.find((a) => a.defaultAddress) ?? addresses[0];
+      setSelectedAddressId(defaultAddress.id);
+      onSelect(defaultAddress);
+    }
+  }, [addresses]);
 
   const selectedAddress = addresses.find((a) => a.id === selectedAddressId);
+
+  const handleSelect = (address: AddressResponse) => {
+    setSelectedAddressId(address.id);
+    onSelect(address);
+    setIsModalOpen(false);
+  };
 
   return (
     <>
       <div className="card-custom">
-        {/* Header: title + nút thay đổi cùng hàng */}
+        {/* Header: title + nut thay doi cung hang */}
         <div className="flex items-center justify-between gap-2 mb-4">
           <div className="flex items-center gap-2">
             <MapPin size={18} className="text-blue-600 shrink-0" />
             <h2 className="font-semibold text-gray-800 text-base">
-              Địa chỉ giao hàng
+              Dia chi giao hang
             </h2>
           </div>
           {selectedAddress && (
             <button
+              type="button"
               onClick={() => setIsModalOpen(true)}
-              className="shrink-0 flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+              className="shrink-0 flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors cursor-pointer"
             >
-              Thay đổi
+              Thay doi
               <ChevronDown size={14} />
             </button>
           )}
         </div>
 
-        {selectedAddress ? (
+        {isLoading ? (
+          <div className="flex items-center gap-2 text-gray-400 py-2">
+            <Loader2 size={16} className="animate-spin" />
+            <span className="text-sm">Dang tai dia chi...</span>
+          </div>
+        ) : selectedAddress ? (
           <div className="min-w-0">
             <div className="flex items-center gap-3 flex-wrap">
               <span className="font-semibold text-gray-900">
@@ -51,7 +71,7 @@ const SelectAddress: React.FC<SelectAddressProps> = ({
               {selectedAddress.defaultAddress && (
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
                   <CheckCircle2 size={10} />
-                  Mặc định
+                  Mac dinh
                 </span>
               )}
             </div>
@@ -61,11 +81,12 @@ const SelectAddress: React.FC<SelectAddressProps> = ({
           </div>
         ) : (
           <button
+            type="button"
             onClick={() => setIsModalOpen(true)}
-            className="w-full flex items-center justify-center gap-2 py-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-blue-400 hover:text-blue-600 transition-colors"
+            className="w-full flex items-center justify-center gap-2 py-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-blue-400 hover:text-blue-600 transition-colors cursor-pointer"
           >
             <Plus size={18} />
-            <span className="text-sm font-medium">Chọn địa chỉ giao hàng</span>
+            <span className="text-sm font-medium">Chon dia chi giao hang</span>
           </button>
         )}
       </div>
@@ -74,14 +95,14 @@ const SelectAddress: React.FC<SelectAddressProps> = ({
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Chọn địa chỉ giao hàng"
+        title="Chon dia chi giao hang"
         size="md"
       >
         <div className="space-y-3">
           {addresses.length === 0 ? (
             <div className="text-center py-8 text-gray-400">
               <MapPin size={40} className="mx-auto mb-2 opacity-40" />
-              <p className="text-sm">Bạn chưa có địa chỉ nào</p>
+              <p className="text-sm">Ban chua co dia chi nao</p>
             </div>
           ) : (
             addresses.map((address) => {
@@ -89,10 +110,8 @@ const SelectAddress: React.FC<SelectAddressProps> = ({
               return (
                 <button
                   key={address.id}
-                  onClick={() => {
-                    onSelect(address);
-                    setIsModalOpen(false);
-                  }}
+                  type="button"
+                  onClick={() => handleSelect(address)}
                   className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
                     isSelected
                       ? "border-blue-500 bg-blue-50"
@@ -110,7 +129,7 @@ const SelectAddress: React.FC<SelectAddressProps> = ({
                         </span>
                         {address.defaultAddress && (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
-                            Mặc định
+                            Mac dinh
                           </span>
                         )}
                       </div>

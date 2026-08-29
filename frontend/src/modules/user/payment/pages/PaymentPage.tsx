@@ -13,33 +13,6 @@ import type { CartResponse, SelectedCartItem } from "../../cart/types/cart.type"
 import type { AddressResponse } from "../../address/types/address.type";
 import { useCart, getSelectedCartItemIds, clearSelectedCartItems } from "../../cart/hooks/useCart";
 
-// ── Mock data ────────────────────────────────────────────────────────────────
-
-const mockAddresses: AddressResponse[] = [
-  {
-    id: 1,
-    fullName: "Nguyễn Văn An",
-    phone: "0901234567",
-    provinceId: 79,
-    districtId: 760,
-    wardCode: "26734",
-    street: "123 Nguyễn Thị Minh Khai, Phường 6, Quận 3, TP. Hồ Chí Minh",
-    streetFull: "123 Nguyễn Thị Minh Khai, Phường 6, Quận 3, TP. Hồ Chí Minh",
-    defaultAddress: true,
-  },
-  {
-    id: 2,
-    fullName: "Nguyễn Văn An",
-    phone: "0907654321",
-    provinceId: 1,
-    districtId: 1,
-    wardCode: "00001",
-    street: "45 Lê Đại Hành, Phường 13, Quận 11, TP. Hà Nội",
-    streetFull: "45 Lê Đại Hành, Phường 13, Quận 11, TP. Hà Nội",
-    defaultAddress: false,
-  },
-];
-
 // ── Component ────────────────────────────────────────────────────────────────
 
 const PaymentPage = () => {
@@ -60,10 +33,7 @@ const PaymentPage = () => {
       .filter((cart) => cart.items.length > 0);
   }, [cartData, selectedCartItemIds]);
 
-  const [addresses] = useState<AddressResponse[]>(mockAddresses);
-  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
-    mockAddresses.find((a) => a.defaultAddress)?.id ?? null,
-  );
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethodType>("COD");
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [voucherDiscount, setVoucherDiscount] = useState(0);
@@ -164,8 +134,6 @@ const PaymentPage = () => {
         <div className="lg:sticky lg:top-4 space-y-4">
           {/* 3. Delivery Address */}
           <SelectAddress
-            addresses={addresses}
-            selectedAddressId={selectedAddressId}
             onSelect={handleSelectAddress}
           />
 

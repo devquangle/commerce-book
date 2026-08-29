@@ -5,9 +5,10 @@ import ProfileLayout from "@/layouts/ProfileLayout";
 import Spinner from "@/components/ui/Spinner";
 import RegisterPage from "@/modules/user/register/pages/RegisterPage";
 import ConfirmEmailPage from "@/modules/user/register/pages/ConfirmEmailPage";
-import AddressPage from "@/modules/user/address/pages/AddressPage";
+import AddressPage from "@/modules/user/address/pages/AddressListPage";
 import AddressCreatePage from "@/modules/user/address/pages/AddressCreatePage";
 import AddressUpdatePage from "@/modules/user/address/pages/AddressUpdatePage";
+import PlaceAddressPage from "@/modules/user/address/pages/PlaceAddressPage";
 import ShopProductsPage from "@/modules/product/pages/shop/ShopProductsPage";
 
 // Lazy-loaded pages
@@ -52,6 +53,7 @@ export const UserRoutes: React.FC = () => {
           <Route path="search" element={<Search />} />
           <Route path="cart" element={<CartPage />} />
           <Route path="checkout" element={<Checkout />} />
+          <Route path="checkout/address" element={<PlaceAddressPage />} />
           <Route path="order-success" element={<OrderSuccess />} />
 
           <Route element={<ProfileLayout />}>

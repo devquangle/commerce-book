@@ -27,7 +27,7 @@ const AddressHeader = ({
   return (
     <div className="flex items-center justify-between py-2 mb-4 border-b border-gray-100 dark:border-zinc-800">
       <div className="flex items-center gap-3">
-        {(mode === "add" || mode === "edit") && (
+        {(mode === "add" || mode === "edit" || !!onBackClick) && (
           <button
             onClick={handleBack}
             className="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-zinc-800 dark:text-zinc-400 rounded-full transition-colors"
