@@ -13,5 +13,4 @@ public class CartResponse {
    private String shopName;
    private String shopSlug;
    private List<CartItemResponse> items = new ArrayList<>();
-   private boolean checked=false;
 }

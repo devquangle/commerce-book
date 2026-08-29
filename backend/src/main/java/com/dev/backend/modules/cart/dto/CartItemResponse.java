@@ -11,5 +11,5 @@ public class CartItemResponse {
     private int cartItemId;
     private int quantity;
     private ProductInfo product;
-    private boolean checked = false;
+
 }

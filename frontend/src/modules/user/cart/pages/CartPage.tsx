@@ -1,128 +1,104 @@
+
 import { useState } from "react";
 import { ShoppingCart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 import CartHeader from "../../../../components/cart/CartHeader";
 import CartItem from "../../../../components/cart/CartItem";
 import CartFooter from "../../../../components/cart/CartFooter";
-import type { CartResponse } from "../types/cart.type";
-import { useNavigate } from "react-router-dom";
 
-// Mock data for initial UI rendering
-const initialMockData: CartResponse[] = [
-  {
-    shopId: 1,
-    shopName: "Nhà sách Fahasa",
-    shopSlug: "nha-sach-fahasa",
-    checked: true,
-    items: [
-      {
-        cartItemId: 101,
-        quantity: 2,
-        checked: true,
-        product: {
-          productId: 1,
-          productName: "Sách Clean Code - Mã Sạch",
-          productSlug: "sach-clean-code",
-          price: 250000,
-          quantity: 10,
-          weight: 500,
-          publishYear: "2019",
-          pages: 400,
-          publisherName: "NXB Trẻ",
-          seriesName: "",
-          genresName: ["Công nghệ", "Lập trình"],
-          authorsName: ["Robert C. Martin"],
-          urlImageDefault: "https://via.placeholder.com/150",
-          promotion: {
-            discountPercent: 10,
-            quantity: 100,
-          },
-        },
-      },
-      {
-        cartItemId: 102,
-        quantity: 1,
-        checked: false,
-        product: {
-          productId: 2,
-          productName: "Đắc Nhân Tâm",
-          productSlug: "dac-nhan-tam",
-          price: 100000,
-          quantity: 50,
-          weight: 300,
-          publishYear: "2020",
-          pages: 320,
-          publisherName: "NXB Tổng Hợp",
-          seriesName: "",
-          genresName: ["Tâm lý", "Kỹ năng sống"],
-          authorsName: ["Dale Carnegie"],
-          urlImageDefault: "https://via.placeholder.com/150",
-        },
-      },
-    ],
-  },
-  {
-    shopId: 2,
-    shopName: "Tiki Trading",
-    shopSlug: "tiki-trading",
-    checked: false,
-    items: [
-      {
-        cartItemId: 103,
-        quantity: 1,
-        checked: false,
-        product: {
-          productId: 3,
-          productName: "Harry Potter và Hòn Đá Phù Thủy",
-          productSlug: "harry-potter-1",
-          price: 150000,
-          quantity: 20,
-          weight: 400,
-          publishYear: "2021",
-          pages: 350,
-          publisherName: "NXB Trẻ",
-          seriesName: "Harry Potter",
-          genresName: ["Fantasy", "Phiêu lưu"],
-          authorsName: ["J.K. Rowling"],
-          urlImageDefault: "https://via.placeholder.com/150",
-          promotion: {
-            discountPercent: 5,
-            quantity: 50,
-          },
-        },
-      },
-    ],
-  },
-];
+import type { CartResponse } from "../types/cart.type";
+import { useCart } from "../hooks/useCart";
 
 const CartPage = () => {
-  const [carts, setCarts] = useState<CartResponse[]>(initialMockData);
-  const navigate=useNavigate();
-  const handleCheckShop = (shopId: number, checked: boolean) => {
+  const { data: cartData, isLoading, error } = useCart();
+
+  const navigate = useNavigate();
+
+  // Local state để quản lý checked / quantity / remove
+  const [carts, setCarts] = useState<CartResponse[]>([]);
+  const [prevCartData, setPrevCartData] = useState<CartResponse[] | undefined>(undefined);
+
+  // Khởi tạo data từ React Query vào local state trong quá trình render (chuẩn React)
+  if (cartData !== prevCartData) {
+    setPrevCartData(cartData);
+    if (cartData) {
+      setCarts(
+        cartData.map((cart) => ({
+          ...cart,
+          checked: false,
+          items: cart.items.map((item) => ({
+            ...item,
+            checked: false,
+          })),
+        })),
+      );
+    } else {
+      setCarts([]);
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto py-16 px-4 flex flex-col items-center justify-center min-h-[60vh]">
+        <div className="w-12 h-12 border-4 border-gray-300 border-t-primary rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto py-16 px-4 flex flex-col items-center justify-center min-h-[60vh]">
+        <p className="text-red-500">
+          Đã xảy ra lỗi khi tải giỏ hàng.
+        </p>
+      </div>
+    );
+  }
+
+  /**
+   * Check / uncheck toàn bộ sản phẩm của shop
+   */
+  const handleCheckShop = (
+    shopId: number,
+    checked: boolean,
+  ) => {
     setCarts((prev) =>
       prev.map((cart) => {
-        if (cart.shopId === shopId) {
-          return {
-            ...cart,
-            checked,
-            items: cart.items.map((item) => ({ ...item, checked })),
-          };
+        if (cart.shopId !== shopId) {
+          return cart;
         }
-        return cart;
+
+        return {
+          ...cart,
+          checked,
+          items: cart.items.map((item) => ({
+            ...item,
+            checked,
+          })),
+        };
       }),
     );
   };
 
-  const handleCheckItem = (cartItemId: number, checked: boolean) => {
+  /**
+   * Check / uncheck một sản phẩm
+   */
+  const handleCheckItem = (
+    cartItemId: number,
+    checked: boolean,
+  ) => {
     setCarts((prev) =>
       prev.map((cart) => {
         const updatedItems = cart.items.map((item) =>
-          item.cartItemId === cartItemId ? { ...item, checked } : item,
+          item.cartItemId === cartItemId
+            ? { ...item, checked }
+            : item,
         );
 
-        // Update shop checkbox if all items are checked
         const allItemsChecked =
-          updatedItems.length > 0 && updatedItems.every((i) => i.checked);
+          updatedItems.length > 0 &&
+          updatedItems.every((item) => item.checked);
 
         return {
           ...cart,
@@ -133,65 +109,106 @@ const CartPage = () => {
     );
   };
 
-  const handleQuantityChange = (cartItemId: number, quantity: number) => {
+  /**
+   * Thay đổi số lượng sản phẩm
+   */
+  const handleQuantityChange = (
+    cartItemId: number,
+    quantity: number,
+  ) => {
     setCarts((prev) =>
       prev.map((cart) => ({
         ...cart,
         items: cart.items.map((item) =>
-          item.cartItemId === cartItemId ? { ...item, quantity } : item,
+          item.cartItemId === cartItemId
+            ? {
+                ...item,
+                quantity,
+              }
+            : item,
         ),
       })),
     );
   };
 
-  const handleRemoveItem = (cartItemId: number) => {
-    setCarts((prev) => {
-      const newCarts = prev
+  /**
+   * Xóa một sản phẩm
+   */
+  const handleRemoveItem = (
+    cartItemId: number,
+  ) => {
+    setCarts((prev) =>
+      prev
         .map((cart) => ({
           ...cart,
-          items: cart.items.filter((item) => item.cartItemId !== cartItemId),
+          items: cart.items.filter(
+            (item) => item.cartItemId !== cartItemId,
+          ),
         }))
-        .filter((cart) => cart.items.length > 0);
-      return newCarts;
-    });
+        .filter((cart) => cart.items.length > 0),
+    );
   };
 
-  const handleCheckAll = (checked: boolean) => {
+  /**
+   * Check / uncheck tất cả sản phẩm
+   */
+  const handleCheckAll = (
+    checked: boolean,
+  ) => {
     setCarts((prev) =>
       prev.map((cart) => ({
         ...cart,
         checked,
-        items: cart.items.map((item) => ({ ...item, checked })),
+        items: cart.items.map((item) => ({
+          ...item,
+          checked,
+        })),
       })),
     );
   };
 
+  /**
+   * Xóa tất cả sản phẩm đang được chọn
+   */
   const handleRemoveSelectedItems = () => {
-    setCarts((prev) => {
-      const newCarts = prev
+    setCarts((prev) =>
+      prev
         .map((cart) => ({
           ...cart,
-          items: cart.items.filter((item) => !item.checked),
+          items: cart.items.filter(
+            (item) => !item.checked,
+          ),
         }))
-        .filter((cart) => cart.items.length > 0);
-      return newCarts;
-    });
+        .filter((cart) => cart.items.length > 0),
+    );
   };
 
+  /**
+   * Checkout
+   */
   const handleCheckout = () => {
     navigate("/checkout");
   };
 
+  /**
+   * Giỏ hàng rỗng
+   */
   if (carts.length === 0) {
     return (
       <div className="container mx-auto py-16 px-4 flex flex-col items-center justify-center min-h-[60vh]">
-        <ShoppingCart size={80} className="text-gray-300 mb-6" />
+        <ShoppingCart
+          size={80}
+          className="text-gray-300 mb-6"
+        />
+
         <h2 className="text-2xl font-semibold text-gray-700 mb-2">
           Giỏ hàng của bạn đang trống
         </h2>
+
         <p className="text-gray-500 mb-6">
           Hãy chọn thêm sản phẩm để mua sắm nhé!
         </p>
+
         <button
           className="btn btn-primary"
           onClick={() => window.history.back()}
@@ -202,20 +219,37 @@ const CartPage = () => {
     );
   }
 
-  // Calculate if all items are checked for the CartHeader
-  const hasItems = carts.length > 0 && carts.some(cart => cart.items.length > 0);
-  const isCheckedAll = hasItems && carts.every(cart => cart.items.every(item => item.checked));
+  /**
+   * Kiểm tra có sản phẩm hay không
+   */
+  const hasItems = carts.some(
+    (cart) => cart.items.length > 0,
+  );
+
+  /**
+   * Kiểm tra tất cả sản phẩm đã được chọn
+   */
+  const isCheckedAll =
+    hasItems &&
+    carts.every(
+      (cart) =>
+        cart.items.length > 0 &&
+        cart.items.every((item) => item.checked),
+    );
 
   return (
     <div className="w-full space-y-16 my-4 p-4 lg:p-3">
       <h1 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-        <ShoppingCart /> Giỏ Hàng
+        <ShoppingCart />
+        Giỏ Hàng
       </h1>
-      <CartHeader 
+
+      <CartHeader
         isCheckedAll={isCheckedAll}
         onCheckAll={handleCheckAll}
         onRemoveAll={handleRemoveSelectedItems}
       />
+
       <div className="flex flex-col gap-4">
         {carts.map((cart) => (
           <CartItem
@@ -224,7 +258,12 @@ const CartPage = () => {
             onCheck={handleCheckItem}
             onQuantityChange={handleQuantityChange}
             onRemove={handleRemoveItem}
-            onShopCheck={(checked) => handleCheckShop(cart.shopId, checked)}
+            onShopCheck={(checked) =>
+              handleCheckShop(
+                cart.shopId,
+                checked,
+              )
+            }
           />
         ))}
       </div>

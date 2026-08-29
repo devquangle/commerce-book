@@ -33,7 +33,7 @@ const CartItem: React.FC<CartItemProps> = ({
           <div className="w-6 flex justify-center shrink-0">
             <input
               type="checkbox"
-              className="checkbox checkbox-primary"
+              className="checkbox checkbox-primary scale-125 cursor-pointer"
               checked={cart.checked}
               onChange={(e) => onShopCheck(e.target.checked)}
             />
@@ -99,7 +99,7 @@ const SingleItem: React.FC<{
         <div className="w-6 flex justify-center shrink-0 mt-1 md:mt-0">
           <input
             type="checkbox"
-            className="checkbox checkbox-primary"
+            className="checkbox checkbox-primary scale-125 cursor-pointer"
             checked={checked}
             onChange={(e) => onCheck(cartItemId, e.target.checked)}
           />
@@ -110,12 +110,12 @@ const SingleItem: React.FC<{
       <div className="grow pl-4 flex items-start gap-4 min-w-0">
         <Link
           to={`/product/${product.productSlug}`}
-          className="w-20 h-20 shrink-0 bg-gray-100 rounded-md overflow-hidden block"
+          className="w-20 h-28 shrink-0 bg-gray-100 rounded-md overflow-hidden block"
         >
           <img
             src={product.urlImageDefault || "https://via.placeholder.com/150"}
             alt={product.productName}
-            className="w-full h-full object-cover transition-transform hover:scale-105"
+            className="w-full h-full object-cover"
           />
         </Link>
 

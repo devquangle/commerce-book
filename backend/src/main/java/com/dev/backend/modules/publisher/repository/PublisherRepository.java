@@ -45,7 +45,7 @@ public interface PublisherRepository extends JpaRepository<Publisher, Long> {
                 p.slug
             )
             FROM Publisher p
-            JOIN Product pr 
+            JOIN p.products pr 
             WHERE pr.status = 'ACTIVE'
             """)
     List<PublisherProductResponse> findPublishersWithProducts();
