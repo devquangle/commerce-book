@@ -31,5 +31,8 @@ export interface ProductResponse {
   genresName: string[] | [];
   authorsName: string[] | [];
   urlImageDefault: string;
-  
+}
+
+export interface SelectedCartItem {
+  cartItemId: number;
 }

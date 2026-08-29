@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -8,10 +7,15 @@ import CartItem from "../../../../components/cart/CartItem";
 import CartFooter from "../../../../components/cart/CartFooter";
 
 import type { CartResponse } from "../types/cart.type";
-import { useCart } from "../hooks/useCart";
+import {
+  useCart,
+  getSelectedCartItemIds,
+  setSelectedCartItemIds,
+  toggleSelectedCartItem,
+} from "../hooks/useCart";
 
 const CartPage = () => {
-  const { data: cartData, isLoading, error } = useCart();
+  const { data: cartData, isPending, error } = useCart();
 
   const navigate = useNavigate();
 
@@ -23,22 +27,27 @@ const CartPage = () => {
   if (cartData !== prevCartData) {
     setPrevCartData(cartData);
     if (cartData) {
+      const selectedIds = getSelectedCartItemIds();
       setCarts(
-        cartData.map((cart) => ({
-          ...cart,
-          checked: false,
-          items: cart.items.map((item) => ({
+        cartData.map((cart) => {
+          const items = cart.items.map((item) => ({
             ...item,
-            checked: false,
-          })),
-        })),
+            checked: selectedIds.includes(item.cartItemId),
+          }));
+          const allItemsChecked = items.length > 0 && items.every((item) => item.checked);
+          return {
+            ...cart,
+            checked: allItemsChecked,
+            items,
+          };
+        }),
       );
     } else {
       setCarts([]);
     }
   }
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="container mx-auto py-16 px-4 flex flex-col items-center justify-center min-h-[60vh]">
         <div className="w-12 h-12 border-4 border-gray-300 border-t-primary rounded-full animate-spin" />
@@ -63,6 +72,13 @@ const CartPage = () => {
     shopId: number,
     checked: boolean,
   ) => {
+    const shopCart = carts.find((c) => c.shopId === shopId);
+    if (shopCart) {
+      shopCart.items.forEach((item) => {
+        toggleSelectedCartItem(item.cartItemId, checked);
+      });
+    }
+
     setCarts((prev) =>
       prev.map((cart) => {
         if (cart.shopId !== shopId) {
@@ -88,6 +104,8 @@ const CartPage = () => {
     cartItemId: number,
     checked: boolean,
   ) => {
+    toggleSelectedCartItem(cartItemId, checked);
+
     setCarts((prev) =>
       prev.map((cart) => {
         const updatedItems = cart.items.map((item) =>
@@ -137,6 +155,8 @@ const CartPage = () => {
   const handleRemoveItem = (
     cartItemId: number,
   ) => {
+    toggleSelectedCartItem(cartItemId, false);
+
     setCarts((prev) =>
       prev
         .map((cart) => ({
@@ -155,6 +175,13 @@ const CartPage = () => {
   const handleCheckAll = (
     checked: boolean,
   ) => {
+    if (checked) {
+      const allIds = carts.flatMap((c) => c.items.map((i) => i.cartItemId));
+      setSelectedCartItemIds(allIds);
+    } else {
+      setSelectedCartItemIds([]);
+    }
+
     setCarts((prev) =>
       prev.map((cart) => ({
         ...cart,
@@ -171,6 +198,11 @@ const CartPage = () => {
    * Xóa tất cả sản phẩm đang được chọn
    */
   const handleRemoveSelectedItems = () => {
+    const currentSelected = getSelectedCartItemIds();
+    if (currentSelected.length > 0) {
+      setSelectedCartItemIds([]); // Clear them as they are being removed
+    }
+
     setCarts((prev) =>
       prev
         .map((cart) => ({

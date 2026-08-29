@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { ShoppingBag, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -9,8 +9,9 @@ import PaymentMethod, {
 import PaymentTotal from "../../../../components/payment/PaymentTotal";
 import CartItem from "../../../../components/cart/CartItem";
 
-import type { CartResponse } from "../../cart/types/cart.type";
+import type { CartResponse, SelectedCartItem } from "../../cart/types/cart.type";
 import type { AddressResponse } from "../../address/types/address.type";
+import { useCart, getSelectedCartItemIds, clearSelectedCartItems } from "../../cart/hooks/useCart";
 
 // ── Mock data ────────────────────────────────────────────────────────────────
 
@@ -39,103 +40,26 @@ const mockAddresses: AddressResponse[] = [
   },
 ];
 
-const mockCheckedCarts: CartResponse[] = [
-  {
-    shopId: 1,
-    shopName: "Nhà sách Fahasa",
-    shopSlug: "nha-sach-fahasa",
-    checked: true,
-    items: [
-      {
-        cartItemId: 101,
-        quantity: 2,
-        checked: true,
-        product: {
-          productId: 1,
-          productName: "Sách Clean Code - Mã Sạch",
-          productSlug: "sach-clean-code",
-          price: 250000,
-          quantity: 10,
-          weight: 500,
-          publishYear: "2019",
-          pages: 400,
-          publisherName: "NXB Trẻ",
-          seriesName: "",
-          genresName: ["Công nghệ", "Lập trình"],
-          authorsName: ["Robert C. Martin"],
-          urlImageDefault: "https://via.placeholder.com/150",
-          promotion: {
-            discountPercent: 10,
-            quantity: 100,
-          },
-        },
-      },
-      {
-        cartItemId: 105,
-        quantity: 2,
-        checked: true,
-        product: {
-          productId: 1,
-          productName: "Sách Clean Code - Mã Sạch",
-          productSlug: "sach-clean-code",
-          price: 250000,
-          quantity: 10,
-          weight: 500,
-          publishYear: "2019",
-          pages: 400,
-          publisherName: "NXB Trẻ",
-          seriesName: "",
-          genresName: ["Công nghệ", "Lập trình"],
-          authorsName: ["Robert C. Martin"],
-          urlImageDefault: "https://via.placeholder.com/150",
-          promotion: {
-            discountPercent: 10,
-            quantity: 100,
-          },
-        },
-      },
-    ],
-  },
-  {
-    shopId: 2,
-    shopName: "Tiki Trading",
-    shopSlug: "tiki-trading",
-    checked: true,
-    items: [
-      {
-        cartItemId: 103,
-        quantity: 1,
-        checked: true,
-        product: {
-          productId: 3,
-          productName: "Harry Potter và Hòn Đá Phù Thủy",
-          productSlug: "harry-potter-1",
-          price: 150000,
-          quantity: 20,
-          weight: 400,
-          publishYear: "2021",
-          pages: 350,
-          publisherName: "NXB Trẻ",
-          seriesName: "Harry Potter",
-          genresName: ["Fantasy", "Phiêu lưu"],
-          authorsName: ["J.K. Rowling"],
-          urlImageDefault: "https://via.placeholder.com/150",
-          promotion: {
-            discountPercent: 5,
-            quantity: 50,
-          },
-        },
-      },
-    ],
-  },
-];
-
 // ── Component ────────────────────────────────────────────────────────────────
 
 const PaymentPage = () => {
   const navigate = useNavigate();
+  const { data: cartData } = useCart();
 
-  const [carts] = useState<CartResponse[]>(mockCheckedCarts);
+  const selectedCartItemIds = getSelectedCartItemIds();
+
+  const carts = useMemo<CartResponse[]>(() => {
+    if (!cartData) return [];
+    return cartData
+      .map((cart) => ({
+        ...cart,
+        items: cart.items.filter((item) =>
+          selectedCartItemIds.includes(item.cartItemId)
+        ),
+      }))
+      .filter((cart) => cart.items.length > 0);
+  }, [cartData, selectedCartItemIds]);
+
   const [addresses] = useState<AddressResponse[]>(mockAddresses);
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
     mockAddresses.find((a) => a.defaultAddress)?.id ?? null,
@@ -155,11 +79,28 @@ const PaymentPage = () => {
       alert("Vui lòng chọn địa chỉ giao hàng trước khi đặt hàng.");
       return;
     }
+    if (selectedCartItemIds.length === 0) {
+      alert("Bạn chưa chọn sản phẩm nào để thanh toán.");
+      return;
+    }
     setIsPlacingOrder(true);
     // Simulating API call
+    // The request should send selectedCartItemIds: number[]
+    const requestPayload = {
+      addressId: selectedAddressId,
+      paymentMethod,
+      note,
+      voucherDiscount,
+      cartItems: selectedCartItemIds.map((id): SelectedCartItem => ({ cartItemId: id })),
+    };
+    console.log("Placing order with payload:", requestPayload);
+    
     await new Promise((r) => setTimeout(r, 1500));
     setIsPlacingOrder(false);
-    console.log("Order placed!", { selectedAddressId, paymentMethod, note, voucherDiscount });
+    console.log("Order placed!");
+    
+    // Xóa các cartItemId đã checkout khỏi localStorage
+    clearSelectedCartItems();
     // navigate("/order-success");
   };
 
