@@ -6,6 +6,7 @@ export const useCart = () => {
   return useQuery<CartResponse[]>({
     queryKey: ["cart"],
     queryFn: CartService.getMyCart,
+    staleTime: 5 * 60 * 1000,
   });
 };
 

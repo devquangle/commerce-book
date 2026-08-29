@@ -13,6 +13,7 @@ import {
   setSelectedCartItemIds,
   toggleSelectedCartItem,
 } from "../hooks/useCart";
+import CartItemSkeleton from "@/components/cart/CartItemSkeleton";
 
 const CartPage = () => {
   const { data: cartData, isPending, error } = useCart();
@@ -21,7 +22,9 @@ const CartPage = () => {
 
   // Local state để quản lý checked / quantity / remove
   const [carts, setCarts] = useState<CartResponse[]>([]);
-  const [prevCartData, setPrevCartData] = useState<CartResponse[] | undefined>(undefined);
+  const [prevCartData, setPrevCartData] = useState<CartResponse[] | undefined>(
+    undefined,
+  );
 
   // Khởi tạo data từ React Query vào local state trong quá trình render (chuẩn React)
   if (cartData !== prevCartData) {
@@ -34,7 +37,8 @@ const CartPage = () => {
             ...item,
             checked: selectedIds.includes(item.cartItemId),
           }));
-          const allItemsChecked = items.length > 0 && items.every((item) => item.checked);
+          const allItemsChecked =
+            items.length > 0 && items.every((item) => item.checked);
           return {
             ...cart,
             checked: allItemsChecked,
@@ -48,19 +52,13 @@ const CartPage = () => {
   }
 
   if (isPending) {
-    return (
-      <div className="container mx-auto py-16 px-4 flex flex-col items-center justify-center min-h-[60vh]">
-        <div className="w-12 h-12 border-4 border-gray-300 border-t-primary rounded-full animate-spin" />
-      </div>
-    );
+    return <CartItemSkeleton />;
   }
 
   if (error) {
     return (
       <div className="container mx-auto py-16 px-4 flex flex-col items-center justify-center min-h-[60vh]">
-        <p className="text-red-500">
-          Đã xảy ra lỗi khi tải giỏ hàng.
-        </p>
+        <p className="text-red-500">Đã xảy ra lỗi khi tải giỏ hàng.</p>
       </div>
     );
   }
@@ -68,10 +66,7 @@ const CartPage = () => {
   /**
    * Check / uncheck toàn bộ sản phẩm của shop
    */
-  const handleCheckShop = (
-    shopId: number,
-    checked: boolean,
-  ) => {
+  const handleCheckShop = (shopId: number, checked: boolean) => {
     const shopCart = carts.find((c) => c.shopId === shopId);
     if (shopCart) {
       shopCart.items.forEach((item) => {
@@ -100,23 +95,17 @@ const CartPage = () => {
   /**
    * Check / uncheck một sản phẩm
    */
-  const handleCheckItem = (
-    cartItemId: number,
-    checked: boolean,
-  ) => {
+  const handleCheckItem = (cartItemId: number, checked: boolean) => {
     toggleSelectedCartItem(cartItemId, checked);
 
     setCarts((prev) =>
       prev.map((cart) => {
         const updatedItems = cart.items.map((item) =>
-          item.cartItemId === cartItemId
-            ? { ...item, checked }
-            : item,
+          item.cartItemId === cartItemId ? { ...item, checked } : item,
         );
 
         const allItemsChecked =
-          updatedItems.length > 0 &&
-          updatedItems.every((item) => item.checked);
+          updatedItems.length > 0 && updatedItems.every((item) => item.checked);
 
         return {
           ...cart,
@@ -130,10 +119,7 @@ const CartPage = () => {
   /**
    * Thay đổi số lượng sản phẩm
    */
-  const handleQuantityChange = (
-    cartItemId: number,
-    quantity: number,
-  ) => {
+  const handleQuantityChange = (cartItemId: number, quantity: number) => {
     setCarts((prev) =>
       prev.map((cart) => ({
         ...cart,
@@ -152,18 +138,14 @@ const CartPage = () => {
   /**
    * Xóa một sản phẩm
    */
-  const handleRemoveItem = (
-    cartItemId: number,
-  ) => {
+  const handleRemoveItem = (cartItemId: number) => {
     toggleSelectedCartItem(cartItemId, false);
 
     setCarts((prev) =>
       prev
         .map((cart) => ({
           ...cart,
-          items: cart.items.filter(
-            (item) => item.cartItemId !== cartItemId,
-          ),
+          items: cart.items.filter((item) => item.cartItemId !== cartItemId),
         }))
         .filter((cart) => cart.items.length > 0),
     );
@@ -172,9 +154,7 @@ const CartPage = () => {
   /**
    * Check / uncheck tất cả sản phẩm
    */
-  const handleCheckAll = (
-    checked: boolean,
-  ) => {
+  const handleCheckAll = (checked: boolean) => {
     if (checked) {
       const allIds = carts.flatMap((c) => c.items.map((i) => i.cartItemId));
       setSelectedCartItemIds(allIds);
@@ -207,9 +187,7 @@ const CartPage = () => {
       prev
         .map((cart) => ({
           ...cart,
-          items: cart.items.filter(
-            (item) => !item.checked,
-          ),
+          items: cart.items.filter((item) => !item.checked),
         }))
         .filter((cart) => cart.items.length > 0),
     );
@@ -228,10 +206,7 @@ const CartPage = () => {
   if (carts.length === 0) {
     return (
       <div className="container mx-auto py-16 px-4 flex flex-col items-center justify-center min-h-[60vh]">
-        <ShoppingCart
-          size={80}
-          className="text-gray-300 mb-6"
-        />
+        <ShoppingCart size={80} className="text-gray-300 mb-6" />
 
         <h2 className="text-2xl font-semibold text-gray-700 mb-2">
           Giỏ hàng của bạn đang trống
@@ -254,9 +229,7 @@ const CartPage = () => {
   /**
    * Kiểm tra có sản phẩm hay không
    */
-  const hasItems = carts.some(
-    (cart) => cart.items.length > 0,
-  );
+  const hasItems = carts.some((cart) => cart.items.length > 0);
 
   /**
    * Kiểm tra tất cả sản phẩm đã được chọn
@@ -265,8 +238,7 @@ const CartPage = () => {
     hasItems &&
     carts.every(
       (cart) =>
-        cart.items.length > 0 &&
-        cart.items.every((item) => item.checked),
+        cart.items.length > 0 && cart.items.every((item) => item.checked),
     );
 
   return (
@@ -290,12 +262,7 @@ const CartPage = () => {
             onCheck={handleCheckItem}
             onQuantityChange={handleQuantityChange}
             onRemove={handleRemoveItem}
-            onShopCheck={(checked) =>
-              handleCheckShop(
-                cart.shopId,
-                checked,
-              )
-            }
+            onShopCheck={(checked) => handleCheckShop(cart.shopId, checked)}
           />
         ))}
       </div>

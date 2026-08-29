@@ -10,7 +10,6 @@ import com.dev.backend.modules.image_product.service.ImageProductService;
 import com.dev.backend.modules.product.entity.Product;
 import com.dev.backend.modules.product.dto.response.ProductInfo;
 import com.dev.backend.modules.product.mapper.ProductMapper;
-import com.dev.backend.modules.product.service.ProductService;
 import com.dev.backend.modules.shop.entity.Shop;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +21,10 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,7 @@ public class CartItemServiceImpl implements CartItemService {
     private final GenreProductService genreProductService;
     private final ImageProductService imageProductService;
     private final ProductMapper productMapper;
+    private final CacheManager cacheManager;
 
     @Override
     @Transactional(readOnly = true)
@@ -48,11 +52,10 @@ public class CartItemServiceImpl implements CartItemService {
                 .map(item -> item.getProduct().getId())
                 .toList();
 
-        // 3. Tối ưu: Dùng hàm hỗ trợ IN clause (giống searchProductsForShop) để lấy dữ
-        // liệu hàng loạt -> Chỉ tốn thêm 3 queries
-        Map<Long, List<String>> authorMap = authorProductService.findAuthorMap(productIds);
-        Map<Long, List<String>> genreMap = genreProductService.findGenreMap(productIds);
-        Map<Long, String> imageMap = imageProductService.findThumbnailMap(productIds);
+        // 3. Tối ưu: Dùng CacheManager kết hợp IN clause để lấy dữ liệu siêu nhanh
+        Map<Long, List<String>> authorMap = getFromCacheOrFetch("productAuthors", productIds, authorProductService::findAuthorMap);
+        Map<Long, List<String>> genreMap = getFromCacheOrFetch("productGenres", productIds, genreProductService::findGenreMap);
+        Map<Long, String> imageMap = getFromCacheOrFetch("productImages", productIds, imageProductService::findThumbnailMap);
 
         Map<Long, CartResponse> shopMap = new LinkedHashMap<>();
 
@@ -126,5 +129,36 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     public void clearCart(Long userId) {
         cartItemRepository.deleteByUserId(userId);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> Map<Long, T> getFromCacheOrFetch(String cacheName, List<Long> ids, java.util.function.Function<List<Long>, Map<Long, T>> fetcher) {
+        Cache cache = cacheManager.getCache(cacheName);
+        Map<Long, T> resultMap = new LinkedHashMap<>();
+        List<Long> missingIds = new ArrayList<>();
+        
+        if (cache != null) {
+            for (Long id : ids) {
+                Cache.ValueWrapper wrapper = cache.get(id);
+                if (wrapper != null) {
+                    resultMap.put(id, (T) wrapper.get());
+                } else {
+                    missingIds.add(id);
+                }
+            }
+        } else {
+            missingIds.addAll(ids);
+        }
+
+        if (!missingIds.isEmpty()) {
+            Map<Long, T> fetchedMap = fetcher.apply(missingIds);
+            resultMap.putAll(fetchedMap);
+            if (cache != null) {
+                for (Map.Entry<Long, T> entry : fetchedMap.entrySet()) {
+                    cache.put(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+        return resultMap;
     }
 }

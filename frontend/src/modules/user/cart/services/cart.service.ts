@@ -11,6 +11,8 @@ export const CartService = {
     if (!res.data.success || !res.data.data) {
       throw new Error(res.data.message || "Load cart failed");
     }
+    console.log("cart",res.data.data);
+    
 
     return res.data.data;
   },

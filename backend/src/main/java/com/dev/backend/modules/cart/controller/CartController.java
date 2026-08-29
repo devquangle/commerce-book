@@ -2,7 +2,6 @@ package com.dev.backend.modules.cart.controller;
 
 import java.util.List;
 
-import org.checkerframework.common.reflection.qual.GetClass;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
