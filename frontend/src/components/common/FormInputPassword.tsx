@@ -1,8 +1,7 @@
 
 import { useController } from "react-hook-form";
 import type { Control, FieldValues, FieldPath, UseControllerProps } from "react-hook-form";
-import { InputFieldPassword } from "./InputFieldPassword";
-import type { InputFieldPasswordProps } from "./InputFieldPassword";
+import { InputFieldPassword, type InputFieldPasswordProps } from "../ui/InputFieldPassword";
 
 export type FormInputPasswordProps<T extends FieldValues> = {
   name: FieldPath<T>;
