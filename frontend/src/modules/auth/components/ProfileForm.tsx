@@ -1,67 +1,70 @@
-import { InputField } from "@/components/ui/InputField";
+import FormInput from "@/components/common/FormInput";
 import { Button } from "@/components/ui/Button";
 import type { UserRequest } from "@/modules/auth/types/user.type";
-import type { FieldErrors, UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
+import type { Control, UseFormHandleSubmit } from "react-hook-form";
 
 export interface ProfileFormProps {
-  register: UseFormRegister<UserRequest>;
-  errors: FieldErrors<UserRequest>;
-  onSubmit: ReturnType<UseFormHandleSubmit<UserRequest>>;}
+  control: Control<UserRequest>;
+  onSubmit: ReturnType<UseFormHandleSubmit<UserRequest>>;
+}
 
 export const ProfileForm = ({
-  register,
-  errors,
+  control,
   onSubmit,
 }: ProfileFormProps) => {
   return (
     <div className="flex-1">
-      <form className="space-y-4" onSubmit={onSubmit}>
-        <InputField
+      <form className="space-y-1.5" onSubmit={onSubmit}>
+        <FormInput
+          name="name"
+          control={control}
           label="Họ và tên"
           type="text"
           placeholder="Họ và tên"
-          {...register("name", {
+          rules={{
             required: "Họ và tên là bắt buộc",
-          })}
-          error={errors?.name?.message}
+          }}
         />
 
-        <InputField
+        <FormInput
+          name="email"
+          control={control}
           label="Email"
           type="email"
           placeholder="you@gmail.com"
-          {...register("email", {
+          rules={{
             required: "Email là bắt buộc",
             pattern: {
               value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
               message: "Email không hợp lệ",
             },
-          })}
-          error={errors?.email?.message}
+          }}
         />
 
-        <InputField
+        <FormInput
+          name="phone"
+          control={control}
           label="Số điện thoại"
           type="text"
           placeholder="0123456789"
-          {...register("phone", {
+          rules={{
             required: "Số điện thoại là bắt buộc",
             pattern: {
               value: /^[0-9]{10}$/,
               message: "Số điện thoại không hợp lệ",
             },
-          })}
-          error={errors?.phone?.message}
+          }}
         />
 
-        <InputField
+        <FormInput
+          name="street"
+          control={control}
           label="Địa chỉ"
           type="text"
           placeholder="Địa chỉ"
-          {...register("street", {
+          rules={{
             required: "Địa chỉ là bắt buộc",
-          })}
-          error={errors?.street?.message}
+          }}
         />
 
         <Button type="submit" className="w-full lg:w-auto">

@@ -24,10 +24,9 @@ const ProfilePage = () => {
   const queryClient = useQueryClient();
 
   const {
-    register,
+    control,
     handleSubmit,
     setError,
-    formState: { errors },
   } = useForm<UserRequest>({
     defaultValues: {
       name: userInfo?.name || "",
@@ -103,13 +102,12 @@ const ProfilePage = () => {
       <ProfileHeader
         title="Thông tin cá nhân"
         subTitle={textContent}
-        className={classNameInfo}
+        hasCard={classNameInfo === "card-custom"}
       />
 
       <div className={`flex flex-col lg:flex-row gap-6 ${classNameInfo}`}>
         <ProfileForm
-          register={register}
-          errors={errors}
+          control={control}
           onSubmit={handleSubmit(onSubmit)}
         />
 
