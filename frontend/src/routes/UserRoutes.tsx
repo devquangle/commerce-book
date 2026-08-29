@@ -14,8 +14,8 @@ import ShopProductsPage from "@/modules/product/pages/shop/ShopProductsPage";
 const Home = lazy(() => import("@/modules/user/pages/Home"));
 const BookDetail = lazy(() => import("@/modules/user/pages/BookDetail"));
 const BookList = lazy(() => import("@/modules/user/pages/BookList"));
-const Cart = lazy(() => import("@/modules/user/pages/Cart"));
-const Checkout = lazy(() => import("@/modules/user/pages/Checkout"));
+const CartPage = lazy(() => import("@/modules/user/cart/pages/CartPage"));
+const Checkout = lazy(() => import("@/modules/user/payment/pages/PaymentPage"));
 const OrderSuccess = lazy(() => import("@/modules/user/pages/OrderSuccess"));
 const OrderHistory = lazy(() => import("@/modules/user/pages/OrderHistory"));
 const OrderDetail = lazy(() => import("@/modules/user/pages/OrderDetail"));
@@ -32,6 +32,7 @@ const SearchProductPage = lazy(
 const ProductDetailPage = lazy(
   () => import("@/modules/user/product-detail/pages/ProductDetailPage")
 );
+
 export const UserRoutes: React.FC = () => {
   return (
     <UserLayout>
@@ -49,7 +50,7 @@ export const UserRoutes: React.FC = () => {
           <Route path="product-detail" element={<ProductDetailPage />} />
            <Route path="/:shopSlug" element={<ShopProductsPage />} />
           <Route path="search" element={<Search />} />
-          <Route path="cart" element={<Cart />} />
+          <Route path="cart" element={<CartPage />} />
           <Route path="checkout" element={<Checkout />} />
           <Route path="order-success" element={<OrderSuccess />} />
 
