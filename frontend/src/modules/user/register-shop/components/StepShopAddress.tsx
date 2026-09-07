@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { MapPin, Navigation, Home } from "lucide-react";
-import { InputField } from "@/components/ui/InputField";
+import { FormInput } from "@/components/common/FormInput";
 import { SelectBox } from "@/components/ui/SelectBox";
 import type { RegisterShopRequest } from "../types/register-shop.type";
 
@@ -93,6 +93,7 @@ const WARDS_MAP: Record<number, Array<{ code: string; name: string }>> = {
 
 export const StepShopAddress: React.FC = () => {
   const {
+    control,
     register,
     setValue,
     watch,
@@ -139,70 +140,77 @@ export const StepShopAddress: React.FC = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="flex flex-col md:flex-row gap-4">
         {/* Province */}
-        <SelectBox
-          label="Tỉnh / Thành phố"
-          required
-          options={provinceOptions}
-          placeholder="Chọn Tỉnh / Thành phố"
-          {...register("provinceId", {
-            required: "Vui lòng chọn Tỉnh / Thành phố",
-            onChange: (e) => {
-              const pid = Number(e.target.value);
-              setValue("provinceId", pid);
-              setValue("districtId", 0);
-              setValue("wardCode", "");
-            },
-          })}
-          error={errors.provinceId?.message}
-          textClassName="body-text"
-        />
+        <div className="flex-1">
+          <SelectBox
+            label="Tỉnh / Thành phố"
+            required
+            options={provinceOptions}
+            placeholder="Chọn Tỉnh / Thành phố"
+            {...register("provinceId", {
+              required: "Vui lòng chọn Tỉnh / Thành phố",
+              onChange: (e) => {
+                const pid = Number(e.target.value);
+                setValue("provinceId", pid);
+                setValue("districtId", 0);
+                setValue("wardCode", "");
+              },
+            })}
+            error={errors.provinceId?.message}
+            textClassName="body-text"
+          />
+        </div>
 
         {/* District */}
-        <SelectBox
-          label="Quận / Huyện"
-          required
-          disabled={!provinceId}
-          options={districtOptions}
-          placeholder={provinceId ? "Chọn Quận / Huyện" : "Hãy chọn Tỉnh/Thành trước"}
-          {...register("districtId", {
-            required: "Vui lòng chọn Quận / Huyện",
-            onChange: (e) => {
-              const did = Number(e.target.value);
-              setValue("districtId", did);
-              setValue("wardCode", "");
-            },
-          })}
-          error={errors.districtId?.message}
-          textClassName="body-text"
-        />
+        <div className="flex-1">
+          <SelectBox
+            label="Quận / Huyện"
+            required
+            disabled={!provinceId}
+            options={districtOptions}
+            placeholder={provinceId ? "Chọn Quận / Huyện" : "Hãy chọn Tỉnh/Thành trước"}
+            {...register("districtId", {
+              required: "Vui lòng chọn Quận / Huyện",
+              onChange: (e) => {
+                const did = Number(e.target.value);
+                setValue("districtId", did);
+                setValue("wardCode", "");
+              },
+            })}
+            error={errors.districtId?.message}
+            textClassName="body-text"
+          />
+        </div>
 
         {/* Ward */}
-        <SelectBox
-          label="Phường / Xã"
-          required
-          disabled={!districtId}
-          options={wardOptions}
-          placeholder={districtId ? "Chọn Phường / Xã" : "Hãy chọn Quận/Huyện trước"}
-          {...register("wardCode", {
-            required: "Vui lòng chọn Phường / Xã",
-          })}
-          error={errors.wardCode?.message}
-          textClassName="body-text"
-        />
+        <div className="flex-1">
+          <SelectBox
+            label="Phường / Xã"
+            required
+            disabled={!districtId}
+            options={wardOptions}
+            placeholder={districtId ? "Chọn Phường / Xã" : "Hãy chọn Quận/Huyện trước"}
+            {...register("wardCode", {
+              required: "Vui lòng chọn Phường / Xã",
+            })}
+            error={errors.wardCode?.message}
+            textClassName="body-text"
+          />
+        </div>
       </div>
 
       {/* Street address */}
-      <InputField
+      <FormInput
+        name="street"
+        control={control}
         label="Địa chỉ chi tiết (Số nhà, tên đường, tòa nhà...)"
         placeholder="Ví dụ: Số 45 Đường Nguyễn Huệ, Tòa nhà Bitexco..."
         required
         icon={<Home className="w-4 h-4 text-zinc-400" />}
-        {...register("street", {
+        rules={{
           required: "Vui lòng nhập số nhà, tên đường chi tiết",
-        })}
-        error={errors.street?.message}
+        }}
         helperText="Địa chỉ chính xác giúp shiper tìm vị trí kho lấy hàng dễ dàng hơn"
         className="body-text"
       />

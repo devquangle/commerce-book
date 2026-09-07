@@ -50,7 +50,7 @@ export const RegisterShopStepper: React.FC<RegisterShopStepperProps> = ({
     <div className="w-full py-1 mb-4">
       <div className="flex items-start justify-between relative max-w-4xl mx-auto">
         {/* Connecting progress bar line aligned strictly to circle centers */}
-        <div className="absolute top-[18px] left-[12%] right-[12%] h-[2px] bg-zinc-200 dark:bg-zinc-800 -translate-y-1/2 z-0 hidden sm:block">
+        <div className="absolute top-4.5 left-[12%] right-[12%] h-0.5 bg-zinc-200 dark:bg-zinc-800 -translate-y-1/2 z-0 hidden sm:block">
           <div
             className="h-full bg-blue-600 transition-all duration-500 ease-in-out"
             style={{

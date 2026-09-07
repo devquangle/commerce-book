@@ -5,8 +5,6 @@ import {
   CreditCard,
   Calendar,
   MapPin,
-  Camera,
-  ShieldCheck,
   CheckCircle,
   Loader2,
   AlertTriangle,
@@ -17,12 +15,9 @@ import {
   X,
   RefreshCw,
   Globe,
-  Building2,
-  Fingerprint,
 } from "lucide-react";
 import axios from "axios";
-import { InputField } from "@/components/ui/InputField";
-import { Button } from "@/components/ui/Button";
+import { FormInput } from "@/components/common/FormInput";
 import SingleImageUpload from "@/components/common/SingleImageUpload";
 import { CameraModal } from "./CameraModal";
 import type { RegisterShopRequest } from "../types/register-shop.type";
@@ -110,6 +105,7 @@ type FaceInputMode = "camera" | "upload";
 
 export const StepOwnerIdentity: React.FC = () => {
   const {
+    control,
     register,
     setValue,
     formState: { errors },
@@ -126,6 +122,7 @@ export const StepOwnerIdentity: React.FC = () => {
   // Xác thực khuôn mặt - chế độ chụp camera
   const [isCameraOpen, setIsCameraOpen] = useState<boolean>(false);
   const [faceVideoBlob, setFaceVideoBlob] = useState<Blob | null>(null);
+  const [faceCameraPreviewUrl, setFaceCameraPreviewUrl] = useState<string>("");
 
   // Xác thực khuôn mặt - chế độ upload file ảnh/video
   const [faceMediaFile, setFaceMediaFile] = useState<File | null>(null);
@@ -322,10 +319,10 @@ export const StepOwnerIdentity: React.FC = () => {
           Hình ảnh Căn cước công dân (Mặt trước &amp; Mặt sau){" "}
           <span className="text-red-500">*</span>
         </label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col md:flex-row gap-4">
           {/* CCCD Mặt trước */}
           <div
-            className={`bg-zinc-50 dark:bg-zinc-800/40 p-4 rounded-xl border space-y-2 transition-colors ${
+            className={`flex-1 bg-zinc-50 dark:bg-zinc-800/40 p-4 rounded-xl border space-y-2 transition-colors ${
               frontCccdFile
                 ? "border-emerald-400 dark:border-emerald-600"
                 : "border-zinc-200 dark:border-zinc-700/60"
@@ -350,7 +347,7 @@ export const StepOwnerIdentity: React.FC = () => {
 
           {/* CCCD Mặt sau */}
           <div
-            className={`bg-zinc-50 dark:bg-zinc-800/40 p-4 rounded-xl border space-y-2 transition-colors ${
+            className={`flex-1 bg-zinc-50 dark:bg-zinc-800/40 p-4 rounded-xl border space-y-2 transition-colors ${
               backCccdFile
                 ? "border-emerald-400 dark:border-emerald-600"
                 : "border-zinc-200 dark:border-zinc-700/60"
@@ -388,16 +385,22 @@ export const StepOwnerIdentity: React.FC = () => {
           >
             {faceVideoBlob ? (
               <div className="py-2 w-full">
-                <div className="flex gap-2 justify-center mb-4">
-                  <div className="text-sm font-semibold text-emerald-700 flex items-center gap-1">
-                    <CheckCircle className="w-4 h-4" /> Đã lưu video Liveness (
-                    {((faceVideoBlob.size || 0) / 1024 / 1024).toFixed(2)} MB)
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
+                  {faceCameraPreviewUrl && (
+                    <img
+                      src={faceCameraPreviewUrl}
+                      alt="Ảnh khuôn mặt đã chụp"
+                      className="w-16 h-16 rounded-xl object-cover border-2 border-emerald-500 shadow-sm"
+                    />
+                  )}
+                  <div className="text-sm font-semibold text-emerald-700 flex items-center gap-1.5">
+                    <CheckCircle className="w-4 h-4" /> Đã chụp ảnh khuôn mặt
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3 mt-4 w-full">
+                <div className="flex gap-3 mt-4 w-full">
                   <button
                     type="button"
-                    className="w-full py-2.5 px-4 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="flex-1 py-2.5 px-4 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                     onClick={(e) => {
                       e.preventDefault();
                       handleVerifyEkyc();
@@ -415,21 +418,22 @@ export const StepOwnerIdentity: React.FC = () => {
                   </button>
                   <button
                     type="button"
-                    className="w-full py-2.5 px-4 bg-[#8e94a4] hover:bg-[#7b8191] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 py-2.5 px-4 bg-[#8e94a4] hover:bg-[#7b8191] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2"
                     onClick={() => {
                       setFaceVideoBlob(null);
+                      setFaceCameraPreviewUrl("");
                     }}
                   >
-                    <RefreshCw className="w-4 h-4" /> Quay lại video
+                    <RefreshCw className="w-4 h-4" /> Chụp lại ảnh
                   </button>
                 </div>
               </div>
             ) : (
               <div className="py-2 w-full">
-                <div className="grid grid-cols-2 gap-3 w-full">
+                <div className="flex gap-3 w-full">
                   <button
                     type="button"
-                    className="w-full py-2.5 px-4 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="flex-1 py-2.5 px-4 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                     onClick={(e) => {
                       e.preventDefault();
                       handleVerifyEkyc();
@@ -447,7 +451,7 @@ export const StepOwnerIdentity: React.FC = () => {
                   </button>
                   <button
                     type="button"
-                    className="w-full py-2.5 px-4 bg-[#8e94a4] hover:bg-[#7b8191] text-white text-sm font-medium rounded-lg shadow-sm transition-colors"
+                    className="flex-1 py-2.5 px-4 bg-[#8e94a4] hover:bg-[#7b8191] text-white text-sm font-medium rounded-lg shadow-sm transition-colors"
                     onClick={() => setIsCameraOpen(true)}
                   >
                     Xác thực khuôn mặt
@@ -515,10 +519,10 @@ export const StepOwnerIdentity: React.FC = () => {
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 mt-4 w-full">
+                  <div className="flex gap-3 mt-4 w-full">
                     <button
                       type="button"
-                      className="w-full py-2.5 px-4 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="flex-1 py-2.5 px-4 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                       onClick={(e) => {
                         e.preventDefault();
                         handleVerifyEkyc();
@@ -536,7 +540,7 @@ export const StepOwnerIdentity: React.FC = () => {
                     </button>
                     <button
                       type="button"
-                      className="w-full py-2.5 px-4 bg-rose-500 hover:bg-rose-600 text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2"
+                      className="flex-1 py-2.5 px-4 bg-rose-500 hover:bg-rose-600 text-white text-sm font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2"
                       onClick={clearFaceMedia}
                     >
                       <X className="w-4 h-4" /> Xóa ảnh / video này
@@ -655,60 +659,69 @@ export const StepOwnerIdentity: React.FC = () => {
       )}
 
       {/* ===== 7. Form Fields (Đầy đủ 11 input theo OwnerIdentityInfo) ===== */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
-        <div className="col-span-1 md:col-span-2 pb-1">
+      <div className="flex flex-wrap gap-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+        <div className="w-full pb-1">
           <h4 className="text-base font-bold text-zinc-800 dark:text-zinc-200">
             Thông tin giấy tờ
           </h4>
         </div>
 
         {/* 1. Full Name */}
-        <InputField
-          label="Họ và tên chủ sở hữu"
-          placeholder="NGUYEN VAN A"
-          required
-          icon={<User className="w-4 h-4 text-zinc-400" />}
-          {...register("fullName", {
-            required: "Vui lòng nhập họ và tên chủ sở hữu",
-          })}
-          error={errors.fullName?.message}
-          helperText="Ghi in hoa không dấu hoặc đúng với trên CCCD"
-          className="body-text"
-        />
+        <div className="w-full md:w-[calc(50%-8px)]">
+          <FormInput
+            name="fullName"
+            control={control}
+            label="Họ và tên chủ sở hữu"
+            placeholder="NGUYEN VAN A"
+            required
+            icon={<User className="w-4 h-4 text-zinc-400" />}
+            rules={{
+              required: "Vui lòng nhập họ và tên chủ sở hữu",
+            }}
+            helperText="Ghi in hoa không dấu hoặc đúng với trên CCCD"
+            className="body-text"
+          />
+        </div>
 
         {/* 2. Identity Number (CCCD) */}
-        <InputField
-          label="Số CCCD / CMND"
-          placeholder="012345678912"
-          required
-          icon={<CreditCard className="w-4 h-4 text-zinc-400" />}
-          {...register("identityNumber", {
-            required: "Vui lòng nhập số CCCD / CMND",
-            pattern: {
-              value: /^[0-9]{9,12}$/,
-              message: "Số CCCD/CMND gồm từ 9 đến 12 chữ số",
-            },
-          })}
-          error={errors.identityNumber?.message}
-          helperText="Số Căn cước công dân gồm 9–12 chữ số"
-          className="body-text"
-        />
+        <div className="w-full md:w-[calc(50%-8px)]">
+          <FormInput
+            name="identityNumber"
+            control={control}
+            label="Số CCCD / CMND"
+            placeholder="012345678912"
+            required
+            icon={<CreditCard className="w-4 h-4 text-zinc-400" />}
+            rules={{
+              required: "Vui lòng nhập số CCCD / CMND",
+              pattern: {
+                value: /^[0-9]{9,12}$/,
+                message: "Số CCCD/CMND gồm từ 9 đến 12 chữ số",
+              },
+            }}
+            helperText="Số Căn cước công dân gồm 9–12 chữ số"
+            className="body-text"
+          />
+        </div>
 
         {/* 3. Date of Birth */}
-        <InputField
-          label="Ngày sinh"
-          type="date"
-          required
-          icon={<Calendar className="w-4 h-4 text-zinc-400" />}
-          {...register("dateOfBirth", {
-            required: "Vui lòng chọn ngày sinh",
-          })}
-          error={errors.dateOfBirth?.message}
-          className="body-text"
-        />
+        <div className="w-full md:w-[calc(50%-8px)]">
+          <FormInput
+            name="dateOfBirth"
+            control={control}
+            label="Ngày sinh"
+            type="date"
+            required
+            icon={<Calendar className="w-4 h-4 text-zinc-400" />}
+            rules={{
+              required: "Vui lòng chọn ngày sinh",
+            }}
+            className="body-text"
+          />
+        </div>
 
         {/* 4. Gender */}
-        <div className="space-y-2">
+        <div className="w-full md:w-[calc(50%-8px)] space-y-2">
           <label className="block text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300">
             Giới tính <span className="text-red-500">*</span>
           </label>
@@ -744,53 +757,96 @@ export const StepOwnerIdentity: React.FC = () => {
         </div>
 
         {/* 5. Nationality */}
-        <InputField
-          label="Quốc tịch"
-          placeholder="Việt Nam"
-          required
-          icon={<Globe className="w-4 h-4 text-zinc-400" />}
-          {...register("nationality", {
-            required: "Vui lòng nhập quốc tịch",
-          })}
-          error={errors.nationality?.message}
-          className="body-text"
-        />
+        <div className="w-full md:w-[calc(50%-8px)]">
+          <FormInput
+            name="nationality"
+            control={control}
+            label="Quốc tịch"
+            placeholder="Việt Nam"
+            required
+            icon={<Globe className="w-4 h-4 text-zinc-400" />}
+            rules={{
+              required: "Vui lòng nhập quốc tịch",
+            }}
+            className="body-text"
+          />
+        </div>
 
         {/* 7. Issue Date */}
-        <InputField
-          label="Ngày cấp CCCD"
-          type="date"
-          icon={<Calendar className="w-4 h-4 text-zinc-400" />}
-          {...register("issueDate")}
-          error={errors.issueDate?.message}
-          className="body-text"
-        />
+        <div className="w-full md:w-[calc(50%-8px)]">
+          <FormInput
+            name="issueDate"
+            control={control}
+            label="Ngày cấp CCCD"
+            type="date"
+            icon={<Calendar className="w-4 h-4 text-zinc-400" />}
+            className="body-text"
+          />
+        </div>
 
         {/* 8. Expiry Date */}
-        <InputField
-          label="Ngày hết hạn CCCD"
-          type="date"
-          required
-          icon={<Calendar className="w-4 h-4 text-zinc-400" />}
-          {...register("expiryDate", {
-            required: "Vui lòng chọn ngày hết hạn CCCD",
-          })}
-          error={errors.expiryDate?.message}
-          className="body-text"
-        />
+        <div className="w-full md:w-[calc(50%-8px)]">
+          <FormInput
+            name="expiryDate"
+            control={control}
+            label="Ngày hết hạn CCCD"
+            type="date"
+            required
+            icon={<Calendar className="w-4 h-4 text-zinc-400" />}
+            rules={{
+              required: "Vui lòng chọn ngày hết hạn CCCD",
+            }}
+            className="body-text"
+          />
+        </div>
 
         {/* 10. Place of Origin */}
-        <InputField
-          label="Quê quán"
-          placeholder="Phường X, Quận Y, Tỉnh Z"
-          required
-          icon={<MapPin className="w-4 h-4 text-zinc-400" />}
-          {...register("placeOfOrigin", {
-            required: "Vui lòng nhập quê quán",
-          })}
-          error={errors.placeOfOrigin?.message}
-          className="body-text"
-        />
+        <div className="w-full md:w-[calc(50%-8px)]">
+          <FormInput
+            name="placeOfOrigin"
+            control={control}
+            label="Quê quán"
+            placeholder="Phường X, Quận Y, Tỉnh Z"
+            required
+            icon={<MapPin className="w-4 h-4 text-zinc-400" />}
+            rules={{
+              required: "Vui lòng nhập quê quán",
+            }}
+            className="body-text"
+          />
+        </div>
+
+        {/* 11. Place of Residence */}
+        <div className="w-full md:w-[calc(50%-8px)]">
+          <FormInput
+            name="placeOfResidence"
+            control={control}
+            label="Nơi thường trú"
+            placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành"
+            required
+            icon={<MapPin className="w-4 h-4 text-zinc-400" />}
+            rules={{
+              required: "Vui lòng nhập nơi thường trú",
+            }}
+            className="body-text"
+          />
+        </div>
+
+        {/* 12. Issue Place */}
+        <div className="w-full md:w-[calc(50%-8px)]">
+          <FormInput
+            name="issuePlace"
+            control={control}
+            label="Nơi cấp"
+            placeholder="Cục Cảnh sát QLHC về TTXH"
+            required
+            icon={<MapPin className="w-4 h-4 text-zinc-400" />}
+            rules={{
+              required: "Vui lòng nhập nơi cấp",
+            }}
+            className="body-text"
+          />
+        </div>
       </div>
 
       {/* Camera Modal */}
@@ -798,7 +854,10 @@ export const StepOwnerIdentity: React.FC = () => {
         isOpen={isCameraOpen}
         onClose={() => setIsCameraOpen(false)}
         onCaptureSuccess={(result) => {
-          setFaceVideoBlob(result.videoBlob);
+          setFaceVideoBlob(result.imageFile || result.videoBlob || null);
+          if (result.imageUrl) {
+            setFaceCameraPreviewUrl(result.imageUrl);
+          }
         }}
       />
     </div>
