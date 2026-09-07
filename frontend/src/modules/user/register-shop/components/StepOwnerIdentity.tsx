@@ -678,7 +678,6 @@ export const StepOwnerIdentity: React.FC = () => {
             rules={{
               required: "Vui lòng nhập họ và tên chủ sở hữu",
             }}
-            helperText="Ghi in hoa không dấu hoặc đúng với trên CCCD"
             className="body-text"
           />
         </div>
@@ -699,7 +698,6 @@ export const StepOwnerIdentity: React.FC = () => {
                 message: "Số CCCD/CMND gồm từ 9 đến 12 chữ số",
               },
             }}
-            helperText="Số Căn cước công dân gồm 9–12 chữ số"
             className="body-text"
           />
         </div>
@@ -772,19 +770,7 @@ export const StepOwnerIdentity: React.FC = () => {
           />
         </div>
 
-        {/* 7. Issue Date */}
-        <div className="w-full md:w-[calc(50%-8px)]">
-          <FormInput
-            name="issueDate"
-            control={control}
-            label="Ngày cấp CCCD"
-            type="date"
-            icon={<Calendar className="w-4 h-4 text-zinc-400" />}
-            className="body-text"
-          />
-        </div>
-
-        {/* 8. Expiry Date */}
+        {/* 6. Expiry Date */}
         <div className="w-full md:w-[calc(50%-8px)]">
           <FormInput
             name="expiryDate"
@@ -801,7 +787,7 @@ export const StepOwnerIdentity: React.FC = () => {
         </div>
 
         {/* 10. Place of Origin */}
-        <div className="w-full md:w-[calc(50%-8px)]">
+        <div className="w-full">
           <FormInput
             name="placeOfOrigin"
             control={control}
@@ -811,38 +797,6 @@ export const StepOwnerIdentity: React.FC = () => {
             icon={<MapPin className="w-4 h-4 text-zinc-400" />}
             rules={{
               required: "Vui lòng nhập quê quán",
-            }}
-            className="body-text"
-          />
-        </div>
-
-        {/* 11. Place of Residence */}
-        <div className="w-full md:w-[calc(50%-8px)]">
-          <FormInput
-            name="placeOfResidence"
-            control={control}
-            label="Nơi thường trú"
-            placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành"
-            required
-            icon={<MapPin className="w-4 h-4 text-zinc-400" />}
-            rules={{
-              required: "Vui lòng nhập nơi thường trú",
-            }}
-            className="body-text"
-          />
-        </div>
-
-        {/* 12. Issue Place */}
-        <div className="w-full md:w-[calc(50%-8px)]">
-          <FormInput
-            name="issuePlace"
-            control={control}
-            label="Nơi cấp"
-            placeholder="Cục Cảnh sát QLHC về TTXH"
-            required
-            icon={<MapPin className="w-4 h-4 text-zinc-400" />}
-            rules={{
-              required: "Vui lòng nhập nơi cấp",
             }}
             className="body-text"
           />

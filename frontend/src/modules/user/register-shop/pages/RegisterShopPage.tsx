@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
-import { ArrowLeft, ArrowRight, CheckCircle2, ShieldAlert } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 
 import type { RegisterShopRequest } from "../types/register-shop.type";
 import { RegisterShopStepper } from "../components/RegisterShopStepper";
@@ -81,9 +81,6 @@ const RegisterShopPage = () => {
         "gender",
         "nationality",
         "placeOfOrigin",
-        "placeOfResidence",
-        "issueDate",
-        "issuePlace",
       ];
     } else if (currentStep === 3) {
       fieldsToValidate = ["shopName", "bankName", "bankNumber", "ownerName"];
@@ -150,14 +147,6 @@ const RegisterShopPage = () => {
                 {currentStep === 3 && <StepShopInfo />}
                 {currentStep === 4 && <StepShopAddress />}
               </div>
-
-              {/* Global error banner if validation fails */}
-              {Object.keys(errors).length > 0 && (
-                <div className="mt-6 p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/60 rounded-xl flex items-center gap-2.5 text-xs text-red-600 dark:text-red-400 font-medium">
-                  <ShieldAlert className="w-4 h-4 shrink-0 text-red-500" />
-                  <span>Vui lòng kiểm tra và điền đầy đủ các thông tin bắt buộc trước khi chuyển bước.</span>
-                </div>
-              )}
 
               {/* Action Navigation Footer */}
               <div className="mt-8 pt-4 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between gap-4">
