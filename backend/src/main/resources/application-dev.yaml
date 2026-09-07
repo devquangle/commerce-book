@@ -71,3 +71,6 @@ app:
     shop-id: ${GHN_SHOP_ID:}
     master-data-url: ${GHN_MASTER_DATA_URL:}
     shipping-fee-url: ${GHN_SHIPPING_FEE_URL:}
+  viettel:
+    token: ${VIETTEL_TOKEN:}
+    url: ${VIETTEL_URL:}
