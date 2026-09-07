@@ -51,6 +51,10 @@ cloudinary:
 gemini:
   api-key: ${GEMINI_API_KEY:}
 
+viettel:
+  token: ${VIETTEL_TOKEN:}
+  url: ${VIETTEL_URL:}
+
 app:
   jwt:
     secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}

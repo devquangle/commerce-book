@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, useWatch } from "react-hook-form";
 import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 
 import type { RegisterShopRequest } from "../types/register-shop.type";
@@ -26,12 +26,8 @@ const INITIAL_FORM_DATA: RegisterShopRequest = {
   dateOfBirth: "",
   gender: "Nam",
   nationality: "Việt Nam",
-  placeOfOrigin: "",
-  placeOfResidence: "",
-  issueDate: "",
+  address: "",
   expiryDate: "",
-  personalIdentification: "",
-  issuePlace: "",
 
   // Step 3
   shopName: "",
@@ -63,9 +59,9 @@ const RegisterShopPage = () => {
   const {
     trigger,
     handleSubmit,
-    watch,
-    formState: { errors },
+    control,
   } = methods;
+
 
   // Step validation using trigger
   const handleNextStep = async () => {
@@ -80,7 +76,8 @@ const RegisterShopPage = () => {
         "dateOfBirth",
         "gender",
         "nationality",
-        "placeOfOrigin",
+        "address",
+        "expiryDate",
       ];
     } else if (currentStep === 3) {
       fieldsToValidate = ["shopName", "bankName", "bankNumber", "ownerName"];
@@ -112,7 +109,7 @@ const RegisterShopPage = () => {
     }
   };
 
-  const shopNameValue = watch("shopName");
+  const shopNameValue = useWatch({ control, name: "shopName" });
 
   return (
     <FormProvider {...methods}>

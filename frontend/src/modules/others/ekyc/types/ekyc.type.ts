@@ -18,3 +18,11 @@ export interface FaceVerificationResponse {
   verifyResult: string;
   score: number;
 }
+
+export interface EkycRequest {
+  imageFront: File | Blob;
+  imageBack: File | Blob;
+  imageSelfie: File | Blob;
+}
+
+export type EkycVerifyPayload = FormData | EkycRequest;

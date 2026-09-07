@@ -13,28 +13,22 @@ export interface ShopAccountInfo {
  * FormData khi gọi eKYC service — KHÔNG được tuần tự hóa vào JSON body.
  */
 export interface OwnerIdentityInfo {
-  /** Họ và tên đầy đủ (in hoa, không dấu, khớp CCCD) */
+  /** Họ và tên đầy đủ (khớp CCCD) */
   fullName: string;
-  /** Số CCCD / CMND (9–12 chữ số) */
+  /** Số CCCD / CMND */
   identityNumber: string;
   /** Ngày sinh dạng ISO yyyy-MM-dd */
   dateOfBirth: string;
   /** Giới tính: "Nam" | "Nữ" */
   gender: string;
-  /** Quốc tịch: */
+  /** Quốc tịch */
   nationality: string;
-  /** Quê quán: */
-  placeOfOrigin: string;
-    /** Nơi thường trú: */
-  placeOfResidence: string;
-  /** Ngày cấp CCCD dạng ISO yyyy-MM-dd */
-  issueDate: string;
-  /** Ngày hết hạn CCCD dạng ISO yyyy-MM-dd (rỗng nếu không thời hạn) */
+  /** Địa chỉ thường trú */
+  address: string;
+  /** Ngày hết hạn CCCD dạng ISO yyyy-MM-dd */
   expiryDate: string;
-  personalIdentification: string;
-  /** Địa chỉ thường trú trên CCCD */
-  issuePlace: string;
 }
+
 
 export interface ShopInfo {
   shopName: string;
