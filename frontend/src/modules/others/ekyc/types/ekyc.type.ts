@@ -15,7 +15,7 @@ export interface InformationResponse {
 }
 
 export interface FaceVerificationResponse {
-  verifyResult: string;
+  verify_result: string;
   score: number;
 }
 
@@ -25,4 +25,4 @@ export interface EkycRequest {
   imageSelfie: File | Blob;
 }
 
-export type EkycVerifyPayload = FormData | EkycRequest;
+export type EkycVerifyPayload = FormData | EkycRequest;

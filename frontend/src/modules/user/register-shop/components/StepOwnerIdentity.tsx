@@ -340,26 +340,13 @@ export const StepOwnerIdentity: React.FC = () => {
       {/* ===== 4. Nút xác thực (Đã được chuyển lên trên cạnh nút chụp) ===== */}
 
       {/* ===== 5. eKYC Result: Success ===== */}
-      {isEkycSuccess && ekycResult && (
+      {isEkycSuccess && ekycResult && ekycResult.verification && ekycResult.verification.verify_result === "true" && (
         <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 p-4 space-y-2">
           <p className="text-sm font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-emerald-500" />
             eKYC thành công — Thông tin đã được điền tự động
           </p>
-          <div className="flex flex-wrap gap-3 text-xs text-emerald-700 dark:text-emerald-400">
-            {ekycResult.verification && (
-              <span className="flex items-center gap-1">
-                <CheckCircle className="w-3.5 h-3.5" />
-                Xác thực khuôn mặt: {ekycResult.verification.verifyResult || "Khớp"}
-                {ekycResult.verification.score != null && (
-                  <span className="font-semibold ml-0.5">
-                    ({(ekycResult.verification.score * 100).toFixed(1)}%)
-                  </span>
-                )}
-              </span>
-            )}
-            <span>Thông tin giấy tờ đã điền vào form bên dưới</span>
-          </div>
+         
         </div>
       )}
 
