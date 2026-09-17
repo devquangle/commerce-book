@@ -13,6 +13,7 @@ import lombok.Setter;
 public class PageResponse<T> {
     private List<T> items;
     private int page;
+    @SuppressWarnings("unused")
     private int size;
     private long totalItems;
     private int totalPages;
