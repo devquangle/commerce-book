@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { Store, Building2, CreditCard, UserCheck, Image as ImageIcon } from "lucide-react";
 import { FormInput } from "@/components/common/FormInput";
 import { TextAreaField } from "@/components/ui/TextAreaField";
 import { SelectBox } from "@/components/ui/SelectBox";
+import type { SelectOption } from "@/components/ui/SelectBox";
 import SingleImageUpload from "@/components/common/SingleImageUpload";
+import { useBanks } from "@/modules/others/bank/hooks/useBank";
+import type { BankResponse } from "@/modules/others/bank/types/bank.type";
 import type { RegisterShopRequest } from "../types/register-shop.type";
 
-const BANK_OPTIONS = [
+const BANK_OPTIONS: SelectOption[] = [
   { label: "Vietcombank (Ngân hàng TMCP Ngoại thương Việt Nam)", value: "Vietcombank" },
   { label: "Techcombank (Ngân hàng TMCP Kỹ thương Việt Nam)", value: "Techcombank" },
   { label: "MB Bank (Ngân hàng TMCP Quân đội)", value: "MBBank" },
@@ -31,6 +34,18 @@ export const StepShopInfo: React.FC = () => {
 
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [bannerFile, setBannerFile] = useState<File | null>(null);
+
+  const { data: banks = [], isLoading: isLoadingBanks } = useBanks();
+
+  const bankOptions: SelectOption[] = useMemo(() => {
+    if (!banks || banks.length === 0) {
+      return BANK_OPTIONS;
+    }
+    return banks.map((bank: BankResponse) => ({
+      label: bank.shortName ? `${bank.shortName} (${bank.name})` : bank.name,
+      value: bank.shortName || bank.name,
+    }));
+  }, [banks]);
 
   const logoUrl = watch("logo") || "";
   const bannerUrl = watch("banner") || "";
@@ -123,8 +138,10 @@ export const StepShopInfo: React.FC = () => {
         <SelectBox
           label="Ngân hàng"
           required
-          options={BANK_OPTIONS}
-          placeholder="Chọn ngân hàng thụ hưởng"
+          searchable
+          searchPlaceholder="Tìm kiếm tên hoặc mã ngân hàng..."
+          options={bankOptions}
+          placeholder={isLoadingBanks ? "Đang tải danh sách ngân hàng..." : "Chọn ngân hàng thụ hưởng"}
           {...register("bankName", {
             required: "Vui lòng chọn ngân hàng thụ hưởng",
           })}

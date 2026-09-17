@@ -152,7 +152,7 @@ public class ViettelIdCheckServiceImpl implements ViettelIdCheckService {
                 infoNode = rootNode;
             }
 
-            InformationResponse information = objectMapper.treeToValue(infoNode, InformationResponse.class);
+            InformationResponse information = InformationResponse.fromJsonNode(infoNode);
 
             if (information == null || (information.getId() == null && information.getName() == null)) {
                 log.warn("Viettel OCR information has null id and name: {}", responseBody);

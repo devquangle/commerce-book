@@ -21,3 +21,4 @@ export const useBank = () => {
   });
 };
 
+export const useBanks = useBank;
