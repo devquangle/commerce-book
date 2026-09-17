@@ -13,10 +13,10 @@ import { AuthService } from "@/modules/auth/services/auth.service";
 import type { UserRequest } from "@/modules/auth/types/user.type";
 import UploadImageService from "@/services/cloudinary/services/cloudinary.service";
 
-import { ProfileHeader } from "./ProfileHeader";
-import { ProfileForm } from "./ProfileForm";
-import { ProfileAvatar } from "./ProfileAvatar";
-import { ChangePassModal } from "./ChangePassModal";
+import { ProfileHeader } from "../../../components/auth/ProfileHeader";
+import { ProfileForm } from "../../../components/auth/ProfileForm";
+import { ProfileAvatar } from "../../../components/auth/ProfileAvatar";
+import { ChangePassModal } from "../../../components/auth/ChangePassModal";
 import Spinner from "@/components/ui/Spinner";
 
 const ProfilePage = () => {
@@ -56,7 +56,6 @@ const ProfilePage = () => {
     userInfo?.role == "USER"
       ? ""
       : "Cập nhật thông tin cá nhân, thay đổi mật khẩu và quản lý ảnh đại diện.";
-  const classNameInfo = userInfo?.role == "USER" ? "" : "card-custom";
 
   const onSubmit = async (data: UserRequest) => {
     try {
@@ -98,14 +97,13 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6 w-full min-h-full pb-6">
+    <div className="flex flex-col gap-6 w-full min-h-full">
       <ProfileHeader
         title="Thông tin cá nhân"
         subTitle={textContent}
-        hasCard={classNameInfo === "card-custom"}
       />
 
-      <div className={`flex flex-col lg:flex-row gap-6 ${classNameInfo}`}>
+      <div className={`flex flex-col lg:flex-row gap-6`}>
         <ProfileForm
           control={control}
           onSubmit={handleSubmit(onSubmit)}

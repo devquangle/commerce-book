@@ -67,7 +67,7 @@ export const ProfileForm = ({
           }}
         />
 
-        <Button type="submit" className="w-full lg:w-auto">
+        <Button type="submit" className="w-full lg:w-auto mt-4">
           Lưu thay đổi
         </Button>
       </form>

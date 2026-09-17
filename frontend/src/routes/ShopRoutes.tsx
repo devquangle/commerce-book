@@ -24,7 +24,7 @@ const ShopRevenue = lazy(() => import("@/modules/shop/pages/ShopRevenue"));
 const ShopSettings = lazy(() => import("@/modules/shop/pages/ShopSettings"));
 const ShopInventory = lazy(() => import("@/modules/shop/pages/ShopInventory"));
 const StorePage = lazy(() => import("@/modules/shop/stores/pages/StorePage"));
-const ProfilePage = lazy(() => import("@/components/auth/ProfilePage"));
+const ProfilePage = lazy(() => import("@/modules/auth/pages/ProfilePage"));
 
 const ShopPromotionListPage = lazy(() => import('@/modules/shop/promotions/pages/ShopPromotionListPage'));
 const ShopPromotionAddPage = lazy(() => import('@/modules/shop/promotions/pages/ShopPromotionAddPage'));

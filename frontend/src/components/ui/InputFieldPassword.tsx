@@ -30,13 +30,14 @@ const InputFieldPassword = ({
 
   const [showPassword, setShowPassword] = useState(false);
   const describedBy = error ? errorId : helperText ? helperId : undefined;
+  const containerClass = containerClassName || (label || error ? "mb-4" : "");
 
   return (
-    <div className={`w-full ${containerClassName}`}>
+    <div className={`w-full ${containerClass}`}>
       {label && (
         <label
           htmlFor={inputId}
-          className="mb-1.5 block text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300"
+          className="mb-2 block text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300"
         >
           {label} {props.required && <span className="text-red-500">*</span>}
         </label>
@@ -73,7 +74,7 @@ const InputFieldPassword = ({
       </div>
 
       {(error || helperText) && (
-        <div className="mt-1.5">
+        <div className="mt-2">
           {error ? (
             <p id={errorId} className="text-xs text-red-500 font-medium">
               {error}

@@ -37,7 +37,7 @@ const AdminReportsStores = lazy(
   () => import("@/modules/admin/pages/AdminReportsStores"),
 );
 const AdminSettings = lazy(() => import("@/modules/admin/pages/AdminSettings"));
-const ProfilePage = lazy(() => import("@/components/auth/ProfilePage"));
+const ProfilePage = lazy(() => import("@/modules/auth/pages/ProfilePage"));
 
 export const AdminRoutes = () => {
   return (
