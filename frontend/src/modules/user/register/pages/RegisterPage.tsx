@@ -40,7 +40,7 @@ const RegisterPage = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="w-full max-w-md  space-y-4"
         >
-          <div className="card-custom flex flex-col gap-3">
+          <div className="card-custom flex flex-col">
             {/* Title */}
             <div className="text-center">
               <h1 className="text-2xl font-bold text-blue-700">

@@ -54,7 +54,7 @@ const LoginPage = () => {
   
   return (
     <Container className="px-4 md:px-8">
-      <div className=" flex justify-center items-center min-h-[80vh] py-4">
+      <div className="flex justify-center items-center min-h-[80vh] py-4">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="w-full max-w-md  space-y-4"

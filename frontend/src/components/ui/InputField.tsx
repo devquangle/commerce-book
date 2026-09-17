@@ -9,6 +9,7 @@ export interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElem
   containerClassName?: string;
   icon?: React.ReactNode;
   ref?: React.Ref<HTMLInputElement>;
+  hideMessage?: boolean;
 }
 
 const InputField = ({
@@ -21,6 +22,7 @@ const InputField = ({
   id,
   ref,
   type,
+  hideMessage = false,
   ...props
 }: InputFieldProps) => {
   const defaultId = useId();
@@ -64,7 +66,7 @@ const InputField = ({
       </div>
 
       {(error || helperText) && (
-        <div className="mt-2">
+        <div className="mt-1.5">
           {error ? (
             <p id={errorId} className="text-xs text-red-500 font-medium">
               {error}

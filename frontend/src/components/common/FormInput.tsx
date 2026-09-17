@@ -13,6 +13,7 @@ const FormInput = <T extends FieldValues>({
   name,
   control,
   rules,
+  containerClassName,
   ...inputProps
 }: FormInputProps<T>) => {
   const {
@@ -27,6 +28,7 @@ const FormInput = <T extends FieldValues>({
   return (
     <InputField
       {...inputProps}
+      containerClassName={containerClassName}
       name={fieldName}
       value={value ?? ""}
       onChange={onChange}

@@ -13,6 +13,7 @@ const FormInputPassword = <T extends FieldValues>({
   name,
   control,
   rules,
+  containerClassName,
   ...inputProps
 }: FormInputPasswordProps<T>) => {
   const {
@@ -27,6 +28,7 @@ const FormInputPassword = <T extends FieldValues>({
   return (
     <InputFieldPassword
       {...inputProps}
+      containerClassName={containerClassName}
       name={fieldName}
       value={value ?? ""}
       onChange={onChange}

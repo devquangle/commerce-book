@@ -10,6 +10,7 @@ export interface InputFieldPasswordProps extends React.InputHTMLAttributes<HTMLI
   containerClassName?: string;
   icon?: React.ReactNode;
   ref?: React.Ref<HTMLInputElement>;
+  hideMessage?: boolean;
 }
 
 const InputFieldPassword = ({
@@ -21,6 +22,7 @@ const InputFieldPassword = ({
   icon,
   id,
   ref,
+  hideMessage = false,
   ...props
 }: InputFieldPasswordProps) => {
   const defaultId = useId();
@@ -74,7 +76,7 @@ const InputFieldPassword = ({
       </div>
 
       {(error || helperText) && (
-        <div className="mt-2">
+        <div className="mt-1.5">
           {error ? (
             <p id={errorId} className="text-xs text-red-500 font-medium">
               {error}
