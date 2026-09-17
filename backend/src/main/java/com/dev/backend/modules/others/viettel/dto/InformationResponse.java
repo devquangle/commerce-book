@@ -42,13 +42,13 @@ public class InformationResponse {
             return null;
         }
         return InformationResponse.builder()
-            .id(extract(node, "id", "id_number"))
+            .id(extract(node, "id", "id_number", "id_card", "identity_number"))
             .name(extract(node, "name", "full_name"))
-            .birthday(extract(node, "birthday", "dob", "birth_day"))
+            .birthday(extract(node, "birthday", "dob", "birth_day", "date_of_birth"))
             .sex(extract(node, "sex", "gender"))
-            .nationality(extract(node, "nationality"))
-            .expiry(extract(node, "expiry"))
-            .address(extract(node, "address"))
+            .nationality(extract(node, "nationality", "nation"))
+            .expiry(extract(node, "expiry", "expiry_date", "valid_until"))
+            .address(extract(node, "address", "recent_location", "place_of_residence"))
             .build();
     }
 

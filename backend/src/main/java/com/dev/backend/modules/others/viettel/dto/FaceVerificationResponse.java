@@ -21,12 +21,23 @@ public class FaceVerificationResponse {
     private Integer code;
     private String message;
 
-    @JsonProperty("request_id")
+    @JsonProperty("requestId")
+    @JsonAlias({"request_id", "requestId"})
     private String requestId;
 
-    @JsonProperty("verify_result")
+    @JsonProperty("verifyResult")
     @JsonAlias({"verify_result", "verifyResult"})
     private String verifyResult;
 
     private Double score;
-}
+
+    @JsonProperty("verify_result")
+    public String getVerifyResultSnakeCase() {
+        return verifyResult;
+    }
+
+    @JsonProperty("request_id")
+    public String getRequestIdSnakeCase() {
+        return requestId;
+    }
+}

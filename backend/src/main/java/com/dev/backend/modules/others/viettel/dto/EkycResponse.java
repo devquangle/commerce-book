@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Kết quả tổng hợp sau quá trình eKYC (OCR CCCD + Face matching)
+ */
 @Getter 
 @Setter 
 @NoArgsConstructor

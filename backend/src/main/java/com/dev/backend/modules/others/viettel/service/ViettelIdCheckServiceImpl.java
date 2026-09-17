@@ -184,13 +184,12 @@ public class ViettelIdCheckServiceImpl implements ViettelIdCheckService {
             FaceVerificationResponse verification = executeFaceVerify(imageFront, imageSelfie, refScore);
 
             // 3. Combine result
-            EkycResponse response = new EkycResponse();
-            response.setCode("200");
-            response.setMessage("eKYC verification successful");
-            response.setInformation(information);
-            response.setVerification(verification);
-
-            return response;
+            return new EkycResponse(
+                    "200",
+                    "eKYC verification successful",
+                    information,
+                    verification
+            );
 
         } catch (AppException e) {
             throw e;
