@@ -59,7 +59,7 @@ const LoginPage = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="w-full max-w-md  space-y-4"
         >
-          <div className="card-custom flex flex-col gap-2">
+          <div className="card-custom flex flex-col gap-4">
             {/* Title */}
             <div className="text-center">
               <h1 className="text-2xl font-bold text-blue-700">
