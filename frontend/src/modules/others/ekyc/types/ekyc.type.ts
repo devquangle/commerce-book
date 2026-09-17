@@ -15,7 +15,7 @@ export interface InformationResponse {
 }
 
 export interface FaceVerificationResponse {
-  verify_result: string;
+  verifyResult: boolean | string;
   score: number;
 }
 

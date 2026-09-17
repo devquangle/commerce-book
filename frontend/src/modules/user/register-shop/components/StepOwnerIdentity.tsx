@@ -67,6 +67,7 @@ export const StepOwnerIdentity: React.FC = () => {
     control,
     register,
     setValue,
+    watch,
     formState: { errors },
   } = useFormContext<RegisterShopRequest>();
 
@@ -93,6 +94,25 @@ export const StepOwnerIdentity: React.FC = () => {
         : ekycMutationError.message) || "Đã xảy ra lỗi khi xác thực eKYC."
     : "";
 
+  // Kiểm tra kết quả xác thực khuôn mặt từ eKYC: chỉ dùng verifyResult == true
+  const isVerified = Boolean(
+    isEkycSuccess &&
+    ekycResult?.verification &&
+    (ekycResult.verification.verifyResult == true || String(ekycResult.verification.verifyResult).toLowerCase() === "true")
+  );
+
+  // eKYC chạy thành công nhưng khuôn mặt không khớp (verifyResult !== true)
+  const isVerifyFailed = Boolean(
+    isEkycSuccess &&
+    ekycResult?.verification &&
+    !isVerified
+  );
+
+  // Chỉ hiển thị form thông tin giấy tờ khi xác thực thành công (hoặc đã có dữ liệu hợp lệ nếu quay lại bước này)
+  const currentFullName = watch("fullName");
+  const currentIdentityNumber = watch("identityNumber");
+  const isFormVisible = isVerified || Boolean(!ekycResult && currentFullName && currentIdentityNumber);
+
   // ---------- main eKYC handler ----------------------------------------------
   const handleVerifyEkyc = useCallback(
     async (selfieFile?: File | Blob) => {
@@ -117,6 +137,17 @@ export const StepOwnerIdentity: React.FC = () => {
           imageBack: backCccdFile,
           imageSelfie: fileToVerify,
         });
+
+        // Chỉ điền dữ liệu vào form khi kết quả xác thực khuôn mặt verifyResult == true
+        const isSuccess = Boolean(
+          data?.verification &&
+          (data.verification.verifyResult == true || String(data.verification.verifyResult).toLowerCase() === "true")
+        );
+
+        if (!isSuccess) {
+          console.warn("Xác thực eKYC không thành công (verifyResult !== true):", data?.verification);
+          return;
+        }
 
       // ---- Điền dữ liệu OCR vào form ------------------
       type InfoMap = Record<string, string | undefined>;
@@ -340,19 +371,33 @@ export const StepOwnerIdentity: React.FC = () => {
       {/* ===== 4. Nút xác thực (Đã được chuyển lên trên cạnh nút chụp) ===== */}
 
       {/* ===== 5. eKYC Result: Success ===== */}
-      {isEkycSuccess && ekycResult && ekycResult.verification && ekycResult.verification.verify_result === "true" && (
-        <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 p-4 space-y-2">
+      {isVerified && (
+        <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 p-4 space-y-2 animate-in fade-in duration-200">
           <p className="text-sm font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-emerald-500" />
-            eKYC thành công — Thông tin đã được điền tự động
+            eKYC thành công — Thông tin giấy tờ đã được nhận diện tự động
           </p>
-         
         </div>
       )}
 
-      {/* ===== 6. eKYC Result: Error ===== */}
+      {/* ===== 5b. eKYC Result: Verify Failed (Face Mismatch) ===== */}
+      {isVerifyFailed && (
+        <div className="rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 p-4 flex items-start gap-3 animate-in fade-in duration-200">
+          <AlertTriangle className="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">
+              Khuôn mặt không khớp với giấy tờ CCCD
+            </p>
+            <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
+              Kết quả xác minh khuôn mặt không đạt yêu cầu (<code className="font-mono text-amber-800 dark:text-amber-200">verifyResult: false</code>). Vui lòng chụp lại ảnh khuôn mặt rõ nét và đảm bảo đúng chủ sở hữu CCCD.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ===== 6. eKYC Result: Network / Server Error ===== */}
       {isEkycError && ekycError && (
-        <div className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/40 p-4 flex items-start gap-3">
+        <div className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/40 p-4 flex items-start gap-3 animate-in fade-in duration-200">
           <AlertTriangle className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
           <div>
             <p className="text-sm font-semibold text-red-700 dark:text-red-300">
@@ -365,13 +410,29 @@ export const StepOwnerIdentity: React.FC = () => {
         </div>
       )}
 
-      {/* ===== 7. Form Fields (Đầy đủ 11 input theo OwnerIdentityInfo) ===== */}
-      <div className="flex flex-wrap gap-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
-        <div className="w-full pb-1">
-          <h4 className="text-base font-bold text-zinc-800 dark:text-zinc-200">
-            Thông tin giấy tờ
+      {/* ===== Hướng dẫn khi chưa hoàn tất xác thực eKYC ===== */}
+      {!isFormVisible && !isEkycLoading && (
+        <div className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50/60 dark:bg-zinc-800/30 p-6 text-center animate-in fade-in duration-200">
+          <div className="mx-auto w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-950/60 flex items-center justify-center mb-2.5">
+            <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+          </div>
+          <h4 className="text-sm font-bold text-zinc-800 dark:text-zinc-200">
+            Thông tin giấy tờ sẽ mở khóa sau khi xác thực eKYC thành công
           </h4>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-md mx-auto leading-relaxed">
+            Vui lòng tải lên ảnh 2 mặt CCCD và nhấn nút <strong>&quot;Xác thực khuôn mặt&quot;</strong>. Khi hệ thống xác minh kết quả hợp lệ (<code className="text-blue-600 dark:text-blue-400 font-mono font-semibold">verifyResult == true</code>), biểu mẫu thông tin giấy tờ sẽ tự động hiển thị để bạn kiểm tra.
+          </p>
         </div>
+      )}
+
+      {/* ===== 7. Form Fields (Chỉ hiển thị khi verifyResult == true hoặc đã có dữ liệu hợp lệ) ===== */}
+      {isFormVisible && (
+        <div className="flex flex-wrap gap-4 pt-4 border-t border-zinc-200 dark:border-zinc-800 animate-in fade-in duration-300">
+          <div className="w-full pb-1">
+            <h4 className="text-base font-bold text-zinc-800 dark:text-zinc-200">
+              Thông tin giấy tờ (Đã trích xuất từ eKYC)
+            </h4>
+          </div>
 
         {/* 1. Full Name */}
         <div className="w-full md:w-[calc(50%-8px)]">
@@ -509,6 +570,7 @@ export const StepOwnerIdentity: React.FC = () => {
           />
         </div>
       </div>
+      )}
 
       {/* Camera Modal */}
       <CameraModal

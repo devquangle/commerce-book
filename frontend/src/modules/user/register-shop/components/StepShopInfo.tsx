@@ -6,21 +6,21 @@ import { TextAreaField } from "@/components/ui/TextAreaField";
 import { SelectBox } from "@/components/ui/SelectBox";
 import type { SelectOption } from "@/components/ui/SelectBox";
 import SingleImageUpload from "@/components/common/SingleImageUpload";
-import { useBanks } from "@/modules/others/bank/hooks/useBank";
+import { useBank } from "@/modules/others/bank/hooks/useBank";
 import type { BankResponse } from "@/modules/others/bank/types/bank.type";
 import type { RegisterShopRequest } from "../types/register-shop.type";
 
 const BANK_OPTIONS: SelectOption[] = [
-  { label: "Vietcombank (Ngân hàng TMCP Ngoại thương Việt Nam)", value: "Vietcombank" },
-  { label: "Techcombank (Ngân hàng TMCP Kỹ thương Việt Nam)", value: "Techcombank" },
-  { label: "MB Bank (Ngân hàng TMCP Quân đội)", value: "MBBank" },
-  { label: "BIDV (Ngân hàng Đầu tư và Phát triển Việt Nam)", value: "BIDV" },
-  { label: "VietinBank (Ngân hàng Công Thương Việt Nam)", value: "VietinBank" },
-  { label: "VPBank (Ngân hàng TMCP Việt Nam Thịnh Vượng)", value: "VPBank" },
-  { label: "ACB (Ngân hàng TMCP Á Châu)", value: "ACB" },
-  { label: "TPBank (Ngân hàng TMCP Tiên Phong)", value: "TPBank" },
-  { label: "Sacombank (Ngân hàng TMCP Sài Gòn Thương Tín)", value: "Sacombank" },
-  { label: "Agribank (Ngân hàng Nông nghiệp và PTNT)", value: "Agribank" },
+  { label: "Vietcombank", subLabel: "Ngân hàng TMCP Ngoại thương Việt Nam", value: "Vietcombank" },
+  { label: "Techcombank", subLabel: "Ngân hàng TMCP Kỹ thương Việt Nam", value: "Techcombank" },
+  { label: "MB Bank", subLabel: "Ngân hàng TMCP Quân đội", value: "MBBank" },
+  { label: "BIDV", subLabel: "Ngân hàng Đầu tư và Phát triển Việt Nam", value: "BIDV" },
+  { label: "VietinBank", subLabel: "Ngân hàng Công Thương Việt Nam", value: "VietinBank" },
+  { label: "VPBank", subLabel: "Ngân hàng TMCP Việt Nam Thịnh Vượng", value: "VPBank" },
+  { label: "ACB", subLabel: "Ngân hàng TMCP Á Châu", value: "ACB" },
+  { label: "TPBank", subLabel: "Ngân hàng TMCP Tiên Phong", value: "TPBank" },
+  { label: "Sacombank", subLabel: "Ngân hàng TMCP Sài Gòn Thương Tín", value: "Sacombank" },
+  { label: "Agribank", subLabel: "Ngân hàng Nông nghiệp và PTNT", value: "Agribank" },
 ];
 
 export const StepShopInfo: React.FC = () => {
@@ -35,15 +35,17 @@ export const StepShopInfo: React.FC = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [bannerFile, setBannerFile] = useState<File | null>(null);
 
-  const { data: banks = [], isLoading: isLoadingBanks } = useBanks();
+  const { data: banks = [], isLoading: isLoadingBanks } = useBank();
 
   const bankOptions: SelectOption[] = useMemo(() => {
     if (!banks || banks.length === 0) {
       return BANK_OPTIONS;
     }
     return banks.map((bank: BankResponse) => ({
-      label: bank.shortName ? `${bank.shortName} (${bank.name})` : bank.name,
+      label: bank.shortName || bank.name,
+      subLabel: bank.shortName ? bank.name : undefined,
       value: bank.shortName || bank.name,
+      image: bank.logo,
     }));
   }, [banks]);
 

@@ -45,7 +45,8 @@ public class APIBankServiceImpl implements APIBankService {
                 .map(bank -> new BankResponse(
                         bank.id(),
                         bank.name(),
-                        bank.shortName()
+                        bank.shortName(),
+                        bank.logo()
                 ))
                 .toList();
     }

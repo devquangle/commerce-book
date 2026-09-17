@@ -3,8 +3,11 @@ import { ChevronDown, Check, Search, X } from "lucide-react";
 
 export interface SelectOption {
   label: string;
+  subLabel?: string;
   value: string | number;
   disabled?: boolean;
+  image?: string;
+  icon?: React.ReactNode;
 }
 
 export interface SelectBoxProps
@@ -100,7 +103,8 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
 
     const filteredOptions = searchable
       ? options.filter((opt) =>
-          String(opt.label || "").toLowerCase().includes(searchTerm.toLowerCase())
+          String(opt.label || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+          String(opt.subLabel || "").toLowerCase().includes(searchTerm.toLowerCase())
         )
       : options;
 
@@ -178,21 +182,45 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
               type="button"
               disabled={disabled}
               onClick={() => setIsOpen((prev) => !prev)}
-              className={`w-full h-10 flex items-center justify-between px-4 py-2 text-sm bg-zinc-50 dark:bg-zinc-800/60 border rounded-xl transition-all text-left ${
+              className={`w-full min-h-[44px] flex items-center justify-between px-3.5 py-1.5 text-sm bg-zinc-50 dark:bg-zinc-800/60 border rounded-xl transition-all text-left ${
                 error
                   ? "border-red-500 focus:ring-2 focus:ring-red-500/20"
                   : "border-zinc-200 dark:border-zinc-700/80 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
               } ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"} ${className}`}
             >
-              <span
-                className={`truncate ${
-                  selectedOption
-                    ? "text-zinc-900 dark:text-white font-medium"
-                    : "text-zinc-400"
-                }`}
-              >
-                {selectedOption ? selectedOption.label : placeholder || "Chọn một mục..."}
-              </span>
+              <div className="flex items-center gap-3 truncate min-w-0">
+                {selectedOption?.image && (
+                  <div className="w-8 h-8 rounded-md bg-white p-1 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center shrink-0 shadow-xs">
+                    <img
+                      src={selectedOption.image}
+                      alt={selectedOption.label}
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        (e.target as HTMLElement).style.display = "none";
+                      }}
+                    />
+                  </div>
+                )}
+                {selectedOption?.icon && (
+                  <span className="shrink-0">{selectedOption.icon}</span>
+                )}
+                {selectedOption ? (
+                  <div className="flex flex-col min-w-0 text-left">
+                    <span className="truncate text-sm font-semibold text-zinc-900 dark:text-white leading-tight">
+                      {selectedOption.label}
+                    </span>
+                    {selectedOption.subLabel && (
+                      <span className="truncate text-xs text-zinc-500 dark:text-zinc-400 mt-0.5 leading-tight">
+                        {selectedOption.subLabel}
+                      </span>
+                    )}
+                  </div>
+                ) : (
+                  <span className="text-zinc-400 text-sm">
+                    {placeholder || "Chọn một mục..."}
+                  </span>
+                )}
+              </div>
               <ChevronDown className="w-4 h-4 text-zinc-400 shrink-0 ms-2" />
             </button>
 
@@ -249,8 +277,34 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
                               : "text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                           }`}
                         >
-                          <span>{opt.label}</span>
-                          {isSelected && <Check className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />}
+                          <div className="flex items-center gap-3 truncate min-w-0">
+                            {opt.image && (
+                              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-white p-1 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center shrink-0 shadow-xs">
+                                <img
+                                  src={opt.image}
+                                  alt={opt.label}
+                                  className="w-full h-full object-contain"
+                                  onError={(e) => {
+                                    (e.target as HTMLElement).style.display = "none";
+                                  }}
+                                />
+                              </div>
+                            )}
+                            {opt.icon && (
+                              <span className="shrink-0">{opt.icon}</span>
+                            )}
+                            <div className="flex flex-col min-w-0">
+                              <span className="truncate text-sm font-semibold text-zinc-900 dark:text-white leading-tight">
+                                {opt.label}
+                              </span>
+                              {opt.subLabel && (
+                                <span className="truncate text-xs text-zinc-500 dark:text-zinc-400 mt-0.5 leading-normal">
+                                  {opt.subLabel}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          {isSelected && <Check className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 ms-2" />}
                         </button>
                       );
                     })
