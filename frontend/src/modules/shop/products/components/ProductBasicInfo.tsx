@@ -23,7 +23,6 @@ import { AlertTriangle, BookOpen, Sparkles } from "lucide-react";
 import Spinner from "@/components/ui/Spinner";
 import { SearchInput } from "@/components/common/SearchInput";
 import { SelectBox } from "@/components/ui/SelectBox";
-import { SelectBox } from "@/components/ui/SelectBox";
 import type { ProductImageRequest } from "@/services/cloudinary/type/cloudinary.type";
 
 registerLocale(viLocale);

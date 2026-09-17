@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FormInput } from "@/components/common/FormInput";
 import { FormInputPassword } from "@/components/common/FormInputPassword";
 
@@ -23,17 +23,23 @@ const LoginPage = () => {
   const auth = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
   const onSubmit = async (requestData: LoginRequest) => {
     setIsLoading(true);
     try {
       const user = await auth.login(requestData);
       if (user) {
         showSuccessToast("Đăng nhập thành công!");
-        if (user && user.role === "USER") {
-          navigate("/home");
-        } else {
-          navigate("/admin");
-        }
+        const from = (location.state as { from?: { pathname: string; search?: string } })?.from;
+        const defaultPath =
+          user.role === "USER"
+            ? "/home"
+            : user.role === "SHOP"
+            ? "/shop"
+            : "/admin";
+        const redirectPath = from ? `${from.pathname}${from.search || ""}` : defaultPath;
+        navigate(redirectPath, { replace: true });
       }
     } catch (error: unknown) {
         const axiosError = error as AxiosError<ApiResponse<unknown>>;

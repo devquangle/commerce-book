@@ -10,6 +10,8 @@ import AddressCreatePage from "@/modules/user/address/pages/AddressCreatePage";
 import AddressUpdatePage from "@/modules/user/address/pages/AddressUpdatePage";
 import PlaceAddressPage from "@/modules/user/address/pages/PlaceAddressPage";
 import ShopProductsPage from "@/modules/product/pages/shop/ShopProductsPage";
+import ProtectedRoute from "./ProtectedRoute";
+import GuestRoute from "./GuestRoute";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("@/modules/user/pages/Home"));
@@ -39,30 +41,35 @@ export const UserRoutes: React.FC = () => {
     <UserLayout>
       <Suspense fallback={<Spinner />}>
         <Routes>
+          {/* Public routes */}
           <Route index element={<Home />} />
           <Route path="home" element={<Home />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
+          <Route path="login" element={<GuestRoute><LoginPage /></GuestRoute>} />
+          <Route path="register" element={<GuestRoute><RegisterPage /></GuestRoute>} />
           <Route path="verify-email" element={<ConfirmEmailPage />} />
           <Route path="register-shop" element={<RegisterShopPage />} />
           <Route path="books" element={<BookList />} />
           <Route path="books/:id" element={<BookDetail />} />
           <Route path="products" element={<SearchProductPage />} />
           <Route path="product-detail" element={<ProductDetailPage />} />
-           <Route path="/:shopSlug" element={<ShopProductsPage />} />
+          <Route path="/:shopSlug" element={<ShopProductsPage />} />
           <Route path="search" element={<Search />} />
-          <Route path="cart" element={<CartPage />} />
-          <Route path="checkout" element={<Checkout />} />
-          <Route path="checkout/address" element={<PlaceAddressPage />} />
-          <Route path="order-success" element={<OrderSuccess />} />
 
-          <Route element={<ProfileLayout />}>
-            <Route path="profile" element={<ProfilePage />} />
-            <Route path="orders" element={<OrderHistory />} />
-            <Route path="address" element={<AddressPage />} />
-            <Route path="address/create" element={<AddressCreatePage />} />
-            <Route path="address/edit/:id" element={<AddressUpdatePage />} />
-            <Route path="orders/:id" element={<OrderDetail />} />
+          {/* Protected routes - yêu cầu đăng nhập */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="cart" element={<CartPage />} />
+            <Route path="checkout" element={<Checkout />} />
+            <Route path="checkout/address" element={<PlaceAddressPage />} />
+            <Route path="order-success" element={<OrderSuccess />} />
+
+            <Route element={<ProfileLayout />}>
+              <Route path="profile" element={<ProfilePage />} />
+              <Route path="orders" element={<OrderHistory />} />
+              <Route path="address" element={<AddressPage />} />
+              <Route path="address/create" element={<AddressCreatePage />} />
+              <Route path="address/edit/:id" element={<AddressUpdatePage />} />
+              <Route path="orders/:id" element={<OrderDetail />} />
+            </Route>
           </Route>
 
           <Route path="404" element={<NotFound />} />

@@ -54,7 +54,7 @@ export const AccountMenuDropdown: React.FC<AccountMenuDropdownProps> = ({
       }
       setIsLogoutModalOpen(false);
       setIsDropdownOpen(false);
-      navigate("/auth/login");
+      navigate("/login");
     } catch (error) {
       console.error("Logout error:", error);
     } finally {

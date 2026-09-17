@@ -18,14 +18,13 @@ export const useLoginMutation = () => {
 };
 
 export const useGetUserQuery = () => {
+  const hasToken = !!getToken(TokenType.ACCESS_TOKEN);
   return useQuery({
     queryKey: authKeys.user(),
     queryFn: async () => {
-      if (!getToken(TokenType.ACCESS_TOKEN)) {
-        return null;
-      }
       return await AuthService.getUser();
     },
+    enabled: hasToken,
     retry: false,
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,

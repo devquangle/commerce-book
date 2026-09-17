@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AdminRoutes } from "@/routes/AdminRoutes";
 import { ShopRoutes } from "@/routes/ShopRoutes";
 import { UserRoutes } from "@/routes/UserRoutes";
+import ProtectedRoute from "@/routes/ProtectedRoute";
 import ScrollToTop from "@/components/common/ScrollToTop";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -22,10 +23,24 @@ function App() {
             <ScrollToTop />
             <Routes>
               {/* Admin panel: /admin/* */}
-              <Route path="/admin/*" element={<AdminRoutes />} />
+              <Route
+                path="/admin/*"
+                element={
+                  <ProtectedRoute allowedRoles={["ADMIN", "STAFF"]}>
+                    <AdminRoutes />
+                  </ProtectedRoute>
+                }
+              />
 
               {/* Shop panel (seller dashboard): /shop/* */}
-              <Route path={`${SHOP_PATH.ROOT}/*`} element={<ShopRoutes />} />
+              <Route
+                path={`${SHOP_PATH.ROOT}/*`}
+                element={
+                  <ProtectedRoute allowedRoles={["SHOP", "ADMIN"]}>
+                    <ShopRoutes />
+                  </ProtectedRoute>
+                }
+              />
 
               {/* User storefront: /* */}
               <Route path="/*" element={<UserRoutes />} />

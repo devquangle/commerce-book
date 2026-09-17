@@ -7,7 +7,7 @@ import type { LoginRequest } from "@/modules/auth/types/login.type";
 import type { RoleType } from "@/libs/constant/role.type";
 
 import { AuthService } from "@/modules/auth/services/auth.service";
-import { setToken, removeToken } from "@/libs/utils/cookie";
+import { getToken, setToken, removeToken } from "@/libs/utils/cookie";
 import { TokenType } from "@/libs/constant/token.type";
 
 import {
@@ -23,9 +23,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const { data: user, isLoading, isError } = useGetUserQuery();
 
   const { mutateAsync: loginMutation } = useLoginMutation();
+  const hasToken = !!getToken(TokenType.ACCESS_TOKEN);
   const userInfo = user ?? null;
   const isAuthenticated = !!user && !isError;
-  const isInitialized = !isLoading;
+  const isInitialized = !hasToken || !isLoading;
   const setUserInfo = (newUser: UserResponse | null) => {
     queryClient.setQueryData(authKeys.user(), newUser);
   };
