@@ -63,3 +63,15 @@ export const useDeleteAddress = () => {
     },
   });
 };
+
+export {
+  useProvinces,
+  useDistricts,
+  useWards,
+} from "@/modules/others/ghn/hooks/useGhn";
+export type {
+  ProvinceResponse,
+  DistrictResponse,
+  WardResponse,
+} from "@/modules/others/ghn/types/ghn.type";
+

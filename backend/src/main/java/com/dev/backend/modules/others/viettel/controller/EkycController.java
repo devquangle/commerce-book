@@ -23,7 +23,7 @@ public class EkycController {
     public ResponseEntity<ResponseData<EkycResponse>> verify(
         @ModelAttribute  EkycRequest request
     ) {
-        EkycResponse ekycResponse= viettelIdCheckService.executeEkyc(request.getImageFront(), request.getImageBack(), request.getImageSelfie(), 0.9);
+        EkycResponse ekycResponse= viettelIdCheckService.executeEkyc(request.getImageFront(), request.getImageBack(), request.getImageSelfie(), 0.8);
         return ResponseUtil.success("Xác thực thành công", ekycResponse);
     }
 }

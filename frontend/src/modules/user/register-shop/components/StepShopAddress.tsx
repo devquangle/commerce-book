@@ -1,100 +1,32 @@
-import React, { useMemo } from "react";
-import { useFormContext } from "react-hook-form";
-import { MapPin, Navigation, Home } from "lucide-react";
+import React, { useMemo, useEffect, useRef } from "react";
+import { useFormContext, Controller } from "react-hook-form";
+import {
+  MapPin,
+  Navigation,
+  Home,
+  BookmarkCheck,
+  CheckCircle2,
+  RotateCcw,
+  Loader2,
+} from "lucide-react";
 import { FormInput } from "@/components/common/FormInput";
 import { SelectBox } from "@/components/ui/SelectBox";
+import type { SelectOption } from "@/components/ui/SelectBox";
+import {
+  useAddresses,
+  useProvinces,
+  useDistricts,
+  useWards,
+  type ProvinceResponse,
+  type DistrictResponse,
+  type WardResponse,
+} from "@/modules/user/address/hooks/useAddress";
+import type { AddressResponse } from "@/modules/user/address/types/address.type";
 import type { RegisterShopRequest } from "../types/register-shop.type";
-
-// Administrative address datasets
-const PROVINCES = [
-  { id: 1, name: "TP. Hồ Chí Minh" },
-  { id: 2, name: "TP. Hà Nội" },
-  { id: 3, name: "TP. Đà Nẵng" },
-  { id: 4, name: "Tỉnh Bình Dương" },
-  { id: 5, name: "TP. Cần Thơ" },
-  { id: 6, name: "Tỉnh Đồng Nai" },
-  { id: 7, name: "Tỉnh Hải Phòng" },
-];
-
-const DISTRICTS_MAP: Record<number, Array<{ id: number; name: string }>> = {
-  1: [
-    { id: 101, name: "Quận 1" },
-    { id: 102, name: "Quận 3" },
-    { id: 103, name: "Quận 7" },
-    { id: 104, name: "Thành phố Thủ Đức" },
-    { id: 105, name: "Quận Bình Thạnh" },
-    { id: 106, name: "Quận Tân Bình" },
-  ],
-  2: [
-    { id: 201, name: "Quận Ba Đình" },
-    { id: 202, name: "Quận Hoàn Kiếm" },
-    { id: 203, name: "Quận Cầu Giấy" },
-    { id: 204, name: "Quận Đống Đa" },
-    { id: 205, name: "Quận Hai Bà Trưng" },
-  ],
-  3: [
-    { id: 301, name: "Quận Hải Châu" },
-    { id: 302, name: "Quận Thanh Khê" },
-    { id: 303, name: "Quận Sơn Trà" },
-  ],
-  4: [
-    { id: 401, name: "TP. Thủ Dầu Một" },
-    { id: 402, name: "TP. Thuận An" },
-    { id: 403, name: "TP. Dĩ An" },
-  ],
-  5: [
-    { id: 501, name: "Quận Ninh Kiều" },
-    { id: 502, name: "Quận Bình Thủy" },
-  ],
-  6: [
-    { id: 601, name: "TP. Biên Hòa" },
-    { id: 602, name: "TP. Long Khánh" },
-  ],
-  7: [
-    { id: 701, name: "Quận Hồng Bàng" },
-    { id: 702, name: "Quận Ngô Quyền" },
-  ],
-};
-
-const WARDS_MAP: Record<number, Array<{ code: string; name: string }>> = {
-  101: [
-    { code: "W10101", name: "Phường Bến Nghé" },
-    { code: "W10102", name: "Phường Bến Thành" },
-    { code: "W10103", name: "Phường Tân Định" },
-    { code: "W10104", name: "Phường Phạm Ngũ Lão" },
-  ],
-  102: [
-    { code: "W10201", name: "Phường Võ Thị Sáu" },
-    { code: "W10202", name: "Phường 1" },
-    { code: "W10203", name: "Phường 2" },
-  ],
-  103: [
-    { code: "W10301", name: "Phường Tân Phong" },
-    { code: "W10302", name: "Phường Tân Quy" },
-  ],
-  104: [
-    { code: "W10401", name: "Phường Thảo Điền" },
-    { code: "W10402", name: "Phường An Phú" },
-    { code: "W10403", name: "Phường Linh Trung" },
-  ],
-  105: [
-    { code: "W10501", name: "Phường 25" },
-    { code: "W10502", name: "Phường 26" },
-  ],
-  201: [
-    { code: "W20101", name: "Phường Điện Biên" },
-    { code: "W20102", name: "Phường Kim Mã" },
-  ],
-  203: [
-    { code: "W20301", name: "Phường Dịch Vọng" },
-    { code: "W20302", name: "Phường Yên Hòa" },
-  ],
-};
 
 export const StepShopAddress: React.FC = () => {
   const {
     control,
-    register,
     setValue,
     watch,
     formState: { errors },
@@ -105,28 +37,97 @@ export const StepShopAddress: React.FC = () => {
   const wardCode = watch("wardCode") || "";
   const street = watch("street") || "";
 
-  // Convert provinces to select options
-  const provinceOptions = useMemo(
-    () => PROVINCES.map((p) => ({ label: p.name, value: p.id })),
-    []
+  // 1. Fetch saved user addresses
+  const { data: addresses = [], isLoading: isLoadingAddresses } = useAddresses();
+
+  // 2. Fetch administrative regions from GHN
+  const { data: provinces = [], isLoading: isLoadingProvinces } = useProvinces();
+  const { data: districts = [], isLoading: isLoadingDistricts } = useDistricts(
+    provinceId ? Number(provinceId) : null
+  );
+  const { data: wards = [], isLoading: isLoadingWards } = useWards(
+    districtId ? Number(districtId) : null
   );
 
-  // Filter districts based on selected provinceId
-  const districtOptions = useMemo(() => {
-    if (!provinceId) return [];
-    const list = DISTRICTS_MAP[provinceId] || [];
-    return list.map((d) => ({ label: d.name, value: d.id }));
-  }, [provinceId]);
+  // Auto-fill with default address on initial load if form fields are empty
+  const isInitializedRef = useRef(false);
+  useEffect(() => {
+    if (!isInitializedRef.current && addresses && addresses.length > 0) {
+      if (!provinceId && !street) {
+        const defaultAddr = addresses.find((a) => a.defaultAddress) || addresses[0];
+        if (defaultAddr && defaultAddr.provinceId) {
+          setValue("provinceId", Number(defaultAddr.provinceId), { shouldValidate: true });
+          setValue("districtId", Number(defaultAddr.districtId) || 0, { shouldValidate: true });
+          setValue("wardCode", defaultAddr.wardCode || "", { shouldValidate: true });
+          setValue("street", defaultAddr.street || "", { shouldValidate: true });
+        }
+      }
+      isInitializedRef.current = true;
+    }
+  }, [addresses, provinceId, street, setValue]);
 
-  // Filter wards based on selected districtId
-  const wardOptions = useMemo(() => {
-    if (!districtId) return [];
-    const list = WARDS_MAP[districtId] || [
-      { code: `W${districtId}01`, name: "Phường Trung Tâm" },
-      { code: `W${districtId}02`, name: "Phường Tân Tiến" },
-    ];
-    return list.map((w) => ({ label: w.name, value: w.code }));
-  }, [districtId]);
+  // Convert regions to SelectBox options
+  const provinceOptions: SelectOption[] = useMemo(
+    () =>
+      Array.isArray(provinces)
+        ? provinces.map((p: ProvinceResponse) => ({
+            label: p.provinceName,
+            value: p.provinceId,
+          }))
+        : [],
+    [provinces]
+  );
+
+  const districtOptions: SelectOption[] = useMemo(
+    () =>
+      Array.isArray(districts)
+        ? districts.map((d: DistrictResponse) => ({
+            label: d.districtName,
+            value: d.districtId,
+          }))
+        : [],
+    [districts]
+  );
+
+  const wardOptions: SelectOption[] = useMemo(
+    () =>
+      Array.isArray(wards)
+        ? wards.map((w: WardResponse) => ({
+            label: w.wardName,
+            value: w.wardCode,
+          }))
+        : [],
+    [wards]
+  );
+
+  // Handle selecting a saved address
+  const handleSelectSavedAddress = (addr: AddressResponse) => {
+    setValue("provinceId", Number(addr.provinceId) || 0, { shouldValidate: true });
+    setValue("districtId", Number(addr.districtId) || 0, { shouldValidate: true });
+    setValue("wardCode", addr.wardCode || "", { shouldValidate: true });
+    setValue("street", addr.street || "", { shouldValidate: true });
+  };
+
+  // Reset address to clear fields for manual input
+  const handleResetAddress = () => {
+    setValue("provinceId", 0, { shouldValidate: false });
+    setValue("districtId", 0, { shouldValidate: false });
+    setValue("wardCode", "", { shouldValidate: false });
+    setValue("street", "", { shouldValidate: false });
+  };
+
+  // Full address labels
+  const selectedProvinceName = useMemo(() => {
+    return provinceOptions.find((p) => Number(p.value) === provinceId)?.label || "";
+  }, [provinceOptions, provinceId]);
+
+  const selectedDistrictName = useMemo(() => {
+    return districtOptions.find((d) => Number(d.value) === districtId)?.label || "";
+  }, [districtOptions, districtId]);
+
+  const selectedWardName = useMemo(() => {
+    return wardOptions.find((w) => String(w.value) === String(wardCode))?.label || "";
+  }, [wardOptions, wardCode]);
 
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
@@ -140,62 +141,190 @@ export const StepShopAddress: React.FC = () => {
         </p>
       </div>
 
+      {/* Quick Select from Saved Addresses */}
+      {isLoadingAddresses ? (
+        <div className="flex items-center gap-2 text-zinc-400 text-xs py-2">
+          <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+          <span>Đang tải sổ địa chỉ của bạn...</span>
+        </div>
+      ) : addresses.length > 0 ? (
+        <div className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-3">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <BookmarkCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">
+                Chọn từ sổ địa chỉ của bạn ({addresses.length})
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={handleResetAddress}
+              className="inline-flex items-center gap-1 text-xs text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Nhập địa chỉ mới</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {addresses.map((addr) => {
+              const isSelected =
+                provinceId === Number(addr.provinceId) &&
+                districtId === Number(addr.districtId) &&
+                wardCode === addr.wardCode &&
+                street === addr.street;
+
+              return (
+                <button
+                  key={addr.id}
+                  type="button"
+                  onClick={() => handleSelectSavedAddress(addr)}
+                  className={`p-3 rounded-lg border text-left transition-all relative cursor-pointer ${
+                    isSelected
+                      ? "border-blue-500 bg-blue-50/70 dark:bg-blue-950/40 shadow-xs ring-1 ring-blue-500"
+                      : "border-zinc-200 dark:border-zinc-700/80 hover:border-blue-300 dark:hover:border-zinc-600 bg-white dark:bg-zinc-900"
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-xs font-bold text-zinc-900 dark:text-white">
+                          {addr.fullName}
+                        </span>
+                        <span className="text-xs text-zinc-400">|</span>
+                        <span className="text-xs text-zinc-600 dark:text-zinc-400">
+                          {addr.phone}
+                        </span>
+                        {addr.defaultAddress && (
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300">
+                            Mặc định
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-zinc-600 dark:text-zinc-300 mt-1 line-clamp-2">
+                        {addr.streetFull || addr.street}
+                      </p>
+                    </div>
+                    {isSelected && (
+                      <CheckCircle2 className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                    )}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
+
       <div className="flex flex-col md:flex-row gap-4">
         {/* Province */}
         <div className="flex-1">
-          <SelectBox
-            label="Tỉnh / Thành phố"
-            required
-            options={provinceOptions}
-            placeholder="Chọn Tỉnh / Thành phố"
-            {...register("provinceId", {
+          <Controller
+            control={control}
+            name="provinceId"
+            rules={{
               required: "Vui lòng chọn Tỉnh / Thành phố",
-              onChange: (e) => {
-                const pid = Number(e.target.value);
-                setValue("provinceId", pid);
-                setValue("districtId", 0);
-                setValue("wardCode", "");
-              },
-            })}
-            error={errors.provinceId?.message}
-            textClassName="body-text"
+              validate: (v) => Number(v) > 0 || "Vui lòng chọn Tỉnh / Thành phố",
+            }}
+            render={({ field, fieldState: { error } }) => (
+              <SelectBox
+                searchable
+                searchPlaceholder="Tìm Tỉnh / Thành..."
+                label="Tỉnh / Thành phố"
+                required
+                options={provinceOptions}
+                placeholder={
+                  isLoadingProvinces
+                    ? "Đang tải Tỉnh / Thành..."
+                    : "Chọn Tỉnh / Thành phố"
+                }
+                disabled={isLoadingProvinces}
+                {...field}
+                value={field.value ? Number(field.value) : ""}
+                onChange={(e) => {
+                  const pid = Number(e.target.value) || 0;
+                  field.onChange(pid);
+                  setValue("districtId", 0, { shouldValidate: true });
+                  setValue("wardCode", "", { shouldValidate: true });
+                }}
+                error={error?.message || errors.provinceId?.message}
+                textClassName="body-text"
+              />
+            )}
           />
         </div>
 
         {/* District */}
         <div className="flex-1">
-          <SelectBox
-            label="Quận / Huyện"
-            required
-            disabled={!provinceId}
-            options={districtOptions}
-            placeholder={provinceId ? "Chọn Quận / Huyện" : "Hãy chọn Tỉnh/Thành trước"}
-            {...register("districtId", {
+          <Controller
+            control={control}
+            name="districtId"
+            rules={{
               required: "Vui lòng chọn Quận / Huyện",
-              onChange: (e) => {
-                const did = Number(e.target.value);
-                setValue("districtId", did);
-                setValue("wardCode", "");
-              },
-            })}
-            error={errors.districtId?.message}
-            textClassName="body-text"
+              validate: (v) => Number(v) > 0 || "Vui lòng chọn Quận / Huyện",
+            }}
+            render={({ field, fieldState: { error } }) => (
+              <SelectBox
+                searchable
+                searchPlaceholder="Tìm Quận / Huyện..."
+                label="Quận / Huyện"
+                required
+                disabled={!provinceId || isLoadingDistricts}
+                options={districtOptions}
+                placeholder={
+                  isLoadingDistricts
+                    ? "Đang tải Quận / Huyện..."
+                    : provinceId
+                    ? "Chọn Quận / Huyện"
+                    : "Hãy chọn Tỉnh/Thành trước"
+                }
+                {...field}
+                value={field.value ? Number(field.value) : ""}
+                onChange={(e) => {
+                  const did = Number(e.target.value) || 0;
+                  field.onChange(did);
+                  setValue("wardCode", "", { shouldValidate: true });
+                }}
+                error={error?.message || errors.districtId?.message}
+                textClassName="body-text"
+              />
+            )}
           />
         </div>
 
         {/* Ward */}
         <div className="flex-1">
-          <SelectBox
-            label="Phường / Xã"
-            required
-            disabled={!districtId}
-            options={wardOptions}
-            placeholder={districtId ? "Chọn Phường / Xã" : "Hãy chọn Quận/Huyện trước"}
-            {...register("wardCode", {
+          <Controller
+            control={control}
+            name="wardCode"
+            rules={{
               required: "Vui lòng chọn Phường / Xã",
-            })}
-            error={errors.wardCode?.message}
-            textClassName="body-text"
+              validate: (v) => Boolean(v && String(v).trim()) || "Vui lòng chọn Phường / Xã",
+            }}
+            render={({ field, fieldState: { error } }) => (
+              <SelectBox
+                searchable
+                searchPlaceholder="Tìm Phường / Xã..."
+                label="Phường / Xã"
+                required
+                disabled={!districtId || isLoadingWards}
+                options={wardOptions}
+                placeholder={
+                  isLoadingWards
+                    ? "Đang tải Phường / Xã..."
+                    : districtId
+                    ? "Chọn Phường / Xã"
+                    : "Hãy chọn Quận/Huyện trước"
+                }
+                {...field}
+                value={field.value ? String(field.value) : ""}
+                onChange={(e) => {
+                  field.onChange(e.target.value || "");
+                }}
+                error={error?.message || errors.wardCode?.message}
+                textClassName="body-text"
+              />
+            )}
           />
         </div>
       </div>
@@ -211,7 +340,7 @@ export const StepShopAddress: React.FC = () => {
         rules={{
           required: "Vui lòng nhập số nhà, tên đường chi tiết",
         }}
-        helperText="Địa chỉ chính xác giúp shiper tìm vị trí kho lấy hàng dễ dàng hơn"
+        helperText="Địa chỉ chính xác giúp shipper tìm vị trí kho lấy hàng dễ dàng hơn"
         className="body-text"
       />
 
@@ -224,10 +353,10 @@ export const StepShopAddress: React.FC = () => {
               Địa chỉ lấy hàng đầy đủ:
             </p>
             <p className="text-xs text-blue-700 dark:text-blue-300 font-medium mt-0.5">
-              {street},{" "}
-              {wardOptions.find((w) => w.value === wardCode)?.label},{" "}
-              {districtOptions.find((d) => Number(d.value) === districtId)?.label},{" "}
-              {provinceOptions.find((p) => Number(p.value) === provinceId)?.label}
+              {street}
+              {selectedWardName ? `, ${selectedWardName}` : ""}
+              {selectedDistrictName ? `, ${selectedDistrictName}` : ""}
+              {selectedProvinceName ? `, ${selectedProvinceName}` : ""}
             </p>
           </div>
         </div>
@@ -235,3 +364,4 @@ export const StepShopAddress: React.FC = () => {
     </div>
   );
 };
+
