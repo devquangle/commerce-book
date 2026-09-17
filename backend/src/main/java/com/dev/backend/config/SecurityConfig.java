@@ -58,7 +58,9 @@ public class SecurityConfig {
                         "/api/v1/publishers/**",
                         "/api/v1/series/**",
                         "/api/v1/reviews/**",
-                        "/api/v1/ekyc/**"
+                        "/api/v1/ekyc/**",
+                        "/api/v1/banks/**"
+
         };
 
         @Bean
