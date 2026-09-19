@@ -31,46 +31,13 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<UserResponse> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(userMapper::toResponse)
-                .collect(Collectors.toList());
-    }
+   
 
-    @Override
-    @Transactional(readOnly = true)
-    public UserResponse getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-        return userMapper.toResponse(user);
-    }
+    
 
-    @Override
-    @Transactional(readOnly = true)
-    public UserResponse getUserByUsername(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
-        return userMapper.toResponse(user);
-    }
+    
 
-    @Override
-    @Transactional(readOnly = true)
-    public UserResponse getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
-        return userMapper.toResponse(user);
-    }
-
-    @Override
-    public void deleteUser(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new RuntimeException("User not found with id: " + id);
-        }
-        userRepository.deleteById(id);
-    }
-
+   
     @Override
     public void insertData() {
         Object[][] roleUserData = {
@@ -108,18 +75,17 @@ public class UserServiceImpl implements UserService {
 
             if (!userRepository.existsByUsername(username) && !userRepository.existsByEmail(email)) {
                 log.info("Creating user account for role {}: {}", code, username);
-                User user = User.builder()
-                        .username(username)
-                        .email(email)
-                        .password(passwordEncoder.encode("Password123"))
-                        .fullName(fullName)
-                        .phone(phone)
-                        .status(UserStatus.ACTIVE.name())
-                        .enabled(true)
-                        .accountNonLocked(true)
-                        .failedAttempts(0)
-                        .tokenVersion(0)
-                        .build();
+                User user = new User();
+                user.setUsername(username);
+                user.setEmail(email);
+                user.setPassword(passwordEncoder.encode("Password123"));
+                user.setFullName(fullName);
+                user.setPhone(phone);
+                user.setStatus(UserStatus.ACTIVE.name());
+                user.setEnabled(true);
+                user.setAccountNonLocked(true);
+                user.setFailedAttempts(0);
+                user.setTokenVersion(0);
 
                 User savedUser = userRepository.save(user);
 
@@ -129,23 +95,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public void register(RegisterUserRequest request) {
-        Role userRole = roleRepository.findByName(ModuleConstants.USER)
-                .orElseThrow(() -> new RuntimeException("Role " + ModuleConstants.USER + " not found"));
-
-        User user = User.builder()
-                .email(request.email())
-                .username(request.email())
-                .password(passwordEncoder.encode(request.password()))
-                .role(userRole)
-                .status(UserStatus.ACTIVE.name())
-                .enabled(true)
-                .accountNonLocked(true)
-                .failedAttempts(0)
-                .tokenVersion(0)
-                .build();
-
-        userRepository.save(user);
-    }
+   
+       
 }

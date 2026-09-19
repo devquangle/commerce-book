@@ -20,7 +20,12 @@ public class UserMapper {
                 .phone(entity.getPhone())
                 .avatarUrl(entity.getAvatarUrl())
                 .street(entity.getStreet())
-                .role(entity.getRole().getName())
+                .role(entity.getRole() != null ? entity.getRole().getName() : null)
+                .identityNumber(entity.getIdentityNumber())
+                .dateOfBirth(entity.getDateOfBirth())
+                .gender(entity.getGender())
+                .nationality(entity.getNationality())
+                .expiryDate(entity.getExpiryDate())
                 .build();
     }
 

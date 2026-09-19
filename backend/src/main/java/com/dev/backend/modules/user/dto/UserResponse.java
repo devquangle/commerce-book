@@ -20,4 +20,9 @@ public class UserResponse {
     private String street;
     private String role;
     private String avatarUrl;
+    private String identityNumber;
+    private String dateOfBirth;
+    private String gender;
+    private String nationality;
+    private String expiryDate;
 }

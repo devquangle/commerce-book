@@ -18,5 +18,7 @@ public record AddressRequest(
 
                 @NotBlank(message = "Địa chỉ không được để trống") String street,
 
-                boolean defaultAddress) {
+                boolean defaultAddress,
+                boolean isShop
+            ) {
 }

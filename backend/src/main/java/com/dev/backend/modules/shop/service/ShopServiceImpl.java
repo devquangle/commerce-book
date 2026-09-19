@@ -1,10 +1,14 @@
 package com.dev.backend.modules.shop.service;
 
+import com.dev.backend.modules.shop.dto.RegisterShopRequest;
 import com.dev.backend.modules.shop.dto.ShopRequest;
 import com.dev.backend.modules.shop.dto.ShopResponse;
 import com.dev.backend.modules.shop.entity.Shop;
 import com.dev.backend.modules.shop.mapper.ShopMapper;
 import com.dev.backend.modules.shop.repository.ShopRepository;
+import com.dev.backend.modules.user.entity.User;
+import com.dev.backend.modules.user.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 public class ShopServiceImpl implements ShopService {
 
     private final ShopRepository shopRepository;
+    private final UserRepository userRepository;
     private final ShopMapper shopMapper;
 
     @Override
@@ -73,5 +78,22 @@ public class ShopServiceImpl implements ShopService {
             throw new RuntimeException("Shop not found with id: " + id);
         }
         shopRepository.deleteById(id);
+    }
+
+    @Override
+    public void registerShop(RegisterShopRequest request) {
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setPhone(request.getPhone());
+        user.setPassword(null);
+        user.setRole(null);
+        user.setFullName(request.getFullName());
+        
+        userRepository.save(user);
+
+        Shop shop= new Shop();
+
+        
+
     }
 }
