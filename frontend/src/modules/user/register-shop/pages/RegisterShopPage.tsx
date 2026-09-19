@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, FormProvider, useWatch } from "react-hook-form";
-import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Store } from "lucide-react";
 
 import type { RegisterShopRequest } from "../types/register-shop.type";
 import { RegisterShopStepper } from "../components/RegisterShopStepper";
@@ -12,6 +12,7 @@ import { StepShopAddress } from "../components/StepShopAddress";
 import { RegisterShopSuccessModal } from "../components/RegisterShopSuccessModal";
 import { Button } from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
+import { useAuth } from "@/context/useAuth";
 
 const INITIAL_FORM_DATA: RegisterShopRequest = {
   // Step 1
@@ -47,12 +48,18 @@ const INITIAL_FORM_DATA: RegisterShopRequest = {
 
 const RegisterShopPage = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, userInfo } = useAuth();
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
 
   const methods = useForm<RegisterShopRequest>({
-    defaultValues: INITIAL_FORM_DATA,
+    defaultValues: {
+      ...INITIAL_FORM_DATA,
+      email: userInfo?.email || "",
+      phone: userInfo?.phone || "",
+      fullName: userInfo?.name || "",
+    },
     mode: "onTouched",
   });
 
@@ -60,15 +67,26 @@ const RegisterShopPage = () => {
     trigger,
     handleSubmit,
     control,
+    setValue,
   } = methods;
 
+  // Tự động điền thông tin nếu đã đăng nhập và userInfo tải xong
+  useEffect(() => {
+    if (userInfo) {
+      if (userInfo.email) setValue("email", userInfo.email);
+      if (userInfo.phone) setValue("phone", userInfo.phone);
+      if (userInfo.name) setValue("fullName", userInfo.name);
+    }
+  }, [userInfo, setValue]);
 
   // Step validation using trigger
   const handleNextStep = async () => {
     let fieldsToValidate: Array<keyof RegisterShopRequest> = [];
 
     if (currentStep === 1) {
-      fieldsToValidate = ["email", "phone", "password", "confirmPassword"];
+      fieldsToValidate = isAuthenticated
+        ? ["email", "phone"]
+        : ["email", "phone", "password", "confirmPassword"];
     } else if (currentStep === 2) {
       fieldsToValidate = [
         "fullName",
@@ -96,7 +114,13 @@ const RegisterShopPage = () => {
   };
 
   const onSubmitForm = async (data: RegisterShopRequest) => {
-    console.log("Dữ liệu đăng ký Shop hoàn tất:", data);
+    const payload = { ...data };
+    if (isAuthenticated) {
+      delete payload.password;
+      delete payload.confirmPassword;
+    }
+
+    console.log("Dữ liệu đăng ký Shop hoàn tất:", payload);
     setIsSubmitting(true);
     try {
       // Giả lập xử lý submit form
@@ -110,6 +134,43 @@ const RegisterShopPage = () => {
   };
 
   const shopNameValue = useWatch({ control, name: "shopName" });
+
+  // Kiểm tra nếu tài khoản hiện tại đã là SHOP
+  if (isAuthenticated && userInfo?.role === "SHOP") {
+    return (
+      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 py-12 px-4 sm:px-6 transition-colors flex items-center justify-center">
+        <Container className="max-w-md mx-auto text-center">
+          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4">
+            <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 flex items-center justify-center mx-auto text-blue-600 dark:text-blue-400">
+              <Store className="w-8 h-8" />
+            </div>
+            <h2 className="text-xl font-bold text-zinc-900 dark:text-white">
+              Bạn đã sở hữu gian hàng!
+            </h2>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              Tài khoản <span className="font-semibold text-zinc-900 dark:text-zinc-200">{userInfo.email}</span> của bạn đã được đăng ký làm Người Bán trên CommerceBook.
+            </p>
+            <div className="pt-2 flex flex-col gap-2.5">
+              <Button
+                variant="primary"
+                onClick={() => navigate("/shop")}
+                className="w-full"
+              >
+                Vào Kênh Người Bán
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => navigate("/")}
+                className="w-full"
+              >
+                Về Trang Chủ
+              </Button>
+            </div>
+          </div>
+        </Container>
+      </div>
+    );
+  }
 
   return (
     <FormProvider {...methods}>

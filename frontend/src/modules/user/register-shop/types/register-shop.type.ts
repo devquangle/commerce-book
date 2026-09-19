@@ -1,8 +1,8 @@
 export interface ShopAccountInfo {
   email: string;
   phone: string;
-  password: string;
-  confirmPassword: string;
+  password?: string;
+  confirmPassword?: string;
 }
 
 /**
