@@ -1,4 +1,4 @@
-import { StoreHeader } from "@/components/stores/StoreHeader";
+import { StoreHeader } from "@/components/stores/StoreHeader1";
 import { StoreInfo } from "@/components/stores/StoreInfo";
 import { StoreAddress } from "@/components/stores/StoreAddress";
 import { StoreDescription } from "@/components/stores/StoreDescription";

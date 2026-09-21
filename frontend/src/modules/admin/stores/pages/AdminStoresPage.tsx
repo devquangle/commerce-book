@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { StoreHeader } from "../../../../components/shop/StoreHeader";
-import { StoreFilter } from "../../../../components/shop/StoreFilter";
-import { StoreTable } from "../../../../components/shop/StoreTable";
-import { StoreMobileCard } from "../../../../components/shop/StoreMobileCard";
-import { StoreSkeleton, StoreMobileSkeleton } from "../../../../components/shop/StoreSkeleton";
-import { StoreDetailModal } from "../../../../components/shop/StoreDetailModal";
-import { StoreApproveModal } from "../../../../components/shop/StoreApproveModal";
-import { StoreRejectModal } from "../../../../components/shop/StoreRejectModal";
+import { StoreHeader } from "../../../../components/stores/StoreHeader";
+import { StoreFilter } from "../../../../components/stores/StoreFilter";
+import { StoreTable } from "../../../../components/stores/StoreTable";
+import { StoreMobileCard } from "../../../../components/stores/StoreMobileCard";
+import { StoreSkeleton, StoreMobileSkeleton } from "../../../../components/stores/StoreSkeleton";
+import { StoreDetailModal } from "../../../../components/stores/StoreDetailModal";
+import { StoreApproveModal } from "../../../../components/stores/StoreApproveModal";
+import { StoreRejectModal } from "../../../../components/stores/StoreRejectModal";
 import { useAdminStoreFilter } from "../hooks/useAdminStoreFilter";
 import {
   useSearchShopsForAdmin,

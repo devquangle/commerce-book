@@ -8,7 +8,7 @@ import {
 import { Pagination } from "@/components/ui/Pagination";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/common/EmptyState";
-import { StoreActionMenu } from "@/components/shop/StoreActionMenu";
+import { StoreActionMenu } from "@/components/stores/StoreActionMenu";
 import type { AdminShopResponse } from "../../modules/admin/stores/types/store.type";
 import { getShopStatusInfo } from "../../modules/admin/stores/types/store-status.type";
 
