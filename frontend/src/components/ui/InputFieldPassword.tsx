@@ -32,10 +32,9 @@ const InputFieldPassword = ({
 
   const [showPassword, setShowPassword] = useState(false);
   const describedBy = error ? errorId : helperText ? helperId : undefined;
-  const containerClass = containerClassName || (label || error ? "mb-4" : "");
 
   return (
-    <div className={`w-full ${containerClass}`}>
+    <div className={`w-full ${containerClassName}`}>
       {label && (
         <label
           htmlFor={inputId}

@@ -14,7 +14,7 @@ export const ProfileForm = ({
 }: ProfileFormProps) => {
   return (
     <div className="flex-1">
-      <form className="space-y-1.5" onSubmit={onSubmit}>
+      <form className="space-y-4" onSubmit={onSubmit}>
         <FormInput
           name="name"
           control={control}

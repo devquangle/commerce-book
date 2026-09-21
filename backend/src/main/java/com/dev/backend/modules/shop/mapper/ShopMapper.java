@@ -1,5 +1,6 @@
 package com.dev.backend.modules.shop.mapper;
 
+import com.dev.backend.common.enums.ShopStatus;
 import com.dev.backend.modules.shop.dto.RegisterShopRequest;
 import com.dev.backend.modules.shop.dto.ShopRequest;
 import com.dev.backend.modules.shop.dto.ShopResponse;
@@ -17,7 +18,7 @@ public class ShopMapper {
         shop.setName(request.getName());
         shop.setDescription(request.getDescription());
         shop.setLogoUrl(request.getLogoUrl());
-        shop.setStatus(request.getStatus());
+        // shop.setStatus(request.getStatus());
         shop.setRating(request.getRating());
         return shop;
     }
@@ -52,17 +53,13 @@ public class ShopMapper {
         if (request.getLogoUrl() != null) {
             entity.setLogoUrl(request.getLogoUrl());
         }
-        if (request.getStatus() != null) {
-            entity.setStatus(request.getStatus());
-        }
+      
         if (request.getRating() != null) {
             entity.setRating(request.getRating());
         }
     }
 
-
-
-     public Shop toShop(RegisterShopRequest request) {
+    public Shop toShop(RegisterShopRequest request) {
         if (request == null) {
             return null;
         }
@@ -76,7 +73,7 @@ public class ShopMapper {
         entity.setBankName(request.bankName());
         entity.setBankNumber(request.bankNumber());
         entity.setOwnerName(request.ownerName());
-
+        entity.setStatus(ShopStatus.PENDING);
         return entity;
     }
 }

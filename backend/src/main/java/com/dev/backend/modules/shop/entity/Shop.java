@@ -1,12 +1,15 @@
 package com.dev.backend.modules.shop.entity;
 
 import com.dev.backend.common.entity.BaseEntity;
+import com.dev.backend.common.enums.ShopStatus;
 import com.dev.backend.modules.order.entity.Order;
 import com.dev.backend.modules.product.entity.Product;
 import com.dev.backend.modules.user.entity.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
@@ -52,7 +55,8 @@ public class Shop extends BaseEntity {
     private String ownerName;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ShopStatus status;
 
     @Column(name = "rating")
     private Double rating;

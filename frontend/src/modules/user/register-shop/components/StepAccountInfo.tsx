@@ -20,7 +20,7 @@ export const StepAccountInfo: React.FC = () => {
   if (isAuthenticated && userInfo) {
     return (
       <div className="space-y-6 animate-in fade-in duration-200">
-        <div className="border-b border-zinc-200 dark:border-zinc-800 pb-3 mb-4">
+        <div className="border-b border-zinc-200 dark:border-zinc-800 pb-3">
           <h3 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
             <UserCheck className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             Bước 1: Xác nhận tài khoản đăng ký Shop
@@ -116,7 +116,7 @@ export const StepAccountInfo: React.FC = () => {
   // Trường hợp 1: Người dùng CHƯA ĐĂNG NHẬP
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
-      <div className="border-b border-zinc-200 dark:border-zinc-800 pb-3 mb-4">
+      <div className="border-b border-zinc-200 dark:border-zinc-800 pb-3">
         <h3 className="text-lg font-bold text-zinc-900 dark:text-white flex items-center gap-2">
           <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           Bước 1: Thông tin tài khoản đăng ký
@@ -178,9 +178,7 @@ export const StepAccountInfo: React.FC = () => {
           }}
           className="body-text"
         />
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Password */}
         <FormInputPassword
           name="password"
