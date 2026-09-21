@@ -55,13 +55,15 @@ export const TextAreaField = React.forwardRef<
           {...props}
         />
 
-        <div className="min-h-[20px] mt-1.5">
-          {error ? (
-            <p className="text-xs text-red-500 font-medium">{error}</p>
-          ) : helperText ? (
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">{helperText}</p>
-          ) : null}
-        </div>
+        {(error || helperText) && (
+          <div className="mt-1.5">
+            {error ? (
+              <p className="text-xs text-red-500 font-medium">{error}</p>
+            ) : helperText ? (
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">{helperText}</p>
+            ) : null}
+          </div>
+        )}
       </div>
     );
   }

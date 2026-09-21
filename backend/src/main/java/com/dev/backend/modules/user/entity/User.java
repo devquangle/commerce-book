@@ -75,6 +75,8 @@ public class User extends BaseEntity {
     @Column(name = "enabled")
     private boolean enabled = false;
 
+    private boolean verify=false;
+
     @Column(name = "account_non_locked")
     private boolean accountNonLocked = true;
 

@@ -300,7 +300,12 @@ export const StepOwnerIdentity: React.FC = () => {
             </p>
             <SingleImageUpload
               file={frontCccdFile}
-              setFile={setFrontCccdFile}
+              setFile={(file) => {
+                setFrontCccdFile(file);
+                if (ekycMutation.isSuccess || ekycMutation.isError) {
+                  ekycMutation.reset();
+                }
+              }}
               label=""
             />
           </div>
@@ -323,50 +328,57 @@ export const StepOwnerIdentity: React.FC = () => {
             </p>
             <SingleImageUpload
               file={backCccdFile}
-              setFile={setBackCccdFile}
+              setFile={(file) => {
+                setBackCccdFile(file);
+                if (ekycMutation.isSuccess || ekycMutation.isError) {
+                  ekycMutation.reset();
+                }
+              }}
               label=""
             />
           </div>
         </div>
       </div>
 
-      {/* ===== 2. Xác thực khuôn mặt ===== */}
-      <div className="space-y-3">
-        <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
-          <Camera className="w-4 h-4 text-blue-500" />
-          Xác thực khuôn mặt
-          <span className="text-red-500">*</span>
-        </p>
+      {/* ===== 2. Xác thực khuôn mặt (Ẩn khi đã xác thực thành công) ===== */}
+      {!isVerified && (
+        <div className="space-y-3">
+          <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
+            <Camera className="w-4 h-4 text-blue-500" />
+            Xác thực khuôn mặt
+            <span className="text-red-500">*</span>
+          </p>
 
-        {/* === Khối chụp Camera === */}
-        <div className="rounded-xl border border-zinc-200 dark:border-zinc-700/60 bg-zinc-50 dark:bg-zinc-800/40 p-4 transition-colors">
-          <div className="flex justify-center py-1 w-full">
-            <button
-              type="button"
-              className="py-2.5 px-6 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
-              onClick={handleStartFaceVerification}
-              disabled={isEkycLoading}
-            >
-              {isEkycLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Đang xác thực...</span>
-                </>
-              ) : isEkycSuccess ? (
-                <>
-                  <RefreshCw className="w-4 h-4" />
-                  <span>Xác thực lại khuôn mặt</span>
-                </>
-              ) : (
-                <>
-                  <Camera className="w-4 h-4" />
-                  <span>Xác thực khuôn mặt</span>
-                </>
-              )}
-            </button>
+          {/* === Khối chụp Camera === */}
+          <div className="rounded-xl border border-zinc-200 dark:border-zinc-700/60 bg-zinc-50 dark:bg-zinc-800/40 p-4 transition-colors">
+            <div className="flex justify-center py-1 w-full">
+              <button
+                type="button"
+                className="py-2.5 px-6 bg-[#50b875] hover:bg-[#44a365] text-white text-sm font-medium rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                onClick={handleStartFaceVerification}
+                disabled={isEkycLoading}
+              >
+                {isEkycLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Đang xác thực...</span>
+                  </>
+                ) : isVerifyFailed ? (
+                  <>
+                    <RefreshCw className="w-4 h-4" />
+                    <span>Xác thực lại khuôn mặt</span>
+                  </>
+                ) : (
+                  <>
+                    <Camera className="w-4 h-4" />
+                    <span>Xác thực khuôn mặt</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* ===== 4. Nút xác thực (Đã được chuyển lên trên cạnh nút chụp) ===== */}
 

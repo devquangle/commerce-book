@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,8 +23,8 @@ public class UserResponse {
     private String role;
     private String avatarUrl;
     private String identityNumber;
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
     private String gender;
     private String nationality;
-    private String expiryDate;
+    private LocalDate expiryDate;
 }

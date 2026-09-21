@@ -314,8 +314,8 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
             )}
           </div>
 
-        {!hideMessage && (
-          <div className="min-h-[20px] mt-1.5">
+        {!hideMessage && (error || helperText) && (
+          <div className="mt-1.5">
             {error ? (
               <p className="text-xs text-red-500 font-medium">{error}</p>
             ) : helperText ? (
