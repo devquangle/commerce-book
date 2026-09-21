@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useRef } from "react";
-import { useFormContext, Controller } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import {
   MapPin,
   Navigation,
@@ -10,7 +10,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { FormInput } from "@/components/common/FormInput";
-import { SelectBox } from "@/components/ui/SelectBox";
+import { FormSelect } from "@/components/common/FormSelect";
 import type { SelectOption } from "@/components/ui/SelectBox";
 import {
   useAddresses,
@@ -30,8 +30,8 @@ export const StepShopAddress: React.FC = () => {
   const {
     control,
     setValue,
+    clearErrors,
     watch,
-    formState: { errors },
   } = useFormContext<RegisterShopRequest>();
 
   const provinceId = Number(watch("provinceId")) || 0;
@@ -105,10 +105,16 @@ export const StepShopAddress: React.FC = () => {
 
   // Handle selecting a saved address
   const handleSelectSavedAddress = (addr: AddressResponse) => {
-    setValue("provinceId", Number(addr.provinceId) || 0, { shouldValidate: true });
-    setValue("districtId", Number(addr.districtId) || 0, { shouldValidate: true });
-    setValue("wardCode", addr.wardCode || "", { shouldValidate: true });
-    setValue("street", addr.street || "", { shouldValidate: true });
+    const pid = Number(addr.provinceId) || 0;
+    const did = Number(addr.districtId) || 0;
+    const wcode = addr.wardCode || "";
+    const str = addr.street || "";
+
+    setValue("provinceId", pid, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+    setValue("districtId", did, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+    setValue("wardCode", wcode, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+    setValue("street", str, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+    clearErrors(["provinceId", "districtId", "wardCode", "street"]);
   };
 
   // Reset address to clear fields for manual input
@@ -117,6 +123,7 @@ export const StepShopAddress: React.FC = () => {
     setValue("districtId", 0, { shouldValidate: false });
     setValue("wardCode", "", { shouldValidate: false });
     setValue("street", "", { shouldValidate: false });
+    clearErrors(["provinceId", "districtId", "wardCode", "street"]);
   };
 
   // Full address labels
@@ -224,112 +231,97 @@ export const StepShopAddress: React.FC = () => {
       <div className="flex flex-col md:flex-row gap-4">
         {/* Province */}
         <div className="flex-1">
-          <Controller
-            control={control}
+          <FormSelect
             name="provinceId"
+            control={control}
+            label="Tỉnh / Thành phố"
+            required
+            searchable
+            searchPlaceholder="Tìm Tỉnh / Thành..."
+            options={provinceOptions}
+            placeholder={
+              isLoadingProvinces
+                ? "Đang tải Tỉnh / Thành..."
+                : "Chọn Tỉnh / Thành phố"
+            }
+            disabled={isLoadingProvinces}
             rules={{
               required: "Vui lòng chọn Tỉnh / Thành phố",
               validate: (v) => Number(v) > 0 || "Vui lòng chọn Tỉnh / Thành phố",
             }}
-            render={({ field, fieldState: { error } }) => (
-              <SelectBox
-                searchable
-                searchPlaceholder="Tìm Tỉnh / Thành..."
-                label="Tỉnh / Thành phố"
-                required
-                options={provinceOptions}
-                placeholder={
-                  isLoadingProvinces
-                    ? "Đang tải Tỉnh / Thành..."
-                    : "Chọn Tỉnh / Thành phố"
-                }
-                disabled={isLoadingProvinces}
-                {...field}
-                value={field.value ? Number(field.value) : ""}
-                onChange={(e) => {
-                  const pid = Number(e.target.value) || 0;
-                  field.onChange(pid);
-                  setValue("districtId", 0, { shouldValidate: true });
-                  setValue("wardCode", "", { shouldValidate: true });
-                }}
-                error={error?.message || errors.provinceId?.message}
-                textClassName="body-text"
-              />
-            )}
+            onValueChange={(val) => {
+              const pid = Number(val) || 0;
+              setValue("provinceId", pid, { shouldValidate: true, shouldDirty: true });
+              setValue("districtId", 0, { shouldValidate: false, shouldDirty: true });
+              setValue("wardCode", "", { shouldValidate: false, shouldDirty: true });
+              clearErrors(["provinceId", "districtId", "wardCode"]);
+            }}
+            textClassName="body-text"
           />
         </div>
 
         {/* District */}
         <div className="flex-1">
-          <Controller
-            control={control}
+          <FormSelect
             name="districtId"
+            control={control}
+            label="Quận / Huyện"
+            required
+            searchable
+            searchPlaceholder="Tìm Quận / Huyện..."
+            disabled={!provinceId || isLoadingDistricts}
+            options={districtOptions}
+            placeholder={
+              isLoadingDistricts
+                ? "Đang tải Quận / Huyện..."
+                : provinceId
+                ? "Chọn Quận / Huyện"
+                : "Hãy chọn Tỉnh/Thành trước"
+            }
             rules={{
               required: "Vui lòng chọn Quận / Huyện",
               validate: (v) => Number(v) > 0 || "Vui lòng chọn Quận / Huyện",
             }}
-            render={({ field, fieldState: { error } }) => (
-              <SelectBox
-                searchable
-                searchPlaceholder="Tìm Quận / Huyện..."
-                label="Quận / Huyện"
-                required
-                disabled={!provinceId || isLoadingDistricts}
-                options={districtOptions}
-                placeholder={
-                  isLoadingDistricts
-                    ? "Đang tải Quận / Huyện..."
-                    : provinceId
-                    ? "Chọn Quận / Huyện"
-                    : "Hãy chọn Tỉnh/Thành trước"
-                }
-                {...field}
-                value={field.value ? Number(field.value) : ""}
-                onChange={(e) => {
-                  const did = Number(e.target.value) || 0;
-                  field.onChange(did);
-                  setValue("wardCode", "", { shouldValidate: true });
-                }}
-                error={error?.message || errors.districtId?.message}
-                textClassName="body-text"
-              />
-            )}
+            onValueChange={(val) => {
+              const did = Number(val) || 0;
+              setValue("districtId", did, { shouldValidate: true, shouldDirty: true });
+              setValue("wardCode", "", { shouldValidate: false, shouldDirty: true });
+              clearErrors(["districtId", "wardCode"]);
+            }}
+            textClassName="body-text"
           />
         </div>
 
         {/* Ward */}
         <div className="flex-1">
-          <Controller
-            control={control}
+          <FormSelect
             name="wardCode"
+            control={control}
+            label="Phường / Xã"
+            required
+            searchable
+            searchPlaceholder="Tìm Phường / Xã..."
+            disabled={!districtId || isLoadingWards}
+            options={wardOptions}
+            placeholder={
+              isLoadingWards
+                ? "Đang tải Phường / Xã..."
+                : districtId
+                ? "Chọn Phường / Xã"
+                : "Hãy chọn Quận/Huyện trước"
+            }
             rules={{
               required: "Vui lòng chọn Phường / Xã",
               validate: (v) => Boolean(v && String(v).trim()) || "Vui lòng chọn Phường / Xã",
             }}
-            render={({ field, fieldState: { error } }) => (
-              <SelectBox
-                searchable
-                searchPlaceholder="Tìm Phường / Xã..."
-                label="Phường / Xã"
-                required
-                disabled={!districtId || isLoadingWards}
-                options={wardOptions}
-                placeholder={
-                  isLoadingWards
-                    ? "Đang tải Phường / Xã..."
-                    : districtId
-                    ? "Chọn Phường / Xã"
-                    : "Hãy chọn Quận/Huyện trước"
-                }
-                {...field}
-                value={field.value ? String(field.value) : ""}
-                onChange={(e) => {
-                  field.onChange(e.target.value || "");
-                }}
-                error={error?.message || errors.wardCode?.message}
-                textClassName="body-text"
-              />
-            )}
+            onValueChange={(val) => {
+              const wcode = String(val || "").trim();
+              setValue("wardCode", wcode, { shouldValidate: true, shouldDirty: true });
+              if (wcode) {
+                clearErrors("wardCode");
+              }
+            }}
+            textClassName="body-text"
           />
         </div>
       </div>

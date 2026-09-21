@@ -115,18 +115,14 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
     const handleSelectOption = (opt: SelectOption) => {
       if (opt.disabled) return;
 
-      const isAlreadySelected = String(opt.value) === String(selectedValue);
-      const newValue = isAlreadySelected ? "" : opt.value;
+      const newValue = opt.value;
 
       setSelectedValue(newValue);
       setIsOpen(false);
       if (searchable) setSearchTerm("");
 
-      // Trigger native select change event so react-hook-form registers the update
       if (selectRef.current) {
         selectRef.current.value = String(newValue);
-        const event = new Event("change", { bubbles: true });
-        selectRef.current.dispatchEvent(event);
       }
 
       if (onChange && selectRef.current) {
@@ -135,6 +131,14 @@ export const SelectBox = React.forwardRef<HTMLSelectElement, SelectBoxProps>(
           currentTarget: selectRef.current,
         } as React.ChangeEvent<HTMLSelectElement>;
         onChange(syntheticEvent);
+      }
+
+      if (onBlur && selectRef.current) {
+        const blurEvent = {
+          target: selectRef.current,
+          currentTarget: selectRef.current,
+        } as React.FocusEvent<HTMLSelectElement>;
+        onBlur(blurEvent);
       }
     };
 

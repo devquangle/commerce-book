@@ -69,7 +69,6 @@ export const StepOwnerIdentity: React.FC = () => {
     register,
     setValue,
     watch,
-    formState: { errors },
   } = useFormContext<RegisterShopRequest>();
 
   // CCCD ảnh mặt trước & mặt sau (chỉ dùng File, không dùng URL)

@@ -427,10 +427,6 @@ const RegisterShopPage = () => {
           isOpen={isSuccessModalOpen}
           onClose={() => setIsSuccessModalOpen(false)}
           shopName={shopNameValue || "Gian Hàng Mới"}
-          onGoToDashboard={() => {
-            setIsSuccessModalOpen(false);
-            navigate("/");
-          }}
         />
       </div>
     </FormProvider>
