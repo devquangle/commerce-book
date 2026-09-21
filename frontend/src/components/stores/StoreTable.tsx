@@ -86,29 +86,29 @@ export const StoreTable: React.FC<StoreTableProps> = ({
   }
 
   return (
-    <div className="card-custom p-0 overflow-hidden flex flex-col">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-850/50 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
-              <th className="py-3.5 px-4">Cửa hàng</th>
-              <th className="py-3.5 px-4">Chủ sở hữu</th>
-              <th className="py-3.5 px-4">Tài khoản thụ hưởng</th>
-              <th className="py-3.5 px-4">Trạng thái</th>
-              <th className="py-3.5 px-4">Ngày đăng ký</th>
-              <th className="py-3.5 px-4 text-right">Thao tác</th>
+    <div className="hidden md:flex card-custom flex-col">
+      <div className="overflow-x-auto overflow-hidden rounded-t-2xl">
+        <table className="w-full text-left body-text text-zinc-600 dark:text-zinc-300">
+          <thead className="bg-zinc-50 dark:bg-zinc-800/40 body-text uppercase font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider">
+            <tr>
+              <th className="px-6 py-4">Cửa hàng</th>
+              <th className="px-6 py-4">Chủ sở hữu</th>
+              <th className="px-6 py-4">Tài khoản thụ hưởng</th>
+              <th className="px-6 py-4">Trạng thái</th>
+              <th className="px-6 py-4">Ngày đăng ký</th>
+              <th className="px-6 py-4 text-right">Thao tác</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800 text-sm">
+          <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
             {stores.map((store) => {
               const statusInfo = getShopStatusInfo(store.status);
               return (
                 <tr
                   key={store.id}
-                  className="hover:bg-zinc-50/70 dark:hover:bg-zinc-850/40 transition-colors"
+                  className="hover:bg-zinc-50/70 dark:hover:bg-zinc-800/30 transition-colors"
                 >
                   {/* Cột 1: Thông tin Cửa hàng */}
-                  <td className="py-3.5 px-4">
+                  <td className="py-3 px-6 align-middle">
                     <div className="flex items-center gap-3">
                       {store.logoUrl ? (
                         <img
@@ -133,7 +133,7 @@ export const StoreTable: React.FC<StoreTableProps> = ({
                   </td>
 
                   {/* Cột 2: Chủ sở hữu */}
-                  <td className="py-3.5 px-4">
+                  <td className="py-3 px-6 align-middle">
                     <div className="flex flex-col gap-0.5">
                       <span className="font-medium text-zinc-900 dark:text-white">
                         {store.ownerFullName || "Chưa cập nhật"}
@@ -154,7 +154,7 @@ export const StoreTable: React.FC<StoreTableProps> = ({
                   </td>
 
                   {/* Cột 3: Ngân hàng */}
-                  <td className="py-3.5 px-4">
+                  <td className="py-3 px-6 align-middle">
                     <div className="flex flex-col gap-0.5">
                       <span className="font-medium text-zinc-800 dark:text-zinc-200 text-xs">
                         {store.bankName || "Chưa cập nhật"}
@@ -169,7 +169,7 @@ export const StoreTable: React.FC<StoreTableProps> = ({
                   </td>
 
                   {/* Cột 4: Trạng thái & Lý do */}
-                  <td className="py-3.5 px-4">
+                  <td className="py-3 px-6 align-middle">
                     <div className="flex flex-col items-start gap-1">
                       <Badge title={statusInfo.label} variant={statusInfo.color} />
                       {store.status === "REJECTED" && store.reason && (
@@ -179,7 +179,7 @@ export const StoreTable: React.FC<StoreTableProps> = ({
                   </td>
 
                   {/* Cột 5: Ngày tạo */}
-                  <td className="py-3.5 px-4 text-xs text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
+                  <td className="py-3 px-6 align-middle text-xs text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
                     {store.createdAt
                       ? new Date(store.createdAt).toLocaleDateString("vi-VN", {
                           day: "2-digit",
@@ -192,7 +192,7 @@ export const StoreTable: React.FC<StoreTableProps> = ({
                   </td>
 
                   {/* Cột 6: Thao tác — dùng StoreActionMenu */}
-                  <td className="py-3.5 px-4 text-right">
+                  <td className="py-3 px-6 text-right align-middle">
                     <StoreActionMenu
                       item={store}
                       onView={onView}
@@ -209,7 +209,7 @@ export const StoreTable: React.FC<StoreTableProps> = ({
 
       {/* Pagination */}
       {computedTotalPages > 1 && (
-        <div className="px-4 py-3 border-t border-zinc-200 dark:border-zinc-800 flex justify-end">
+        <div className="px-4 bg-zinc-50/50 dark:bg-zinc-800/50 border-t border-zinc-200 dark:border-zinc-800">
           <Pagination
             currentPage={page}
             totalPages={computedTotalPages}

@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { StoreHeader } from "../../../../components/stores/StoreHeader";
-import { StoreFilter } from "../../../../components/stores/StoreFilter";
-import { StoreTable } from "../../../../components/stores/StoreTable";
-import { StoreMobileCard } from "../../../../components/stores/StoreMobileCard";
-import { StoreSkeleton, StoreMobileSkeleton } from "../../../../components/stores/StoreSkeleton";
-import { StoreDetailModal } from "../../../../components/stores/StoreDetailModal";
-import { StoreApproveModal } from "../../../../components/stores/StoreApproveModal";
-import { StoreRejectModal } from "../../../../components/stores/StoreRejectModal";
+import { Pagination } from "@/components/ui/Pagination";
+import { StoreHeader } from "@/components/stores/StoreHeader";
+import { StoreFilter } from "@/components/stores/StoreFilter";
+import { StoreTable } from "@/components/stores/StoreTable";
+import { StoreMobileCard } from "@/components/stores/StoreMobileCard";
+import { StoreSkeleton, StoreMobileSkeleton } from "@/components/stores/StoreSkeleton";
+import { StoreDetailModal } from "@/components/stores/StoreDetailModal";
+import { StoreApproveModal } from "@/components/stores/StoreApproveModal";
+import { StoreRejectModal } from "@/components/stores/StoreRejectModal";
 import { useAdminStoreFilter } from "../hooks/useAdminStoreFilter";
 import {
   useSearchShopsForAdmin,
@@ -71,16 +72,10 @@ export const AdminStoresPage = () => {
     setIsRejectOpen(true);
   };
 
-  // Pending count in current list (or overall if status == PENDING)
-  const pendingCount = stores.filter((s) => s.status === "PENDING").length;
-
   return (
-    <div className="flex flex-col gap-6 w-full min-h-full pb-8">
+    <div className="flex flex-col gap-6 w-full min-h-full pb-6">
       {/* Header */}
-      <StoreHeader
-        totalStores={totalElements}
-        pendingStores={pendingCount}
-      />
+      <StoreHeader />
 
       {/* Filter */}
       <StoreFilter
@@ -91,7 +86,6 @@ export const AdminStoresPage = () => {
         onReset={handleResetFilter}
       />
 
-      {/* Main Content: Table on Desktop, Cards on Mobile */}
       {isLoading ? (
         <>
           <div className="hidden md:block">
@@ -105,7 +99,7 @@ export const AdminStoresPage = () => {
         </>
       ) : (
         <>
-          {/* Desktop Table */}
+          {/* Giao diện Table cho Desktop */}
           <div className="hidden md:block">
             <StoreTable
               stores={stores}
@@ -121,7 +115,7 @@ export const AdminStoresPage = () => {
             />
           </div>
 
-          {/* Mobile Grid Cards */}
+          {/* Giao diện Card cho Mobile/Tablet */}
           <div className="flex flex-col gap-4 md:hidden">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {stores.map((store) => (
@@ -133,11 +127,23 @@ export const AdminStoresPage = () => {
                   onReject={handleOpenReject}
                 />
               ))}
+              {stores.length === 0 && (
+                <div className="col-span-full py-24 text-center text-zinc-500 bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800">
+                  Không tìm thấy gian hàng nào
+                </div>
+              )}
             </div>
 
-            {stores.length === 0 && (
-              <div className="py-20 text-center text-zinc-500 bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800">
-                Không tìm thấy gian hàng nào
+            {stores.length > 0 && (
+              <div className="card-custom">
+                <Pagination
+                  currentPage={page}
+                  totalPages={Math.ceil(totalElements / size) || 1}
+                  totalElements={totalElements}
+                  pageSize={size}
+                  onPageChange={handlePageChange}
+                  onPageSizeChange={handlePageSizeChange}
+                />
               </div>
             )}
           </div>
