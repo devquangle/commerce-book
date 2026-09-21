@@ -23,6 +23,22 @@ import java.util.stream.Collectors;
 
 import com.dev.backend.common.exception.NotFoundException;
 
+import com.dev.backend.common.constant.ModuleConstants;
+import com.dev.backend.common.enums.ShopStatus;
+import com.dev.backend.common.response.PageResponse;
+import com.dev.backend.modules.address.entity.Address;
+import com.dev.backend.modules.address.repository.AddressRepository;
+import com.dev.backend.modules.role.entity.Role;
+import com.dev.backend.modules.role.repository.RoleRepository;
+import com.dev.backend.modules.shop.dto.AdminShopDetailResponse;
+import com.dev.backend.modules.shop.dto.AdminShopFilterRequest;
+import com.dev.backend.modules.shop.dto.AdminShopResponse;
+import com.dev.backend.modules.shop.dto.RejectShopRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -32,6 +48,8 @@ public class ShopServiceImpl implements ShopService {
     private final UserService userService;
     private final UserRepository userRepository;
     private final AddressService addressService;
+    private final AddressRepository addressRepository;
+    private final RoleRepository roleRepository;
     private final ShopMapper shopMapper;
 
     @Override
@@ -166,5 +184,71 @@ public class ShopServiceImpl implements ShopService {
 
         // 4. Trả về response thông tin Shop vừa tạo
         return shopMapper.toResponse(shop);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageResponse<AdminShopResponse> searchShopsForAdmin(AdminShopFilterRequest request) {
+        int pageNumber = request.getPageNumber();
+        int pageSize = request.getPageSize();
+        Sort.Direction direction = "ASC".equalsIgnoreCase(request.getSortDirection())
+                ? Sort.Direction.ASC
+                : Sort.Direction.DESC;
+        String sortBy = (request.getSortBy() != null && !request.getSortBy().isBlank())
+                ? request.getSortBy()
+                : "createdAt";
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(direction, sortBy));
+
+        Page<Shop> page = shopRepository.searchForAdmin(request.getKeyword(), request.getStatus(), pageable);
+        List<AdminShopResponse> items = page.getContent().stream()
+                .map(shopMapper::toAdminResponse)
+                .collect(Collectors.toList());
+
+        return new PageResponse<>(items, page.getNumber(), page.getSize(), page.getTotalElements(), page.getTotalPages());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AdminShopDetailResponse getShopDetailForAdmin(Long id) {
+        Shop shop = shopRepository.findByIdWithOwner(id)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy cửa hàng với id: " + id));
+
+        Address address = null;
+        if (shop.getOwner() != null) {
+            address = addressRepository.findShopAddressByUserId(shop.getOwner().getId()).orElse(null);
+        }
+
+        return shopMapper.toAdminDetailResponse(shop, address);
+    }
+
+    @Override
+    public void approveShop(Long id) {
+        Shop shop = shopRepository.findByIdWithOwner(id)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy cửa hàng với id: " + id));
+
+        shop.setStatus(ShopStatus.ACTIVE);
+        shop.setReason(null);
+        shopRepository.save(shop);
+
+        User owner = shop.getOwner();
+        if (owner != null) {
+            Role shopRole = roleRepository.findByCode("ROLE_SHOP")
+                    .or(() -> roleRepository.findByName(ModuleConstants.SHOP))
+                    .orElse(null);
+            if (shopRole != null) {
+                owner.setRole(shopRole);
+                userRepository.save(owner);
+            }
+        }
+    }
+
+    @Override
+    public void rejectShop(Long id, RejectShopRequest request) {
+        Shop shop = shopRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy cửa hàng với id: " + id));
+
+        shop.setStatus(ShopStatus.REJECTED);
+        shop.setReason(request != null ? request.getReason() : null);
+        shopRepository.save(shop);
     }
 }

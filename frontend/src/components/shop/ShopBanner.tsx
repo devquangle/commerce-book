@@ -49,7 +49,7 @@ const ShopBanner = ({ shopInfo }: ShopBannerProps) => {
             </Swiper>
           ) : (
             <div className="w-full h-full flex flex-col justify-center items-center text-gray-500 text-3xl font-bold">
-              Banner {shopInfo.name}
+              Banner {shopInfo.shopName}
             </div>
           )}
         </div>

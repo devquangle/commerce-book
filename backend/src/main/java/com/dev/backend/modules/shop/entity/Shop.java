@@ -58,6 +58,9 @@ public class Shop extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ShopStatus status;
 
+    @Column(name = "reason", columnDefinition = "TEXT")
+    private String reason;
+
     @Column(name = "rating")
     private Double rating;
 

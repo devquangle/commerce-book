@@ -41,4 +41,12 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
                 WHERE a.user.id = :userId
             """)
     void resetDefaultAddress(@Param("userId") Long userId);
+
+    @Query("""
+                SELECT a
+                FROM Address a
+                WHERE a.user.id = :userId
+                AND a.isShop = true
+            """)
+    Optional<Address> findShopAddressByUserId(@Param("userId") Long userId);
 }

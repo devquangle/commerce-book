@@ -7,6 +7,12 @@ import com.dev.backend.modules.shop.entity.Shop;
 import com.dev.backend.modules.user.entity.User;
 
 
+import com.dev.backend.common.response.PageResponse;
+import com.dev.backend.modules.shop.dto.AdminShopDetailResponse;
+import com.dev.backend.modules.shop.dto.AdminShopFilterRequest;
+import com.dev.backend.modules.shop.dto.AdminShopResponse;
+import com.dev.backend.modules.shop.dto.RejectShopRequest;
+
 public interface ShopService {
 
     Shop getById(Long id);
@@ -21,6 +27,13 @@ public interface ShopService {
 
     boolean checkShopNameExists(String name);
 
-   CheckAccountResponse checkAccountAvailability(String email, String phone, Long currentUserId);
+    CheckAccountResponse checkAccountAvailability(String email, String phone, Long currentUserId);
 
+    PageResponse<AdminShopResponse> searchShopsForAdmin(AdminShopFilterRequest request);
+
+    AdminShopDetailResponse getShopDetailForAdmin(Long id);
+
+    void approveShop(Long id);
+
+    void rejectShop(Long id, RejectShopRequest request);
 }

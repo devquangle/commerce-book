@@ -7,6 +7,7 @@ public enum ShopStatus {
     PENDING,   // Chờ duyệt đăng ký cửa hàng
     ACTIVE,    // Đang hoạt động
     INACTIVE,  // Tạm ngưng hoạt động
+    REJECTED,  // Bị từ chối duyệt
     SUSPENDED, // Bị tạm đình chỉ
     BANNED     // Bị cấm / Khóa gian hàng vĩnh viễn
 }
