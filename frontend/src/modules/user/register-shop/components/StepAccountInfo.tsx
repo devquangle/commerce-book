@@ -183,7 +183,7 @@ export const StepAccountInfo: React.FC = () => {
         <FormInputPassword
           name="password"
           control={control}
-          label="Mật khẩu tài khoản Shop"
+          label="Mật khẩu tài khoản"
           placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)"
           required
           rules={{

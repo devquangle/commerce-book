@@ -22,6 +22,7 @@ export interface InputDateProps {
   id?: string;
   minDate?: Date | null;
   maxDate?: Date | null;
+  hideMessage?: boolean;
 }
 
 export const InputDate = forwardRef<any, InputDateProps>(
@@ -41,6 +42,7 @@ export const InputDate = forwardRef<any, InputDateProps>(
       id,
       minDate,
       maxDate,
+      hideMessage = false,
     },
     ref
   ) => {
@@ -97,11 +99,15 @@ export const InputDate = forwardRef<any, InputDateProps>(
           </div>
         </div>
 
-        {error ? (
-          <p className="text-xs text-red-500 font-medium">{error}</p>
-        ) : helperText ? (
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">{helperText}</p>
-        ) : null}
+        {!hideMessage && (
+          <div className="min-h-[20px] mt-1.5">
+            {error ? (
+              <p className="text-xs text-red-500 font-medium">{error}</p>
+            ) : helperText ? (
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">{helperText}</p>
+            ) : null}
+          </div>
+        )}
       </div>
     );
   }
