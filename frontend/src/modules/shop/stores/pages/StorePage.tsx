@@ -1,8 +1,8 @@
-import { StoreHeader } from "@/components/shop/stores/StoreHeader";
-import { StoreInfo } from "@/components/shop/stores/StoreInfo";
-import { StoreAddress } from "@/components/shop/stores/StoreAddress";
-import { StoreDescription } from "@/components/shop/stores/StoreDescription";
-import { StoreOwnerInfo } from "@/components/shop/stores/StoreOwnerInfo";
+import { StoreHeader } from "@/components/stores/StoreHeader";
+import { StoreInfo } from "@/components/stores/StoreInfo";
+import { StoreAddress } from "@/components/stores/StoreAddress";
+import { StoreDescription } from "@/components/stores/StoreDescription";
+import { StoreOwnerInfo } from "@/components/stores/StoreOwnerInfo";
 
 const StorePage = () => {
   return (

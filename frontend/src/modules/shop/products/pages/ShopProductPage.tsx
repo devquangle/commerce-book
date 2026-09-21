@@ -1,14 +1,14 @@
 import { Pagination } from "@/components/ui/Pagination";
 import { useState } from "react";
-import { ProductHeader } from "@/components/shop/products/ProductHeader";
-import { ProductFilter } from "@/components/shop/products/ProductFilter";
-import { ProductTable } from "@/components/shop/products/ProductTable";
-import { ProductMobileCard } from "@/components/shop/products/ProductMobileCard";
+import { ProductHeader } from "@/components/products/shop/ProductHeader";
+import { ProductFilter } from "@/components/products/shop/ProductFilter";
+import { ProductTable } from "@/components/products/shop/ProductTable";
+import { ProductMobileCard } from "@/components/products/shop/ProductMobileCard";
 import {
   ProductSkeleton,
   ProductMobileSkeleton,
-} from "@/components/shop/products/ProductSkeleton";
-import { ProductDeleteModal } from "@/components/shop/products/ProductDeleteModal";
+} from "@/components/products/shop/ProductSkeleton";
+import { ProductDeleteModal } from "@/components/products/shop/ProductDeleteModal";
 import { useProductShopFilter } from "../hooks/useProductShopFilter";
 import { useProductShop, useDeleteProductShop } from "../hooks/useProduct";
 import type { ProductResponse } from "../types/product.type";

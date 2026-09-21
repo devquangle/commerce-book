@@ -1,15 +1,15 @@
 import React from "react";
-import ProductImages from "@/components/user/product-detail/ProductImages";
+import ProductImages from "@/components/products/detail/ProductImages";
 import Container from "@/components/ui/Container";
-import ProductDescription from "@/components/user/product-detail/ProductDescription";
-import ProductAttribute from "@/components/user/product-detail/ProductAttribute";
-import ProductInfo from "@/components/user/product-detail/ProductInfo";
+import ProductDescription from "@/components/products/detail/ProductDescription";
+import ProductAttribute from "@/components/products/detail/ProductAttribute";
+import ProductInfo from "@/components/products/detail/ProductInfo";
 import { useData } from "../hooks/useData";
 import { useSearchParams } from "react-router-dom";
 import ShopInfo from "@/components/shop/ShopInfo";
 import type { ShopInfo as ShopInfoType } from "@/modules/shop/types/shop.type";
-import ProductReviews from "@/components/user/product-detail/ProductReviews";
-import ProductSlider from "@/components/product/ProductSlider";
+import ProductReviews from "@/components/products/detail/ProductReviews";
+import ProductSlider from "@/components/products/ProductSlider";
 import type { ProductReviewResponse } from "../types/product-review.type";
 import type { ProductCardResponse } from "@/modules/product/types/product-card.type";
 

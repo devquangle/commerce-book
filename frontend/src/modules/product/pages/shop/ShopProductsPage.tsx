@@ -1,13 +1,13 @@
-import ProductFlashSale from "@/components/product/ProductFlashSale";
+import ProductFlashSale from "@/components/products/ProductFlashSale";
 import ShopBanner from "@/components/shop/ShopBanner";
 import type { ShopInfo } from "@/modules/shop/types/shop.type";
 import type { ProductCardResponse } from "../../types/product-card.type";
-import FilterSidebar from "@/components/product/FilterSidebar";
-import ProductToolbar from "@/components/product/ProductToolbar";
+import FilterSidebar from "@/components/products/FilterSidebar";
+import ProductToolbar from "@/components/products/ProductToolbar";
 import { useSearchProductsFilter } from "../../hooks/useSearchProductsFilter";
 import { useState } from "react";
 import { useSearchProducts } from "../../hooks/useSearchProducts";
-import ProductCard from "@/components/product/ProductCard";
+import ProductCard from "@/components/products/ProductCard";
 import { Pagination } from "@/components/ui/Pagination";
 
 // Dữ liệu mẫu (mock data) theo đúng thiết kế UI

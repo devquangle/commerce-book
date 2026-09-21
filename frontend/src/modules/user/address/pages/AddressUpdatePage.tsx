@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import AddressHeader from "@/components/user/address/AddressHeader";
-import AddressFormUpdate from "@/components/user/address/AddressFormUpdate";
+import AddressHeader from "@/components/address/AddressHeader";
+import AddressFormUpdate from "@/components/address/AddressFormUpdate";
 
 const AddressUpdatePage = () => {
   const { id } = useParams<{ id: string }>();

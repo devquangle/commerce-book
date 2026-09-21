@@ -1,12 +1,12 @@
 import { Pagination } from "@/components/ui/Pagination";
-import { ProductHeader } from "@/components/admin/products/ProductHeader";
-import { ProductFilter } from "@/components/admin/products/ProductFilter";
-import { ProductTable } from "@/components/admin/products/ProductTable";
+import { ProductHeader } from "@/components/products/admin/ProductHeader";
+import { ProductFilter } from "@/components/products/admin/ProductFilter";
+import { ProductTable } from "@/components/products/admin/ProductTable";
 import {
   ProductSkeleton,
   ProductMobileSkeleton,
-} from "@/components/shop/products/ProductSkeleton";
-import { ProductMobileCard } from "@/components/admin/products/ProductMobileCard";
+} from "@/components/products/shop/ProductSkeleton";
+import { ProductMobileCard } from "@/components/products/admin/ProductMobileCard";
 import { useNavigate } from "react-router-dom";
 
 import { useSuperAdminFilter } from "@/modules/shop/products/hooks/useSuperAdminFilter";

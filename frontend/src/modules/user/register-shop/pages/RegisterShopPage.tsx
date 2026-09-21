@@ -4,12 +4,12 @@ import { useForm, FormProvider, useWatch } from "react-hook-form";
 import { ArrowLeft, ArrowRight, CheckCircle2, Store } from "lucide-react";
 
 import type { RegisterShopRequest } from "../types/register-shop.type";
-import { RegisterShopStepper } from "@/components/user/register-shop/RegisterShopStepper";
-import { StepAccountInfo } from "@/components/user/register-shop/StepAccountInfo";
-import { StepOwnerIdentity } from "@/components/user/register-shop/StepOwnerIdentity";
-import { StepShopInfo } from "@/components/user/register-shop/StepShopInfo";
-import { StepShopAddress } from "@/components/user/register-shop/StepShopAddress";
-import { RegisterShopSuccessModal } from "@/components/user/register-shop/RegisterShopSuccessModal";
+import { RegisterShopStepper } from "@/components/register-shop/RegisterShopStepper";
+import { StepAccountInfo } from "@/components/register-shop/StepAccountInfo";
+import { StepOwnerIdentity } from "@/components/register-shop/StepOwnerIdentity";
+import { StepShopInfo } from "@/components/register-shop/StepShopInfo";
+import { StepShopAddress } from "@/components/register-shop/StepShopAddress";
+import { RegisterShopSuccessModal } from "@/components/register-shop/RegisterShopSuccessModal";
 import { Button } from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
 import { useAuth } from "@/context/useAuth";

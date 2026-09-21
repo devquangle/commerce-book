@@ -2,13 +2,13 @@ import { useState } from "react";
 import { MapPin } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import AddressCard from "@/components/user/address/AddressCard";
-import AddressHeader from "@/components/user/address/AddressHeader";
-import AddressSkeleton from "@/components/user/address/AddressSkeleton";
-import AddressFormAdd from "@/components/user/address/AddressFormAdd";
-import AddressFormUpdate from "@/components/user/address/AddressFormUpdate";
-import AddressDeleteModal from "@/components/user/address/AddressDeleteModal";
-import AddressDefaultModal from "@/components/user/address/AddressDefaultModal";
+import AddressCard from "@/components/address/AddressCard";
+import AddressHeader from "@/components/address/AddressHeader";
+import AddressSkeleton from "@/components/address/AddressSkeleton";
+import AddressFormAdd from "@/components/address/AddressFormAdd";
+import AddressFormUpdate from "@/components/address/AddressFormUpdate";
+import AddressDeleteModal from "@/components/address/AddressDeleteModal";
+import AddressDefaultModal from "@/components/address/AddressDefaultModal";
 import { useAddresses } from "../hooks/useAddress";
 import type { AddressResponse } from "../types/address.type";
 

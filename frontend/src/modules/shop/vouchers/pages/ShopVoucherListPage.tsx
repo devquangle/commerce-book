@@ -1,14 +1,14 @@
 import { Pagination } from "@/components/ui/Pagination";
 import { useState } from "react";
-import { VoucherHeader } from "@/components/shop/vouchers/VoucherHeader";
-import { VoucherFilter } from "@/components/shop/vouchers/VoucherFilter";
-import { VoucherTable } from "@/components/shop/vouchers/VoucherTable";
-import { VoucherMobileCard } from "@/components/shop/vouchers/VoucherMobileCard";
+import { VoucherHeader } from "@/components/vouchers/VoucherHeader";
+import { VoucherFilter } from "@/components/vouchers/VoucherFilter";
+import { VoucherTable } from "@/components/vouchers/VoucherTable";
+import { VoucherMobileCard } from "@/components/vouchers/VoucherMobileCard";
 import {
   VoucherSkeleton,
   VoucherMobileSkeleton,
-} from "@/components/shop/vouchers/VoucherSkeleton";
-import { VoucherDeleteModal } from "@/components/shop/vouchers/VoucherDeleteModal";
+} from "@/components/vouchers/VoucherSkeleton";
+import { VoucherDeleteModal } from "@/components/vouchers/VoucherDeleteModal";
 import { useVoucherShopFilter } from "../hooks/useVoucherShopFilter";
 import { useVoucherShop, useDeleteVoucherShop } from "../hooks/useVoucher";
 import type { VoucherResponse } from "../types/voucher.type";

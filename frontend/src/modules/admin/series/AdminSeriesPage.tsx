@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { SeriesHeader } from "@/components/admin/series/SeriesHeader";
-import { SeriesFilter } from "@/components/admin/series/SeriesFilter";
-import { SeriesTable } from "@/components/admin/series/SeriesTable";
-import { SeriesMobileCard } from "@/components/admin/series/SeriesMobileCard";
+import { SeriesHeader } from "@/components/series/SeriesHeader";
+import { SeriesFilter } from "@/components/series/SeriesFilter";
+import { SeriesTable } from "@/components/series/SeriesTable";
+import { SeriesMobileCard } from "@/components/series/SeriesMobileCard";
 import {
   SeriesSkeleton,
   SeriesMobileSkeleton,
-} from "@/components/admin/series/SeriesSkeleton";
-import { SeriesModal } from "@/components/admin/series/SeriesModal";
-import { SeriesDeleteModal } from "@/components/admin/series/SeriesDeleteModal";
+} from "@/components/series/SeriesSkeleton";
+import { SeriesModal } from "@/components/series/SeriesModal";
+import { SeriesDeleteModal } from "@/components/series/SeriesDeleteModal";
 import { useSeriesFilter } from "./hooks/useSeriesFilter";
 import {
   useCreateSeries,

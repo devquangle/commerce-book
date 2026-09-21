@@ -1,14 +1,14 @@
 import { Pagination } from "@/components/ui/Pagination";
 import { useState } from "react";
-import { PromotionHeader } from "@/components/shop/promotions/PromotionHeader";
-import { PromotionFilter } from "@/components/shop/promotions/PromotionFilter";
-import { PromotionTable } from "@/components/shop/promotions/PromotionTable";
-import { PromotionMobileCard } from "@/components/shop/promotions/PromotionMobileCard";
+import { PromotionHeader } from "@/components/promotions/PromotionHeader";
+import { PromotionFilter } from "@/components/promotions/PromotionFilter";
+import { PromotionTable } from "@/components/promotions/PromotionTable";
+import { PromotionMobileCard } from "@/components/promotions/PromotionMobileCard";
 import {
   PromotionSkeleton,
   PromotionMobileSkeleton,
-} from "@/components/shop/promotions/PromotionSkeleton";
-import { PromotionDeleteModal } from "@/components/shop/promotions/PromotionDeleteModal";
+} from "@/components/promotions/PromotionSkeleton";
+import { PromotionDeleteModal } from "@/components/promotions/PromotionDeleteModal";
 import { usePromotionShopFilter } from "../hooks/usePromotionShopFilter";
 import { usePromotionShop, useDeletePromotionShop } from "../hooks/usePromotion";
 import type { PromotionResponse } from "../types/promotion.type";

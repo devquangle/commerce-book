@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, useWatch } from "react-hook-form";
-import { ProductHeader } from "@/components/shop/products/ProductHeader";
-import { ProductBasicInfo } from "@/components/shop/products/ProductBasicInfo";
-import ProductAttribute from "@/components/shop/products/ProductAttribute";
+import { ProductHeader } from "@/components/products/shop/ProductHeader";
+import { ProductBasicInfo } from "@/components/products/shop/ProductBasicInfo";
+import ProductAttribute from "@/components/products/shop/ProductAttribute";
 import MultipleImageUpload from "@/components/common/MultipleImageUpload";
 import { ensureThumbnail } from "@/components/common/multiple-image-upload.utils";
-import ProductDescription from "@/components/shop/products/ProductDescription";
+import ProductDescription from "@/components/products/shop/ProductDescription";
 import { INITIAL_FORM } from "../types/product-data.type";
 import type { ProductRequest } from "../types/product.type";
 import { useBookFormData } from "../hooks/useBookFormData";
