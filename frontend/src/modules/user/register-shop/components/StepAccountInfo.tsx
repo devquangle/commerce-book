@@ -1,7 +1,7 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { Mail, Phone, ShieldCheck, UserCheck, LogOut, CheckCircle2, Info } from "lucide-react";
+import { Mail, UserCheck, LogOut, CheckCircle2, Info } from "lucide-react";
 import { FormInput } from "@/components/common/FormInput";
 import { FormInputPassword } from "@/components/common/FormInputPassword";
 import { useAuth } from "@/context/useAuth";
@@ -68,39 +68,6 @@ export const StepAccountInfo: React.FC = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Email (Readonly) */}
-          <FormInput
-            name="email"
-            control={control}
-            label="Email chủ sở hữu"
-            type="email"
-            placeholder="example@domain.com"
-            disabled
-            required
-            icon={<Mail className="w-4 h-4 text-zinc-400" />}
-            className="body-text bg-zinc-100 dark:bg-zinc-800/60 cursor-not-allowed opacity-80"
-          />
-
-          {/* Phone (Editable) */}
-          <FormInput
-            name="phone"
-            control={control}
-            label="Số điện thoại liên hệ chính thức"
-            type="tel"
-            placeholder="0987654321"
-            required
-            icon={<Phone className="w-4 h-4 text-zinc-400" />}
-            rules={{
-              required: "Vui lòng nhập số điện thoại liên hệ",
-              pattern: {
-                value: /^(0[3|5|7|8|9])+([0-9]{8})$/,
-                message: "Số điện thoại không đúng định dạng Việt Nam (10 chữ số)",
-              },
-            }}
-            className="body-text"
-          />
-        </div>
 
         {/* Note regarding password */}
         <div className="p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 flex items-start gap-2.5 text-xs text-zinc-600 dark:text-zinc-400">
@@ -122,7 +89,7 @@ export const StepAccountInfo: React.FC = () => {
           Bước 1: Thông tin tài khoản đăng ký
         </h3>
         <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-          Cung cấp email và số điện thoại liên hệ chính thức của chủ cửa hàng.
+          Cung cấp email tài khoản và mật khẩu đăng nhập cho Kênh Người Bán.
         </p>
       </div>
 
@@ -140,12 +107,12 @@ export const StepAccountInfo: React.FC = () => {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-4">
         {/* Email */}
         <FormInput
           name="email"
           control={control}
-          label="Email chủ sở hữu"
+          label="Email đăng ký chủ sở hữu"
           type="email"
           placeholder="example@domain.com"
           required
@@ -160,57 +127,39 @@ export const StepAccountInfo: React.FC = () => {
           className="body-text"
         />
 
-        {/* Phone */}
-        <FormInput
-          name="phone"
-          control={control}
-          label="Số điện thoại liên hệ"
-          type="tel"
-          placeholder="0987654321"
-          required
-          icon={<Phone className="w-4 h-4 text-zinc-400" />}
-          rules={{
-            required: "Vui lòng nhập số điện thoại",
-            pattern: {
-              value: /^(0[3|5|7|8|9])+([0-9]{8})$/,
-              message: "Số điện thoại không đúng định dạng Việt Nam (10 chữ số)",
-            },
-          }}
-          className="body-text"
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Password */}
+          <FormInputPassword
+            name="password"
+            control={control}
+            label="Mật khẩu tài khoản"
+            placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)"
+            required
+            rules={{
+              required: "Vui lòng nhập mật khẩu",
+              minLength: {
+                value: 6,
+                message: "Mật khẩu phải có ít nhất 6 ký tự",
+              },
+            }}
+            className="body-text"
+          />
 
-        {/* Password */}
-        <FormInputPassword
-          name="password"
-          control={control}
-          label="Mật khẩu tài khoản"
-          placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)"
-          required
-          rules={{
-            required: "Vui lòng nhập mật khẩu",
-            minLength: {
-              value: 6,
-              message: "Mật khẩu phải có ít nhất 6 ký tự",
-            },
-          }}
-          className="body-text"
-        />
-
-        {/* Confirm Password */}
-        <FormInputPassword
-          name="confirmPassword"
-          control={control}
-          label="Xác nhận mật khẩu"
-          placeholder="Nhập lại mật khẩu vừa đặt"
-          required
-          icon={<ShieldCheck className="w-4 h-4 text-zinc-400" />}
-          rules={{
-            required: "Vui lòng xác nhận mật khẩu",
-            validate: (value) =>
-              value === passwordValue || "Mật khẩu xác nhận không khớp",
-          }}
-          className="body-text"
-        />
+          {/* Confirm Password */}
+          <FormInputPassword
+            name="confirmPassword"
+            control={control}
+            label="Xác nhận mật khẩu"
+            placeholder="Nhập lại mật khẩu vừa đặt"
+            required
+            rules={{
+              required: "Vui lòng xác nhận mật khẩu",
+              validate: (value) =>
+                value === passwordValue || "Mật khẩu xác nhận không khớp",
+            }}
+            className="body-text"
+          />
+        </div>
       </div>
     </div>
   );

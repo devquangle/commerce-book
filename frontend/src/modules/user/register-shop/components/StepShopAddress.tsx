@@ -21,10 +21,12 @@ import {
   type DistrictResponse,
   type WardResponse,
 } from "@/modules/user/address/hooks/useAddress";
+import { useAuth } from "@/context/useAuth";
 import type { AddressResponse } from "@/modules/user/address/types/address.type";
 import type { RegisterShopRequest } from "../types/register-shop.type";
 
 export const StepShopAddress: React.FC = () => {
+  const { isAuthenticated } = useAuth();
   const {
     control,
     setValue,
@@ -37,8 +39,8 @@ export const StepShopAddress: React.FC = () => {
   const wardCode = watch("wardCode") || "";
   const street = watch("street") || "";
 
-  // 1. Fetch saved user addresses
-  const { data: addresses = [], isLoading: isLoadingAddresses } = useAddresses();
+  // 1. Fetch saved user addresses (CHỈ gọi khi người dùng đã đăng nhập)
+  const { data: addresses = [], isLoading: isLoadingAddresses } = useAddresses(isAuthenticated);
 
   // 2. Fetch administrative regions from GHN
   const { data: provinces = [], isLoading: isLoadingProvinces } = useProvinces();
@@ -49,9 +51,10 @@ export const StepShopAddress: React.FC = () => {
     districtId ? Number(districtId) : null
   );
 
-  // Auto-fill with default address on initial load if form fields are empty
+  // Auto-fill with default address on initial load if form fields are empty (CHỈ áp dụng cho người dùng ĐÃ ĐĂNG NHẬP)
   const isInitializedRef = useRef(false);
   useEffect(() => {
+    if (!isAuthenticated) return;
     if (!isInitializedRef.current && addresses && addresses.length > 0) {
       if (!provinceId && !street) {
         const defaultAddr = addresses.find((a) => a.defaultAddress) || addresses[0];
@@ -64,7 +67,7 @@ export const StepShopAddress: React.FC = () => {
       }
       isInitializedRef.current = true;
     }
-  }, [addresses, provinceId, street, setValue]);
+  }, [isAuthenticated, addresses, provinceId, street, setValue]);
 
   // Convert regions to SelectBox options
   const provinceOptions: SelectOption[] = useMemo(
@@ -141,80 +144,82 @@ export const StepShopAddress: React.FC = () => {
         </p>
       </div>
 
-      {/* Quick Select from Saved Addresses */}
-      {isLoadingAddresses ? (
-        <div className="flex items-center gap-2 text-zinc-400 text-xs py-2">
-          <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
-          <span>Đang tải sổ địa chỉ của bạn...</span>
-        </div>
-      ) : addresses.length > 0 ? (
-        <div className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-3">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center gap-2">
-              <BookmarkCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">
-                Chọn từ sổ địa chỉ của bạn ({addresses.length})
-              </span>
+      {/* Quick Select from Saved Addresses (Chỉ hiển thị khi đã đăng nhập) */}
+      {isAuthenticated && (
+        isLoadingAddresses ? (
+          <div className="flex items-center gap-2 text-zinc-400 text-xs py-2">
+            <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+            <span>Đang tải sổ địa chỉ của bạn...</span>
+          </div>
+        ) : addresses.length > 0 ? (
+          <div className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-3">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2">
+                <BookmarkCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">
+                  Chọn từ sổ địa chỉ của bạn ({addresses.length})
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={handleResetAddress}
+                className="inline-flex items-center gap-1 text-xs text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors cursor-pointer"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Nhập địa chỉ mới</span>
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={handleResetAddress}
-              className="inline-flex items-center gap-1 text-xs text-zinc-500 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors cursor-pointer"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Nhập địa chỉ mới</span>
-            </button>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            {addresses.map((addr) => {
-              const isSelected =
-                provinceId === Number(addr.provinceId) &&
-                districtId === Number(addr.districtId) &&
-                wardCode === addr.wardCode &&
-                street === addr.street;
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {addresses.map((addr) => {
+                const isSelected =
+                  provinceId === Number(addr.provinceId) &&
+                  districtId === Number(addr.districtId) &&
+                  wardCode === addr.wardCode &&
+                  street === addr.street;
 
-              return (
-                <button
-                  key={addr.id}
-                  type="button"
-                  onClick={() => handleSelectSavedAddress(addr)}
-                  className={`p-3 rounded-lg border text-left transition-all relative cursor-pointer ${
-                    isSelected
-                      ? "border-blue-500 bg-blue-50/70 dark:bg-blue-950/40 shadow-xs ring-1 ring-blue-500"
-                      : "border-zinc-200 dark:border-zinc-700/80 hover:border-blue-300 dark:hover:border-zinc-600 bg-white dark:bg-zinc-900"
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-xs font-bold text-zinc-900 dark:text-white">
-                          {addr.fullName}
-                        </span>
-                        <span className="text-xs text-zinc-400">|</span>
-                        <span className="text-xs text-zinc-600 dark:text-zinc-400">
-                          {addr.phone}
-                        </span>
-                        {addr.defaultAddress && (
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300">
-                            Mặc định
+                return (
+                  <button
+                    key={addr.id}
+                    type="button"
+                    onClick={() => handleSelectSavedAddress(addr)}
+                    className={`p-3 rounded-lg border text-left transition-all relative cursor-pointer ${
+                      isSelected
+                        ? "border-blue-500 bg-blue-50/70 dark:bg-blue-950/40 shadow-xs ring-1 ring-blue-500"
+                        : "border-zinc-200 dark:border-zinc-700/80 hover:border-blue-300 dark:hover:border-zinc-600 bg-white dark:bg-zinc-900"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-xs font-bold text-zinc-900 dark:text-white">
+                            {addr.fullName}
                           </span>
-                        )}
+                          <span className="text-xs text-zinc-400">|</span>
+                          <span className="text-xs text-zinc-600 dark:text-zinc-400">
+                            {addr.phone}
+                          </span>
+                          {addr.defaultAddress && (
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300">
+                              Mặc định
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-zinc-600 dark:text-zinc-300 mt-1 line-clamp-2">
+                          {addr.streetFull || addr.street}
+                        </p>
                       </div>
-                      <p className="text-xs text-zinc-600 dark:text-zinc-300 mt-1 line-clamp-2">
-                        {addr.streetFull || addr.street}
-                      </p>
+                      {isSelected && (
+                        <CheckCircle2 className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                      )}
                     </div>
-                    {isSelected && (
-                      <CheckCircle2 className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
-                    )}
-                  </div>
-                </button>
-              );
-            })}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      ) : null}
+        ) : null
+      )}
 
       <div className="flex flex-col md:flex-row gap-4">
         {/* Province */}

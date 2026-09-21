@@ -96,7 +96,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createAccountShop(RegisterShopRequest req) {
+    public void validateAccountShop(RegisterShopRequest req) {
+        if (req.password() == null || req.password().isBlank()) {
+            throw new BadRequestException("Mật khẩu không được để trống.");
+        }
         if (!Objects.equals(req.password(), req.confirmPassword())) {
             throw new BadRequestException("Mật khẩu xác nhận không khớp.");
         }
@@ -111,6 +114,11 @@ public class UserServiceImpl implements UserService {
         if (!errors.getErrors().isEmpty()) {
             throw errors;
         }
+    }
+
+    @Override
+    public User createAccountShop(RegisterShopRequest req) {
+        validateAccountShop(req);
 
         User user = userMapper.toAccount(req);
 
@@ -122,9 +130,9 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(passwordEncoder.encode(req.password()));
 
-        Role role = roleRepository.findByCode("ROLE_SHOP")
-                .or(() -> roleRepository.findByName(ModuleConstants.SHOP))
-                .orElseThrow(() -> new NotFoundException("Role ROLE_SHOP không tồn tại"));
+        Role role = roleRepository.findByCode("ROLE_USER")
+                .or(() -> roleRepository.findByName(ModuleConstants.USER))
+                .orElseThrow(() -> new NotFoundException("Role ROLE_USER không tồn tại"));
         user.setRole(role);
 
         user.setStatus(UserStatus.ACTIVE.name());
@@ -136,4 +144,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public User updateAccountShop(User user, RegisterShopRequest req) {
+        if (req.phone() != null && !req.phone().isBlank() && !req.phone().equals(user.getPhone())) {
+            if (userRepository.existsByPhone(req.phone())) {
+                throw new DuplicateFieldException("phone", "Số điện thoại đã được sử dụng bởi tài khoản khác.");
+            }
+        }
+        userMapper.updateKycInfo(user, req);
+        return userRepository.save(user);
+    }
 }

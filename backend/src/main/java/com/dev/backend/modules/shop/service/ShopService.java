@@ -8,20 +8,19 @@ import com.dev.backend.modules.user.entity.User;
 import java.util.List;
 
 public interface ShopService {
-    List<ShopResponse> getAllShops();
 
     Shop getById(Long id);
 
-    ShopResponse getShopById(Long id);
+    Shop createShop(User user, RegisterShopRequest request);
 
-    ShopResponse getShopByOwnerId(Long ownerId);
-
-    Shop createShop(User user,RegisterShopRequest request);
-
-
-    void deleteShop(Long id);
+    ShopResponse registerShop(RegisterShopRequest request, Long currentUserId);
 
     ShopResponse registerShop(RegisterShopRequest request);
 
-    
+    void validateRegisterShop(RegisterShopRequest request);
+
+    boolean checkShopNameExists(String name);
+
+    com.dev.backend.modules.shop.dto.CheckAccountResponse checkAccountAvailability(String email, String phone, Long currentUserId);
+
 }

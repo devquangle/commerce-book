@@ -17,8 +17,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.dev.backend.common.exception.NotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -33,33 +36,9 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ShopResponse> getAllShops() {
-        return shopRepository.findAll().stream()
-                .map(shopMapper::toResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public Shop getById(Long id) {
         return shopRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Shop not found with id: " + id));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public ShopResponse getShopById(Long id) {
-        Shop shop = shopRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Shop not found with id: " + id));
-        return shopMapper.toResponse(shop);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public ShopResponse getShopByOwnerId(Long ownerId) {
-        Shop shop = shopRepository.findByOwnerId(ownerId)
-                .orElseThrow(() -> new RuntimeException("Shop not found for owner id: " + ownerId));
-        return shopMapper.toResponse(shop);
+                .orElseThrow(() -> new NotFoundException("Cửa hàng không tồn tại với id: " + id));
     }
 
     @Override
@@ -78,39 +57,114 @@ public class ShopServiceImpl implements ShopService {
         return shopRepository.save(shop);
     }
 
+    
+
     @Override
-    public void deleteShop(Long id) {
-        if (!shopRepository.existsById(id)) {
-            throw new RuntimeException("Shop not found with id: " + id);
+    public boolean checkShopNameExists(String name) {
+        if (name == null || name.isBlank()) {
+            return false;
         }
-        shopRepository.deleteById(id);
+        return shopRepository.existsByName(name.trim());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public com.dev.backend.modules.shop.dto.CheckAccountResponse checkAccountAvailability(String email, String phone, Long currentUserId) {
+        boolean emailExists = false;
+        boolean phoneExists = false;
+        boolean alreadyHasShop = false;
+        StringBuilder message = new StringBuilder();
+
+        if (currentUserId != null) {
+            User currentUser = userRepository.findById(currentUserId).orElse(null);
+            if (currentUser != null) {
+                if (currentUser.getShop() != null) {
+                    alreadyHasShop = true;
+                    message.append("Tài khoản của bạn đã sở hữu một cửa hàng. ");
+                }
+                if (phone != null && !phone.isBlank() && !phone.trim().equals(currentUser.getPhone())) {
+                    if (userRepository.existsByPhone(phone.trim())) {
+                        phoneExists = true;
+                        message.append("Số điện thoại này đã được sử dụng bởi tài khoản khác. ");
+                    }
+                }
+            }
+        } else {
+            if (email != null && !email.isBlank()) {
+                if (userRepository.existsByEmail(email.trim())) {
+                    emailExists = true;
+                    message.append("Email này đã được sử dụng. ");
+                }
+            }
+            if (phone != null && !phone.isBlank()) {
+                if (userRepository.existsByPhone(phone.trim())) {
+                    phoneExists = true;
+                    message.append("Số điện thoại này đã được sử dụng. ");
+                }
+            }
+        }
+
+        return new com.dev.backend.modules.shop.dto.CheckAccountResponse(
+                emailExists,
+                phoneExists,
+                alreadyHasShop,
+                message.toString().trim()
+        );
+    }
+
+    @Override
+    public void validateRegisterShop(RegisterShopRequest request) {
+        if (request == null) {
+            throw new BadRequestException("Dữ liệu đăng ký không được để trống.");
+        }
+        if (request.shopName() == null || request.shopName().isBlank()) {
+            throw new BadRequestException("Tên cửa hàng không được để trống.");
+        }
+        String trimmedShopName = request.shopName().trim();
+        if (shopRepository.existsByName(trimmedShopName)) {
+            throw new DuplicateFieldException("shopName", "Tên cửa hàng đã tồn tại trên hệ thống.");
+        }
     }
 
     @Override
     public ShopResponse registerShop(RegisterShopRequest request) {
-        if (request == null || request.shopName() == null || request.shopName().isBlank()) {
-            throw new BadRequestException("Tên cửa hàng không được để trống.");
+        return registerShop(request, null);
+    }
+
+    @Override
+    public ShopResponse registerShop(RegisterShopRequest request, Long currentUserId) {
+        // 0. Kiểm tra tính hợp lệ của shop
+        validateRegisterShop(request);
+
+        User user;
+        if (currentUserId != null) {
+            // Trường hợp 1: Người dùng đã đăng nhập tài khoản
+            user = userRepository.findById(currentUserId)
+                    .orElseThrow(() -> new NotFoundException("Không tìm thấy thông tin tài khoản người dùng"));
+
+            if (user.getShop() != null) {
+                throw new BadRequestException("Tài khoản của bạn đã đăng ký sở hữu một cửa hàng.");
+            }
+
+            user = userService.updateAccountShop(user, request);
+        } else {
+            // Trường hợp 2: Khách vãng lai (Guest) chưa đăng nhập
+            userService.validateAccountShop(request);
+            user = userService.createAccountShop(request);
         }
 
-        String trimmedShopName = request.shopName().trim();
-        if (shopRepository.existsByName(trimmedShopName)) {
-            throw new DuplicateFieldException("shopName", "Tên cửa hàng đã tồn tại.");
-        }
-
-        // 1. Tạo tài khoản User chủ shop
-        User user = userService.createAccountShop(request);
-
-        // 2. Tạo cửa hàng và sinh slug duy nhất
+        // 1. Tạo cửa hàng và sinh slug duy nhất
         Shop shop = createShop(user, request);
 
-        // 3. Thiết lập quan hệ hai chiều: Gán Shop ngược lại cho User
+        // 2. Thiết lập quan hệ hai chiều: Gán Shop ngược lại cho User
         user.setShop(shop);
+        shop.setYear(LocalDate.now().getYear());
         userRepository.save(user);
 
-        // 4. Tạo địa chỉ lấy hàng của Shop
+        // 3. Tạo địa chỉ lấy hàng của Shop
         addressService.createShopAddress(user, request);
 
-        // 5. Trả về response thông tin Shop vừa tạo
+        // 4. Trả về response thông tin Shop vừa tạo
         return shopMapper.toResponse(shop);
     }
 }

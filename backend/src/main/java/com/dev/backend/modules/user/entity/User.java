@@ -69,6 +69,18 @@ public class User extends BaseEntity {
     @Column(name = "street")
     private String street;
 
+    @Column(name = "cccd_front_url")
+    private String cccdFrontUrl;
+
+    @Column(name = "cccd_back_url")
+    private String cccdBackUrl;
+
+    @Column(name = "face_image_url")
+    private String faceImageUrl;
+
+    @Column(name = "ekyc_verified")
+    private Boolean ekycVerified = false;
+
     @Column(name = "status")
     private String status;
 

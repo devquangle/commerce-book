@@ -9,10 +9,24 @@ export function getErrorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {
     const data = error.response?.data;
 
-    if (data && typeof data === "object" && "message" in data) {
-      const msg = (data as { message?: unknown }).message;
-      if (typeof msg === "string") {
-        return msg;
+    if (data && typeof data === "object") {
+      // Nếu backend trả về map các field bị lỗi validation trong `data.data`
+      if (
+        "data" in data &&
+        data.data &&
+        typeof data.data === "object" &&
+        !Array.isArray(data.data)
+      ) {
+        const fieldErrors = Object.entries(data.data as Record<string, unknown>)
+          .map(([field, msg]) => `${field}: ${msg}`)
+          .join("; ");
+        if (fieldErrors) {
+          return `${data.message || "Dữ liệu không hợp lệ"} (${fieldErrors})`;
+        }
+      }
+
+      if ("message" in data && typeof (data as { message?: unknown }).message === "string") {
+        return (data as { message: string }).message;
       }
     }
     return error.response?.statusText || "Đã xảy ra lỗi từ server";

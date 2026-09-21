@@ -2,12 +2,13 @@ package com.dev.backend.modules.shop.mapper;
 
 import com.dev.backend.common.enums.ShopStatus;
 import com.dev.backend.modules.shop.dto.RegisterShopRequest;
-import com.dev.backend.modules.shop.dto.ShopResponse;
 import com.dev.backend.modules.shop.entity.Shop;
 import com.dev.backend.modules.user.entity.User;
 
 import com.dev.backend.common.utils.TextUtils;
 import org.springframework.stereotype.Component;
+
+import com.dev.backend.modules.shop.dto.ShopResponse;
 
 @Component
 public class ShopMapper {
@@ -35,7 +36,7 @@ public class ShopMapper {
         }
 
         Shop entity = new Shop();
-        entity.setName(request.shopName() != null ? request.shopName().trim() : null);
+        entity.setName(request.shopName() != null ? TextUtils.capitalizeFully(request.shopName().trim()) : null);
         entity.setSlug(request.shopName() != null ? TextUtils.toSlug(request.shopName()) : null);
         entity.setDescription(request.shopDescription());
         entity.setLogoUrl(request.logo());

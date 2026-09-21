@@ -8,6 +8,10 @@ public interface UserService {
 
     void insertData();
 
+    void validateAccountShop(RegisterShopRequest req);
+
     User createAccountShop(RegisterShopRequest req);
+
+    User updateAccountShop(User user, RegisterShopRequest req);
 
 }

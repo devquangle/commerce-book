@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
-import { Store, Building2, CreditCard, UserCheck, Image as ImageIcon } from "lucide-react";
+import { Store, Building2, CreditCard, UserCheck, Image as ImageIcon, Loader2, Phone } from "lucide-react";
 import { FormInput } from "@/components/common/FormInput";
 import { TextAreaField } from "@/components/ui/TextAreaField";
 import { SelectBox } from "@/components/ui/SelectBox";
@@ -9,6 +9,8 @@ import SingleImageUpload from "@/components/common/SingleImageUpload";
 import { useBank } from "@/modules/others/bank/hooks/useBank";
 import type { BankResponse } from "@/modules/others/bank/types/bank.type";
 import type { RegisterShopRequest } from "../types/register-shop.type";
+import UploadImageService from "@/services/cloudinary/services/cloudinary.service";
+import { showErrorToast } from "@/libs/utils/toastUtil";
 
 const BANK_OPTIONS: SelectOption[] = [
   { label: "Vietcombank", subLabel: "Ngân hàng TMCP Ngoại thương Việt Nam", value: "Vietcombank" },
@@ -34,6 +36,8 @@ export const StepShopInfo: React.FC = () => {
 
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [bannerFile, setBannerFile] = useState<File | null>(null);
+  const [isUploadingLogo, setIsUploadingLogo] = useState<boolean>(false);
+  const [isUploadingBanner, setIsUploadingBanner] = useState<boolean>(false);
 
   const { data: banks = [], isLoading: isLoadingBanks } = useBank();
 
@@ -51,6 +55,40 @@ export const StepShopInfo: React.FC = () => {
 
   const logoUrl = watch("logo") || "";
   const bannerUrl = watch("banner") || "";
+
+  const handleLogoChange = async (file: File | null) => {
+    setLogoFile(file);
+    if (!file) {
+      setValue("logo", "");
+      return;
+    }
+    setIsUploadingLogo(true);
+    try {
+      const res = await UploadImageService.uploadFile(file);
+      setValue("logo", res.url, { shouldValidate: true });
+    } catch {
+      showErrorToast("Không thể tải ảnh Logo lên Cloudinary. Vui lòng thử lại.");
+    } finally {
+      setIsUploadingLogo(false);
+    }
+  };
+
+  const handleBannerChange = async (file: File | null) => {
+    setBannerFile(file);
+    if (!file) {
+      setValue("banner", "");
+      return;
+    }
+    setIsUploadingBanner(true);
+    try {
+      const res = await UploadImageService.uploadFile(file);
+      setValue("banner", res.url, { shouldValidate: true });
+    } catch {
+      showErrorToast("Không thể tải ảnh Banner lên Cloudinary. Vui lòng thử lại.");
+    } finally {
+      setIsUploadingBanner(false);
+    }
+  };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
@@ -70,19 +108,44 @@ export const StepShopInfo: React.FC = () => {
           <Store className="w-4 h-4 text-blue-500" /> Thông tin gian hàng
         </h4>
 
-        <FormInput
-          name="shopName"
-          control={control}
-          label="Tên Cửa hàng (Shop Name)"
-          placeholder="Ví dụ: Tiệm Sách Tri Thức, BookZone Store..."
-          required
-          icon={<Store className="w-4 h-4 text-zinc-400" />}
-          rules={{
-            required: "Vui lòng nhập tên Cửa hàng",
-          }}
-          helperText="Tên shop hiển thị công khai cho khách hàng mua sắm"
-          className="body-text"
-        />
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-1">
+            <FormInput
+              name="shopName"
+              control={control}
+              label="Tên Cửa hàng (Shop Name)"
+              placeholder="Ví dụ: Tiệm Sách Tri Thức, BookZone Store..."
+              required
+              icon={<Store className="w-4 h-4 text-zinc-400" />}
+              rules={{
+                required: "Vui lòng nhập tên Cửa hàng",
+              }}
+              helperText="Tên shop hiển thị công khai cho khách hàng mua sắm"
+              className="body-text"
+            />
+          </div>
+
+          <div className="flex-1">
+            <FormInput
+              name="phone"
+              control={control}
+              label="Số điện thoại liên hệ chính thức"
+              type="tel"
+              placeholder="0987654321"
+              required
+              icon={<Phone className="w-4 h-4 text-zinc-400" />}
+              rules={{
+                required: "Vui lòng nhập số điện thoại liên hệ",
+                pattern: {
+                  value: /^(0[3|5|7|8|9])+([0-9]{8})$/,
+                  message: "Số điện thoại không đúng định dạng Việt Nam (10 chữ số)",
+                },
+              }}
+              helperText="Số điện thoại để liên hệ xác nhận đơn và CSKH"
+              className="body-text"
+            />
+          </div>
+        </div>
 
         <TextAreaField
           label="Mô tả Cửa hàng"
@@ -98,15 +161,11 @@ export const StepShopInfo: React.FC = () => {
           <div className="flex-1 bg-zinc-50 dark:bg-zinc-800/40 p-4 rounded-xl border border-zinc-200 dark:border-zinc-700/60">
             <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-2 flex items-center gap-1.5">
               <ImageIcon className="w-4 h-4 text-blue-500" /> Logo Cửa hàng (Tùy chọn)
+              {isUploadingLogo && <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-500 ml-auto" />}
             </p>
             <SingleImageUpload
               file={logoFile}
-              setFile={(f) => {
-                setLogoFile(f);
-                if (f) {
-                  setValue("logo", URL.createObjectURL(f));
-                }
-              }}
+              setFile={handleLogoChange}
               avatarUrl={logoUrl}
               setAvatarUrl={(url) => setValue("logo", url)}
             />
@@ -115,15 +174,11 @@ export const StepShopInfo: React.FC = () => {
           <div className="flex-1 bg-zinc-50 dark:bg-zinc-800/40 p-4 rounded-xl border border-zinc-200 dark:border-zinc-700/60">
             <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-2 flex items-center gap-1.5">
               <ImageIcon className="w-4 h-4 text-blue-500" /> Ảnh bìa / Banner Shop (Tùy chọn)
+              {isUploadingBanner && <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-500 ml-auto" />}
             </p>
             <SingleImageUpload
               file={bannerFile}
-              setFile={(f) => {
-                setBannerFile(f);
-                if (f) {
-                  setValue("banner", URL.createObjectURL(f));
-                }
-              }}
+              setFile={handleBannerChange}
               avatarUrl={bannerUrl}
               setAvatarUrl={(url) => setValue("banner", url)}
             />

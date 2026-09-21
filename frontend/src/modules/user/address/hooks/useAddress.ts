@@ -7,10 +7,11 @@ export const addressKeys = {
   detail: (id: number) => ["addresses", id] as const,
 };
 
-export const useAddresses = () => {
+export const useAddresses = (enabled: boolean = true) => {
   return useQuery({
     queryKey: addressKeys.all,
     queryFn: AddressService.getAll,
+    enabled,
   });
 };
 

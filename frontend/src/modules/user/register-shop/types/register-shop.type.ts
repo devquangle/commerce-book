@@ -27,6 +27,12 @@ export interface OwnerIdentityInfo {
   address: string;
   /** Ngày hết hạn CCCD dạng ISO yyyy-MM-dd */
   expiryDate: string;
+  /** Link ảnh mặt trước CCCD trên CDN */
+  cccdFrontUrl?: string;
+  /** Link ảnh mặt sau CCCD trên CDN */
+  cccdBackUrl?: string;
+  /** Link ảnh selfie khuôn mặt trên CDN */
+  faceImageUrl?: string;
 }
 
 
@@ -49,3 +55,22 @@ export interface ShopAddressInfo {
 
 export interface RegisterShopRequest
   extends ShopAccountInfo, OwnerIdentityInfo, ShopInfo, ShopAddressInfo {}
+
+export interface ShopRegisterResponse {
+  id: number;
+  ownerId?: number;
+  name: string;
+  description?: string;
+  logoUrl?: string;
+  status: string;
+  rating?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CheckAccountResponse {
+  emailExists: boolean;
+  phoneExists: boolean;
+  alreadyHasShop: boolean;
+  message?: string;
+}

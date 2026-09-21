@@ -19,6 +19,7 @@ import SingleImageUpload from "@/components/common/SingleImageUpload";
 import { CameraModal } from "./CameraModal";
 import type { RegisterShopRequest } from "../types/register-shop.type";
 import { useVerifyEkyc } from "@/modules/others/ekyc/hooks/useEkyc";
+import UploadImageService from "@/services/cloudinary/services/cloudinary.service";
 
 // ---- helpers ---------------------------------------------------------------
 
@@ -147,6 +148,26 @@ export const StepOwnerIdentity: React.FC = () => {
         if (!isSuccess) {
           console.warn("Xác thực eKYC không thành công (verifyResult !== true):", data?.verification);
           return;
+        }
+
+        // Tải ảnh CCCD và Selfie lên Cloudinary để lưu link đối soát hồ sơ
+        if (frontCccdFile) {
+          UploadImageService.uploadFile(frontCccdFile)
+            .then((res) => setValue("cccdFrontUrl", res.url))
+            .catch((err) => console.error("Lỗi tải ảnh CCCD trước lên Cloudinary:", err));
+        }
+        if (backCccdFile) {
+          UploadImageService.uploadFile(backCccdFile)
+            .then((res) => setValue("cccdBackUrl", res.url))
+            .catch((err) => console.error("Lỗi tải ảnh CCCD sau lên Cloudinary:", err));
+        }
+        if (fileToVerify) {
+          const selfieFile = fileToVerify instanceof File
+            ? fileToVerify
+            : new File([fileToVerify], "selfie.jpg", { type: "image/jpeg" });
+          UploadImageService.uploadFile(selfieFile)
+            .then((res) => setValue("faceImageUrl", res.url))
+            .catch((err) => console.error("Lỗi tải ảnh chân dung lên Cloudinary:", err));
         }
 
       // ---- Điền dữ liệu OCR vào form ------------------
@@ -440,10 +461,14 @@ export const StepOwnerIdentity: React.FC = () => {
       {/* ===== 7. Form Fields (Chỉ hiển thị khi verifyResult == true hoặc đã có dữ liệu hợp lệ) ===== */}
       {isFormVisible && (
         <div className="flex flex-wrap gap-4 pt-4 border-t border-zinc-200 dark:border-zinc-800 animate-in fade-in duration-300">
-          <div className="w-full pb-1">
-            <h4 className="text-base font-bold text-zinc-800 dark:text-zinc-200">
+          <div className="w-full pb-1 flex items-center justify-between">
+            <h4 className="text-base font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-emerald-500" />
               Thông tin giấy tờ (Đã trích xuất từ eKYC)
             </h4>
+            <span className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-full px-2.5 py-0.5">
+              Đã khóa thông tin
+            </span>
           </div>
 
         {/* 1. Full Name */}
@@ -454,11 +479,9 @@ export const StepOwnerIdentity: React.FC = () => {
             label="Họ và tên chủ sở hữu"
             placeholder="NGUYEN VAN A"
             required
+            readOnly
             icon={<User className="w-4 h-4 text-zinc-400" />}
-            rules={{
-              required: "Vui lòng nhập họ và tên chủ sở hữu",
-            }}
-            className="body-text"
+            className="body-text bg-zinc-100 dark:bg-zinc-800/70 cursor-not-allowed select-none text-zinc-600 dark:text-zinc-300"
           />
         </div>
 
@@ -470,15 +493,9 @@ export const StepOwnerIdentity: React.FC = () => {
             label="Số CCCD / CMND"
             placeholder="012345678912"
             required
+            readOnly
             icon={<CreditCard className="w-4 h-4 text-zinc-400" />}
-            rules={{
-              required: "Vui lòng nhập số CCCD / CMND",
-              pattern: {
-                value: /^[0-9]{9,12}$/,
-                message: "Số CCCD/CMND gồm từ 9 đến 12 chữ số",
-              },
-            }}
-            className="body-text"
+            className="body-text bg-zinc-100 dark:bg-zinc-800/70 cursor-not-allowed select-none text-zinc-600 dark:text-zinc-300"
           />
         </div>
 
@@ -490,11 +507,9 @@ export const StepOwnerIdentity: React.FC = () => {
             label="Ngày sinh"
             type="date"
             required
+            readOnly
             icon={<Calendar className="w-4 h-4 text-zinc-400" />}
-            rules={{
-              required: "Vui lòng chọn ngày sinh",
-            }}
-            className="body-text"
+            className="body-text bg-zinc-100 dark:bg-zinc-800/70 cursor-not-allowed select-none text-zinc-600 dark:text-zinc-300"
           />
         </div>
 
@@ -503,35 +518,26 @@ export const StepOwnerIdentity: React.FC = () => {
           <label className="block text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300">
             Giới tính <span className="text-red-500">*</span>
           </label>
-          <div className="flex items-center gap-6 py-2.5 px-4 bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/80 rounded-xl h-11.5">
-            <label className="flex items-center gap-2 cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+          <div className="flex items-center gap-6 py-2.5 px-4 bg-zinc-100 dark:bg-zinc-800/70 border border-zinc-200 dark:border-zinc-700/80 rounded-xl h-11.5 pointer-events-none cursor-not-allowed select-none opacity-85">
+            <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300 cursor-not-allowed">
               <input
                 type="radio"
                 value="Nam"
-                {...register("gender", {
-                  required: "Vui lòng chọn giới tính",
-                })}
-                className="w-4 h-4 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                {...register("gender")}
+                className="w-4 h-4 text-blue-600 cursor-not-allowed"
               />
               Nam
             </label>
-            <label className="flex items-center gap-2 cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+            <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300 cursor-not-allowed">
               <input
                 type="radio"
                 value="Nữ"
-                {...register("gender", {
-                  required: "Vui lòng chọn giới tính",
-                })}
-                className="w-4 h-4 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                {...register("gender")}
+                className="w-4 h-4 text-blue-600 cursor-not-allowed"
               />
               Nữ
             </label>
           </div>
-          {errors.gender?.message && (
-            <p className="text-xs text-red-500 font-medium">
-              {errors.gender.message}
-            </p>
-          )}
         </div>
 
         {/* 5. Nationality */}
@@ -542,11 +548,9 @@ export const StepOwnerIdentity: React.FC = () => {
             label="Quốc tịch"
             placeholder="Việt Nam"
             required
+            readOnly
             icon={<Globe className="w-4 h-4 text-zinc-400" />}
-            rules={{
-              required: "Vui lòng nhập quốc tịch",
-            }}
-            className="body-text"
+            className="body-text bg-zinc-100 dark:bg-zinc-800/70 cursor-not-allowed select-none text-zinc-600 dark:text-zinc-300"
           />
         </div>
 
@@ -558,15 +562,13 @@ export const StepOwnerIdentity: React.FC = () => {
             label="Ngày hết hạn CCCD"
             type="date"
             required
+            readOnly
             icon={<Calendar className="w-4 h-4 text-zinc-400" />}
-            rules={{
-              required: "Vui lòng chọn ngày hết hạn CCCD",
-            }}
-            className="body-text"
+            className="body-text bg-zinc-100 dark:bg-zinc-800/70 cursor-not-allowed select-none text-zinc-600 dark:text-zinc-300"
           />
         </div>
 
-        {/* 7. Address */}
+        {/* 7. Address (col 12) */}
         <div className="w-full">
           <FormInput
             name="address"
@@ -574,11 +576,9 @@ export const StepOwnerIdentity: React.FC = () => {
             label="Địa chỉ thường trú"
             placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố"
             required
+            readOnly
             icon={<MapPin className="w-4 h-4 text-zinc-400" />}
-            rules={{
-              required: "Vui lòng nhập địa chỉ thường trú",
-            }}
-            className="body-text"
+            className="body-text bg-zinc-100 dark:bg-zinc-800/70 cursor-not-allowed select-none text-zinc-600 dark:text-zinc-300"
           />
         </div>
       </div>
