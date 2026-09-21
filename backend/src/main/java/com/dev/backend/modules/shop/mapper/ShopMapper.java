@@ -2,26 +2,15 @@ package com.dev.backend.modules.shop.mapper;
 
 import com.dev.backend.common.enums.ShopStatus;
 import com.dev.backend.modules.shop.dto.RegisterShopRequest;
-import com.dev.backend.modules.shop.dto.ShopRequest;
 import com.dev.backend.modules.shop.dto.ShopResponse;
 import com.dev.backend.modules.shop.entity.Shop;
+import com.dev.backend.modules.user.entity.User;
+
+import com.dev.backend.common.utils.TextUtils;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ShopMapper {
-
-    public Shop toEntity(ShopRequest request) {
-        if (request == null) {
-            return null;
-        }
-        Shop shop = new Shop();
-        shop.setName(request.getName());
-        shop.setDescription(request.getDescription());
-        shop.setLogoUrl(request.getLogoUrl());
-        // shop.setStatus(request.getStatus());
-        shop.setRating(request.getRating());
-        return shop;
-    }
 
     public ShopResponse toResponse(Shop entity) {
         if (entity == null) {
@@ -40,33 +29,14 @@ public class ShopMapper {
                 .build();
     }
 
-    public void updateEntityFromRequest(ShopRequest request, Shop entity) {
-        if (request == null || entity == null) {
-            return;
-        }
-        if (request.getName() != null) {
-            entity.setName(request.getName());
-        }
-        if (request.getDescription() != null) {
-            entity.setDescription(request.getDescription());
-        }
-        if (request.getLogoUrl() != null) {
-            entity.setLogoUrl(request.getLogoUrl());
-        }
-      
-        if (request.getRating() != null) {
-            entity.setRating(request.getRating());
-        }
-    }
-
-    public Shop toShop(RegisterShopRequest request) {
+    public Shop toShop(User user, RegisterShopRequest request) {
         if (request == null) {
             return null;
         }
 
         Shop entity = new Shop();
-
-        entity.setName(request.shopName());
+        entity.setName(request.shopName() != null ? request.shopName().trim() : null);
+        entity.setSlug(request.shopName() != null ? TextUtils.toSlug(request.shopName()) : null);
         entity.setDescription(request.shopDescription());
         entity.setLogoUrl(request.logo());
         entity.setBannerUrl(request.banner());
@@ -74,6 +44,7 @@ public class ShopMapper {
         entity.setBankNumber(request.bankNumber());
         entity.setOwnerName(request.ownerName());
         entity.setStatus(ShopStatus.PENDING);
+        entity.setOwner(user);
         return entity;
     }
 }

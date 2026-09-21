@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface ShopRepository extends JpaRepository<Shop, Long> {
     Optional<Shop> findByOwnerId(Long ownerId);
+    boolean existsByName(String name);
+    boolean existsBySlug(String slug);
 }

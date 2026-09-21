@@ -25,8 +25,8 @@ public record RegisterShopRequest(
         String bankNumber,
         String ownerName,
 
-        Long provinceId,
-        Long districtId,
+        Integer provinceId,
+        Integer districtId,
         String wardCode,
         String street
 ) {}

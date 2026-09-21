@@ -8,6 +8,7 @@ import com.dev.backend.modules.address.entity.Address;
 import com.dev.backend.modules.address.mapper.AddressMapper;
 import com.dev.backend.modules.address.repository.AddressRepository;
 import com.dev.backend.modules.others.ghn.service.GHNService;
+import com.dev.backend.modules.shop.dto.RegisterShopRequest;
 import com.dev.backend.modules.user.entity.User;
 import com.dev.backend.modules.user.repository.UserRepository;
 
@@ -111,7 +112,7 @@ public class AddressServiceImpl implements AddressService {
     public AddressResponse update(Long id, AddressRequest request, Long userId) {
         Address address = getByIdAndUserId(id, userId);
         addressMapper.toEntity(address, request);
-      if (request.defaultAddress()) {
+        if (request.defaultAddress()) {
             addressRepository.resetDefaultAddress(userId);
             address.setDefault(true);
         } else {
@@ -123,6 +124,25 @@ public class AddressServiceImpl implements AddressService {
         return addressMapper.toDTO(saved);
     }
 
+    @Override
+    public Address createShopAddress(User user, RegisterShopRequest request) {
+        Address address = addressMapper.toAddressShop(request);
+        address.setUser(user);
+
+        try {
+            String streetFull = ghnService.getStreetFull(
+                    address.getProvinceId(),
+                    address.getDistrictId(),
+                    address.getWardCode(),
+                    address.getStreet()
+            );
+            address.setStreetFull(streetFull != null ? streetFull : address.getStreet());
+        } catch (Exception e) {
+            address.setStreetFull(address.getStreet());
+        }
+
+        return addressRepository.save(address);
+    }
     @Override
     @Transactional(readOnly = true)
     public void validate() {

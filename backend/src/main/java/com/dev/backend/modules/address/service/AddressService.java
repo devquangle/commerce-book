@@ -3,6 +3,8 @@ package com.dev.backend.modules.address.service;
 import com.dev.backend.modules.address.dto.AddressRequest;
 import com.dev.backend.modules.address.dto.AddressResponse;
 import com.dev.backend.modules.address.entity.Address;
+import com.dev.backend.modules.shop.dto.RegisterShopRequest;
+import com.dev.backend.modules.user.entity.User;
 
 import java.util.List;
 
@@ -23,4 +25,6 @@ public interface AddressService {
     void delete(Long id, Long userId);
 
     void defaultAddress(Long id, Long userId);
+
+    Address createShopAddress(User user, RegisterShopRequest request);
 }

@@ -1,9 +1,9 @@
 package com.dev.backend.modules.shop.service;
 
 import com.dev.backend.modules.shop.dto.RegisterShopRequest;
-import com.dev.backend.modules.shop.dto.ShopRequest;
 import com.dev.backend.modules.shop.dto.ShopResponse;
 import com.dev.backend.modules.shop.entity.Shop;
+import com.dev.backend.modules.user.entity.User;
 
 import java.util.List;
 
@@ -16,13 +16,12 @@ public interface ShopService {
 
     ShopResponse getShopByOwnerId(Long ownerId);
 
-    ShopResponse createShop(ShopRequest request);
+    Shop createShop(User user,RegisterShopRequest request);
 
-    ShopResponse updateShop(Long id, ShopRequest request);
 
     void deleteShop(Long id);
 
-    void registerShop(RegisterShopRequest request);
+    ShopResponse registerShop(RegisterShopRequest request);
 
     
 }
