@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { AuthorHeader } from "./components/AuthorHeader";
-import { AuthorFilter } from "./components/AuthorFilter";
-import { AuthorTable } from "./components/AuthorTable";
-import { AuthorMobileCard } from "./components/AuthorMobileCard";
+import { AuthorHeader } from "@/components/admin/authors/AuthorHeader";
+import { AuthorFilter } from "@/components/admin/authors/AuthorFilter";
+import { AuthorTable } from "@/components/admin/authors/AuthorTable";
+import { AuthorMobileCard } from "@/components/admin/authors/AuthorMobileCard";
 import {
   AuthorSkeleton,
   AuthorMobileSkeleton,
-} from "./components/AuthorSkeleton";
-import { AuthorModal } from "./components/AuthorModal";
-import { AuthorDeleteModal } from "./components/AuthorDeleteModal";
+} from "@/components/admin/authors/AuthorSkeleton";
+import { AuthorModal } from "@/components/admin/authors/AuthorModal";
+import { AuthorDeleteModal } from "@/components/admin/authors/AuthorDeleteModal";
 import { useAuthorFilter } from "./hooks/useAuthorFilter";
 import {
   useCreateAuthor,

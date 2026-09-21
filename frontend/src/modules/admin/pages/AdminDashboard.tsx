@@ -5,7 +5,7 @@ import {
   PendingActionCards,
   RecentActivities,
   TopRevenueShops,
-} from "../dashboard/components";
+} from "@/components/admin/dashboard";
 import {
   DASHBOARD_DATE,
   SUPER_ADMIN_NAME,

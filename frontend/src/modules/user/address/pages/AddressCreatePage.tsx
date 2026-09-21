@@ -1,5 +1,5 @@
-import AddressHeader from "../components/AddressHeader";
-import AddressFormAdd from "../components/AddressFormAdd";
+import AddressHeader from "@/components/user/address/AddressHeader";
+import AddressFormAdd from "@/components/user/address/AddressFormAdd";
 
 const AddressCreatePage = () => {
   return (

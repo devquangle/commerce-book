@@ -1,12 +1,12 @@
 import { useState } from "react";
-import AddressHeader from "../components/AddressHeader";
-import AddressCard from "../components/AddressCard";
-import AddressSkeleton from "../components/AddressSkeleton";
+import AddressHeader from "@/components/user/address/AddressHeader";
+import AddressCard from "@/components/user/address/AddressCard";
+import AddressSkeleton from "@/components/user/address/AddressSkeleton";
 import { useNavigate } from "react-router-dom";
 import { useAddresses } from "../hooks/useAddress";
 import type { AddressResponse } from "../types/address.type";
-import AddressDeleteModal from "../components/AddressDeleteModal";
-import AddressDefaultModal from "../components/AddressDefaultModal";
+import AddressDeleteModal from "@/components/user/address/AddressDeleteModal";
+import AddressDefaultModal from "@/components/user/address/AddressDefaultModal";
 
 const AddressPage = () => {
   const { data: addressesResponse = [], isPending } = useAddresses();

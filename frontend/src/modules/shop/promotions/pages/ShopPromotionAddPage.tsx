@@ -5,14 +5,14 @@ import { InputField } from "@/components/ui/InputField";
 import { InputDate } from "@/components/ui/InputDate";
 import { SelectBox } from "@/components/ui/SelectBox";
 import Spinner from "@/components/ui/Spinner";
-import { PromotionHeader } from "../components/PromotionHeader";
+import { PromotionHeader } from "@/components/shop/promotions/PromotionHeader";
 import { useCreatePromotionShop } from "../hooks/usePromotion";
 import type { PromotionRequest, PromotionCampaignType } from "../types/promotion.type";
 
 // Import product hooks & components
 import { useProductShop } from "@/modules/shop/products/hooks/useProduct";
-import { PromotionProductTable } from "../components/PromotionProductTable";
-import { PromotionProductFilter } from "../components/PromotionProductFilter";
+import { PromotionProductTable } from "@/components/shop/promotions/PromotionProductTable";
+import { PromotionProductFilter } from "@/components/shop/promotions/PromotionProductFilter";
 import type { ProductResponse } from "@/modules/shop/products/types/product.type";
 
 import { useProductShopFilter } from "@/modules/shop/products/hooks/useProductShopFilter";

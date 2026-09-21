@@ -1,20 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useForm, useWatch } from "react-hook-form";
-import { ProductHeader } from "../components/ProductHeader";
-import { ProductBasicInfo } from "@/modules/shop/products/components/ProductBasicInfo";
-import ProductAttribute from "@/modules/shop/products/components/ProductAttribute";
+import { ProductHeader } from "@/components/admin/products/ProductHeader";
+import { ProductBasicInfo } from "@/components/shop/products/ProductBasicInfo";
+import ProductAttribute from "@/components/shop/products/ProductAttribute";
 import MultipleImageUpload from "@/components/common/MultipleImageUpload";
 import { ensureThumbnail } from "@/components/common/multiple-image-upload.utils";
-import ProductDescription from "@/modules/shop/products/components/ProductDescription";
+import ProductDescription from "@/components/shop/products/ProductDescription";
 import { INITIAL_FORM } from "@/modules/shop/products/types/product-data.type";
 import type { ProductRequest } from "@/modules/shop/products/types/product.type";
 import { useBookFormData } from "@/modules/shop/products/hooks/useBookFormData";
 import { useProductDetailForAdmin } from "@/modules/shop/products/hooks/useProduct";
 import Spinner from "@/components/ui/Spinner";
-import { ProductApproveModal } from "../components/ProductApproveModal";
-import { ProductRejectModal } from "../components/ProductRejectModal";
-import ProductReason from "@/modules/shop/products/components/ProductReason";
+import { ProductApproveModal } from "@/components/admin/products/ProductApproveModal";
+import { ProductRejectModal } from "@/components/admin/products/ProductRejectModal";
+import ProductReason from "@/components/shop/products/ProductReason";
 
 const AdminProductDetailPage = () => {
   const navigate = useNavigate();

@@ -10,7 +10,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { SHOP_PATH } from "./libs/constant/shop-path";
 import { ChatProvider } from "@/modules/others/twilio/context/ChatContext";
-import { ChatWidget } from "@/modules/others/twilio/components/ChatWidget";
+import { ChatWidget } from "@/components/common/ChatWidget";
 
 const queryClient = new QueryClient();
 

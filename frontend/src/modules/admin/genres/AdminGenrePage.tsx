@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { GenreHeader } from "./components/GenreHeader";
-import { GenreFilter } from "./components/GenreFilter";
-import { GenreTable } from "./components/GenreTable";
-import { GenreMobileCard } from "./components/GenreMobileCard";
-import { GenreSkeleton, GenreMobileSkeleton } from "./components/GenreSkeleton";
-import { GenreModal } from "./components/GenreModal";
-import { GenreDeleteModal } from "./components/GenreDeleteModal";
+import { GenreHeader } from "@/components/admin/genres/GenreHeader";
+import { GenreFilter } from "@/components/admin/genres/GenreFilter";
+import { GenreTable } from "@/components/admin/genres/GenreTable";
+import { GenreMobileCard } from "@/components/admin/genres/GenreMobileCard";
+import { GenreSkeleton, GenreMobileSkeleton } from "@/components/admin/genres/GenreSkeleton";
+import { GenreModal } from "@/components/admin/genres/GenreModal";
+import { GenreDeleteModal } from "@/components/admin/genres/GenreDeleteModal";
 import { useGenreFilter } from "./hooks/useGenreFilter";
 import {
   useCreateGenre,

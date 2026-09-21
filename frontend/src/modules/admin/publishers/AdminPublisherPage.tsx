@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { PublisherHeader } from "./components/PublisherHeader";
-import { PublisherFilter } from "./components/PublisherFilter";
-import { PublisherTable } from "./components/PublisherTable";
-import { PublisherMobileCard } from "./components/PublisherMobileCard";
+import { PublisherHeader } from "@/components/admin/publishers/PublisherHeader";
+import { PublisherFilter } from "@/components/admin/publishers/PublisherFilter";
+import { PublisherTable } from "@/components/admin/publishers/PublisherTable";
+import { PublisherMobileCard } from "@/components/admin/publishers/PublisherMobileCard";
 import {
   PublisherSkeleton,
   PublisherMobileSkeleton,
-} from "./components/PublisherSkeleton";
-import { PublisherModal } from "./components/PublisherModal";
-import { PublisherDeleteModal } from "./components/PublisherDeleteModal";
+} from "@/components/admin/publishers/PublisherSkeleton";
+import { PublisherModal } from "@/components/admin/publishers/PublisherModal";
+import { PublisherDeleteModal } from "@/components/admin/publishers/PublisherDeleteModal";
 import { usePublisherFilter } from "./hooks/usePublisherFilter";
 import {
   useCreatePublisher,

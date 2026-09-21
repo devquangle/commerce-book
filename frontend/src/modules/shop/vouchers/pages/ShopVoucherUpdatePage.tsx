@@ -6,7 +6,7 @@ import { TextAreaField } from "@/components/ui/TextAreaField";
 import { InputDate } from "@/components/ui/InputDate";
 import { SelectBox } from "@/components/ui/SelectBox";
 import Spinner from "@/components/ui/Spinner";
-import { VoucherHeader } from "../components/VoucherHeader";
+import { VoucherHeader } from "@/components/shop/vouchers/VoucherHeader";
 import { useUpdateVoucherShop, useVoucherShopDetail } from "../hooks/useVoucher";
 import type { VoucherRequest } from "../types/voucher.type";
 
