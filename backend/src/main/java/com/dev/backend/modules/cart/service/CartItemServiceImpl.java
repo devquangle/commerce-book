@@ -132,11 +132,10 @@ public class CartItemServiceImpl implements CartItemService {
                     }
                     User user = userRepository.findById(userId)
                             .orElseThrow(() -> new NotFoundException("Không tìm thấy thông tin tài khoản người dùng"));
-                    CartItem cartItem = CartItem.builder()
-                            .user(user)
-                            .product(product)
-                            .quantity(request.getQuantity())
-                            .build();
+                    CartItem cartItem = new CartItem();
+                    cartItem.setUser(user);
+                    cartItem.setProduct(product);
+                    cartItem.setQuantity(request.getQuantity());
                     return cartItemRepository.save(cartItem);
                 });
     }

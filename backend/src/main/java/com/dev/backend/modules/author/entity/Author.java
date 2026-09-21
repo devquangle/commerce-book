@@ -11,7 +11,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,7 +24,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Author extends BaseEntity {
 
     @Column(name = "name", nullable = false, length = 150)
@@ -51,6 +49,5 @@ public class Author extends BaseEntity {
     private AuthorStatus status;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<AuthorProduct> authorProducts = new ArrayList<>();
 }

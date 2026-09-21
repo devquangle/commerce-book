@@ -23,4 +23,6 @@ public interface ShopService {
     void deleteShop(Long id);
 
     void registerShop(RegisterShopRequest request);
+
+    
 }

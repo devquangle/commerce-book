@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class User extends BaseEntity {
     private String identityNumber;
 
     @Column(name = "date_of_birth")
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Column(name = "gender")
     private String gender;
@@ -57,7 +58,7 @@ public class User extends BaseEntity {
     private String nationality;
 
     @Column(name = "expiry_date")
-    private String expiryDate;
+    private LocalDate expiryDate;
 
     @Column(name = "phone", length = 20, unique = true)
     private String phone;

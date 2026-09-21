@@ -7,7 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,7 +20,6 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Role extends BaseEntity {
 
     @Column(name = "name", nullable = false, length = 100)
@@ -36,7 +34,6 @@ public class Role extends BaseEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Builder.Default
     @OneToMany(mappedBy = "role")
     private Set<User> users = new HashSet<>();
 }

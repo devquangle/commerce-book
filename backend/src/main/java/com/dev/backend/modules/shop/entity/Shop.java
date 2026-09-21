@@ -13,7 +13,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,7 +26,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Shop extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -46,6 +44,13 @@ public class Shop extends BaseEntity {
     @Column(name = "logo_url")
     private String logoUrl;
 
+    @Column(name = "banner_url")
+    private String bannerUrl;
+
+    private String bankName;
+    private String bankNumber;
+    private String ownerName;
+
     @Column(name = "status")
     private String status;
 
@@ -56,14 +61,11 @@ public class Shop extends BaseEntity {
     private int year;
 
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
-    @Builder.Default
     private List<Product> products = new ArrayList<>();
 
     @OneToMany(mappedBy = "shop")
-    @Builder.Default
     private List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "shop")
-    @Builder.Default
     private List<User> employees = new ArrayList<>();
 }

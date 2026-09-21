@@ -18,17 +18,17 @@ public class OrderMapper {
         if (request == null) {
             return null;
         }
-        return Order.builder()
-                .orderCode(request.getOrderCode())
-                .totalAmount(request.getTotalAmount())
-                .shippingFee(request.getShippingFee())
-                .status(request.getStatus())
-                .shippingAddress(request.getShippingAddress())
-                .paymentMethod(request.getPaymentMethod())
-                .paymentStatus(request.getPaymentStatus())
-                .voucher(request.getVoucher())
-                .voucherAmount(request.getVoucherAmount())
-                .build();
+        Order order = new Order();
+        order.setOrderCode(request.getOrderCode());
+        order.setTotalAmount(request.getTotalAmount());
+        order.setShippingFee(request.getShippingFee());
+        order.setStatus(request.getStatus());
+        order.setShippingAddress(request.getShippingAddress());
+        order.setPaymentMethod(request.getPaymentMethod());
+        order.setPaymentStatus(request.getPaymentStatus());
+        order.setVoucher(request.getVoucher());
+        order.setVoucherAmount(request.getVoucherAmount());
+        return order;
     }
 
     public OrderResponse toResponse(Order entity) {
@@ -60,11 +60,11 @@ public class OrderMapper {
         if (request == null) {
             return null;
         }
-        return OrderItem.builder()
-                .price(request.getPrice())
-                .quantity(request.getQuantity())
-                .productSnap(request.getProductSnap())
-                .build();
+        OrderItem orderItem = new OrderItem();
+        orderItem.setPrice(request.getPrice());
+        orderItem.setQuantity(request.getQuantity());
+        orderItem.setProductSnap(request.getProductSnap());
+        return orderItem;
     }
 
     public OrderItemResponse toOrderItemResponse(OrderItem entity) {

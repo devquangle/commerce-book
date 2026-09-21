@@ -1,38 +1,32 @@
 package com.dev.backend.modules.shop.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.time.LocalDate;
 
-@AllArgsConstructor 
-@NoArgsConstructor 
-@Getter 
-@Setter 
-public class RegisterShopRequest {
-    private String email;
-    private String phone;
-    private String password;
-    private String confirmPassword;
 
-    private String fullName;
-    private String identityNumber;
-    private String dateOfBirth;
-    private String gender;
-    private String nationality;
-    private String address;
-    private String expiryDate;
+public record RegisterShopRequest(
+        String email,
+        String phone,
+        String password,
+        String confirmPassword,
 
-    private String shopName;
-    private String shopDescription;
-    private String logo;
-    private String banner;
-    private String bankName;
-    private String bankNumber;
-    private String ownerName;
+        String fullName,
+        String identityNumber,
+        LocalDate dateOfBirth,
+        String gender,
+        String nationality,
+        String address,
+        LocalDate expiryDate,
 
-    private Integer provinceId;
-    private Integer districtId;
-    private String wardCode;
-    private String street;
-}
+        String shopName,
+        String shopDescription,
+        String logo,
+        String banner,
+        String bankName,
+        String bankNumber,
+        String ownerName,
+
+        Long provinceId,
+        Long districtId,
+        String wardCode,
+        String street
+) {}

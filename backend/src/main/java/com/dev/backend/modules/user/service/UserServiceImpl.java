@@ -2,9 +2,14 @@ package com.dev.backend.modules.user.service;
 
 import com.dev.backend.common.constant.ModuleConstants;
 import com.dev.backend.common.enums.UserStatus;
+import com.dev.backend.common.exception.BadRequestException;
+import com.dev.backend.common.exception.DuplicateFieldException;
+import com.dev.backend.common.exception.NotFoundException;
+import com.dev.backend.common.utils.UsernameUtils;
 import com.dev.backend.modules.auth.dto.RegisterUserRequest;
 import com.dev.backend.modules.role.entity.Role;
 import com.dev.backend.modules.role.repository.RoleRepository;
+import com.dev.backend.modules.shop.dto.RegisterShopRequest;
 import com.dev.backend.modules.user.dto.UserResponse;
 import com.dev.backend.modules.user.entity.User;
 import com.dev.backend.modules.user.mapper.UserMapper;
@@ -16,7 +21,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,13 +38,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
-   
-
-    
-
-    
-
-   
     @Override
     public void insertData() {
         Object[][] roleUserData = {
@@ -65,12 +65,12 @@ public class UserServiceImpl implements UserService {
                     .or(() -> roleRepository.findByName(name))
                     .orElseGet(() -> {
                         log.info("Creating role: {}", code);
-                        return roleRepository.save(Role.builder()
-                                .code(code)
-                                .name(name)
-                                .module(module)
-                                .description(description)
-                                .build());
+                        Role newRole = new Role();
+                        newRole.setCode(code);
+                        newRole.setName(name);
+                        newRole.setModule(module);
+                        newRole.setDescription(description);
+                        return roleRepository.save(newRole);
                     });
 
             if (!userRepository.existsByUsername(username) && !userRepository.existsByEmail(email)) {
@@ -95,6 +95,45 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-   
-       
+    @Override
+    public User createAccountShop(RegisterShopRequest req) {
+        if (!Objects.equals(req.password(), req.confirmPassword())) {
+            throw new BadRequestException("Mật khẩu xác nhận không khớp.");
+        }
+
+        DuplicateFieldException errors = new DuplicateFieldException(new HashMap<>());
+        if (userRepository.existsByEmail(req.email())) {
+            errors.addError("email", "Email đã được sử dụng.");
+        }
+        if (userRepository.existsByPhone(req.phone())) {
+            errors.addError("phone", "Số điện thoại đã được sử dụng.");
+        }
+        if (!errors.getErrors().isEmpty()) {
+            throw errors;
+        }
+
+        User user = userMapper.toAccount(req);
+
+        String username;
+        do {
+            username = UsernameUtils.generateRandomUsername();
+        } while (userRepository.existsByUsername(username));
+        user.setUsername(username);
+
+        user.setPassword(passwordEncoder.encode(req.password()));
+
+        Role role = roleRepository.findByCode("ROLE_SHOP")
+                .or(() -> roleRepository.findByName(ModuleConstants.SHOP))
+                .orElseThrow(() -> new NotFoundException("Role ROLE_SHOP không tồn tại"));
+        user.setRole(role);
+
+        user.setStatus(UserStatus.ACTIVE.name());
+        user.setEnabled(true);
+        user.setAccountNonLocked(true);
+        user.setFailedAttempts(0);
+        user.setTokenVersion(0);
+
+        return userRepository.save(user);
+    }
+
 }

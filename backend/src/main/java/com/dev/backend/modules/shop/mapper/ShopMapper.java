@@ -1,5 +1,6 @@
 package com.dev.backend.modules.shop.mapper;
 
+import com.dev.backend.modules.shop.dto.RegisterShopRequest;
 import com.dev.backend.modules.shop.dto.ShopRequest;
 import com.dev.backend.modules.shop.dto.ShopResponse;
 import com.dev.backend.modules.shop.entity.Shop;
@@ -12,13 +13,13 @@ public class ShopMapper {
         if (request == null) {
             return null;
         }
-        return Shop.builder()
-                .name(request.getName())
-                .description(request.getDescription())
-                .logoUrl(request.getLogoUrl())
-                .status(request.getStatus())
-                .rating(request.getRating())
-                .build();
+        Shop shop = new Shop();
+        shop.setName(request.getName());
+        shop.setDescription(request.getDescription());
+        shop.setLogoUrl(request.getLogoUrl());
+        shop.setStatus(request.getStatus());
+        shop.setRating(request.getRating());
+        return shop;
     }
 
     public ShopResponse toResponse(Shop entity) {
@@ -57,5 +58,25 @@ public class ShopMapper {
         if (request.getRating() != null) {
             entity.setRating(request.getRating());
         }
+    }
+
+
+
+     public Shop toShop(RegisterShopRequest request) {
+        if (request == null) {
+            return null;
+        }
+
+        Shop entity = new Shop();
+
+        entity.setName(request.shopName());
+        entity.setDescription(request.shopDescription());
+        entity.setLogoUrl(request.logo());
+        entity.setBannerUrl(request.banner());
+        entity.setBankName(request.bankName());
+        entity.setBankNumber(request.bankNumber());
+        entity.setOwnerName(request.ownerName());
+
+        return entity;
     }
 }

@@ -82,18 +82,7 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public void registerShop(RegisterShopRequest request) {
-        User user = new User();
-        user.setEmail(request.getEmail());
-        user.setPhone(request.getPhone());
-        user.setPassword(null);
-        user.setRole(null);
-        user.setFullName(request.getFullName());
-        
-        userRepository.save(user);
-
-        Shop shop= new Shop();
-
-        
+     
 
     }
 }

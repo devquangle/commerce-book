@@ -1,12 +1,13 @@
 package com.dev.backend.modules.user.service;
 
-import com.dev.backend.modules.auth.dto.RegisterUserRequest;
-import com.dev.backend.modules.user.dto.UserResponse;
+import com.dev.backend.modules.shop.dto.RegisterShopRequest;
+import com.dev.backend.modules.user.entity.User;
 
-import java.util.List;
 
 public interface UserService {
 
     void insertData();
+
+    User createAccountShop(RegisterShopRequest req);
 
 }
