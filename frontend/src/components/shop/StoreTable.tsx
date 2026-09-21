@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import {
-  Eye,
-  CheckCircle2,
-  XCircle,
   AlertCircle,
   ChevronDown,
   Phone,
@@ -11,7 +8,7 @@ import {
 import { Pagination } from "@/components/ui/Pagination";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/common/EmptyState";
-import { Tooltip } from "@/components/ui/Tooltip";
+import { StoreActionMenu } from "@/components/shop/StoreActionMenu";
 import type { AdminShopResponse } from "../../modules/admin/stores/types/store.type";
 import { getShopStatusInfo } from "../../modules/admin/stores/types/store-status.type";
 
@@ -194,43 +191,14 @@ export const StoreTable: React.FC<StoreTableProps> = ({
                       : "N/A"}
                   </td>
 
-                  {/* Cột 6: Thao tác */}
+                  {/* Cột 6: Thao tác — dùng StoreActionMenu */}
                   <td className="py-3.5 px-4 text-right">
-                    <div className="flex items-center justify-end gap-1.5">
-                      {/* Xem chi tiết */}
-                      <Tooltip content="Xem hồ sơ eKYC">
-                        <button
-                          onClick={() => onView(store.id)}
-                          className="p-1.5 text-zinc-500 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-lg transition-colors cursor-pointer"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
-                      </Tooltip>
-
-                      {/* Duyệt nhanh (nếu PENDING hoặc REJECTED) */}
-                      {store.status !== "ACTIVE" && (
-                        <Tooltip content="Phê duyệt gian hàng">
-                          <button
-                            onClick={() => onApprove(store)}
-                            className="p-1.5 text-zinc-500 hover:text-emerald-600 dark:text-zinc-400 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 rounded-lg transition-colors cursor-pointer"
-                          >
-                            <CheckCircle2 className="w-4 h-4" />
-                          </button>
-                        </Tooltip>
-                      )}
-
-                      {/* Từ chối (nếu PENDING) */}
-                      {store.status === "PENDING" && (
-                        <Tooltip content="Từ chối duyệt">
-                          <button
-                            onClick={() => onReject(store)}
-                            className="p-1.5 text-zinc-500 hover:text-rose-600 dark:text-zinc-400 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors cursor-pointer"
-                          >
-                            <XCircle className="w-4 h-4" />
-                          </button>
-                        </Tooltip>
-                      )}
-                    </div>
+                    <StoreActionMenu
+                      item={store}
+                      onView={onView}
+                      onApprove={onApprove}
+                      onReject={onReject}
+                    />
                   </td>
                 </tr>
               );
